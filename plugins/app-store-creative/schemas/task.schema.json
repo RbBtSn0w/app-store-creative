@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "App Store Creative Task",
+  "type": "object",
+  "required": ["kind", "locale", "device", "output"],
+  "properties": {
+    "kind": {"enum": ["screenshot", "app_preview"]},
+    "locale": {"type": "string", "minLength": 1},
+    "device": {"type": "string", "minLength": 1},
+    "output": {"type": "string", "minLength": 1},
+    "dimensions": {
+      "type": "array",
+      "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "media_contract": {
+      "type": "object",
+      "properties": {
+        "codec": {"type": "string"},
+        "audio_codec": {"type": "string"},
+        "audio_required": {"type": "boolean"},
+        "fps": {"type": "number", "exclusiveMinimum": 0},
+        "fps_tolerance": {"type": "number", "minimum": 0},
+        "duration": {"type": "number", "exclusiveMinimum": 0},
+        "duration_tolerance": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "screenshot"}}},
+      "then": {"properties": {"output": {"pattern": "\\.[pP][nN][gG]$"}}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "app_preview"}}},
+      "then": {"properties": {"output": {"pattern": "\\.([mM][oO][vV]|[mM][pP]4|[mM]4[vV])$"}}}
+    }
+  ],
+  "additionalProperties": true
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "E2E Screenshot Capture"
+  short_description: "Capture truthful product UI checkpoints"
+  default_prompt: "Use $e2e-screenshot-capture to capture deterministic product UI checkpoints."

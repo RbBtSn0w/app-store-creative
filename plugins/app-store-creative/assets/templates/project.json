@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "plugin_version": "0.1.0",
+  "project": {
+    "id": "example-app"
+  },
+  "product": {
+    "name": "Example App",
+    "bundle_id": "com.example.app",
+    "platforms": [
+      "iOS"
+    ],
+    "default_locale": "en-US"
+  },
+  "dependencies": {
+    "figma": {
+      "plugin": "figma",
+      "required": true,
+      "purpose": "Design source and creative review"
+    },
+    "app_store_connect": {
+      "plugin": "asc",
+      "required": true,
+      "purpose": "Metadata lookup and approved publishing handoff"
+    }
+  },
+  "capture": {
+    "adapter": "e2e-screenshot-capture",
+    "mode": "local",
+    "input_directory": "capture",
+    "output_directory": "artifacts"
+  },
+  "paths": {
+    "release_manifest": "release.json",
+    "artifacts": "artifacts",
+    "runtime": ".app-store-creative/runtime/0.1.0/app_store_creative.py"
+  }
+}

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate plugin package
+        run: python3 .github/validate_plugin.py
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Validate consumer templates offline
+        env:
+          APP_STORE_CREATIVE_CLI: plugins/app-store-creative/scripts/app_store_creative.py
+        run: |
+          plugins/app-store-creative/assets/templates/validate-app-store-creative.sh \
+            plugins/app-store-creative/assets/templates/project.json \
+            plugins/app-store-creative/assets/templates/release.json

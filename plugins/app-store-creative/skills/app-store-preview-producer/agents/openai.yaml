@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Preview Producer"
+  short_description: "Produce truthful App Preview videos"
+  default_prompt: "Use $app-store-preview-producer to produce a validated App Preview from real UI recordings."

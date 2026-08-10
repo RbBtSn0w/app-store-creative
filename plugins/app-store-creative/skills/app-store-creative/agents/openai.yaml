@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Creative"
+  short_description: "Orchestrate App Store screenshots and previews"
+  default_prompt: "Use $app-store-creative to prepare approved App Store screenshots and preview videos."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Creative Publisher"
+  short_description: "Plan upload and audit App Store media"
+  default_prompt: "Use $app-store-creative-publisher to plan and verify approved App Store media uploads."

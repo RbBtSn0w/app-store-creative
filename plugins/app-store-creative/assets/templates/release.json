@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "plugin_version": "0.1.0",
+  "project_id": "example-app",
+  "release": {
+    "version": "1.0.0",
+    "name": "Initial App Store creative release"
+  },
+  "targets": [
+    {
+      "id": "iphone-6.9-portrait",
+      "display_type": "APP_IPHONE_69",
+      "device_type": "iPhone 16 Pro Max",
+      "dimensions": [
+        1320,
+        2868
+      ]
+    }
+  ],
+  "locales": [
+    "en-US"
+  ],
+  "scenes": [
+    {
+      "id": "hero",
+      "order": 1,
+      "purpose": "Communicate the primary product value"
+    }
+  ],
+  "preview": {
+    "orientation": "portrait",
+    "dimensions": [
+      886,
+      1920
+    ],
+    "fps": 30,
+    "duration_seconds": {
+      "minimum": 15,
+      "maximum": 30
+    },
+    "codec": "h264",
+    "audio": {
+      "required": false,
+      "codec": "aac"
+    }
+  },
+  "approval_policy": {
+    "design": "required",
+    "upload": "required",
+    "self_approval": false,
+    "confirmation_tokens": {
+      "approve": "APPROVE",
+      "promote": "PROMOTE",
+      "upload": "UPLOAD"
+    }
+  },
+  "publishing": {
+    "engine_upload_mode": "dry-run",
+    "mutation_executor": "official-asc-plugin"
+  },
+  "remoteWrite": false,
+  "tasks": [
+    {
+      "kind": "screenshot",
+      "locale": "en-US",
+      "device": "iphone-6.9",
+      "target_id": "iphone-6.9-portrait",
+      "scene_id": "hero",
+      "output": "artifacts/en-US/iphone-6.9/01-hero.png",
+      "dimensions": [
+        1320,
+        2868
+      ]
+    }
+  ]
+}

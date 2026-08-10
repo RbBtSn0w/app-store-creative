@@ -1,0 +1,10 @@
+.DS_Store
+.build/
+.swiftpm/
+__pycache__/
+*.pyc
+.coverage
+.pytest_cache/
+
+# Generated creative outputs are project-owned and must not enter the plugin package.
+artifacts/

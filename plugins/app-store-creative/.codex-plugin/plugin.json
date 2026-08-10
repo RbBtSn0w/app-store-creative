@@ -1,0 +1,40 @@
+{
+  "name": "app-store-creative",
+  "version": "0.1.0",
+  "description": "Plan, produce, validate, and publish reproducible App Store creative releases.",
+  "author": {
+    "name": "RbBtSn0w",
+    "url": "https://github.com/RbBtSn0w"
+  },
+  "homepage": "https://github.com/RbBtSn0w/app-store-creative",
+  "repository": "https://github.com/RbBtSn0w/app-store-creative",
+  "license": "MIT",
+  "keywords": [
+    "app-store",
+    "creative",
+    "screenshots",
+    "localization",
+    "release-automation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "App Store Creative",
+    "shortDescription": "Build verified App Store creative releases.",
+    "longDescription": "Turn product evidence into localized App Store screenshot and preview releases with deterministic plans, validation, and publishing handoffs.",
+    "developerName": "RbBtSn0w",
+    "category": "Creativity",
+    "capabilities": [
+      "Creative Planning",
+      "Screenshot Production",
+      "Release Validation",
+      "Publishing Handoff"
+    ],
+    "websiteURL": "https://github.com/RbBtSn0w/app-store-creative",
+    "defaultPrompt": [
+      "Plan an App Store creative release from my product evidence.",
+      "Validate this screenshot release before publishing.",
+      "Prepare a localized App Store publishing handoff."
+    ],
+    "brandColor": "#0A84FF"
+  }
+}

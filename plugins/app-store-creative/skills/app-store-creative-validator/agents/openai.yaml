@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Store Creative Validator"
+  short_description: "Validate screenshots videos and evidence"
+  default_prompt: "Use $app-store-creative-validator to verify an App Store creative release."
