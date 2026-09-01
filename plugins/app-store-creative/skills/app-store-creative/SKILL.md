@@ -27,6 +27,8 @@ Require the official Figma and ASC plugins for their respective external systems
 5. Require a design approval before promotion and a separate upload approval before any App Store Connect mutation.
 6. Run `verify` before approval, promotion, and upload. Run `audit` after upload.
 
+When a follow-up changes source inputs for an unpromoted task, read [iteration-contract.md](references/iteration-contract.md), invalidate that task, and re-run only the proved-dependent work. Preserve unaffected task evidence. Create a new run instead when release-manifest task fields changed or any affected task was promoted.
+
 ```sh
 python3 <plugin-root>/scripts/app_store_creative.py init --repo <repo>
 python3 <plugin-root>/scripts/app_store_creative.py plan --repo <repo> --release <version> --run-id <run-id>

@@ -68,6 +68,22 @@ python3 app_store_creative.py upload \
   --confirm-approved UPLOAD
 ```
 
+For an unpromoted completed task whose source inputs changed without changing
+its release-manifest fields, archive its current receipt and reopen it with:
+
+```bash
+python3 app_store_creative.py invalidate \
+  --repo <project-root> \
+  --run-id <run-id> \
+  --task-id <task-id> \
+  --actor <identity> \
+  --reason <reason>
+```
+
+Invalidation preserves receipt and approval history, clears current approvals,
+and makes prior upload plans stale. Create a new run for changed task fields or
+for work that was already promoted.
+
 The promotion input directory must preserve every task's relative `output`
 path. For example, an output of `artifacts/en-US/mac/01-hero.png` is read from
 `<approved-export-root>/artifacts/en-US/mac/01-hero.png`. This prevents

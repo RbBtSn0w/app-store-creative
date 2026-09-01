@@ -25,4 +25,4 @@ python3 <plugin-root>/scripts/app_store_creative.py complete --repo <repo> --run
 
 Run without `--execute` to inspect the derived media command. Add `--execute` only after reviewing the contract and command.
 
-Do not upload or request either approval from this skill.
+For changed preview story, interaction, pacing, or locale, use the orchestrator's [iteration contract](../app-store-creative/references/iteration-contract.md) to isolate affected real-UI segments before encoding again. For `source-map-v1`, complete with a `preview` receipt that binds each final interval to its current source-take and output hashes. Do not upload or request either approval from this skill.

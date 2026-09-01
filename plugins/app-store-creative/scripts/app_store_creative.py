@@ -27,6 +27,9 @@ def run(args):
         return engine.command_claim(ns(root=root, run_id=args.run_id, task_id=args.task_id, owner=args.agent_id,
                                        ttl_seconds=args.ttl_seconds, reclaim_expired=args.reclaim_expired,
                                        release_claim=args.release_claim))
+    if args.command == "invalidate":
+        return engine.command_invalidate(ns(root=root, run_id=args.run_id, task_id=args.task_id,
+                                            actor=args.actor, reason=args.reason))
     if args.command == "complete":
         store = engine.Store(root); claim = engine.load_json(store.state / "claims" / f"{args.task_id}.json")
         if claim["run_id"] != args.run_id: raise engine.WorkflowError("claim does not belong to run")
@@ -85,6 +88,7 @@ def build_parser():
     x = cmd("plan"); x.add_argument("--release", type=Path, required=True); x.add_argument("--run-id")
     x = cmd("status"); x.add_argument("--run-id", required=True)
     x = cmd("claim"); x.add_argument("--run-id", required=True); x.add_argument("--task-id", required=True); x.add_argument("--agent-id", required=True); x.add_argument("--ttl-seconds", type=int, default=1800); mode = x.add_mutually_exclusive_group(); mode.add_argument("--reclaim-expired", action="store_true"); mode.add_argument("--release", dest="release_claim", action="store_true")
+    x = cmd("invalidate"); x.add_argument("--run-id", required=True); x.add_argument("--task-id", required=True); x.add_argument("--actor", required=True); x.add_argument("--reason", required=True)
     x = cmd("complete"); x.add_argument("--run-id", required=True); x.add_argument("--task-id", required=True); x.add_argument("--agent-id", required=True); x.add_argument("--receipt", type=Path, required=True)
     x = cmd("verify"); x.add_argument("--release", type=Path, required=True); x.add_argument("--run-id")
     x = cmd("approve"); x.add_argument("--release", type=Path, required=True); x.add_argument("--stage", choices=("design", "upload"), required=True); x.add_argument("--approved-by", required=True); x.add_argument("--input-manifest", type=Path, required=True); x.add_argument("--confirm", required=True)

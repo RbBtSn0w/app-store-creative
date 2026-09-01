@@ -8,6 +8,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import shutil
 import struct
 import subprocess
@@ -139,6 +140,8 @@ def normalize_task(raw: dict[str, Any], run_id: str) -> dict[str, Any]:
     output = Path(task["output"])
     if output.is_absolute() or ".." in output.parts: raise WorkflowError("task output must stay inside the repository")
     task["output"] = str(output)
+    if task.get("receipt_contract") not in (None, "source-map-v1"):
+        raise WorkflowError("unsupported receipt_contract")
     return task
 
 
@@ -215,6 +218,40 @@ def command_claim(args: argparse.Namespace) -> dict[str, Any]:
     return body
 
 
+def command_invalidate(args: argparse.Namespace) -> dict[str, Any]:
+    store = Store(args.root.resolve()); store.require()
+    task = load_json(store.task_path(args.task_id))
+    if task["run_id"] != args.run_id: raise WorkflowError("task does not belong to run")
+    receipt_path = store.state / "receipts" / f"{args.task_id}.json"
+    if not receipt_path.exists(): raise WorkflowError("only a completed task can be invalidated")
+    if (store.state / "receipts" / f"{args.task_id}-promotion.json").exists() or (store.state / "releases" / f"{args.run_id}.json").exists():
+        raise WorkflowError("promoted tasks cannot be invalidated; create a new run")
+    if not isinstance(args.actor, str) or not args.actor.strip(): raise WorkflowError("invalidation actor is required")
+    if not isinstance(args.reason, str) or not args.reason.strip(): raise WorkflowError("invalidation reason is required")
+
+    lock_path = store.state / "claims" / f".{args.task_id}.lock"
+    with lock_path.open("a+b") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if not receipt_path.exists(): raise WorkflowError("task is not complete")
+        receipt_sha256 = file_digest(receipt_path)
+        history = store.state / "receipt-history" / args.task_id / f"{receipt_sha256}.json"
+        history.parent.mkdir(parents=True, exist_ok=True)
+        if history.exists() and history.read_bytes() != receipt_path.read_bytes():
+            raise WorkflowError("receipt history hash collision")
+        invalidated_approvals = []
+        for stage in ("design", "upload"):
+            pointer = store.state / "approvals" / f"{args.task_id}-{stage}" / "current.json"
+            if pointer.exists():
+                pointer.unlink(); invalidated_approvals.append(stage)
+        if not history.exists(): os.replace(receipt_path, history)
+        else: receipt_path.unlink()
+    body = {"run_id": args.run_id, "task_id": args.task_id, "actor": args.actor,
+            "reason": args.reason, "receipt_sha256": receipt_sha256,
+            "invalidated_approvals": invalidated_approvals}
+    store.append_event("invalidated", body)
+    return {"invalidated": True, **body, "history": str(history)}
+
+
 def inspect_png(path: Path) -> dict[str, Any]:
     data = path.read_bytes()
     header = data[:29]
@@ -266,6 +303,65 @@ def inspect_asset(path: Path) -> dict[str, Any]:
     return {**info, "path": str(path), "size": path.stat().st_size, "sha256": file_digest(path)}
 
 
+def _source_file(root: Path, raw: Any, label: str, *, task_output: str) -> Path:
+    if not isinstance(raw, dict): raise WorkflowError(f"source-map-v1 {label} must be an object")
+    path_value = raw.get("path"); claimed_hash = raw.get("sha256")
+    if not isinstance(path_value, str) or not path_value: raise WorkflowError(f"source-map-v1 {label}.path is required")
+    if not isinstance(claimed_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", claimed_hash):
+        raise WorkflowError(f"source-map-v1 {label}.sha256 must be lowercase SHA-256")
+    relative = Path(path_value)
+    if relative.is_absolute() or ".." in relative.parts: raise WorkflowError(f"source-map-v1 {label} path must stay inside the repository")
+    path = confined(root, root / relative, f"source-map-v1 {label}")
+    if path == confined(root, root / task_output, "task output"):
+        raise WorkflowError(f"source-map-v1 {label} cannot be the task output")
+    if not path.is_file(): raise WorkflowError(f"source-map-v1 missing source: {path_value}")
+    if file_digest(path) != claimed_hash: raise WorkflowError(f"source hash mismatch: {path_value}")
+    return path
+
+
+def _validate_mapping_common(root: Path, task: dict[str, Any], mapping: Any, asset: dict[str, Any]) -> None:
+    if not isinstance(mapping, dict): raise WorkflowError("source-map-v1 entries must be objects")
+    for field in ("locale", "appearance", "source_revision"):
+        if not isinstance(mapping.get(field), str) or not mapping[field]: raise WorkflowError(f"source-map-v1 {field} is required")
+    if mapping["locale"] != task["locale"]: raise WorkflowError("source-map-v1 locale does not match task")
+    geometry = mapping.get("geometry")
+    if not isinstance(geometry, dict) or any(type(geometry.get(key)) is not int or geometry[key] <= 0 for key in ("width", "height")):
+        raise WorkflowError("source-map-v1 geometry requires positive integer width and height")
+    output = mapping.get("output")
+    if not isinstance(output, dict) or output.get("path") != task["output"] or output.get("sha256") != asset["sha256"]:
+        raise WorkflowError("source-map-v1 output does not match the verified task asset")
+
+
+def validate_producer_receipt(root: Path, task: dict[str, Any], receipt: Any, asset: dict[str, Any]) -> None:
+    if task.get("receipt_contract") != "source-map-v1": return
+    if not isinstance(receipt, dict): raise WorkflowError("source-map-v1 receipt must be an object")
+    mappings = receipt.get("source_map")
+    if not isinstance(mappings, list) or not mappings: raise WorkflowError("source-map-v1 requires a non-empty source_map")
+    expected_role = "design" if task["kind"] == "screenshot" else "preview"
+    if receipt.get("role") != expected_role: raise WorkflowError(f"source-map-v1 role must be {expected_role}")
+    for index, mapping in enumerate(mappings):
+        _validate_mapping_common(root, task, mapping, asset)
+        if task["kind"] == "screenshot":
+            if not isinstance(mapping.get("scene_id"), str) or not mapping["scene_id"]:
+                raise WorkflowError("source-map-v1 scene_id is required")
+            if task.get("scene_id") and mapping["scene_id"] != task["scene_id"]:
+                raise WorkflowError("source-map-v1 scene_id does not match task")
+            sources = mapping.get("source_captures")
+            if not isinstance(sources, list) or not sources: raise WorkflowError("source-map-v1 source_captures are required")
+            for source_index, source in enumerate(sources):
+                _source_file(root, source, f"source_map[{index}].source_captures[{source_index}]", task_output=task["output"])
+            node_ids = mapping.get("figma_node_ids")
+            if not isinstance(node_ids, list) or not node_ids or any(not isinstance(value, str) or not value for value in node_ids):
+                raise WorkflowError("source-map-v1 figma_node_ids are required")
+        else:
+            for field in ("segment_id", "journey_id"):
+                if not isinstance(mapping.get(field), str) or not mapping[field]: raise WorkflowError(f"source-map-v1 {field} is required")
+            _source_file(root, mapping.get("source_take"), f"source_map[{index}].source_take", task_output=task["output"])
+            interval = mapping.get("interval")
+            if not isinstance(interval, dict) or type(interval.get("start")) not in (int, float) or type(interval.get("end")) not in (int, float) or not 0 <= interval["start"] < interval["end"]:
+                raise WorkflowError("source-map-v1 interval requires 0 <= start < end")
+
+
 def command_verify(args: argparse.Namespace) -> dict[str, Any]:
     store = Store(args.root.resolve()); store.require()
     task = load_json(store.task_path(args.task_id))
@@ -286,6 +382,10 @@ def command_verify(args: argparse.Namespace) -> dict[str, Any]:
     if contract.get("audio_required") and not info.get("audio_codec"): raise WorkflowError("audio stream is required")
     for field in ("fps", "duration"):
         if field in contract and abs(info.get(field, 0) - contract[field]) > contract.get(f"{field}_tolerance", 0.01): raise WorkflowError(f"{field} mismatch")
+    receipt_path = store.state / "receipts" / f"{args.task_id}.json"
+    if receipt_path.exists():
+        receipt = load_json(receipt_path)
+        validate_producer_receipt(store.root, task, receipt.get("producer_receipt"), info)
     return {"run_id": task["run_id"], "task_id": args.task_id, "asset": info}
 
 
@@ -298,6 +398,7 @@ def command_complete(args: argparse.Namespace) -> dict[str, Any]:
     verified = command_verify(args)
     task = load_json(store.task_path(args.task_id))
     producer_receipt = load_json(args.producer_receipt)
+    validate_producer_receipt(store.root, task, producer_receipt, verified["asset"])
     body = {"schema_version": SCHEMA_VERSION, "run_id": task["run_id"], "task_id": args.task_id, "task_sha256": file_digest(store.task_path(args.task_id)),
             "asset": verified["asset"], "claim": {"owner": claim["owner"], "token_sha256": hashlib.sha256(args.token.encode()).hexdigest()}}
     body["producer_receipt"] = producer_receipt
@@ -313,6 +414,7 @@ def command_approve(args: argparse.Namespace) -> dict[str, Any]:
     store = Store(args.root.resolve()); store.require()
     receipt_path = store.state / "receipts" / f"{args.task_id}.json"
     if not receipt_path.exists(): raise WorkflowError("task is not complete")
+    command_verify(argparse.Namespace(root=store.root, task_id=args.task_id))
     receipt = load_json(receipt_path)
     if args.approver == receipt["claim"]["owner"]: raise WorkflowError("self approval is forbidden")
     if args.stage == "upload":
@@ -337,6 +439,7 @@ def approval(store: Store, task_id: str, stage: str) -> dict[str, Any]:
     if claimed != digest(unsigned) or claimed != pointer["approval_sha256"]: raise WorkflowError(f"invalid {stage} approval history")
     receipt_path = store.state / "receipts" / f"{task_id}.json"
     if result["receipt_sha256"] != file_digest(receipt_path): raise WorkflowError(f"stale {stage} approval")
+    command_verify(argparse.Namespace(root=store.root, task_id=task_id))
     return result
 
 
@@ -410,6 +513,9 @@ class UploadAdapter(Protocol):
 def command_upload(args: argparse.Namespace) -> dict[str, Any]:
     store = Store(args.root.resolve()); store.require()
     plan = load_json(store.state / "upload-plans" / f"{args.plan_id}.json")
+    receipt_path = store.state / "receipts" / f"{plan['task_id']}.json"
+    if not receipt_path.exists() or plan.get("receipt_sha256") != file_digest(receipt_path):
+        raise WorkflowError("stale upload plan; generate and approve a new plan")
     approval(store, plan["task_id"], "design"); upload = approval(store, plan["task_id"], "upload")
     if upload["input_sha256"] != args.plan_sha256: raise WorkflowError("upload approval is not bound to this plan")
     if not args.execute:
@@ -430,6 +536,9 @@ def command_audit(args: argparse.Namespace) -> dict[str, Any]:
         if receipt.name.endswith("-promotion.json"): continue
         body = load_json(receipt); claimed = body.pop("receipt_sha256", None)
         if claimed != digest(body): problems.append(f"receipt digest mismatch: {receipt.name}")
+    for receipt in sorted((store.state / "receipt-history").glob("**/*.json")):
+        body = load_json(receipt); claimed = body.pop("receipt_sha256", None)
+        if claimed != digest(body): problems.append(f"receipt history digest mismatch: {receipt.name}")
     return {"ok": not problems, "problems": problems}
 
 
@@ -457,6 +566,7 @@ def parser() -> argparse.ArgumentParser:
     pl = sub.add_parser("plan"); pl.add_argument("manifest", type=Path); pl.set_defaults(func=command_plan)
     s = sub.add_parser("status"); s.set_defaults(func=command_status)
     c = sub.add_parser("claim"); c.add_argument("task_id"); c.add_argument("--owner", required=True); c.set_defaults(func=command_claim)
+    inv = sub.add_parser("invalidate"); inv.add_argument("task_id"); inv.add_argument("--run-id", required=True); inv.add_argument("--actor", required=True); inv.add_argument("--reason", required=True); inv.set_defaults(func=command_invalidate)
     for name, func in (("verify", command_verify), ("promote", command_promote)):
         x = sub.add_parser(name); x.add_argument("task_id"); x.set_defaults(func=func)
     co = sub.add_parser("complete"); co.add_argument("task_id"); co.add_argument("--token", required=True); co.set_defaults(func=command_complete)

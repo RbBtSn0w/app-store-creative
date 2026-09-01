@@ -24,4 +24,4 @@ python3 <plugin-root>/scripts/app_store_creative.py complete --repo <repo> --run
 
 Do not claim success from a focused test alone when the product boundary requires a real window, device, permission, or cross-process interaction. Preserve raw captures; downstream design may frame or annotate them but must not alter their UI content.
 
-Read [capture-contract.md](references/capture-contract.md) when defining checkpoints or receipt evidence. Use the orchestrator's [agent handoff contract](../app-store-creative/references/agent-handoff.md) for leases and completion.
+Read [capture-contract.md](references/capture-contract.md) when defining checkpoints or receipt evidence. On a changed run, also read the orchestrator's [iteration contract](../app-store-creative/references/iteration-contract.md): replay the individual affected checkpoint first, then recapture only the outputs whose source map proves dependence. Use the orchestrator's [agent handoff contract](../app-store-creative/references/agent-handoff.md) for leases and completion.
