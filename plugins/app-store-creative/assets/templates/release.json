@@ -66,6 +66,7 @@
       "device": "iphone-6.9",
       "target_id": "iphone-6.9-portrait",
       "scene_id": "hero",
+      "receipt_contract": "source-map-v1",
       "output": "artifacts/en-US/iphone-6.9/01-hero.png",
       "dimensions": [
         1320,

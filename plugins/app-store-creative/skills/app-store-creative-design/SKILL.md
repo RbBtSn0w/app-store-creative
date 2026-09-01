@@ -23,3 +23,5 @@ python3 <plugin-root>/scripts/app_store_creative.py complete --repo <repo> --run
 ```
 
 Do not promote exports yourself. The orchestrator may request design approval only after validation succeeds; that approval is not upload approval. The approval confirmation token is `APPROVE`.
+
+For a follow-up that changes copy or presentation only, update only the Figma frames selected by the source map. If a product capture hash changes, export every frame that references it. For `source-map-v1`, complete with a `design` receipt containing the required capture hashes, output binding, and Figma node IDs; see the orchestrator's [iteration contract](../app-store-creative/references/iteration-contract.md).

@@ -229,6 +229,101 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(workflow.WorkflowError, "app_preview"):
             workflow.command_verify(type("A", (), {"root": self.root, "task_id": task_id})())
 
+    def test_invalidate_archives_current_evidence_and_reopens_unpromoted_task(self):
+        task_id = self.plan(); png(self.root / "out/a.png")
+        claim = workflow.command_claim(self.claim_args(task_id))
+        producer = self.root / "producer.json"; producer.write_text("{}")
+        workflow.command_complete(type("A", (), {"root": self.root, "task_id": task_id, "token": claim["token"], "producer_receipt": producer})())
+        run = workflow.load_json(self.store.state / "runs/run-a.json")
+        workflow.command_approve(type("A", (), {"root": self.root, "task_id": task_id, "stage": "design",
+                                                  "approver": "reviewer", "input_sha256": run["manifest_sha256"]})())
+
+        result = workflow.command_invalidate(type("A", (), {"root": self.root, "run_id": "run-a", "task_id": task_id,
+                                                              "actor": "editor", "reason": "capture changed"})())
+
+        self.assertTrue(result["invalidated"])
+        self.assertEqual(workflow.task_state(self.store, task_id), "pending")
+        self.assertEqual(len(list((self.store.state / "receipt-history" / task_id).glob("*.json"))), 1)
+        approvals = self.store.state / "approvals" / f"{task_id}-design"
+        self.assertFalse((approvals / "current.json").exists())
+        self.assertEqual(len([path for path in approvals.glob("*.json") if path.name != "current.json"]), 1)
+        self.assertTrue(workflow.command_audit(type("A", (), {"root": self.root})())["ok"])
+        self.assertEqual(workflow.command_claim(self.claim_args(task_id))["owner"], "worker")
+
+        parsed = public.build_parser().parse_args(["invalidate", "--repo", str(self.root), "--run-id", "run-a",
+                                                   "--task-id", task_id, "--actor", "editor", "--reason", "capture changed"])
+        self.assertEqual(parsed.command, "invalidate")
+
+    def test_invalidate_refuses_promoted_task(self):
+        task_id = self.plan(); png(self.root / "out/a.png")
+        claim = workflow.command_claim(self.claim_args(task_id))
+        producer = self.root / "producer.json"; producer.write_text("{}")
+        workflow.command_complete(type("A", (), {"root": self.root, "task_id": task_id, "token": claim["token"], "producer_receipt": producer})())
+        workflow.command_approve(type("A", (), {"root": self.root, "task_id": task_id, "stage": "design",
+                                                  "approver": "reviewer", "input_sha256": "manifest"})())
+        workflow.command_promote(type("A", (), {"root": self.root, "task_id": task_id})())
+        with self.assertRaisesRegex(workflow.WorkflowError, "new run"):
+            workflow.command_invalidate(type("A", (), {"root": self.root, "run_id": "run-a", "task_id": task_id,
+                                                          "actor": "editor", "reason": "late change"})())
+
+    def test_source_map_contract_rejects_missing_or_stale_evidence(self):
+        manifest = self.root / "source-map.json"
+        manifest.write_text(json.dumps({"tasks": [{"kind": "screenshot", "locale": "en-US", "device": "iphone",
+                                                     "output": "out/a.png", "dimensions": [10, 20],
+                                                     "receipt_contract": "source-map-v1", "scene_id": "hero"}]}))
+        task_id = workflow.command_plan(type("A", (), {"root": self.root, "manifest": manifest, "run_id": "mapped"})())["task_ids"][0]
+        source = self.root / "capture/hero.png"; output = self.root / "out/a.png"; png(source, 3, 4); png(output)
+        claim = workflow.command_claim(type("A", (), {"root": self.root, "run_id": "mapped", "task_id": task_id,
+                                                       "owner": "worker", "ttl_seconds": 60, "reclaim_expired": False,
+                                                       "release_claim": False})())
+        producer = self.root / "producer.json"; producer.write_text("{}")
+        args = type("A", (), {"root": self.root, "task_id": task_id, "token": claim["token"], "producer_receipt": producer})()
+        with self.assertRaisesRegex(workflow.WorkflowError, "source-map-v1"):
+            workflow.command_complete(args)
+
+        receipt = {"role": "design", "source_map": [{
+            "scene_id": "hero", "locale": "en-US", "appearance": "light",
+            "geometry": {"width": 10, "height": 20}, "source_revision": "abc123",
+            "source_captures": [{"path": "out/a.png", "sha256": workflow.file_digest(output)}],
+            "output": {"path": "out/a.png", "sha256": workflow.file_digest(output)},
+            "figma_node_ids": ["1:2"]}]}
+        producer.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(workflow.WorkflowError, "cannot be the task output"):
+            workflow.command_complete(args)
+
+        receipt["source_map"][0]["source_captures"][0] = {"path": "capture/hero.png", "sha256": "0" * 64}
+        producer.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(workflow.WorkflowError, "source hash mismatch"):
+            workflow.command_complete(args)
+
+        receipt["source_map"][0]["source_captures"][0]["sha256"] = workflow.file_digest(source)
+        producer.write_text(json.dumps(receipt))
+        completed = workflow.command_complete(args)
+        self.assertEqual(completed["producer_receipt"]["role"], "design")
+        source.write_bytes(source.read_bytes() + b"changed")
+        with self.assertRaisesRegex(workflow.WorkflowError, "source hash mismatch"):
+            workflow.command_verify(type("A", (), {"root": self.root, "task_id": task_id})())
+
+    def test_upload_plan_becomes_stale_after_task_is_recompleted(self):
+        task_id = self.plan(); output = self.root / "out/a.png"; png(output)
+        producer = self.root / "producer.json"; producer.write_text("{}")
+        claim = workflow.command_claim(self.claim_args(task_id))
+        workflow.command_complete(type("A", (), {"root": self.root, "task_id": task_id, "token": claim["token"], "producer_receipt": producer})())
+        base = {"root": self.root, "task_id": task_id}
+        workflow.command_approve(type("A", (), {**base, "stage": "design", "approver": "designer", "input_sha256": "manifest"})())
+        old_plan = workflow.command_upload_plan(type("A", (), base)())
+
+        workflow.command_invalidate(type("A", (), {**base, "run_id": "run-a", "actor": "editor", "reason": "new capture"})())
+        output.write_bytes(output.read_bytes() + b"new")
+        claim = workflow.command_claim(self.claim_args(task_id))
+        workflow.command_complete(type("A", (), {"root": self.root, "task_id": task_id, "token": claim["token"], "producer_receipt": producer})())
+        workflow.command_approve(type("A", (), {**base, "stage": "design", "approver": "designer", "input_sha256": "manifest"})())
+        workflow.command_approve(type("A", (), {**base, "stage": "upload", "approver": "uploader", "input_sha256": "old-plan"})())
+
+        with self.assertRaisesRegex(workflow.WorkflowError, "stale upload plan"):
+            workflow.command_upload(type("A", (), {"root": self.root, "plan_id": old_plan["plan_id"],
+                                                     "execute": False, "plan_sha256": "old-plan"})())
+
     def test_public_audit_is_read_only_and_local_only(self):
         release = self.root / "release.json"; release.write_text(json.dumps({"tasks": []}))
         before = sorted((self.store.state / "events").glob("*.json"))
