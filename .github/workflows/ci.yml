@@ -35,6 +35,7 @@ jobs:
         run: |
           npm ci
           npm test
+          npx tsc --noEmit
           npm run build
 
       - name: Smoke-test complete plugin distribution
