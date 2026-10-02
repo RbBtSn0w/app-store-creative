@@ -11,7 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "app-store-creative"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
-EXPECTED_VERSION = "0.1.0"
+EXPECTED_PLUGIN_VERSION = "0.2.0"
+EXPECTED_TEMPLATE_VERSION = "0.1.0"
 
 
 def require(condition: bool, message: str) -> None:
@@ -22,7 +23,7 @@ def require(condition: bool, message: str) -> None:
 def main() -> None:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     require(data.get("name") == PLUGIN.name, "plugin name must match its directory")
-    require(data.get("version") == EXPECTED_VERSION, "unexpected plugin version")
+    require(data.get("version") == EXPECTED_PLUGIN_VERSION, "unexpected plugin version")
     require(data.get("author", {}).get("name") == "RbBtSn0w", "unexpected author")
     require(data.get("interface", {}).get("category") == "Creativity", "unexpected category")
     require(bool(data.get("interface", {}).get("capabilities")), "capabilities must not be empty")
@@ -37,7 +38,7 @@ def main() -> None:
         template = json.loads(
             (PLUGIN / "assets" / "templates" / template_name).read_text(encoding="utf-8")
         )
-        require(template.get("plugin_version") == EXPECTED_VERSION, f"stale {template_name}")
+        require(template.get("plugin_version") == EXPECTED_TEMPLATE_VERSION, f"stale {template_name}")
         templates[template_name] = template
 
     project = templates["project.json"]
@@ -74,7 +75,7 @@ def main() -> None:
         "authentication": "ON_INSTALL",
     }, "unexpected marketplace policy")
 
-    print(f"Validated {PLUGIN.relative_to(ROOT)} at version {EXPECTED_VERSION}")
+    print(f"Validated {PLUGIN.relative_to(ROOT)} at version {EXPECTED_PLUGIN_VERSION}")
 
 
 if __name__ == "__main__":
