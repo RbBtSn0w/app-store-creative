@@ -246,6 +246,39 @@ class TestV2Workflow(unittest.TestCase):
             backups = list(backup_dir.glob("creative.config.*.json"))
             self.assertGreaterEqual(len(backups), 1)
 
+            # 5. Verify server gracefully handles invalid/malformed JSON
+            invalid_post = urllib.request.Request(
+                f"http://127.0.0.1:{ctx.port}/api/config",
+                data=b"NOT_A_JSON_STRING",
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with self.assertRaises(urllib.error.HTTPError) as cm:
+                urllib.request.urlopen(invalid_post)
+            self.assertEqual(cm.exception.code, 400)
+
+    def test_validator_handles_corrupted_png(self):
+        artifacts = self.root / "artifacts"
+        # 1. Zero-byte file
+        zero_png = artifacts / "en-US/iphone_6_9/zero.png"
+        zero_png.parent.mkdir(parents=True, exist_ok=True)
+        zero_png.write_bytes(b"")
+
+        # 2. Corrupted magic header
+        garbage_png = artifacts / "en-US/iphone_6_9/garbage.png"
+        garbage_png.write_bytes(b"NOT_A_PNG_HEADER_DATA")
+
+        res = validator.run_validation(
+            repo_root=self.root,
+            config_path=self.template_config,
+            artifacts_dir=artifacts,
+            write_lockfile=False,
+        )
+        self.assertEqual(res["status"], "FAIL")
+        self.assertGreaterEqual(len(res["errors"]), 2)
+        self.assertTrue(any("zero.png" in err for err in res["errors"]))
+        self.assertTrue(any("garbage.png" in err for err in res["errors"]))
+
 
 if __name__ == "__main__":
     unittest.main()

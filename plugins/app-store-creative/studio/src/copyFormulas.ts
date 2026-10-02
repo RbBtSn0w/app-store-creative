@@ -60,4 +60,10 @@ export const COPY_FORMULAS: CopyFormula[] = [
     headline: 'Right on Your Lock Screen',
     subheadline: 'Interactive widgets and StandBy mode ready',
   },
+  {
+    category: 'Social & Creator',
+    role: 'CTA',
+    headline: 'Connect With Your Community',
+    subheadline: 'Share milestone cards and achievements instantly',
+  },
 ];

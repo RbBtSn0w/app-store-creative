@@ -129,6 +129,12 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     "message": "Configuration saved successfully",
                     "backup": str(backup_path.relative_to(self.repo_root) if backup_path.is_relative_to(self.repo_root) else backup_path)
                 }).encode())
+            except json.JSONDecodeError as e:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": f"Invalid JSON payload: {str(e)}"}).encode())
             except Exception as e:
                 self.send_response(500)
                 self.send_header("Content-Type", "application/json")
