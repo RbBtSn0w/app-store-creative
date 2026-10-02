@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "app-store-creative"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
-EXPECTED_PLUGIN_VERSION = "0.2.9"
+EXPECTED_PLUGIN_VERSION = "0.2.10"
 EXPECTED_TEMPLATE_VERSION = "0.1.0"
 
 

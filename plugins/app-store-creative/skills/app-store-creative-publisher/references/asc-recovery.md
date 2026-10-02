@@ -55,3 +55,21 @@ https://developer.apple.com/help/app-store-connect/manage-app-information/upload
 
 Apple's field migration reference:
 https://developer.apple.com/documentation/appstoreconnectapi/app-store-connect-api-3-7-release-notes
+
+
+## Decode evidence when validating remote playback
+
+A media probe's duration and a decoder's zero exit code alone do not prove full
+playback: FFmpeg can finish successfully with no output frames or read only the
+first HLS segment. Require decoded-frame evidence consistent with the approved
+frame rate and content duration, and verify any acceptance-image file actually
+exists before recording success.
+
+If HLS decoding is incomplete, inspect the variant playlist and normal CDN byte
+range responses before attributing the problem to Apple's processing. The full
+variant MP4 referenced by the playlist can provide independent decode evidence.
+Preserve the original URLs, playlist, download response, probe, and decode logs.
+Its timestamps may have a nonzero origin; use decoded frame count/rate for content
+length and normalize PTS before extracting the selected poster interval. Report
+this verification method and any HLS-reader limitation without claiming that a
+particular App Store client was tested.
