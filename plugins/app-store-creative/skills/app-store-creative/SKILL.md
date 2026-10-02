@@ -9,7 +9,7 @@ Coordinate specialists through the repository plan. Keep product pixels real, ar
 
 ## Preflight
 
-Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime` from this skill's installed path. Runtime resources live inside the declared main skill payload so ADG installs them. Before relying on a command, inspect its current interface:
+Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime` from this skill's installed path. Runtime resources live inside the declared main skill payload so ADG installs them. Use Python 3.10 or newer (prefer the Homebrew interpreter on macOS). Before relying on a command, inspect its current interface:
 
 ```sh
 python3 <runtime-root>/scripts/app_store_creative.py --help

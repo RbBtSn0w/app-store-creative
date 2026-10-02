@@ -544,7 +544,8 @@ def command_audit(args: argparse.Namespace) -> dict[str, Any]:
 
 def command_doctor(args: argparse.Namespace) -> dict[str, Any]:
     root = args.root.resolve(); state = root / STATE_DIR
-    return {"python": sys.version.split()[0], "python_ok": sys.version_info >= (3, 10), "root": str(root),
+    return {"status": "PASS" if sys.version_info >= (3, 10) else "FAIL",
+            "python": sys.version.split()[0], "python_ok": sys.version_info >= (3, 10), "root": str(root),
             "initialized": (state / "config.json").is_file(), "sips": shutil.which("sips"), "ffmpeg": shutil.which("ffmpeg"),
             "ffprobe": shutil.which("ffprobe"), "asc": shutil.which("asc")}
 

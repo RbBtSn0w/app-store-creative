@@ -113,3 +113,8 @@ class ArtifactHandoffTests(unittest.TestCase):
         args = cli.build_parser().parse_args(["publish", "--repo", str(self.root)])
         with self.assertRaises(ValueError):
             cli.run(args)
+
+    def test_doctor_rejects_unsupported_python(self):
+        args = cli.build_parser().parse_args(["doctor", "--repo", str(self.root)])
+        with mock.patch("creative_workflow.sys.version_info", (3, 9, 6)):
+            self.assertEqual(cli.run(args)["status"], "FAIL")

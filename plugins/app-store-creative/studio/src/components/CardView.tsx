@@ -85,7 +85,7 @@ export const CardView: React.FC<CardViewProps> = ({
   // Calculate layout-specific default 3D offsets if not explicitly set
   const computedOffset = {
     x: card.deviceOffset?.x ?? 0,
-    y: card.deviceOffset?.y ?? (layout === 'phone_floating_isometric' ? 40 : 25),
+    y: card.deviceOffset?.y ?? (target.startsWith('mac_') ? 0 : layout === 'phone_floating_isometric' ? 40 : 25),
     scale: card.deviceOffset?.scale ?? (layout === 'phone_perspective_hero' ? 1.08 : 1),
     rotate: card.deviceOffset?.rotate ?? (layout === 'phone_floating_isometric' ? -6 : 0),
     rotateX: card.deviceOffset?.rotateX ?? (layout === 'phone_floating_isometric' ? 14 : layout === 'phone_perspective_hero' ? 18 : 0),
@@ -152,14 +152,16 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Device Frame Display Area */}
-      <div className={`relative z-10 ${isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
+      <div className={`relative z-10 ${isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-4' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
         <DeviceFrame
           screenshot={card.screenshot}
           offset={computedOffset}
           theme={resolvedTheme}
           target={target}
           className={
-            isFeatureGraphic
+            isMac
+              ? ''
+              : isFeatureGraphic
               ? 'scale-75 -translate-y-4'
               : layout === 'phone_bleed'
               ? 'scale-110 translate-y-12'

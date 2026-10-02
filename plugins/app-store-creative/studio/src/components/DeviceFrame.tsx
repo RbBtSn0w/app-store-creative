@@ -71,16 +71,11 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
           transformStyle: 'preserve-3d',
         }}
       >
-        <div className={`relative w-[480px] h-[300px] rounded-[16px] p-[8px] ${getBezelGradient()}`}>
+        <div className={`relative w-[480px] h-[260px] rounded-[16px] p-[8px] ${getBezelGradient()}`}>
           <div className="relative w-full h-full bg-[#121214] rounded-[10px] overflow-hidden shadow-inner flex flex-col">
-            {/* Window chrome / traffic lights */}
-            <div className="h-6 bg-[#1C1C1E] border-b border-white/5 flex items-center px-2 space-x-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
-            </div>
+            {/* Preserve the captured window's native chrome and complete content. */}
             {screenshot ? (
-              <img src={screenshot} alt="Mac App Screenshot" className="w-full flex-1 object-cover object-top" />
+              <img src={screenshot} alt="Mac App Screenshot" className="w-full h-full object-contain" />
             ) : (
               <div className="flex-1 bg-[#0D1117] p-3 text-white flex flex-col justify-between">
                 <div className="h-4 w-28 bg-white/20 rounded" />
