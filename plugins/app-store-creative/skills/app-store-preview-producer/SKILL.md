@@ -11,6 +11,10 @@ All executable and template resources ship with the main orchestration skill.
 
 Build previews around recordings of the real running app. Decorative titles and transitions may be designed; product interaction pixels may not be mocked or regenerated.
 
+For a video made in only one language, set `previewVideo.locales` to that
+nonempty subset of project locales. The ASC handoff uses this exact scope;
+omitting it retains the legacy behavior of assigning the video to all locales.
+
 ## Produce
 
 1. Read the plan and [video-capture.md](references/video-capture.md), then claim the preview task.

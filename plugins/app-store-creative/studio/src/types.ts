@@ -131,6 +131,7 @@ export interface CreativeConfig {
   connectedTrack?: boolean;
   cards: CardConfig[];
   previewVideo?: {
+    locales?: string[];
     enabled: boolean;
     source?: string;
     fps?: number;

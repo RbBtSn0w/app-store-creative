@@ -16,6 +16,17 @@ except ImportError:
     from .export_engine import TARGET_SPECS
 
 
+def preview_locales(config: Dict[str, Any]) -> List[str]:
+    """Bind a preview to its explicitly selected project localizations."""
+    project_locales = config.get("project", {}).get("locales", ["en-US"])
+    locales = config.get("previewVideo", {}).get("locales", project_locales)
+    if not isinstance(locales, list) or not locales or any(
+        not isinstance(locale, str) or locale not in project_locales for locale in locales
+    ) or len(locales) != len(set(locales)):
+        raise ValueError("App Preview locales must be a nonempty unique subset of project locales")
+    return locales
+
+
 def compute_sha256(path: Path) -> str:
     """Compute SHA-256 hex digest of a file."""
     h = hashlib.sha256()
@@ -112,6 +123,11 @@ def run_validation(
     art_dir = artifacts_dir or (repo_root / "artifacts")
 
     errors: List[str] = []
+    if config.get("previewVideo", {}).get("enabled"):
+        try:
+            preview_locales(config)
+        except ValueError as error:
+            errors.append(str(error))
     asset_records: Dict[str, Any] = {}
 
     expected = declared_screenshots(config)

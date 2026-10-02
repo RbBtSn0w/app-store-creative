@@ -118,3 +118,14 @@ class ArtifactHandoffTests(unittest.TestCase):
         args = cli.build_parser().parse_args(["doctor", "--repo", str(self.root)])
         with mock.patch("creative_workflow.sys.version_info", (3, 9, 6)):
             self.assertEqual(cli.run(args)["status"], "FAIL")
+
+    def test_preview_locale_scope_keeps_english_video_out_of_chinese_slot(self):
+        config = {"project": {"locales": ["en-US", "zh-Hans"]},
+                  "previewVideo": {"locales": ["en-US"]}}
+        self.assertEqual(validator.preview_locales(config), ["en-US"])
+        config["previewVideo"]["locales"] = ["ja"]
+        with self.assertRaises(ValueError):
+            validator.preview_locales(config)
+        config["previewVideo"]["locales"] = []
+        with self.assertRaises(ValueError):
+            validator.preview_locales(config)

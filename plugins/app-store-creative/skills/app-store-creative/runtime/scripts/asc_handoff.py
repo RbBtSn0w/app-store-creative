@@ -33,7 +33,7 @@ def prepare_handoff(root: Path, write: bool = False) -> dict:
                             "order": [c["id"] for c in config["cards"]].index(Path(filename).stem) + 1,
                             "path": str((art / name).resolve()), **lock["assets"][name]})
     previews = [{"path": str((art / name).resolve()),
-                 "locales": config.get("project", {}).get("locales", ["en-US"]),
+                 "locales": validator.preview_locales(config),
                  "poster_frame_time_code": config.get("previewVideo", {}).get("posterFrameTimeCode"),
                  **evidence}
                 for name, evidence in lock["assets"].items() if evidence.get("type") == "video"]
