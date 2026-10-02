@@ -19,6 +19,8 @@ interface CardViewProps {
 export const CardView: React.FC<CardViewProps> = ({
   card,
   index,
+  totalCards = 1,
+  connected = false,
   target,
   theme,
   localizedText,
@@ -102,6 +104,11 @@ export const CardView: React.FC<CardViewProps> = ({
     isMac,
   } = getTargetScalingInfo(target);
 
+  // Only shared backgrounds span the deck; explicit per-card backgrounds stay local.
+  const trackLength = Number.isFinite(totalCards) ? Math.max(1, Math.floor(totalCards)) : 1;
+  const useConnectedBackground = connected && !card.customBackground && trackLength > 1;
+  const backgroundIndex = Math.min(Math.max(0, index), trackLength - 1);
+
   const cardContent = (
     <div
       data-card-id={card.id}
@@ -112,12 +119,24 @@ export const CardView: React.FC<CardViewProps> = ({
       style={{
         width: `${baseCanvasWidth}px`,
         height: `${baseCanvasHeight}px`,
-        ...getBackgroundStyle(),
       }}
     >
-      {/* Decorative ambient glow or mesh elements */}
-      <div className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
+      <div
+        data-background-track={useConnectedBackground ? 'connected' : 'isolated'}
+        className="pointer-events-none absolute top-0"
+        style={{
+          width: `${baseCanvasWidth * (useConnectedBackground ? trackLength : 1)}px`,
+          height: `${baseCanvasHeight}px`,
+          left: `${useConnectedBackground ? -backgroundIndex * baseCanvasWidth : 0}px`,
+          ...getBackgroundStyle(),
+        }}
+      >
+        {/* Keep decoration in the shared coordinate space to avoid repeated seams. */}
+        {bg.type !== 'solid' && <>
+          <div className="absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
+        </>}
+      </div>
 
       {/* Top Marketing Copy Section */}
       <div className={`relative z-20 ${isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>

@@ -25,6 +25,12 @@ Screenshots are advertisements, not documentation. Each slide must sell one clea
 4. **Slide 4 (Ecosystem / Integration)**: Platform superpowers ("Right on Your Lock Screen", Widgets, Mac/Watch sync).
 5. **Slide 5 (Call to Action / Trust)**: Social proof, privacy commitment, or frictionless onboarding.
 
+Connected backgrounds share a full-deck gradient and decoration coordinate space.
+Each export is a slice of that background. Headlines and product captures remain
+inside their own card; cross-card product or text placement is not supported.
+A card with `customBackground` uses its own independent background.
+Solid presets remain solid without ambient colored glows.
+
 ### 2. Weak vs. Better Headline Conversion
 
 | Weak (Documents Technical UI) | Better (Sells Outcome / Feeling) |
