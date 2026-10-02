@@ -21,7 +21,9 @@ Pass its ordered files, hashes, target hints, preview locales, and poster-frame
 choice to the ASC agent. Require separate human design and upload approvals for
 the exact package. Resolve missing target IDs and poster-frame choices before
 remote mutation; report upload and fresh remote audit as separate ASC evidence.
-Never treat `awaiting_asc` as uploaded or submit a version for review.
+Never treat `awaiting_asc` as uploaded or submit a version for review. Preview
+file delivery (`COMPLETE`) can precede playable-video processing; apply the
+separate readiness checks in [asc-recovery.md](references/asc-recovery.md).
 
 ## Publish
 
