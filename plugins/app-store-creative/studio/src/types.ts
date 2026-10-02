@@ -14,7 +14,11 @@ export type TargetDevice =
   | 'ipad_13'
   | 'ipad_12_9'
   | 'mac_16_10'
-  | 'watch_ultra';
+  | 'watch_ultra'
+  | 'google_play_phone'
+  | 'google_play_tablet_7'
+  | 'google_play_tablet_10'
+  | 'google_play_feature_graphic';
 
 export interface DeviceDimensions {
   width: number;
@@ -32,6 +36,10 @@ export const TARGET_DIMENSIONS: Record<TargetDevice, DeviceDimensions> = {
   ipad_12_9: { width: 2048, height: 2732, displayName: 'iPad Pro 12.9"', aspectRatio: '2048/2732' },
   mac_16_10: { width: 2880, height: 1800, displayName: 'MacBook Pro 16:10', aspectRatio: '16/10' },
   watch_ultra: { width: 410, height: 502, displayName: 'Apple Watch Ultra', aspectRatio: '410/502' },
+  google_play_phone: { width: 1080, height: 2400, displayName: 'Google Play Phone (9:20)', aspectRatio: '9/20' },
+  google_play_tablet_7: { width: 1200, height: 1920, displayName: 'Google Play 7" Tablet', aspectRatio: '10/16' },
+  google_play_tablet_10: { width: 1600, height: 2560, displayName: 'Google Play 10" Tablet', aspectRatio: '10/16' },
+  google_play_feature_graphic: { width: 1024, height: 500, displayName: 'Google Play Feature Graphic', aspectRatio: '1024/500' },
 };
 
 export interface BackgroundConfig {
@@ -42,6 +50,7 @@ export interface BackgroundConfig {
 }
 
 export interface ThemeConfig {
+  stylePreset?: string;
   background: BackgroundConfig;
   fontFamily?: string;
   headlineColor?: string;
@@ -55,6 +64,8 @@ export interface CardOffset {
   y?: number;
   scale?: number;
   rotate?: number;
+  rotateX?: number;
+  rotateY?: number;
 }
 
 export interface CardConfig {
@@ -62,7 +73,18 @@ export interface CardConfig {
   headline: string;
   subheadline?: string;
   screenshot?: string;
-  layout?: 'phone_bottom' | 'phone_center' | 'phone_tilt_left' | 'phone_tilt_right' | 'phone_bleed' | 'split_dual' | 'pure_text';
+  layout?:
+    | 'phone_bottom'
+    | 'phone_center'
+    | 'phone_tilt_left'
+    | 'phone_tilt_right'
+    | 'phone_bleed'
+    | 'split_dual'
+    | 'pure_text'
+    | 'phone_floating_isometric'
+    | 'phone_perspective_hero'
+    | 'split_dual_perspective'
+    | 'feature_graphic_banner';
   deviceOffset?: CardOffset;
   customBackground?: BackgroundConfig;
 }

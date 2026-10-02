@@ -45,7 +45,11 @@
           "ipad_13",
           "ipad_12_9",
           "mac_16_10",
-          "watch_ultra"
+          "watch_ultra",
+          "google_play_phone",
+          "google_play_tablet_7",
+          "google_play_tablet_10",
+          "google_play_feature_graphic"
         ]
       },
       "default": ["iphone_6_9"]
@@ -54,6 +58,30 @@
       "type": "object",
       "description": "Global visual styling for screenshot cards",
       "properties": {
+        "stylePreset": {
+          "type": "string",
+          "enum": [
+            "liquid_glass",
+            "swiss_grid",
+            "midnight_glow",
+            "quiet_japandi",
+            "bento_keynote",
+            "candy_pop",
+            "neon_athletic",
+            "magazine_editorial",
+            "soft_clay",
+            "pastel_dream",
+            "vintage_travel",
+            "cyber_matrix",
+            "clean_light",
+            "dark_contrast",
+            "ocean_gradient",
+            "sunset_warmth",
+            "forest_minimal",
+            "monochrome_bold"
+          ],
+          "description": "Pre-configured visual style preset applying cohesive palette, typography, and atmospheric lighting"
+        },
         "background": {
           "type": "object",
           "properties": {
@@ -134,7 +162,11 @@
               "phone_tilt_right",
               "phone_bleed",
               "split_dual",
-              "pure_text"
+              "pure_text",
+              "phone_floating_isometric",
+              "phone_perspective_hero",
+              "split_dual_perspective",
+              "feature_graphic_banner"
             ],
             "default": "phone_bottom"
           },
@@ -144,7 +176,9 @@
               "x": { "type": "number", "default": 0 },
               "y": { "type": "number", "default": 0 },
               "scale": { "type": "number", "default": 1 },
-              "rotate": { "type": "number", "default": 0 }
+              "rotate": { "type": "number", "default": 0 },
+              "rotateX": { "type": "number", "default": 0 },
+              "rotateY": { "type": "number", "default": 0 }
             }
           },
           "customBackground": {

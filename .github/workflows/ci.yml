@@ -23,6 +23,20 @@ jobs:
       - name: Run unit tests
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: plugins/app-store-creative/studio/package-lock.json
+
+      - name: Test and build Studio frontend
+        working-directory: plugins/app-store-creative/studio
+        run: |
+          npm ci
+          npm test
+          npm run build
+
       - name: Validate consumer templates offline
         env:
           APP_STORE_CREATIVE_CLI: plugins/app-store-creative/scripts/app_store_creative.py

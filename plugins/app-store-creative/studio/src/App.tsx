@@ -73,6 +73,8 @@ export const App: React.FC = () => {
   const [currentLocale, setCurrentLocale] = useState<string>('en-US');
   const [connectedTrack, setConnectedTrack] = useState<boolean>(true);
   const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // Check query params for export mode
   const urlParams = new URLSearchParams(window.location.search);
@@ -86,7 +88,7 @@ export const App: React.FC = () => {
     fetch('/api/config')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data) {
+        if (data && data.cards) {
           setConfig(data);
           if (data.targets?.length) setCurrentTarget(data.targets[0]);
           if (data.project?.defaultLocale) setCurrentLocale(data.project.defaultLocale);
@@ -97,6 +99,90 @@ export const App: React.FC = () => {
         // Standalone mode, default config is active
       });
   }, []);
+
+  // Save config back to server
+  const handleSaveConfig = () => {
+    setIsSaving(true);
+    fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          setIsDirty(false);
+        } else {
+          alert('Save failed: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch((err) => {
+        alert('Failed to connect to local Studio server: ' + err);
+      })
+      .finally(() => setIsSaving(false));
+  };
+
+  // Keyboard shortcut: Cmd+S / Ctrl+S
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        if (isDirty && !isSaving) {
+          handleSaveConfig();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDirty, isSaving, config]);
+
+  const handleStylePresetChange = (presetId: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      theme: {
+        ...prev.theme,
+        stylePreset: presetId || undefined,
+      },
+    }));
+    setIsDirty(true);
+  };
+
+  const handleUpdateCardText = (cardId: string, field: 'headline' | 'subheadline', value: string) => {
+    setConfig((prev) => {
+      const isDefaultLocale = currentLocale === (prev.project.defaultLocale || 'en-US');
+      if (isDefaultLocale) {
+        return {
+          ...prev,
+          cards: prev.cards.map((c) => (c.id === cardId ? { ...c, [field]: value } : c)),
+        };
+      }
+      // Update localization map
+      const prevLocalizations = prev.localizations || {};
+      const currentLocaleMap = prevLocalizations[currentLocale] || {};
+      const currentCardLoc = currentLocaleMap[cardId] || { headline: '' };
+      return {
+        ...prev,
+        localizations: {
+          ...prevLocalizations,
+          [currentLocale]: {
+            ...currentLocaleMap,
+            [cardId]: {
+              ...currentCardLoc,
+              [field]: value,
+            },
+          },
+        },
+      };
+    });
+    setIsDirty(true);
+  };
+
+  const handleApplyCopyFormula = (formula: { headline: string; subheadline: string }) => {
+    if (config.cards.length === 0) return;
+    const targetCardId = config.cards[0].id;
+    handleUpdateCardText(targetCardId, 'headline', formula.headline);
+    handleUpdateCardText(targetCardId, 'subheadline', formula.subheadline);
+  };
 
   // EXPORT MODE: Render only the requested card at 100% viewport size
   if (isExport && exportCardParam !== null) {
@@ -157,6 +243,12 @@ export const App: React.FC = () => {
         cardCount={config.cards.length}
         onTriggerExport={handleTriggerExport}
         isExporting={isExporting}
+        stylePreset={config.theme.stylePreset}
+        onStylePresetChange={handleStylePresetChange}
+        isDirty={isDirty}
+        isSaving={isSaving}
+        onSaveConfig={handleSaveConfig}
+        onApplyCopyFormula={handleApplyCopyFormula}
       />
 
       {/* Main Studio Viewport */}
@@ -189,6 +281,7 @@ export const App: React.FC = () => {
                 localizedText={localized}
                 connected={connectedTrack}
                 isExport={false}
+                onUpdateText={(field, value) => handleUpdateCardText(card.id, field, value)}
               />
             );
           })}

@@ -178,6 +178,107 @@ class TestV2Workflow(unittest.TestCase):
         finally:
             shutil.which = original_which
 
+    def test_google_play_target_specs(self):
+        gp_keys = ["google_play_phone", "google_play_tablet_7", "google_play_tablet_10", "google_play_feature_graphic"]
+        for key in gp_keys:
+            self.assertIn(key, export_engine.TARGET_SPECS)
+            spec = export_engine.TARGET_SPECS[key]
+            self.assertGreater(spec["width"], 0)
+            self.assertGreater(spec["height"], 0)
+        self.assertEqual(export_engine.TARGET_SPECS["google_play_feature_graphic"]["width"], 1024)
+        self.assertEqual(export_engine.TARGET_SPECS["google_play_feature_graphic"]["height"], 500)
+        self.assertEqual(export_engine.TARGET_SPECS["google_play_phone"]["width"], 1080)
+        self.assertEqual(export_engine.TARGET_SPECS["google_play_phone"]["height"], 2400)
+
+    def test_validator_supports_google_play_targets(self):
+        artifacts = self.root / "artifacts"
+        # 1. Feature Graphic (1024x500)
+        fg_png = artifacts / "en-US/google_play_feature_graphic/banner.png"
+        create_mock_png(fg_png, width=1024, height=500, has_alpha=False)
+
+        # 2. Google Play Phone (1080x2400)
+        phone_png = artifacts / "en-US/google_play_phone/01-hero.png"
+        create_mock_png(phone_png, width=1080, height=2400, has_alpha=False)
+
+        res = validator.run_validation(
+            repo_root=self.root,
+            config_path=self.template_config,
+            artifacts_dir=artifacts,
+            write_lockfile=True,
+        )
+        self.assertEqual(res["status"], "PASS")
+        self.assertEqual(len(res["errors"]), 0)
+        self.assertEqual(res["assets_count"], 2)
+
+    def test_studio_server_post_config_and_backup(self):
+        cfg_file = self.root / "creative.config.json"
+        cfg_file.write_text(self.template_config.read_text())
+
+        with export_engine.LocalServerContext(self.root, cfg_file) as ctx:
+            # 1. Fetch current config via GET /api/config
+            get_req = urllib.request.Request(f"http://127.0.0.1:{ctx.port}/api/config")
+            with urllib.request.urlopen(get_req) as resp:
+                self.assertEqual(resp.status, 200)
+                data = json.loads(resp.read().decode())
+                self.assertIn("cards", data)
+
+            # 2. Update config via POST /api/config
+            data["cards"][0]["headline"] = "Updated Headline From Test"
+            post_bytes = json.dumps(data).encode()
+            post_req = urllib.request.Request(
+                f"http://127.0.0.1:{ctx.port}/api/config",
+                data=post_bytes,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(post_req) as resp:
+                self.assertEqual(resp.status, 200)
+                res_body = json.loads(resp.read().decode())
+                self.assertTrue(res_body["ok"])
+
+            # 3. Verify disk file was updated
+            saved_disk = json.loads(cfg_file.read_text())
+            self.assertEqual(saved_disk["cards"][0]["headline"], "Updated Headline From Test")
+
+            # 4. Verify backup was created in .creative/backups/
+            backup_dir = self.root / ".creative/backups"
+            self.assertTrue(backup_dir.exists())
+            backups = list(backup_dir.glob("creative.config.*.json"))
+            self.assertGreaterEqual(len(backups), 1)
+
+            # 5. Verify server gracefully handles invalid/malformed JSON
+            invalid_post = urllib.request.Request(
+                f"http://127.0.0.1:{ctx.port}/api/config",
+                data=b"NOT_A_JSON_STRING",
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with self.assertRaises(urllib.error.HTTPError) as cm:
+                urllib.request.urlopen(invalid_post)
+            self.assertEqual(cm.exception.code, 400)
+
+    def test_validator_handles_corrupted_png(self):
+        artifacts = self.root / "artifacts"
+        # 1. Zero-byte file
+        zero_png = artifacts / "en-US/iphone_6_9/zero.png"
+        zero_png.parent.mkdir(parents=True, exist_ok=True)
+        zero_png.write_bytes(b"")
+
+        # 2. Corrupted magic header
+        garbage_png = artifacts / "en-US/iphone_6_9/garbage.png"
+        garbage_png.write_bytes(b"NOT_A_PNG_HEADER_DATA")
+
+        res = validator.run_validation(
+            repo_root=self.root,
+            config_path=self.template_config,
+            artifacts_dir=artifacts,
+            write_lockfile=False,
+        )
+        self.assertEqual(res["status"], "FAIL")
+        self.assertGreaterEqual(len(res["errors"]), 2)
+        self.assertTrue(any("zero.png" in err for err in res["errors"]))
+        self.assertTrue(any("garbage.png" in err for err in res["errors"]))
+
 
 if __name__ == "__main__":
     unittest.main()
