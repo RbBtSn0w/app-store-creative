@@ -50,7 +50,7 @@ def read_image_meta(path: Path) -> Tuple[int, int, bool]:
 
             w = int(w_proc.stdout.strip().split()[-1])
             h = int(h_proc.stdout.strip().split()[-1])
-            has_alpha = "yes" in a_proc.stdout.lower()
+            has_alpha = a_proc.stdout.strip().split()[-1].lower() == "yes"
             return w, h, has_alpha
         except Exception:
             pass

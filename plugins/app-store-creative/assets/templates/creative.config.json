@@ -1,5 +1,5 @@
 {
-  "$schema": "../schemas/creative.config.schema.json",
+  "$schema": "../../schemas/creative.config.schema.json",
   "project": {
     "id": "habit-flow",
     "name": "HabitFlow",
