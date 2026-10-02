@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 try:
     from produce_app_preview import build_command, validate_output
@@ -18,7 +18,7 @@ def produce_preview_from_config(
     repo_root: Path,
     config_path: Optional[Path] = None,
     output_dir: Optional[Path] = None,
-) -> Optional[Dict[str, any]]:
+) -> Optional[Dict[str, Any]]:
     """Produce an Apple-compliant App Preview video from creative.config.json."""
     cfg_file = config_path or (repo_root / "creative.config.json")
     if not cfg_file.exists():

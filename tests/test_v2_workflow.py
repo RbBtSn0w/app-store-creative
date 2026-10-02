@@ -2,6 +2,7 @@ import json
 import struct
 import tempfile
 import unittest
+from unittest import mock
 import urllib.request
 import zlib
 from pathlib import Path

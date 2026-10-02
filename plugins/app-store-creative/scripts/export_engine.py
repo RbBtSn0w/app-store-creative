@@ -11,7 +11,7 @@ import threading
 import time
 import urllib.request
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     from studio_server import StudioRequestHandler, ThreadingHTTPServer
@@ -20,7 +20,7 @@ except ImportError:
 
 
 # Standard Apple App Store Connect Dimensions
-TARGET_SPECS: Dict[str, Dict[str, any]] = {
+TARGET_SPECS: Dict[str, Dict[str, Any]] = {
     "iphone_6_9": {"width": 1320, "height": 2868, "display_name": 'iPhone 16 Pro Max (6.9")'},
     "iphone_6_7": {"width": 1290, "height": 2796, "display_name": 'iPhone 15 Pro Max (6.7")'},
     "iphone_6_5": {"width": 1242, "height": 2688, "display_name": 'iPhone 11 Pro Max (6.5")'},
@@ -165,7 +165,7 @@ def run_export(
     output_dir: Optional[Path] = None,
     targets: Optional[List[str]] = None,
     locales: Optional[List[str]] = None,
-) -> Dict[str, any]:
+) -> Dict[str, Any]:
     """Execute complete batch export of all cards across targets and locales."""
     cfg_file = config_path or (repo_root / "creative.config.json")
     if not cfg_file.exists():
