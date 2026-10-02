@@ -15,6 +15,8 @@ before publishing.
 - **Connected Track Support**: Continuous panoramic canvas allowing cards, decorative gradients, and tilted phones to span across screen boundaries.
 - **Headless 1:1 Store Rendering**: Uses system Chrome for deterministic, zero-tolerance resolution export (1320x2868, 1290x2796, etc.) with 24-bit RGB and no alpha channel.
 - **Zero-Network Release Validator**: Strictly verifies dimensions, format, file sizes, and generates immutable `.creative/release-lock.json` evidence.
+- **Native macOS Window Recorder**: Packaged ScreenCaptureKit executor with explicit window selection, bounded capture, and hash-bound recording receipts (macOS 15+).
+- **Source Timeline Production**: Select intervals from real takes, preflight media/filter capabilities, and emit production receipts plus acceptance contact sheets.
 - **App Preview Video Synthesizer**: Native FFmpeg automation producing compliant H.264 stereo AAC App Preview videos (15-30s).
 - **ASC Publishing Handoff**: Connects safely with the official App Store Connect plugin (`asc`).
 

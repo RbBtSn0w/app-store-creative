@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "app-store-creative"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
-EXPECTED_PLUGIN_VERSION = "0.2.6"
+EXPECTED_PLUGIN_VERSION = "0.2.7"
 EXPECTED_TEMPLATE_VERSION = "0.1.0"
 
 
@@ -77,6 +77,8 @@ def main() -> None:
 
     runtime = PLUGIN / "skills/app-store-creative/runtime"
     for required in ("scripts/app_store_creative.py", "scripts/asc_handoff.py",
+                         "scripts/record_app_window.py", "scripts/record_app_window.swift",
+                         "scripts/produce_app_preview.py",
                      "schemas/creative.config.schema.json", "assets/templates/creative.config.json",
                      "studio/dist/index.html"):
         require((runtime / required).is_file(), f"ADG skill payload missing {required}")

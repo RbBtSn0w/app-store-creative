@@ -18,9 +18,9 @@ omitting it retains the legacy behavior of assigning the video to all locales.
 ## Produce
 
 1. Read the plan and [video-capture.md](references/video-capture.md), then claim the preview task.
-2. Record deterministic journeys with the platform-native path named by the plan: ScreenCaptureKit for macOS, `simctl` for Simulator, or another explicitly approved real-device method.
+2. For macOS, use the packaged `record_app_window.py` executor described in [video-capture.md](references/video-capture.md); it never launches, quits, or drives the app. Record deterministic journeys with the platform-native path named by the plan: ScreenCaptureKit for macOS, `simctl` for Simulator, or another explicitly approved real-device method.
 3. Keep cursor, taps, notifications, permission prompts, and sensitive data out unless the storyboard requires them.
-4. Edit with `ffmpeg` or the repository-declared tool. Preserve action continuity and truthful feature behavior.
+4. Use `produce_app_preview.py` with segment `start` and `duration` to select intervals from real takes. It resolves paths relative to the contract and emits a receipt and contact sheet. Edit with `ffmpeg` or the repository-declared tool. Preserve action continuity and truthful feature behavior.
 5. Encode to the plan's dimensions, orientation, frame rate, duration, codec, audio, and color constraints.
 6. Export the final preview plus an acceptance snapshot containing representative frames and timing notes.
 7. Record source takes, commands, hashes, media probe output, and acceptance-snapshot path in the receipt; complete the task.

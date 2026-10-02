@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """Compose an App Preview from an explicit JSON contract using ffmpeg."""
 
-import argparse, json, shutil, subprocess, sys
+import argparse, hashlib, json, math, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 
 def build_command(contract: dict, output: Path) -> list[str]:
     ffmpeg = shutil.which("ffmpeg") or "ffmpeg"
-    segments = list(contract.get("segments") or [])
+    segments = contract.get("segments") or []
     if not isinstance(segments, list) or not segments: raise ValueError("contract requires non-empty segments")
     width = int(contract["width"]); height = int(contract["height"]); fps = float(contract["fps"]); duration = float(contract["duration"])
-    if min(width, height, fps, duration) <= 0: raise ValueError("width, height, fps, and duration must be positive")
+    if not all(math.isfinite(v) and v > 0 for v in (width, height, fps, duration)): raise ValueError("width, height, fps, and duration must be positive")
     end_card = contract.get("end_card")
+    for segment in segments:
+        start = float(segment.get("start", 0)); length = float(segment["duration"])
+        if not math.isfinite(start) or start < 0 or not math.isfinite(length) or length <= 0:
+            raise ValueError("segment start must be finite and nonnegative; duration must be finite and positive")
     segment_total = sum(float(segment["duration"]) for segment in segments)
     end_duration = float(end_card.get("duration", 0)) if end_card else 0
     if abs(segment_total + end_duration - duration) > 0.01: raise ValueError("segment and end-card durations must equal output duration")
@@ -29,9 +33,10 @@ def build_command(contract: dict, output: Path) -> list[str]:
     concat_inputs = []
     for i, segment in enumerate(segments):
         segment_duration = float(segment.get("duration", duration))
-        filters.append(f"[{i}:v:0]scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,fps={fps},trim=duration={segment_duration},setpts=PTS-STARTPTS[v{i}]")
+        start = float(segment.get("start", 0))
+        filters.append(f"[{i}:v:0]scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,fps={fps},trim=start={start}:duration={segment_duration},setpts=PTS-STARTPTS[v{i}]")
         if segment.get("has_audio", True):
-            filters.append(f"[{i}:a:0]atrim=duration={segment_duration},asetpts=PTS-STARTPTS[a{i}]")
+            filters.append(f"[{i}:a:0]atrim=start={start}:duration={segment_duration},asetpts=PTS-STARTPTS[a{i}]")
         else:
             filters.append(f"anullsrc=channel_layout=stereo:sample_rate=48000,atrim=duration={segment_duration}[a{i}]")
         concat_inputs.append(f"[v{i}][a{i}]")
@@ -74,13 +79,94 @@ def validate_output(path: Path, contract: dict) -> dict:
     return payload
 
 
+def digest(path: Path) -> str:
+    with path.open("rb") as source:
+        result = hashlib.sha256()
+        for block in iter(lambda: source.read(1024 * 1024), b""):
+            result.update(block)
+        return result.hexdigest()
+
+
+def probe_media(path: Path) -> dict:
+    result = subprocess.run(["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", str(path)],
+                            check=True, text=True, capture_output=True)
+    return json.loads(result.stdout)
+
+
+def preflight_sources(contract: dict) -> list[dict]:
+    sources = []
+    for segment in contract["segments"]:
+        path = Path(segment["path"]).resolve()
+        probe = probe_media(path)
+        if not any(s.get("codec_type") == "video" for s in probe.get("streams", [])):
+            raise ValueError(f"source has no video: {path}")
+        if float(segment.get("start", 0)) + float(segment["duration"]) > float(probe["format"]["duration"]) + 0.01:
+            raise ValueError(f"segment exceeds source duration: {path}")
+        if segment.get("has_audio", True) and not any(s.get("codec_type") == "audio" for s in probe.get("streams", [])):
+            raise ValueError(f"source has no audio; explicitly set has_audio=false: {path}")
+        sources.append({"path": str(path), "sha256": digest(path), "probe": probe})
+    for image in [*contract.get("overlays", []), contract.get("end_card") or {}]:
+        if image.get("path"):
+            path = Path(image["path"]).resolve()
+            sources.append({"path": str(path), "sha256": digest(path)})
+    return sources
+
+
+def execute(contract: dict, output: Path, receipt: Path, snapshot: Path) -> dict:
+    command = build_command(contract, output)
+    for path in (output, receipt, snapshot):
+        if path.exists(): raise ValueError(f"refusing to overwrite existing artifact: {path}")
+    if len({p.resolve() for p in (output, receipt, snapshot)}) != 3:
+        raise ValueError("output, receipt, and snapshot must be distinct")
+    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
+        raise ValueError("ffmpeg and ffprobe are required")
+    filters = subprocess.run(["ffmpeg", "-hide_banner", "-filters"], check=True, capture_output=True, text=True).stdout
+    if any(o.get("type") == "text" for o in contract.get("overlays", [])) and "drawtext" not in filters:
+        raise ValueError("this ffmpeg build lacks drawtext; use an image overlay or a build with drawtext")
+    sources = preflight_sources(contract)
+    for path in (output, receipt, snapshot): path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=output.parent) as scratch:
+        encoded = Path(scratch) / output.name
+        actual_command = build_command(contract, encoded)
+        subprocess.run(actual_command, check=True, capture_output=True)
+        probe = validate_output(encoded, contract)
+        image = Path(scratch) / "acceptance.png"
+        # Six evenly spaced real frames; editorial review remains a human decision.
+        snapshot_command = ["ffmpeg", "-hide_banner", "-nostdin", "-y", "-i", str(encoded),
+                            "-vf", f"fps=6/{float(contract['duration'])},scale=480:-1,tile=3x2",
+                            "-frames:v", "1", str(image)]
+        subprocess.run(snapshot_command, check=True, capture_output=True)
+        if any(digest(Path(s["path"])) != s["sha256"] for s in sources):
+            raise ValueError("source changed while producing preview")
+        result = {"schema_version": 1, "producer": "app-store-creative", "kind": "preview-production",
+                  "contract_sha256": hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest(),
+                  "sources": sources, "contract": contract, "segments": contract["segments"],
+                  "command": command, "execution_command": actual_command,
+                  "output": {"path": str(output.resolve()), "sha256": digest(encoded), "probe": probe},
+                  "acceptance_snapshot": {"path": str(snapshot.resolve()), "sha256": digest(image)},
+                  "snapshot_command": snapshot_command, "uploaded": False}
+        shutil.move(str(image), snapshot)
+        shutil.move(str(encoded), output)
+        receipt.write_text(json.dumps(result, indent=2) + "\n")
+    return result
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(); p.add_argument("--contract", type=Path, required=True); p.add_argument("--output", type=Path, required=True); p.add_argument("--execute", action="store_true")
-    args = p.parse_args(argv); contract = json.loads(args.contract.read_text()); command = build_command(contract, args.output)
-    if not args.execute: print(json.dumps({"executed": False, "command": command})); return 0
-    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"): print("ffmpeg and ffprobe are required", file=sys.stderr); return 2
-    subprocess.run(command, check=True)
-    print(json.dumps({"executed": True, "probe": validate_output(args.output, contract)})); return 0
+    p.add_argument("--receipt", type=Path); p.add_argument("--snapshot", type=Path)
+    args = p.parse_args(argv)
+    try:
+        contract = json.loads(args.contract.read_text())
+        for item in [*contract.get("segments", []), *contract.get("overlays", []), contract.get("end_card") or {}]:
+            if item.get("path"):
+                item["path"] = str((args.contract.resolve().parent / item["path"]).resolve())
+        command = build_command(contract, args.output)
+        if not args.execute: print(json.dumps({"executed": False, "command": command})); return 0
+        result = execute(contract, args.output, args.receipt or args.output.with_suffix(".receipt.json"),
+                         args.snapshot or args.output.with_suffix(".acceptance.png"))
+        print(json.dumps({"executed": True, "output": result["output"], "acceptance_snapshot": result["acceptance_snapshot"]})); return 0
+    except (ValueError, OSError, subprocess.CalledProcessError) as error:
+        print(str(error), file=sys.stderr); return 2
 
 
 if __name__ == "__main__": raise SystemExit(main())

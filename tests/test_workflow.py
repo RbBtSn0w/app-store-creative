@@ -160,6 +160,56 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "durations"):
             preview.build_command(contract, Path("preview.mp4"))
 
+    def test_preview_selects_source_interval_and_rejects_invalid_start(self):
+        contract = {"width": 1920, "height": 1080, "fps": 30, "duration": 4,
+                    "segments": [{"path": "take.mov", "start": 8, "duration": 4, "has_audio": True}]}
+        command = preview.build_command(contract, Path("preview.mp4"))
+        filters = command[command.index("-filter_complex") + 1]
+        self.assertIn("trim=start=8.0:duration=4.0", filters)
+        self.assertIn("atrim=start=8.0:duration=4.0", filters)
+        for start in (-1, float("nan"), float("inf")):
+            contract["segments"][0]["start"] = start
+            with self.assertRaises(ValueError):
+                preview.build_command(contract, Path("preview.mp4"))
+
+    def test_recording_plan_requires_explicit_window_and_bounded_duration(self):
+        plan = adapters.macos_recording_plan(bundle_id="com.example.app", window_id=42,
+                                            output=Path("take.mov"), duration=20)
+        self.assertEqual(plan["window_id"], 42)
+        self.assertEqual(plan["duration"], 20)
+        self.assertFalse(plan["include_cursor"])
+        for duration in (0, -1, float("nan"), 3601):
+            with self.assertRaises(adapters.RecordingContractError):
+                adapters.macos_recording_plan(bundle_id="com.example.app", window_id=42,
+                                             output=Path("take.mov"), duration=duration)
+        with self.assertRaises(adapters.RecordingContractError):
+            adapters.macos_recording_plan(bundle_id="com.example.app", window_id=0,
+                                         output=Path("take.mov"), duration=20)
+
+    def test_preview_rejects_out_of_bounds_sources_and_missing_audio(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            source = Path(scratch) / "take.mov"; source.write_bytes(b"real-source-fixture")
+            contract = {"segments": [{"path": str(source), "start": 8, "duration": 4, "has_audio": False}]}
+            media = {"format": {"duration": "10"}, "streams": [{"codec_type": "video"}]}
+            with mock.patch.object(preview, "probe_media", return_value=media):
+                with self.assertRaisesRegex(ValueError, "exceeds"):
+                    preview.preflight_sources(contract)
+                contract["segments"][0]["start"] = 6
+                result = preview.preflight_sources(contract)
+                self.assertEqual(result[0]["sha256"], preview.digest(source))
+                contract["segments"][0]["has_audio"] = True
+                with self.assertRaisesRegex(ValueError, "no audio"):
+                    preview.preflight_sources(contract)
+
+    def test_preview_preserves_existing_outputs(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            output = Path(scratch) / "preview.mp4"; output.write_bytes(b"previous-preview")
+            contract = {"width": 1920, "height": 1080, "fps": 30, "duration": 4,
+                        "segments": [{"path": "take.mov", "duration": 4, "has_audio": False}]}
+            with self.assertRaisesRegex(ValueError, "overwrite"):
+                preview.execute(contract, output, output.with_suffix(".json"), output.with_suffix(".png"))
+            self.assertEqual(output.read_bytes(), b"previous-preview")
+
     def test_confined_rejects_symlink_escape(self):
         outside = Path(self.temp.name).parent / "outside-creative-test"; outside.mkdir(exist_ok=True)
         link = self.root / "escaped"; link.symlink_to(outside, target_is_directory=True)

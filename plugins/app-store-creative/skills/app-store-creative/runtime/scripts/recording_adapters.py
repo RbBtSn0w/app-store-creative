@@ -29,3 +29,22 @@ def macos_screencapturekit_contract(*, bundle_id: str, output: Path, include_cur
 
 def shell_preview(command: list[str]) -> str:
     return shlex.join(command)
+
+
+def macos_recording_plan(*, bundle_id: str, window_id: int, output: Path,
+                         duration: float, width: int = 1920, height: int = 1080,
+                         fps: int = 30) -> dict:
+    import math
+    plan = macos_screencapturekit_contract(bundle_id=bundle_id, output=output)
+    if output.suffix.lower() != ".mov":
+        raise RecordingContractError("native recording output must be .mov")
+    if not isinstance(window_id, int) or isinstance(window_id, bool) or window_id <= 0:
+        raise RecordingContractError("an explicit positive window ID is required")
+    if not math.isfinite(duration) or not 0 < duration <= 3600:
+        raise RecordingContractError("duration must be finite and between 0 and 3600 seconds")
+    if any(not isinstance(v, int) or isinstance(v, bool) or v <= 0 for v in (width, height, fps)):
+        raise RecordingContractError("width, height, and fps must be positive integers")
+    if width > 7680 or height > 7680 or fps > 60:
+        raise RecordingContractError("recording dimensions or fps exceed supported bounds")
+    plan.update(window_id=window_id, duration=duration, width=width, height=height, fps=fps)
+    return plan

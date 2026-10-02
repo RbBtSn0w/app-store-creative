@@ -23,6 +23,8 @@ def main():
             "node_modules", "__pycache__", "*.pyc", ".DS_Store"))
         runtime = staged / "skills/app-store-creative/runtime"
         for required in ("scripts/app_store_creative.py", "scripts/asc_handoff.py",
+                         "scripts/record_app_window.py", "scripts/record_app_window.swift",
+                         "scripts/produce_app_preview.py",
                          "schemas/creative.config.schema.json", "assets/templates/creative.config.json",
                          "studio/dist/index.html"):
             if not (runtime / required).is_file():
@@ -36,6 +38,10 @@ def main():
             bundle.extractall(extracted)
         subprocess.run([sys.executable, str(extracted / staged.name / "skills/app-store-creative/runtime/scripts/app_store_creative.py"),
                         "doctor", "--repo", scratch], cwd=scratch, check=True, capture_output=True)
+        for script in ("record_app_window.py", "produce_app_preview.py"):
+            subprocess.run([sys.executable, str(extracted / staged.name /
+                            "skills/app-store-creative/runtime/scripts" / script), "--help"],
+                           cwd=scratch, check=True, capture_output=True)
         shutil.copyfile(archive, args.output)
         print(f"Validated complete plugin package: {args.output}")
 
