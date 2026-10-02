@@ -45,10 +45,17 @@ def produce_preview_from_config(
     duration = float(preview_cfg.get("duration", 20))
     fps = float(preview_cfg.get("fps", 30))
     orientation = preview_cfg.get("orientation", "portrait")
+    targets = config.get("targets", [])
+    is_mac = any(t.startswith("mac_") for t in targets)
 
-    # Dimensions for portrait vs landscape (iPhone 6.9/6.7" App Preview)
-    width = 886 if orientation == "portrait" else 1920
-    height = 1920 if orientation == "portrait" else 886
+    # Dimensions for portrait vs landscape:
+    # Mac App Store strictly requires 16:9 (1920x1080) for desktop landscape videos
+    # iPhone App Previews use 19.5:9 (886x1920 portrait or 1920x886 landscape)
+    default_width = 886 if orientation == "portrait" else (1920 if is_mac else 1920)
+    default_height = 1920 if orientation == "portrait" else (1080 if is_mac else 886)
+
+    width = int(preview_cfg.get("width", default_width))
+    height = int(preview_cfg.get("height", default_height))
 
     out_root = output_dir or (repo_root / "artifacts")
     target_out = out_root / "preview" / "app_preview.mp4"

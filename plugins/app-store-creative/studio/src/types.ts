@@ -101,6 +101,8 @@ export interface CreativeConfig {
     fps?: number;
     duration?: number;
     orientation?: 'portrait' | 'landscape';
+    width?: number;
+    height?: number;
     audio?: {
       required?: boolean;
       addSilentTrackIfMissing?: boolean;

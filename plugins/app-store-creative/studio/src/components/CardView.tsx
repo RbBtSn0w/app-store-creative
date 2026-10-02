@@ -92,19 +92,24 @@ export const CardView: React.FC<CardViewProps> = ({
     rotateY: card.deviceOffset?.rotateY ?? (layout === 'phone_floating_isometric' ? -12 : 0),
   };
 
-  const previewWidth = isFeatureGraphic ? 600 : 400;
-  const previewHeight = isFeatureGraphic ? 293 : 869;
+  // Compute virtual base canvas dimensions and physical export scale factor
+  const isMac = target.startsWith('mac_');
+  const isTablet = target.startsWith('ipad_') || target.startsWith('google_play_tablet_');
+  const baseCanvasWidth = isFeatureGraphic ? 600 : isMac ? 720 : isTablet ? 480 : 400;
+  const targetDim = TARGET_DIMENSIONS[target] || TARGET_DIMENSIONS.iphone_6_9;
+  const baseCanvasHeight = Math.round(baseCanvasWidth * (targetDim.height / targetDim.width));
+  const exportScale = isExport ? targetDim.width / baseCanvasWidth : 1;
 
-  return (
+  const cardContent = (
     <div
       data-card-id={card.id}
       data-card-index={index}
       className={`relative flex ${isFeatureGraphic ? 'flex-row items-center justify-between p-8' : 'flex-col'} overflow-hidden text-center select-none shadow-2xl transition-all duration-300 ${
-        isExport ? 'w-full h-full' : 'rounded-[32px] ring-1 ring-white/10'
+        isExport ? '' : 'rounded-[32px] ring-1 ring-white/10'
       } ${getLayoutClasses()}`}
       style={{
-        width: isExport ? '100%' : `${previewWidth}px`,
-        height: isExport ? '100%' : `${previewHeight}px`,
+        width: `${baseCanvasWidth}px`,
+        height: `${baseCanvasHeight}px`,
         ...getBackgroundStyle(),
       }}
     >
@@ -113,7 +118,7 @@ export const CardView: React.FC<CardViewProps> = ({
       <div className="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
 
       {/* Top Marketing Copy Section */}
-      <div className={`relative z-20 ${isFeatureGraphic ? 'text-left max-w-[50%] px-4' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
+      <div className={`relative z-20 ${isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
         <h2
           contentEditable={!isExport && !!onUpdateText}
           suppressContentEditableWarning
@@ -132,7 +137,7 @@ export const CardView: React.FC<CardViewProps> = ({
             suppressContentEditableWarning
             onBlur={(e) => onUpdateText?.('subheadline', e.currentTarget.textContent || '')}
             className={`text-sm font-medium tracking-normal leading-snug drop-shadow-sm outline-none focus:ring-1 focus:ring-blue-400 rounded px-1 ${
-              isFeatureGraphic ? 'max-w-[320px]' : 'max-w-[280px]'
+              isFeatureGraphic ? 'max-w-[320px]' : isMac ? 'max-w-[420px]' : 'max-w-[280px]'
             }`}
             style={{
               color: resolvedTheme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
@@ -171,4 +176,29 @@ export const CardView: React.FC<CardViewProps> = ({
       )}
     </div>
   );
+
+  if (isExport) {
+    return (
+      <div
+        className="w-full h-full overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${targetDim.width}px`,
+          height: `${targetDim.height}px`,
+        }}
+      >
+        <div
+          style={{
+            width: `${baseCanvasWidth}px`,
+            height: `${baseCanvasHeight}px`,
+            transform: `scale(${exportScale})`,
+            transformOrigin: 'center center',
+          }}
+        >
+          {cardContent}
+        </div>
+      </div>
+    );
+  }
+
+  return cardContent;
 };

@@ -71,7 +71,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
           transformStyle: 'preserve-3d',
         }}
       >
-        <div className={`relative w-[360px] h-[225px] rounded-[14px] p-[6px] ${getBezelGradient()}`}>
+        <div className={`relative w-[480px] h-[300px] rounded-[16px] p-[8px] ${getBezelGradient()}`}>
           <div className="relative w-full h-full bg-[#121214] rounded-[10px] overflow-hidden shadow-inner flex flex-col">
             {/* Window chrome / traffic lights */}
             <div className="h-6 bg-[#1C1C1E] border-b border-white/5 flex items-center px-2 space-x-1.5">
