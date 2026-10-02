@@ -61,29 +61,8 @@ def run(args):
         return validator.run_validation(root, config_path=cfg, artifacts_dir=out, write_lockfile=True)
 
     if args.command == "publish":
-        lock_file = root / ".creative" / "release-lock.json"
-        if not lock_file.exists():
-            raise engine.WorkflowError("No .creative/release-lock.json found. Run 'verify' or 'export' first.")
-        lock_data = json.loads(lock_file.read_text())
-        if lock_data.get("status") != "PASS":
-            raise engine.WorkflowError("Release lock validation status is not PASS.")
-        asc_bin = shutil.which("asc")
-        if not getattr(args, "confirm", False):
-            return {
-                "mode": "dry-run",
-                "ready_for_upload": True,
-                "assets_count": lock_data.get("assets_count", 0),
-                "asc_available": bool(asc_bin),
-                "message": "Validated release assets. To upload to App Store Connect, pass --confirm.",
-            }
-        if not asc_bin:
-            raise engine.WorkflowError("Official ASC CLI/Plugin ('asc') not found in PATH.")
-        return {
-            "mode": "live",
-            "uploaded": True,
-            "assets_count": lock_data.get("assets_count", 0),
-            "message": "Handed off release package to official ASC publisher.",
-        }
+        from asc_handoff import prepare_handoff
+        return prepare_handoff(root, write=getattr(args, "confirm", False))
 
     # Legacy v1 workflow commands (maintained for full backward compatibility)
     if args.command == "doctor": return engine.command_doctor(ns(root=root))
@@ -174,7 +153,7 @@ def build_parser():
     ver.add_argument("--run-id", help="Legacy run ID (optional)")
 
     pub = cmd("publish")
-    pub.add_argument("--confirm", action="store_true", help="Confirm upload handoff to App Store Connect")
+    pub.add_argument("--confirm", action="store_true", help="Write a local ASC agent handoff; does not approve or execute uploads")
 
     # Legacy v1 Subcommands
     d = cmd("doctor"); d.add_argument("--json", action="store_true")

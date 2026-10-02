@@ -42,7 +42,10 @@ class TestV2Workflow(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name)
-        self.template_config = Path(__file__).parents[1] / "plugins/app-store-creative/assets/templates/creative.config.json"
+        self.template_config = self.root / "creative.config.json"
+        self.template_config.write_text(json.dumps({
+            "project": {"locales": ["en-US"]}, "targets": ["iphone_6_9"],
+            "cards": [{"id": "01-hero"}]}))
 
     def tearDown(self):
         self.temp_dir.cleanup()
@@ -100,6 +103,9 @@ class TestV2Workflow(unittest.TestCase):
 
     def test_validator_supports_target_name_aliases(self):
         artifacts = self.root / "artifacts"
+        config = json.loads(self.template_config.read_text())
+        config["targets"] = ["iphone-6.9"]
+        self.template_config.write_text(json.dumps(config))
         # Directory named iphone-6.9 instead of iphone_6_9
         aliased_png = artifacts / "en-US/iphone-6.9/01-hero.png"
         create_mock_png(aliased_png, width=1320, height=2868, has_alpha=False)
@@ -140,17 +146,14 @@ class TestV2Workflow(unittest.TestCase):
         with self.assertRaises(Exception):
             cli.run(args)
 
-        # 2. Write valid release-lock.json
-        lock_dir = self.root / ".creative"
-        lock_dir.mkdir(parents=True)
-        lock_file = lock_dir / "release-lock.json"
-        lock_file.write_text(json.dumps({"status": "PASS", "assets_count": 3}))
-
-        # 3. Dry-run publish succeeds
+        # Bind actual files to a fresh release lock.
+        create_mock_png(self.root / "artifacts/en-US/iphone_6_9/01-hero.png")
+        validator.run_validation(self.root)
         res_dry = cli.run(args)
         self.assertEqual(res_dry["mode"], "dry-run")
-        self.assertTrue(res_dry["ready_for_upload"])
-        self.assertEqual(res_dry["assets_count"], 3)
+        self.assertFalse(res_dry["uploaded"])
+        self.assertEqual(res_dry["status"], "awaiting_asc")
+        self.assertEqual(res_dry["assets_count"], 1)
 
     def test_verify_cli_returns_error_code_on_failure(self):
         artifacts = self.root / "artifacts"
@@ -193,6 +196,9 @@ class TestV2Workflow(unittest.TestCase):
 
     def test_validator_supports_google_play_targets(self):
         artifacts = self.root / "artifacts"
+        self.template_config.write_text(json.dumps({
+            "project": {"locales": ["en-US"]}, "targets": ["google_play_phone"],
+            "cards": [{"id": "01-hero"}]}))
         # 1. Feature Graphic (1024x500)
         fg_png = artifacts / "en-US/google_play_feature_graphic/banner.png"
         create_mock_png(fg_png, width=1024, height=500, has_alpha=False)

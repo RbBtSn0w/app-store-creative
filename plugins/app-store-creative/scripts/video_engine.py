@@ -31,13 +31,11 @@ def produce_preview_from_config(
 
     src_rel = preview_cfg.get("source")
     if not src_rel:
-        print("⚠️ previewVideo is enabled but no source video specified.", file=sys.stderr)
-        return None
+        raise ValueError("Enabled previewVideo requires a real source recording")
 
     src_path = repo_root / src_rel
     if not src_path.exists():
-        print(f"⚠️ Source video not found: {src_path}", file=sys.stderr)
-        return None
+        raise FileNotFoundError(f"Source video not found: {src_path}")
 
     if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
         raise RuntimeError("ffmpeg and ffprobe must be installed to produce App Previews.")

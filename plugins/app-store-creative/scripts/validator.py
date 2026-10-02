@@ -78,35 +78,23 @@ def match_target_spec(path_part: str) -> Optional[str]:
     return None
 
 
-def inspect_video_file(path: Path) -> Tuple[Optional[str], Optional[str], Optional[float]]:
-    """Inspect video codec, audio codec, and duration with ffprobe if installed."""
+def inspect_video_file(path: Path) -> Dict[str, Any]:
+    """Probe every required media field; unavailable evidence is a failure."""
     if not shutil.which("ffprobe"):
-        return None, None, None
+        raise ValueError("ffprobe is required to validate App Preview videos")
+    result = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries",
+         "format=duration:stream=codec_type,codec_name,width,height,r_frame_rate",
+         "-of", "json", str(path)], capture_output=True, text=True, check=True)
+    return json.loads(result.stdout)
 
-    try:
-        probe = subprocess.run(
-            [
-                "ffprobe",
-                "-v",
-                "error",
-                "-show_entries",
-                "format=duration:stream=codec_type,codec_name",
-                "-of",
-                "json",
-                str(path),
-            ],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        data = json.loads(probe.stdout)
-        duration = float(data.get("format", {}).get("duration", 0))
-        streams = data.get("streams", [])
-        v_codec = next((s.get("codec_name") for s in streams if s.get("codec_type") == "video"), None)
-        a_codec = next((s.get("codec_name") for s in streams if s.get("codec_type") == "audio"), None)
-        return v_codec, a_codec, duration
-    except Exception:
-        return None, None, None
+
+def declared_screenshots(config: Dict[str, Any]) -> List[str]:
+    """Return the complete ordered screenshot matrix declared by the project."""
+    return [f"{locale}/{target}/{card['id']}.png"
+            for locale in config.get("project", {}).get("locales", ["en-US"])
+            for target in config.get("targets", ["iphone_6_9"])
+            for card in config.get("cards", [])]
 
 
 def run_validation(
@@ -120,14 +108,25 @@ def run_validation(
     if not cfg_file.exists():
         raise FileNotFoundError(f"Configuration file not found: {cfg_file}")
 
+    config = json.loads(cfg_file.read_text())
     art_dir = artifacts_dir or (repo_root / "artifacts")
 
     errors: List[str] = []
     asset_records: Dict[str, Any] = {}
 
-    if not art_dir.exists() or not any(art_dir.iterdir()):
-        errors.append(f"No artifacts found in: {art_dir}")
-        return {"status": "FAIL", "errors": errors, "assets": {}}
+    expected = declared_screenshots(config)
+    if not expected:
+        errors.append("Configuration must declare at least one screenshot")
+    for name in expected:
+        if not (art_dir / name).is_file():
+            errors.append(f"Missing declared screenshot: {name}")
+    preview = config.get("previewVideo", {})
+    if preview.get("enabled"):
+        source = preview.get("source")
+        if not source or not (repo_root / source).is_file():
+            errors.append("Enabled previewVideo requires an existing real source recording")
+        if not (art_dir / "preview/app_preview.mp4").is_file():
+            errors.append("Missing declared App Preview: preview/app_preview.mp4")
 
     print("🔍 Running Zero-Network Apple Store Verification...")
 
@@ -176,23 +175,34 @@ def run_validation(
         if size_bytes > 500 * 1024 * 1024:
             errors.append(f"Video exceeds 500MB limit: {rel}")
 
-        v_codec, a_codec, duration = inspect_video_file(mp4)
-        if v_codec and v_codec != "h264":
-            errors.append(f"App Preview video codec must be H.264, found: {v_codec} ({rel})")
-        if a_codec and a_codec != "aac":
-            errors.append(f"App Preview audio codec must be AAC, found: {a_codec} ({rel})")
-        if duration is not None:
-            if duration < 14.95 or duration > 30.05:
-                errors.append(f"App Preview duration must be 15-30 seconds, found {duration:.1f}s ({rel})")
-
-        asset_records[str(rel)] = {
-            "sha256": sha,
-            "type": "video",
-            "size_bytes": size_bytes,
-            "duration": duration,
-            "video_codec": v_codec,
-            "audio_codec": a_codec,
-        }
+        try:
+            from fractions import Fraction
+            probe = inspect_video_file(mp4)
+            streams = probe.get("streams", [])
+            video = next((x for x in streams if x.get("codec_type") == "video"), {})
+            audio = next((x for x in streams if x.get("codec_type") == "audio"), {})
+            duration = float(probe["format"]["duration"])
+            fps = float(Fraction(video["r_frame_rate"]))
+            width, height = int(video["width"]), int(video["height"])
+            if video.get("codec_name") != "h264" or audio.get("codec_name") != "aac":
+                raise ValueError("App Preview requires H.264 video and AAC audio")
+            if not 14.95 <= duration <= 30.05 or not 0 < fps <= 30:
+                raise ValueError("App Preview requires 15-30 seconds and at most 30 fps")
+            is_mac = any(x.startswith("mac_") for x in config.get("targets", []))
+            portrait = preview.get("orientation", "portrait") == "portrait" and not is_mac
+            expected_size = (int(preview.get("width", 886 if portrait else 1920)),
+                             int(preview.get("height", 1920 if portrait else (1080 if is_mac else 886))))
+            if (width, height) != expected_size:
+                raise ValueError(f"App Preview dimensions must be {expected_size}")
+            if abs(fps - float(preview.get("fps", 30))) > .01:
+                raise ValueError("App Preview fps differs from configuration")
+            if preview.get("enabled") and abs(duration - float(preview.get("duration", 20))) > .05:
+                raise ValueError("App Preview duration differs from configuration")
+            asset_records[str(rel)] = {"sha256": sha, "type": "video", "size_bytes": size_bytes,
+                                       "duration": duration, "fps": fps, "width": width, "height": height,
+                                       "video_codec": video["codec_name"], "audio_codec": audio["codec_name"]}
+        except Exception as exc:
+            errors.append(f"Failed to validate video {rel}: {exc}")
 
     status = "PASS" if not errors else "FAIL"
 
@@ -203,6 +213,10 @@ def run_validation(
         "verified_at": datetime.now(timezone.utc).isoformat(),
         "git_commit": get_git_commit(repo_root),
         "config_hash": compute_sha256(cfg_file),
+        "artifacts_dir": str(art_dir.resolve()),
+        "config_path": str(cfg_file.resolve()),
+        "source_hashes": {str(config["previewVideo"]["source"]): compute_sha256(repo_root / config["previewVideo"]["source"])}
+            if preview.get("enabled") and preview.get("source") and (repo_root / preview["source"]).is_file() else {},
         "assets_count": len(asset_records),
         "assets": asset_records,
         "errors": errors,

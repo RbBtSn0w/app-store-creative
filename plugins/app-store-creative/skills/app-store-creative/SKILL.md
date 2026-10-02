@@ -16,6 +16,10 @@ python3 <plugin-root>/scripts/app_store_creative.py --help
 python3 <plugin-root>/scripts/app_store_creative.py doctor --repo <repo>
 ```
 
+Run `doctor` against the installed plugin before starting. Missing scripts, schemas,
+templates, or Studio files indicate an incomplete distribution; use a complete
+local package or report the installation defect. Do not infer readiness from skills alone.
+
 Require the official Figma and ASC plugins for their respective external systems. Do not recreate their connectors, authentication, or API schemas locally.
 
 ## Agent-Native Workflow (v2.0 Recommended)
@@ -26,7 +30,7 @@ For fast, deterministic, local-first iteration without Figma dependencies:
 2. **Preview (Dev)**: Start the local studio on `localhost:3100` (`app_store_creative.py dev`) for instant human & Agent visual grounding.
 3. **Export**: Run `app_store_creative.py export` (add `--with-video` for App Preview videos) to generate 1:1 store-accurate, 24-bit RGB PNGs via headless Chrome.
 4. **Verify**: Run `app_store_creative.py verify` to check zero-network compliance and generate `.creative/release-lock.json`.
-5. **Publish**: Review diff with `app_store_creative.py publish` and execute ASC upload with `--confirm`.
+5. **Handoff**: Inspect `app_store_creative.py publish`; use `--confirm` to write `.creative/asc-handoff.json`. This prepares local artifacts only and grants no upload approval. Delegate uploads and remote audits to the official ASC plugin after separate human design and upload approvals.
 
 ```sh
 python3 <plugin-root>/scripts/app_store_creative.py dev

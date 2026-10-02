@@ -7,6 +7,18 @@ description: Plan, execute, recover, and audit human-approved App Store screensh
 
 Publish approved media only. Use the official ASC plugin for current authentication, ID resolution, screenshot, and video-preview operations; do not duplicate its connector or API implementation.
 
+## Agent-Native v2 Handoff
+
+Creative owns artifact preparation and publishing coordination. The official ASC
+plugin owns every external read, upload, and remote audit. For v2, inspect
+`publish`, then write `.creative/asc-handoff.json` with `publish --confirm`.
+The confirmation writes local files only and does not grant either approval.
+Pass its ordered files, hashes, target hints, preview locales, and poster-frame
+choice to the ASC agent. Require separate human design and upload approvals for
+the exact package. Resolve missing target IDs and poster-frame choices before
+remote mutation; report upload and fresh remote audit as separate ASC evidence.
+Never treat `awaiting_asc` as uploaded or submit a version for review.
+
 ## Publish
 
 1. Refuse CI environments and unattended execution.

@@ -192,12 +192,22 @@
         }
       }
     },
+    "publishing": {
+      "type": "object",
+      "description": "Optional target hints for the official ASC agent; never upload authorization.",
+      "properties": {
+        "appId": { "type": "string" },
+        "version": { "type": "string" },
+        "versionId": { "type": "string" }
+      }
+    },
     "previewVideo": {
       "type": "object",
       "description": "App Preview video production configuration",
       "properties": {
         "enabled": { "type": "boolean", "default": false },
         "source": { "type": "string", "description": "Relative path to raw screen recording" },
+        "posterFrameTimeCode": { "type": "string", "description": "Optional poster frame timecode for ASC review, for example 00:00:05:00." },
         "fps": { "type": "number", "default": 30 },
         "duration": { "type": "number", "default": 20 },
         "orientation": { "type": "string", "enum": ["portrait", "landscape"], "default": "portrait" },

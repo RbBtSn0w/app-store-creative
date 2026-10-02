@@ -82,15 +82,31 @@ python3 plugins/app-store-creative/scripts/app_store_creative.py verify
 # Generates immutable audit evidence: .creative/release-lock.json
 ```
 
-### 5. Safe ASC Publishing
-Verify the diff and hand off compliant assets to App Store Connect:
+### 5. Prepare an ASC Agent Handoff
+Inspect verified artifacts and prepare their local handoff for the official ASC plugin:
 ```bash
 # Dry-run inspection
 python3 plugins/app-store-creative/scripts/app_store_creative.py publish
 
-# Confirm handoff
+# Write .creative/asc-handoff.json (no remote upload)
 python3 plugins/app-store-creative/scripts/app_store_creative.py publish --confirm
 ```
+
+The handoff binds ordered screenshots and previews to their hashes, configuration,
+and release lock. `--confirm` confirms local handoff generation only: it never
+uploads, approves a design, or grants upload approval. The ASC agent resolves
+version/localization IDs, obtains separate human approvals, uploads through the
+official ASC plugin, and audits remote processing and order. Creative reports
+`uploaded: false` until ASC provides independent remote evidence.
+
+An enabled `previewVideo` requires an existing real UI recording and its final
+video. Missing files or unavailable media probes fail validation. `verify` checks
+the entire declared screenshot matrix, including after a partial export.
+
+Plugin distributors must copy the complete plugin tree, including `scripts/`,
+`schemas/`, `assets/`, and the built `studio/dist/`, rather than just `skills/`.
+Run `.github/package_plugin.py --output <package.zip>` after building Studio;
+it smoke-tests the extracted runtime before emitting a distributable package.
 
 ---
 
