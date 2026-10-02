@@ -201,6 +201,8 @@
         "fps": { "type": "number", "default": 30 },
         "duration": { "type": "number", "default": 20 },
         "orientation": { "type": "string", "enum": ["portrait", "landscape"], "default": "portrait" },
+        "width": { "type": "integer", "description": "Explicit output video width in pixels" },
+        "height": { "type": "integer", "description": "Explicit output video height in pixels" },
         "audio": {
           "type": "object",
           "properties": {

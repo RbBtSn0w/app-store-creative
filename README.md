@@ -6,7 +6,7 @@ preview releases.
 
 It replaces heavy external design software with an instant **Localhost Canvas**
 supporting connected panoramic cards, executes deterministic 1:1 headless
-rendering with zero network access, and enforces Apple Store Connect constraints
+rendering with zero network access, and enforces App Store Connect constraints
 before publishing.
 
 ## Key Capabilities (v2.0)

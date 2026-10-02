@@ -2,6 +2,7 @@ import json
 import struct
 import tempfile
 import unittest
+from unittest import mock
 import urllib.request
 import zlib
 from pathlib import Path
@@ -278,6 +279,77 @@ class TestV2Workflow(unittest.TestCase):
         self.assertGreaterEqual(len(res["errors"]), 2)
         self.assertTrue(any("zero.png" in err for err in res["errors"]))
         self.assertTrue(any("garbage.png" in err for err in res["errors"]))
+
+    def test_video_engine_dimensions_resolution_and_overrides(self):
+        import video_engine
+
+        # Case 1: Default iPhone portrait (886x1920)
+        cfg_iphone_portrait = self.root / "cfg_iphone_portrait.json"
+        cfg_iphone_portrait.write_text(json.dumps({
+            "targets": ["iphone_6_9"],
+            "previewVideo": {"enabled": True, "source": "dummy.mov", "orientation": "portrait"}
+        }))
+        # Case 2: Default iPhone landscape (1920x886)
+        cfg_iphone_landscape = self.root / "cfg_iphone_landscape.json"
+        cfg_iphone_landscape.write_text(json.dumps({
+            "targets": ["iphone_6_9"],
+            "previewVideo": {"enabled": True, "source": "dummy.mov", "orientation": "landscape"}
+        }))
+        # Case 3: Default Mac desktop target (1920x1080 - 16:9 Mac App Store standard)
+        cfg_mac_default = self.root / "cfg_mac_default.json"
+        cfg_mac_default.write_text(json.dumps({
+            "targets": ["mac_16_10"],
+            "previewVideo": {"enabled": True, "source": "dummy.mov", "orientation": "landscape"}
+        }))
+        # Case 4: Explicit width and height configuration overrides
+        cfg_custom = self.root / "cfg_custom.json"
+        cfg_custom.write_text(json.dumps({
+            "targets": ["iphone_6_9"],
+            "previewVideo": {"enabled": True, "source": "dummy.mov", "width": 1080, "height": 1920}
+        }))
+
+        # Mock dummy file
+        dummy_mov = self.root / "dummy.mov"
+        dummy_mov.write_bytes(b"dummy")
+
+        def fake_run(cmd, *args, **kwargs):
+            # Touch target output file so .stat() succeeds
+            out_file = self.root / "artifacts/preview/app_preview.mp4"
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            out_file.write_bytes(b"mock_mp4")
+            return unittest.mock.MagicMock()
+
+        # Test contract construction via mocking subprocess and produce_app_preview
+        with unittest.mock.patch("video_engine.build_command") as mock_build, \
+             unittest.mock.patch("video_engine.validate_output") as mock_validate, \
+             unittest.mock.patch("subprocess.run", side_effect=fake_run), \
+             unittest.mock.patch("shutil.which", return_value="/usr/bin/ffmpeg"):
+
+            mock_validate.return_value = {"streams": []}
+
+            # 1. iPhone Portrait
+            video_engine.produce_preview_from_config(self.root, config_path=cfg_iphone_portrait)
+            contract_iphone_p = mock_build.call_args[0][0]
+            self.assertEqual(contract_iphone_p["width"], 886)
+            self.assertEqual(contract_iphone_p["height"], 1920)
+
+            # 2. iPhone Landscape
+            video_engine.produce_preview_from_config(self.root, config_path=cfg_iphone_landscape)
+            contract_iphone_l = mock_build.call_args[0][0]
+            self.assertEqual(contract_iphone_l["width"], 1920)
+            self.assertEqual(contract_iphone_l["height"], 886)
+
+            # 3. Mac Landscape -> Strict 16:9 (1920x1080)
+            video_engine.produce_preview_from_config(self.root, config_path=cfg_mac_default)
+            contract_mac = mock_build.call_args[0][0]
+            self.assertEqual(contract_mac["width"], 1920)
+            self.assertEqual(contract_mac["height"], 1080)
+
+            # 4. Custom dimensions override
+            video_engine.produce_preview_from_config(self.root, config_path=cfg_custom)
+            contract_custom = mock_build.call_args[0][0]
+            self.assertEqual(contract_custom["width"], 1080)
+            self.assertEqual(contract_custom["height"], 1920)
 
 
 if __name__ == "__main__":

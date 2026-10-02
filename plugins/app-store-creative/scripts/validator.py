@@ -8,7 +8,7 @@ import shutil
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     from export_engine import TARGET_SPECS
@@ -114,7 +114,7 @@ def run_validation(
     config_path: Optional[Path] = None,
     artifacts_dir: Optional[Path] = None,
     write_lockfile: bool = True,
-) -> Dict[str, any]:
+) -> Dict[str, Any]:
     """Validate all assets in artifacts against App Store rules, with zero network dependencies."""
     cfg_file = config_path or (repo_root / "creative.config.json")
     if not cfg_file.exists():
@@ -123,7 +123,7 @@ def run_validation(
     art_dir = artifacts_dir or (repo_root / "artifacts")
 
     errors: List[str] = []
-    asset_records: Dict[str, any] = {}
+    asset_records: Dict[str, Any] = {}
 
     if not art_dir.exists() or not any(art_dir.iterdir()):
         errors.append(f"No artifacts found in: {art_dir}")
