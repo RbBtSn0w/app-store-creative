@@ -1,4 +1,4 @@
-import { BackgroundConfig, ThemeConfig } from './types';
+import { ThemeConfig } from './types';
 
 export type StylePresetId =
   | 'liquid_glass'

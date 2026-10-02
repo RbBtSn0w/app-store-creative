@@ -36,11 +36,11 @@ export const CardView: React.FC<CardViewProps> = ({
 
   const resolvedTheme: ThemeConfig = {
     ...theme,
-    headlineColor: theme.headlineColor || preset?.theme.headlineColor || '#FFFFFF',
-    subheadlineColor: theme.subheadlineColor || preset?.theme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
-    bezelStyle: theme.bezelStyle || preset?.theme.bezelStyle || 'natural',
-    shadow: theme.shadow || preset?.theme.shadow || 'dramatic',
-    background: card.customBackground || (theme.background?.colors?.length ? theme.background : (preset?.theme.background || theme.background)),
+    headlineColor: preset?.theme.headlineColor || theme.headlineColor || '#FFFFFF',
+    subheadlineColor: preset?.theme.subheadlineColor || theme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
+    bezelStyle: preset?.theme.bezelStyle || theme.bezelStyle || 'natural',
+    shadow: preset?.theme.shadow || theme.shadow || 'dramatic',
+    background: card.customBackground || (preset?.theme.background || theme.background),
   };
 
   // Compute background style

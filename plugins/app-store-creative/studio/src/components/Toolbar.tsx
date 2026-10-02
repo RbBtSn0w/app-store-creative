@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TargetDevice, TARGET_DIMENSIONS } from '../types';
-import { STYLE_PRESETS, StylePresetId } from '../stylePresets';
+import { STYLE_PRESETS } from '../stylePresets';
 import { COPY_FORMULAS, CopyFormula } from '../copyFormulas';
 import { Smartphone, Globe, Layers, Download, CheckCircle, Sparkles, Palette, Lightbulb, Save, Loader2 } from 'lucide-react';
 

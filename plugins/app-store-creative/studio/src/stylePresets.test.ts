@@ -41,10 +41,11 @@ describe('stylePresets definitions and contrast safety', () => {
       expect(bg).toBeDefined();
       expect(['solid', 'gradient']).toContain(bg?.type);
       expect(Array.isArray(bg?.colors)).toBe(true);
-      expect(bg?.colors.length).toBeGreaterThan(0);
+      expect(bg?.colors?.length).toBeGreaterThan(0);
 
       // Verify colors format (hex, rgb, or named)
-      for (const color of bg!.colors) {
+      const colors = bg?.colors || [];
+      for (const color of colors) {
         expect(typeof color).toBe('string');
         expect(color.length).toBeGreaterThan(0);
       }
@@ -64,7 +65,7 @@ describe('stylePresets definitions and contrast safety', () => {
   it('solid presets should have at least 1 color', () => {
     for (const preset of Object.values(STYLE_PRESETS)) {
       if (preset.theme.background?.type === 'solid') {
-        expect(preset.theme.background.colors.length).toBeGreaterThanOrEqual(1);
+        expect(preset.theme.background.colors?.length).toBeGreaterThanOrEqual(1);
       }
     }
   });
@@ -72,7 +73,7 @@ describe('stylePresets definitions and contrast safety', () => {
   it('gradient presets should have at least 2 colors and valid angle', () => {
     for (const preset of Object.values(STYLE_PRESETS)) {
       if (preset.theme.background?.type === 'gradient') {
-        expect(preset.theme.background.colors.length).toBeGreaterThanOrEqual(2);
+        expect(preset.theme.background.colors?.length).toBeGreaterThanOrEqual(2);
         expect(typeof preset.theme.background.angle).toBe('number');
       }
     }

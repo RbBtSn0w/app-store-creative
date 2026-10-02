@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { COPY_FORMULAS, CopyFormula } from './copyFormulas';
+import { COPY_FORMULAS } from './copyFormulas';
 
 describe('copyFormulas data structure and narrative coverage', () => {
   const requiredRoles = ['Hero', 'Feature', 'Benefit', 'Stats', 'CTA'];
