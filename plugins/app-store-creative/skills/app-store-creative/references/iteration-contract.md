@@ -57,7 +57,7 @@ and upload approval pointers while retaining their immutable history, and
 returns the task to `pending`:
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py invalidate \
+python3 <runtime-root>/scripts/app_store_creative.py invalidate \
   --repo <repo> \
   --run-id <run-id> \
   --task-id <task-id> \

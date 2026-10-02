@@ -5,6 +5,10 @@ description: Compose and localize App Store screenshot frames in Figma using rea
 
 # App Store Creative Design
 
+Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime`.
+All executable and template resources ship with the main orchestration skill.
+
+
 Use the official Figma plugin as the editable design system. Before any Figma operation, load its mandatory `figma-use` skill; load its generation skill when creating or materially restructuring designs. Never copy Figma connector code or authentication into this plugin.
 
 ## Agent-Native Design Workflow (v2.1)
@@ -59,8 +63,8 @@ Apply any of the 18 pre-configured visual style presets under `theme.stylePreset
 7. Record the Figma file/key, page and frame identifiers, input hashes, export mapping, and visual-review notes in the receipt; complete the task.
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
-python3 <plugin-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
+python3 <runtime-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
+python3 <runtime-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
 ```
 
 Do not promote exports yourself. The orchestrator may request design approval only after validation succeeds; that approval is not upload approval. The approval confirmation token is `APPROVE`.

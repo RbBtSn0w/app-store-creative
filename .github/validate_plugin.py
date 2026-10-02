@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "app-store-creative"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
-EXPECTED_PLUGIN_VERSION = "0.2.0"
+EXPECTED_PLUGIN_VERSION = "0.2.1"
 EXPECTED_TEMPLATE_VERSION = "0.1.0"
 
 
@@ -74,6 +74,16 @@ def main() -> None:
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL",
     }, "unexpected marketplace policy")
+
+    runtime = PLUGIN / "skills/app-store-creative/runtime"
+    for required in ("scripts/app_store_creative.py", "scripts/asc_handoff.py",
+                     "schemas/creative.config.schema.json", "assets/templates/creative.config.json",
+                     "studio/dist/index.html"):
+        require((runtime / required).is_file(), f"ADG skill payload missing {required}")
+    canonical = json.loads((PLUGIN / ".agents/.plugin.json").read_text())
+    require(canonical["version"] == EXPECTED_PLUGIN_VERSION, "stale canonical ADG version")
+    require(canonical.get("selectionDependencies", {}).get("skills", {}).get("skills") ==
+            ["app-store-creative"], "specialist installs must include the runtime owner")
 
     print(f"Validated {PLUGIN.relative_to(ROOT)} at version {EXPECTED_PLUGIN_VERSION}")
 

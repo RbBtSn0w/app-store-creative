@@ -5,6 +5,10 @@ description: Plan, execute, recover, and audit human-approved App Store screensh
 
 # App Store Creative Publisher
 
+Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime`.
+All executable and template resources ship with the main orchestration skill.
+
+
 Publish approved media only. Use the official ASC plugin for current authentication, ID resolution, screenshot, and video-preview operations; do not duplicate its connector or API implementation.
 
 ## Agent-Native v2 Handoff
@@ -31,10 +35,10 @@ Never treat `awaiting_asc` as uploaded or submit a version for review.
 8. Run the engine's local-integrity `audit`, then perform a separate fresh ASC read for remote order and completeness. Report local intent, successful writes, failures, local integrity, and remote truth separately.
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py upload-plan --repo <repo> --release <version> --app <app-id> --version-id <version-id> --output <plan-file>
-python3 <plugin-root>/scripts/app_store_creative.py approve --repo <repo> --release <version> --stage upload --approved-by <identity> --input-manifest <plan-file> --confirm APPROVE
-python3 <plugin-root>/scripts/app_store_creative.py upload --repo <repo> --release <version> --plan <plan-file> --confirm-approved UPLOAD
-python3 <plugin-root>/scripts/app_store_creative.py audit --repo <repo> --release <release.json> --app <app-id> --version-id <version-id>
+python3 <runtime-root>/scripts/app_store_creative.py upload-plan --repo <repo> --release <version> --app <app-id> --version-id <version-id> --output <plan-file>
+python3 <runtime-root>/scripts/app_store_creative.py approve --repo <repo> --release <version> --stage upload --approved-by <identity> --input-manifest <plan-file> --confirm APPROVE
+python3 <runtime-root>/scripts/app_store_creative.py upload --repo <repo> --release <version> --plan <plan-file> --confirm-approved UPLOAD
+python3 <runtime-root>/scripts/app_store_creative.py audit --repo <repo> --release <release.json> --app <app-id> --version-id <version-id>
 ```
 
 The `audit` command is deliberately local-only and returns

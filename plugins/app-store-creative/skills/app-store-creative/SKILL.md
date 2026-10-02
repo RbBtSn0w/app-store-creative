@@ -9,11 +9,11 @@ Coordinate specialists through the repository plan. Keep product pixels real, ar
 
 ## Preflight
 
-Resolve `<plugin-root>` from this skill's installed path. Before relying on a command, inspect its current interface:
+Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime` from this skill's installed path. Runtime resources live inside the declared main skill payload so ADG installs them. Before relying on a command, inspect its current interface:
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py --help
-python3 <plugin-root>/scripts/app_store_creative.py doctor --repo <repo>
+python3 <runtime-root>/scripts/app_store_creative.py --help
+python3 <runtime-root>/scripts/app_store_creative.py doctor --repo <repo>
 ```
 
 Run `doctor` against the installed plugin before starting. Missing scripts, schemas,
@@ -33,10 +33,10 @@ For fast, deterministic, local-first iteration without Figma dependencies:
 5. **Handoff**: Inspect `app_store_creative.py publish`; use `--confirm` to write `.creative/asc-handoff.json`. This prepares local artifacts only and grants no upload approval. Delegate uploads and remote audits to the official ASC plugin after separate human design and upload approvals.
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py dev
-python3 <plugin-root>/scripts/app_store_creative.py export --with-video
-python3 <plugin-root>/scripts/app_store_creative.py verify
-python3 <plugin-root>/scripts/app_store_creative.py publish --confirm
+python3 <runtime-root>/scripts/app_store_creative.py dev
+python3 <runtime-root>/scripts/app_store_creative.py export --with-video
+python3 <runtime-root>/scripts/app_store_creative.py verify
+python3 <runtime-root>/scripts/app_store_creative.py publish --confirm
 ```
 
 ## Multi-Agent Manifest Workflow (Legacy v1 Contract)
@@ -51,10 +51,10 @@ python3 <plugin-root>/scripts/app_store_creative.py publish --confirm
 When a follow-up changes source inputs for an unpromoted task, read [iteration-contract.md](references/iteration-contract.md), invalidate that task, and re-run only the proved-dependent work. Preserve unaffected task evidence. Create a new run instead when release-manifest task fields changed or any affected task was promoted.
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py init --repo <repo>
-python3 <plugin-root>/scripts/app_store_creative.py plan --repo <repo> --release <version> --run-id <run-id>
-python3 <plugin-root>/scripts/app_store_creative.py status --repo <repo> --run-id <run-id>
-python3 <plugin-root>/scripts/app_store_creative.py verify --repo <repo> --release <version> --run-id <run-id>
+python3 <runtime-root>/scripts/app_store_creative.py init --repo <repo>
+python3 <runtime-root>/scripts/app_store_creative.py plan --repo <repo> --release <version> --run-id <run-id>
+python3 <runtime-root>/scripts/app_store_creative.py status --repo <repo> --run-id <run-id>
+python3 <runtime-root>/scripts/app_store_creative.py verify --repo <repo> --release <version> --run-id <run-id>
 ```
 
 Never upload from CI. Never submit an app version for review. Report local validation, human approvals, upload outcome, and fresh ASC state as separate facts.

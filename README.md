@@ -103,8 +103,13 @@ An enabled `previewVideo` requires an existing real UI recording and its final
 video. Missing files or unavailable media probes fail validation. `verify` checks
 the entire declared screenshot matrix, including after a partial export.
 
-Plugin distributors must copy the complete plugin tree, including `scripts/`,
-`schemas/`, `assets/`, and the built `studio/dist/`, rather than just `skills/`.
+The complete executable payload lives under
+`skills/app-store-creative/runtime/` (scripts, schemas, templates, and Studio dist).
+ADG's declared-component filtering preserves this subtree. The canonical ADG
+manifest requires the main skill when installing any specialist, so partial
+skill installs retain the runtime. Source-tree `scripts/`, `schemas/`, `assets/`,
+and `studio/dist/` are compatibility symlinks; installed consumers use
+`skills/app-store-creative/runtime/scripts/app_store_creative.py`.
 Run `.github/package_plugin.py --output <package.zip>` after building Studio;
 it smoke-tests the extracted runtime before emitting a distributable package.
 

@@ -21,19 +21,20 @@ def main():
         staged = Path(scratch) / "app-store-creative"
         shutil.copytree(args.plugin_root, staged, ignore=shutil.ignore_patterns(
             "node_modules", "__pycache__", "*.pyc", ".DS_Store"))
+        runtime = staged / "skills/app-store-creative/runtime"
         for required in ("scripts/app_store_creative.py", "scripts/asc_handoff.py",
                          "schemas/creative.config.schema.json", "assets/templates/creative.config.json",
-                         "studio/dist/index.html", "skills/app-store-creative/SKILL.md"):
-            if not (staged / required).is_file():
+                         "studio/dist/index.html"):
+            if not (runtime / required).is_file():
                 raise SystemExit(f"Incomplete plugin package: missing {required}")
-        subprocess.run([sys.executable, str(staged / "scripts/app_store_creative.py"), "--help"],
+        subprocess.run([sys.executable, str(runtime / "scripts/app_store_creative.py"), "--help"],
                        cwd=scratch, check=True, capture_output=True)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         archive = shutil.make_archive(str(Path(scratch) / "package"), "zip", scratch, staged.name)
         extracted = Path(scratch) / "extracted"
         with zipfile.ZipFile(archive) as bundle:
             bundle.extractall(extracted)
-        subprocess.run([sys.executable, str(extracted / staged.name / "scripts/app_store_creative.py"),
+        subprocess.run([sys.executable, str(extracted / staged.name / "skills/app-store-creative/runtime/scripts/app_store_creative.py"),
                         "doctor", "--repo", scratch], cwd=scratch, check=True, capture_output=True)
         shutil.copyfile(archive, args.output)
         print(f"Validated complete plugin package: {args.output}")

@@ -9,7 +9,7 @@ export default defineConfig({
     host: true,
   },
   build: {
-    outDir: 'dist',
+    outDir: '../skills/app-store-creative/runtime/studio/dist',
     emptyOutDir: true,
   },
 });

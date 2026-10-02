@@ -34,8 +34,8 @@ No downstream artifact retroactively proves an earlier gate. Never treat a succe
 ## Approval commands
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py approve --repo <repo> --release <version> --stage design --approved-by <identity> --input-manifest <manifest-file> --confirm APPROVE
-python3 <plugin-root>/scripts/app_store_creative.py promote --repo <repo> --release <release.json> --input-dir <validated-export-root> --confirm-approved PROMOTE
+python3 <runtime-root>/scripts/app_store_creative.py approve --repo <repo> --release <version> --stage design --approved-by <identity> --input-manifest <manifest-file> --confirm APPROVE
+python3 <runtime-root>/scripts/app_store_creative.py promote --repo <repo> --release <release.json> --input-dir <validated-export-root> --confirm-approved PROMOTE
 ```
 
 The validated export root must preserve each task's relative `output` path.

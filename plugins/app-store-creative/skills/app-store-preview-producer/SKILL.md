@@ -5,6 +5,10 @@ description: Produce App Store Preview videos from deterministic recordings of r
 
 # App Store Preview Producer
 
+Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime`.
+All executable and template resources ship with the main orchestration skill.
+
+
 Build previews around recordings of the real running app. Decorative titles and transitions may be designed; product interaction pixels may not be mocked or regenerated.
 
 ## Produce
@@ -18,9 +22,9 @@ Build previews around recordings of the real running app. Decorative titles and 
 7. Record source takes, commands, hashes, media probe output, and acceptance-snapshot path in the receipt; complete the task.
 
 ```sh
-python3 <plugin-root>/scripts/produce_app_preview.py --contract <contract-file> --output <preview-file>
-python3 <plugin-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
-python3 <plugin-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
+python3 <runtime-root>/scripts/produce_app_preview.py --contract <contract-file> --output <preview-file>
+python3 <runtime-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
+python3 <runtime-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
 ```
 
 Run without `--execute` to inspect the derived media command. Add `--execute` only after reviewing the contract and command.

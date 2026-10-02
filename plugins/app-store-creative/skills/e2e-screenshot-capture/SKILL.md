@@ -5,6 +5,10 @@ description: Capture deterministic, named screenshots of real product UI through
 
 # E2E Screenshot Capture
 
+Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime`.
+All executable and template resources ship with the main orchestration skill.
+
+
 Preserve the established contract: screenshot pixels must come from the running product UI, not a recreation, mock, Figma redraw, or generated image.
 
 ## Capture
@@ -18,8 +22,8 @@ Preserve the established contract: screenshot pixels must come from the running 
 7. Write a receipt listing command, environment, source revision, checkpoint-to-file mapping, dimensions, and hashes; then complete the task.
 
 ```sh
-python3 <plugin-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
-python3 <plugin-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
+python3 <runtime-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
+python3 <runtime-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
 ```
 
 Do not claim success from a focused test alone when the product boundary requires a real window, device, permission, or cross-process interaction. Preserve raw captures; downstream design may frame or annotate them but must not alter their UI content.
