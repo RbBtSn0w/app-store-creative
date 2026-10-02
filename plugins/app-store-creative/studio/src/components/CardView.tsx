@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardConfig, TargetDevice, ThemeConfig } from '../types';
+import { CardConfig, TargetDevice, ThemeConfig, getTargetScalingInfo } from '../types';
 import { DeviceFrame } from './DeviceFrame';
 import { STYLE_PRESETS, StylePresetId } from '../stylePresets';
 
@@ -93,12 +93,14 @@ export const CardView: React.FC<CardViewProps> = ({
   };
 
   // Compute virtual base canvas dimensions and physical export scale factor
-  const isMac = target.startsWith('mac_');
-  const isTablet = target.startsWith('ipad_') || target.startsWith('google_play_tablet_');
-  const baseCanvasWidth = isFeatureGraphic ? 600 : isMac ? 720 : isTablet ? 480 : 400;
-  const targetDim = TARGET_DIMENSIONS[target] || TARGET_DIMENSIONS.iphone_6_9;
-  const baseCanvasHeight = Math.round(baseCanvasWidth * (targetDim.height / targetDim.width));
-  const exportScale = isExport ? targetDim.width / baseCanvasWidth : 1;
+  const {
+    baseCanvasWidth,
+    baseCanvasHeight,
+    exportScale,
+    physicalWidth,
+    physicalHeight,
+    isMac,
+  } = getTargetScalingInfo(target);
 
   const cardContent = (
     <div
@@ -182,8 +184,8 @@ export const CardView: React.FC<CardViewProps> = ({
       <div
         className="w-full h-full overflow-hidden flex items-center justify-center"
         style={{
-          width: `${targetDim.width}px`,
-          height: `${targetDim.height}px`,
+          width: `${physicalWidth}px`,
+          height: `${physicalHeight}px`,
         }}
       >
         <div

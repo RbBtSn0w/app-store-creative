@@ -51,7 +51,7 @@ def produce_preview_from_config(
     # Dimensions for portrait vs landscape:
     # Mac App Store strictly requires 16:9 (1920x1080) for desktop landscape videos
     # iPhone App Previews use 19.5:9 (886x1920 portrait or 1920x886 landscape)
-    default_width = 886 if orientation == "portrait" else (1920 if is_mac else 1920)
+    default_width = 886 if orientation == "portrait" else 1920
     default_height = 1920 if orientation == "portrait" else (1080 if is_mac else 886)
 
     width = int(preview_cfg.get("width", default_width))

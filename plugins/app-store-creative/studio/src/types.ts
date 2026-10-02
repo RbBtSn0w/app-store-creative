@@ -42,6 +42,38 @@ export const TARGET_DIMENSIONS: Record<TargetDevice, DeviceDimensions> = {
   google_play_feature_graphic: { width: 1024, height: 500, displayName: 'Google Play Feature Graphic', aspectRatio: '1024/500' },
 };
 
+export interface TargetScalingInfo {
+  baseCanvasWidth: number;
+  baseCanvasHeight: number;
+  exportScale: number;
+  physicalWidth: number;
+  physicalHeight: number;
+  isMac: boolean;
+  isTablet: boolean;
+  isFeatureGraphic: boolean;
+}
+
+export function getTargetScalingInfo(target: TargetDevice): TargetScalingInfo {
+  const isFeatureGraphic = target === 'google_play_feature_graphic';
+  const isMac = target.startsWith('mac_');
+  const isTablet = target.startsWith('ipad_') || target.startsWith('google_play_tablet_');
+  const baseCanvasWidth = isFeatureGraphic ? 600 : isMac ? 720 : isTablet ? 480 : 400;
+  const targetDim = TARGET_DIMENSIONS[target] || TARGET_DIMENSIONS.iphone_6_9;
+  const baseCanvasHeight = Math.round(baseCanvasWidth * (targetDim.height / targetDim.width));
+  const exportScale = targetDim.width / baseCanvasWidth;
+
+  return {
+    baseCanvasWidth,
+    baseCanvasHeight,
+    exportScale,
+    physicalWidth: targetDim.width,
+    physicalHeight: targetDim.height,
+    isMac,
+    isTablet,
+    isFeatureGraphic,
+  };
+}
+
 export interface BackgroundConfig {
   type: 'solid' | 'gradient' | 'mesh' | 'image';
   colors?: string[];
