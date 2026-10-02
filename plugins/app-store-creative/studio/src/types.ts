@@ -143,5 +143,5 @@ export interface CreativeConfig {
       addSilentTrackIfMissing?: boolean;
     };
   };
-  localizations?: Record<string, Record<string, { headline: string; subheadline?: string }>>;
+  localizations?: Record<string, Record<string, { headline: string; subheadline?: string; screenshot?: string }>>;
 }

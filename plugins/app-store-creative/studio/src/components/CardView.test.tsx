@@ -34,3 +34,12 @@ it('uses side composition only for native Mac layouts', () => {
   expect(phone).not.toContain('data-native-window="true"');
   expect(phone).not.toContain('text-left w-[240px]');
 });
+
+it('renders the localized product capture with the localized headline', () => {
+  const markup = renderToStaticMarkup(<CardView
+    card={{ id: 'history', headline: 'Find clips', screenshot: '/en.png' }} index={0}
+    target="mac_16_10" theme={{ background: { type: 'solid', colors: ['#000000'] } }}
+    localizedText={{ headline: 'Find clips in Chinese', screenshot: '/zh.png' }} isExport />);
+  expect(markup).toContain('/zh.png');
+  expect(markup).not.toContain('/en.png');
+});

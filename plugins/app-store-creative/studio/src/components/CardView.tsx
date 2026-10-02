@@ -10,7 +10,7 @@ interface CardViewProps {
   target: TargetDevice;
   theme: ThemeConfig;
   locale?: string;
-  localizedText?: { headline: string; subheadline?: string };
+  localizedText?: { headline: string; subheadline?: string; screenshot?: string };
   isExport?: boolean;
   connected?: boolean;
   onUpdateText?: (field: 'headline' | 'subheadline', value: string) => void;
@@ -182,7 +182,7 @@ export const CardView: React.FC<CardViewProps> = ({
           nativeWindow={isNativeMac}
           maxWidth={isNativeSide ? 320 : 540}
           maxHeight={isNativeSide ? 360 : 280}
-          screenshot={card.screenshot}
+          screenshot={localizedText?.screenshot || card.screenshot}
           offset={computedOffset}
           theme={resolvedTheme}
           target={target}

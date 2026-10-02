@@ -37,6 +37,12 @@ These layouts preserve the captured window's proportions without adding an
 artificial display bezel. Use side layouts for narrow floating panels and
 alternate composition across the deck. Other layouts keep their existing frames.
 
+Localized product captures can be declared with
+`localizations[locale][cardId].screenshot`, alongside headline and subheadline.
+The locale-specific path takes precedence over `cards[].screenshot` in both
+Studio and headless export. Use real captures in that language; translating only
+the surrounding marketing copy does not localize the product UI.
+
 ### 2. Weak vs. Better Headline Conversion
 
 | Weak (Documents Technical UI) | Better (Sells Outcome / Feeling) |

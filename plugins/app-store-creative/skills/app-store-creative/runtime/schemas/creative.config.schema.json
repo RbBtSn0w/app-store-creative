@@ -227,14 +227,15 @@
     },
     "localizations": {
       "type": "object",
-      "description": "Localized strings mapping: locale -> card_id -> { headline, subheadline }",
+      "description": "Localized copy and optional source capture: locale -> card_id -> { headline, subheadline, screenshot }",
       "additionalProperties": {
         "type": "object",
         "additionalProperties": {
           "type": "object",
           "properties": {
             "headline": { "type": "string" },
-            "subheadline": { "type": "string" }
+            "subheadline": { "type": "string" },
+            "screenshot": { "type": "string", "description": "Relative path to the product capture for this locale" }
           }
         }
       }
