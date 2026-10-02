@@ -22,3 +22,15 @@ describe('connected screenshot backgrounds', () => {
     expect(render(1, true, true)).toContain('data-background-track="isolated"');
   });
 });
+
+it('uses side composition only for native Mac layouts', () => {
+  const card = { id: 'quick-paste', headline: 'Paste without switching', screenshot: '/panel.png', layout: 'mac_native_left' as const };
+  const theme = { background: { type: 'solid' as const, colors: ['#111111'] } };
+  const mac = renderToStaticMarkup(<CardView card={card} index={0} target="mac_16_10" theme={theme} isExport />);
+  expect(mac).toContain('data-native-window="true"');
+  expect(mac).toContain('max-height:360px');
+  expect(mac).toContain('text-left w-[240px]');
+  const phone = renderToStaticMarkup(<CardView card={card} index={0} target="iphone_6_9" theme={theme} isExport />);
+  expect(phone).not.toContain('data-native-window="true"');
+  expect(phone).not.toContain('text-left w-[240px]');
+});

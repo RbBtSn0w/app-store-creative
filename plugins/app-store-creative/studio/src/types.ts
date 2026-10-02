@@ -106,6 +106,9 @@ export interface CardConfig {
   subheadline?: string;
   screenshot?: string;
   layout?:
+    | 'mac_native_hero'
+    | 'mac_native_left'
+    | 'mac_native_right'
     | 'phone_bottom'
     | 'phone_center'
     | 'phone_tilt_left'

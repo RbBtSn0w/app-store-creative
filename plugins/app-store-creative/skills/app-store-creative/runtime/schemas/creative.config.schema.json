@@ -166,7 +166,10 @@
               "phone_floating_isometric",
               "phone_perspective_hero",
               "split_dual_perspective",
-              "feature_graphic_banner"
+              "feature_graphic_banner",
+              "mac_native_hero",
+              "mac_native_left",
+              "mac_native_right"
             ],
             "default": "phone_bottom"
           },

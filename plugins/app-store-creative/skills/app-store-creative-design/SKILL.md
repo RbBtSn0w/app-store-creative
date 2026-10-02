@@ -31,6 +31,12 @@ inside their own card; cross-card product or text placement is not supported.
 A card with `customBackground` uses its own independent background.
 Solid presets remain solid without ambient colored glows.
 
+For Mac captures, select `mac_native_hero` for a centered window under the
+headline, or `mac_native_left` / `mac_native_right` for copy on the left/right.
+These layouts preserve the captured window's proportions without adding an
+artificial display bezel. Use side layouts for narrow floating panels and
+alternate composition across the deck. Other layouts keep their existing frames.
+
 ### 2. Weak vs. Better Headline Conversion
 
 | Weak (Documents Technical UI) | Better (Sells Outcome / Feeling) |

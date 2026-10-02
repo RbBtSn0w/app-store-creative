@@ -13,3 +13,14 @@ describe('Mac product-window framing', () => {
     expect(markup).toContain('object-contain');
   });
 });
+
+it('preserves a native floating window without a wide artificial bezel', () => {
+  const markup = renderToStaticMarkup(
+    <DeviceFrame target="mac_16_10" screenshot="/quick-paste.png" nativeWindow maxWidth={320} maxHeight={360} />,
+  );
+  expect(markup).toContain('data-native-window="true"');
+  expect(markup).toContain('max-width:320px');
+  expect(markup).toContain('max-height:360px');
+  expect(markup).not.toContain('bg-[#121214]');
+  expect(markup).not.toContain('p-[8px]');
+});

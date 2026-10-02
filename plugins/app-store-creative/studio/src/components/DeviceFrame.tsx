@@ -7,6 +7,9 @@ interface DeviceFrameProps {
   theme?: ThemeConfig;
   target?: TargetDevice;
   className?: string;
+  nativeWindow?: boolean;
+  maxWidth?: number;
+  maxHeight?: number;
 }
 
 export const DeviceFrame: React.FC<DeviceFrameProps> = ({
@@ -15,6 +18,9 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
   theme,
   target = 'iphone_6_9',
   className = '',
+  nativeWindow = false,
+  maxWidth = 540,
+  maxHeight = 280,
 }) => {
   const { x = 0, y = 0, scale = 1, rotate = 0, rotateX = 0, rotateY = 0 } = offset;
   const shadowStyle = theme?.shadow || 'dramatic';
@@ -59,6 +65,17 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
   const isTablet = target.startsWith('ipad_') || target.startsWith('google_play_tablet_');
   const isMac = target.startsWith('mac_');
   const isAndroidPhone = target === 'google_play_phone';
+
+  if (isMac && nativeWindow && screenshot) {
+    return (
+      <div data-native-window="true"
+        className={`relative select-none ${getShadow()} ${className}`}
+        style={{ transform: transform3d, transformOrigin: 'center center' }}>
+        <img src={screenshot} alt="Mac App Screenshot" className="block object-contain"
+          style={{ width: 'auto', height: 'auto', maxWidth, maxHeight }} />
+      </div>
+    );
+  }
 
   // RENDER MAC FRAME
   if (isMac) {

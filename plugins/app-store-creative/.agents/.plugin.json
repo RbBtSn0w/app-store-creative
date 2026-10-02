@@ -1,7 +1,7 @@
 {
   "schemaVersion": "adg.plugin/v1",
   "name": "app-store-creative",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Agent-native Localhost Studio & release engine to plan, produce, validate, and publish reproducible App Store creative releases.",
   "license": "MIT",
   "homepage": "https://github.com/RbBtSn0w/app-store-creative",

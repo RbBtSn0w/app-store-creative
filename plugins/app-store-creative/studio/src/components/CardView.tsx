@@ -30,6 +30,8 @@ export const CardView: React.FC<CardViewProps> = ({
   const headline = localizedText?.headline || card.headline;
   const subheadline = localizedText?.subheadline || card.subheadline;
   const layout = card.layout || 'phone_bottom';
+  const isNativeMac = target.startsWith('mac_') && layout.startsWith('mac_native_');
+  const isNativeSide = isNativeMac && layout !== 'mac_native_hero';
 
   // Resolve theme with style preset if specified
   const preset = theme.stylePreset && (theme.stylePreset in STYLE_PRESETS)
@@ -69,6 +71,10 @@ export const CardView: React.FC<CardViewProps> = ({
       return 'flex-row items-center justify-between px-10 py-6';
     }
     switch (layout) {
+      case 'mac_native_left':
+        return target.startsWith('mac_') ? 'flex-row items-center justify-between px-8 gap-8' : 'justify-between items-center';
+      case 'mac_native_right':
+        return target.startsWith('mac_') ? 'flex-row-reverse items-center justify-between px-8 gap-8' : 'justify-between items-center';
       case 'phone_center':
         return 'justify-center items-center py-8';
       case 'phone_bleed':
@@ -113,7 +119,7 @@ export const CardView: React.FC<CardViewProps> = ({
     <div
       data-card-id={card.id}
       data-card-index={index}
-      className={`relative flex ${isFeatureGraphic ? 'flex-row items-center justify-between p-8' : 'flex-col'} overflow-hidden text-center select-none shadow-2xl transition-all duration-300 ${
+      className={`relative flex ${isFeatureGraphic ? 'flex-row items-center justify-between p-8' : isNativeSide ? '' : 'flex-col'} overflow-hidden text-center select-none shadow-2xl transition-all duration-300 ${
         isExport ? '' : 'rounded-[32px] ring-1 ring-white/10'
       } ${getLayoutClasses()}`}
       style={{
@@ -139,7 +145,7 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Top Marketing Copy Section */}
-      <div className={`relative z-20 ${isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
+      <div className={`relative z-20 ${isNativeSide ? 'text-left w-[240px] shrink-0' : isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
         <h2
           contentEditable={!isExport && !!onUpdateText}
           suppressContentEditableWarning
@@ -171,8 +177,11 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Device Frame Display Area */}
-      <div className={`relative z-10 ${isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-4' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
+      <div className={`relative z-10 ${isNativeSide ? 'flex-1 h-full min-w-0 flex items-center justify-center' : isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-4' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
         <DeviceFrame
+          nativeWindow={isNativeMac}
+          maxWidth={isNativeSide ? 320 : 540}
+          maxHeight={isNativeSide ? 360 : 280}
           screenshot={card.screenshot}
           offset={computedOffset}
           theme={resolvedTheme}
