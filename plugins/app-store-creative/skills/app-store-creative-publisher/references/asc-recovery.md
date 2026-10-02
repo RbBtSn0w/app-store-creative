@@ -24,18 +24,23 @@ Report the approved local plan, attempted operations, successful writes, failed 
 
 ## Preview delivery versus video processing
 
-A preview upload can report `assetDeliveryState.state: COMPLETE` while Apple has
-not yet generated its playable video or poster image. Treat this as successful
+The deprecated `assetDeliveryState` field can report `COMPLETE` while Apple has
+not yet generated a playable video. Treat this as successful
 file delivery, not proof that preview processing is complete.
 
 After delivery, inspect the current preview resource through official ASC:
 
 - Bind `sourceFileChecksum` to the approved local file and verify the configured
   poster-frame timecode.
-- Inspect `videoDeliveryState` and `previewFrameImage` when the installed ASC CLI
-  exposes them. A missing field is unknown, not success.
-- Check for a nonempty playable `videoUrl` and a generated preview image. An empty
-  image template with zero dimensions is not visual acceptance evidence.
+- Prefer `videoDeliveryState` and `previewFrameImage` when the installed ASC CLI
+  exposes them. Apple deprecated `assetDeliveryState` and `previewImage` in API
+  3.7. A missing modern field is unknown, not success or failure. An empty legacy
+  `previewImage` must not be treated as evidence that processing is pending.
+- Verify the returned `videoUrl` is playable, with expected duration and valid
+  video/audio streams. Report poster-image readiness separately. If modern image
+  state is unavailable, retain that limitation; verify the acknowledged
+  poster-frame timecode and inspect that interval in the approved video instead
+  of indefinitely polling the deprecated image field.
 - `asc video-previews download --id <preview-id> --output <new-local-path>` can
   verify that ASC exposes a playable URL when list output is incomplete. A
   `preview has no videoUrl` response means playback readiness remains unverified;
@@ -46,3 +51,7 @@ Report delivery, video processing, and poster-image readiness separately. Do not
 close the creative release while required playback readiness remains unverified.
 Apple notes that preview processing can take up to 24 hours:
 https://developer.apple.com/help/app-store-connect/manage-app-information/upload-app-previews-and-screenshots
+
+
+Apple's field migration reference:
+https://developer.apple.com/documentation/appstoreconnectapi/app-store-connect-api-3-7-release-notes
