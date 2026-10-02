@@ -1,0 +1,95 @@
+{
+  "$schema": "../../schemas/creative.config.schema.json",
+  "project": {
+    "id": "habit-flow",
+    "name": "HabitFlow",
+    "bundleId": "com.example.habitflow",
+    "defaultLocale": "en-US",
+    "locales": ["en-US", "zh-Hans"]
+  },
+  "targets": [
+    "iphone_6_9",
+    "iphone_6_5"
+  ],
+  "theme": {
+    "background": {
+      "type": "gradient",
+      "colors": ["#0A0E1A", "#1E1B4B", "#311042"],
+      "angle": 145
+    },
+    "fontFamily": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
+    "headlineColor": "#FFFFFF",
+    "subheadlineColor": "rgba(255, 255, 255, 0.7)",
+    "bezelStyle": "natural",
+    "shadow": "dramatic"
+  },
+  "connectedTrack": true,
+  "cards": [
+    {
+      "id": "01-hero",
+      "headline": "Build Habits That Last",
+      "subheadline": "Effortless tracking designed for Apple platforms",
+      "screenshot": "capture/01-dashboard.png",
+      "layout": "phone_bottom",
+      "deviceOffset": {
+        "x": 0,
+        "y": 40,
+        "scale": 1.05,
+        "rotate": 0
+      }
+    },
+    {
+      "id": "02-analytics",
+      "headline": "Insights at a Glance",
+      "subheadline": "Interactive streaks and smart completion heatmaps",
+      "screenshot": "capture/02-analytics.png",
+      "layout": "phone_tilt_left",
+      "deviceOffset": {
+        "x": -20,
+        "y": 60,
+        "scale": 1.0,
+        "rotate": -5
+      }
+    },
+    {
+      "id": "03-widgets",
+      "headline": "Right on Your Lock Screen",
+      "subheadline": "StandBy mode and interactive widgets ready",
+      "screenshot": "capture/03-widgets.png",
+      "layout": "phone_tilt_right",
+      "deviceOffset": {
+        "x": 20,
+        "y": 60,
+        "scale": 1.0,
+        "rotate": 5
+      }
+    }
+  ],
+  "previewVideo": {
+    "enabled": false,
+    "source": "capture/preview-recording.mov",
+    "fps": 30,
+    "duration": 20,
+    "orientation": "portrait",
+    "audio": {
+      "required": false,
+      "addSilentTrackIfMissing": true
+    }
+  },
+  "localizations": {
+    "zh-Hans": {
+      "01-hero": {
+        "headline": "培养持久好习惯",
+        "subheadline": "专为 Apple 生态打造的极简习惯追踪"
+      },
+      "02-analytics": {
+        "headline": "数据洞察，一目了然",
+        "subheadline": "连续打卡天数与智能完成度热力图"
+      },
+      "03-widgets": {
+        "headline": "锁屏微件，触手可及",
+        "subheadline": "支持待机显示与交互式桌面小组件"
+      }
+    }
+  }
+}

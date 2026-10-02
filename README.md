@@ -1,19 +1,29 @@
 # App Store Creative
 
-App Store Creative is a local-first Codex plugin for planning, producing,
-validating, and publishing reproducible App Store screenshot and preview
-releases.
+App Store Creative is an Agent-native, local-first release engine and Studio for
+producing, validating, and publishing reproducible App Store screenshot and
+preview releases.
 
-The plugin keeps creative intent in versioned project and release manifests.
-Its validation path is deterministic and requires no network access, making the
-same release gate suitable for local development and CI.
+It replaces heavy external design software with an instant **Localhost Canvas**
+supporting connected panoramic cards, executes deterministic 1:1 headless
+rendering with zero network access, and enforces Apple Store Connect constraints
+before publishing.
+
+## Key Capabilities (v2.0)
+
+- **Localhost Studio Canvas**: Pre-bundled Vite + React studio with real Apple device bezels (iPhone 16 Pro Max, iPad, Mac) and hot reload.
+- **Connected Track Support**: Continuous panoramic canvas allowing cards, decorative gradients, and tilted phones to span across screen boundaries.
+- **Headless 1:1 Store Rendering**: Uses system Chrome for deterministic, zero-tolerance resolution export (1320x2868, 1290x2796, etc.) with 24-bit RGB and no alpha channel.
+- **Zero-Network Release Validator**: Strictly verifies dimensions, format, file sizes, and generates immutable `.creative/release-lock.json` evidence.
+- **App Preview Video Synthesizer**: Native FFmpeg automation producing compliant H.264 stereo AAC App Preview videos (15-30s).
+- **ASC Publishing Handoff**: Connects safely with the official App Store Connect plugin (`asc`).
 
 ## Prerequisites
 
-Install the official Figma plugin for design-source work and the ASC plugin for
-App Store Connect lookup and publishing handoff. App Store Creative does not
-declare either integration in its manifest: every external read or write stays
-explicit and attributable to the corresponding plugin.
+- **Python 3.10+**
+- **Google Chrome** (or Chromium / Brave / Edge) for headless pixel exports.
+- **FFmpeg & ffprobe** (optional, only required if generating App Preview videos).
+- **ASC plugin / CLI** (optional, for remote App Store Connect publishing).
 
 ## Install from this repository
 
@@ -40,7 +50,51 @@ visible during review. Vendor the matching local runtime at
 `APP_STORE_CREATIVE_CLI` to that exact local version. The wrapper never installs
 dependencies or contacts the network.
 
-## Stable CLI contract
+## Agent-Native Workflow (v2.0)
+
+In v2.0, the entire release intent is declared in a single `creative.config.json`. No Figma or external design accounts are required.
+
+### 1. Initialize or copy the config
+Copy the template to your repository:
+```bash
+cp plugins/app-store-creative/assets/templates/creative.config.json ./creative.config.json
+```
+
+### 2. Live Preview with Localhost Studio
+Start the Studio server to interactively preview your cards, test continuous panoramic layouts, and inspect multi-locale typography:
+```bash
+python3 plugins/app-store-creative/scripts/app_store_creative.py dev
+# Opens http://localhost:3100
+```
+
+### 3. Headless 1:1 Pixel Export
+Export store-ready, 24-bit RGB PNGs across all target devices and locales in seconds:
+```bash
+python3 plugins/app-store-creative/scripts/app_store_creative.py export
+# With App Preview video:
+python3 plugins/app-store-creative/scripts/app_store_creative.py export --with-video
+```
+
+### 4. Zero-Network Release Verification
+Verify that all generated assets strictly adhere to Apple App Store Connect specifications:
+```bash
+python3 plugins/app-store-creative/scripts/app_store_creative.py verify
+# Generates immutable audit evidence: .creative/release-lock.json
+```
+
+### 5. Safe ASC Publishing
+Verify the diff and hand off compliant assets to App Store Connect:
+```bash
+# Dry-run inspection
+python3 plugins/app-store-creative/scripts/app_store_creative.py publish
+
+# Confirm handoff
+python3 plugins/app-store-creative/scripts/app_store_creative.py publish --confirm
+```
+
+---
+
+## Stable CLI Contract (v1 Legacy Compatibility)
 
 Every `--release` argument is a path to a JSON release manifest, not an inline
 JSON value. The approval boundaries require exact, case-sensitive confirmation

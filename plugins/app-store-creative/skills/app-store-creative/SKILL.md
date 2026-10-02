@@ -18,7 +18,24 @@ python3 <plugin-root>/scripts/app_store_creative.py doctor --repo <repo>
 
 Require the official Figma and ASC plugins for their respective external systems. Do not recreate their connectors, authentication, or API schemas locally.
 
-## Run the workflow
+## Agent-Native Workflow (v2.0 Recommended)
+
+For fast, deterministic, local-first iteration without Figma dependencies:
+
+1. **Declare**: Read or create `creative.config.json` with project info, device targets, visual theme, and cards.
+2. **Preview (Dev)**: Start the local studio on `localhost:3100` (`app_store_creative.py dev`) for instant human & Agent visual grounding.
+3. **Export**: Run `app_store_creative.py export` (add `--with-video` for App Preview videos) to generate 1:1 store-accurate, 24-bit RGB PNGs via headless Chrome.
+4. **Verify**: Run `app_store_creative.py verify` to check zero-network compliance and generate `.creative/release-lock.json`.
+5. **Publish**: Review diff with `app_store_creative.py publish` and execute ASC upload with `--confirm`.
+
+```sh
+python3 <plugin-root>/scripts/app_store_creative.py dev
+python3 <plugin-root>/scripts/app_store_creative.py export --with-video
+python3 <plugin-root>/scripts/app_store_creative.py verify
+python3 <plugin-root>/scripts/app_store_creative.py publish --confirm
+```
+
+## Multi-Agent Manifest Workflow (Legacy v1 Contract)
 
 1. Initialize only when the repository has not adopted the workflow; `init` refuses to overwrite existing files.
 2. Create a run and treat its generated plan as the task graph and state authority.
