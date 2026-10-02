@@ -16,9 +16,11 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
   target = 'iphone_6_9',
   className = '',
 }) => {
-  const { x = 0, y = 0, scale = 1, rotate = 0 } = offset;
+  const { x = 0, y = 0, scale = 1, rotate = 0, rotateX = 0, rotateY = 0 } = offset;
   const shadowStyle = theme?.shadow || 'dramatic';
   const bezelStyle = theme?.bezelStyle || 'natural';
+
+  const transform3d = `perspective(1200px) translate3d(${x}px, ${y}px, 0) scale(${scale}) rotate(${rotate}deg) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
   // Shadow classes
   const getShadow = () => {
@@ -54,8 +56,9 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
     }
   };
 
-  const isTablet = target.startsWith('ipad_');
+  const isTablet = target.startsWith('ipad_') || target.startsWith('google_play_tablet_');
   const isMac = target.startsWith('mac_');
+  const isAndroidPhone = target === 'google_play_phone';
 
   // RENDER MAC FRAME
   if (isMac) {
@@ -63,8 +66,9 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
       <div
         className={`relative transition-transform duration-200 select-none ${getShadow()} ${className}`}
         style={{
-          transform: `translate3d(${x}px, ${y}px, 0) scale(${scale}) rotate(${rotate}deg)`,
+          transform: transform3d,
           transformOrigin: 'center center',
+          transformStyle: 'preserve-3d',
         }}
       >
         <div className={`relative w-[360px] h-[225px] rounded-[14px] p-[6px] ${getBezelGradient()}`}>
@@ -89,21 +93,22 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
     );
   }
 
-  // RENDER IPAD FRAME
+  // RENDER IPAD / TABLET FRAME
   if (isTablet) {
     return (
       <div
         className={`relative transition-transform duration-200 select-none ${getShadow()} ${className}`}
         style={{
-          transform: `translate3d(${x}px, ${y}px, 0) scale(${scale}) rotate(${rotate}deg)`,
+          transform: transform3d,
           transformOrigin: 'center center',
+          transformStyle: 'preserve-3d',
         }}
       >
         <div className={`relative w-[340px] h-[460px] rounded-[36px] p-[10px] ${getBezelGradient()}`}>
           <div className="relative w-full h-full bg-black rounded-[28px] overflow-hidden shadow-inner ring-1 ring-black">
             <div className="absolute top-2 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#151515] ring-1 ring-white/10" />
             {screenshot ? (
-              <img src={screenshot} alt="iPad Screenshot" className="w-full h-full object-cover object-top" />
+              <img src={screenshot} alt="Tablet Screenshot" className="w-full h-full object-cover object-top" />
             ) : (
               <div className="w-full h-full bg-[#090D16] text-white p-4 pt-8 flex flex-col justify-between">
                 <div className="h-5 w-28 bg-white/20 rounded-md" />
@@ -117,13 +122,14 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
     );
   }
 
-  // DEFAULT: IPHONE CHASSIS WITH DYNAMIC ISLAND
+  // DEFAULT: PHONE CHASSIS (IPHONE / ANDROID)
   return (
     <div
       className={`relative transition-transform duration-200 select-none ${getShadow()} ${className}`}
       style={{
-        transform: `translate3d(${x}px, ${y}px, 0) scale(${scale}) rotate(${rotate}deg)`,
+        transform: transform3d,
         transformOrigin: 'center center',
+        transformStyle: 'preserve-3d',
       }}
     >
       {/* Outer Chassis */}
@@ -142,13 +148,19 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
 
         {/* Inner Screen Bezel */}
         <div className="relative w-full h-full bg-black rounded-[46px] overflow-hidden shadow-inner ring-1 ring-black">
-          {/* Dynamic Island */}
-          <div className="absolute top-[11px] left-1/2 -translate-x-1/2 w-[98px] h-[28px] bg-black rounded-full z-30 flex items-center justify-between px-3 ring-1 ring-[#1C1C1E]">
-            <div className="w-[10px] h-[10px] rounded-full bg-[#0A0D18] ring-1 ring-[#181E33] flex items-center justify-center">
-              <div className="w-[4px] h-[4px] rounded-full bg-[#1A2645]/80" />
+          {/* Dynamic Island or Android Punch-Hole */}
+          {isAndroidPhone ? (
+            <div className="absolute top-[14px] left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-black rounded-full z-30 ring-1 ring-[#2A2A2E] flex items-center justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#111827]" />
             </div>
-            <div className="w-[8px] h-[8px] rounded-full bg-[#0B0D13] opacity-80" />
-          </div>
+          ) : (
+            <div className="absolute top-[11px] left-1/2 -translate-x-1/2 w-[98px] h-[28px] bg-black rounded-full z-30 flex items-center justify-between px-3 ring-1 ring-[#1C1C1E]">
+              <div className="w-[10px] h-[10px] rounded-full bg-[#0A0D18] ring-1 ring-[#181E33] flex items-center justify-center">
+                <div className="w-[4px] h-[4px] rounded-full bg-[#1A2645]/80" />
+              </div>
+              <div className="w-[8px] h-[8px] rounded-full bg-[#0B0D13] opacity-80" />
+            </div>
+          )}
 
           {/* Screenshot Content or High-Fidelity Mock Placeholder */}
           {screenshot ? (

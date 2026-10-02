@@ -29,6 +29,10 @@ TARGET_SPECS: Dict[str, Dict[str, any]] = {
     "ipad_12_9": {"width": 2048, "height": 2732, "display_name": 'iPad Pro 12.9"'},
     "mac_16_10": {"width": 2880, "height": 1800, "display_name": "MacBook Pro 16:10"},
     "watch_ultra": {"width": 410, "height": 502, "display_name": "Apple Watch Ultra"},
+    "google_play_phone": {"width": 1080, "height": 2400, "display_name": "Google Play Phone (9:20)"},
+    "google_play_tablet_7": {"width": 1200, "height": 1920, "display_name": 'Google Play 7" Tablet'},
+    "google_play_tablet_10": {"width": 1600, "height": 2560, "display_name": 'Google Play 10" Tablet'},
+    "google_play_feature_graphic": {"width": 1024, "height": 500, "display_name": "Google Play Feature Graphic (1024x500)"},
 }
 
 

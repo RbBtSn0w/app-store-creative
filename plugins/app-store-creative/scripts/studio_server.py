@@ -92,7 +92,52 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
         raw_path = self.path.split("?")[0]
         unquoted = urllib.parse.unquote(raw_path)
 
-        # Handle UI-triggered Export
+        # 1. API: Save updated creative.config.json (Bidirectional Studio Editing)
+        if unquoted == "/api/config":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body_bytes = self.rfile.read(content_len) if content_len > 0 else b"{}"
+            try:
+                payload = json.loads(body_bytes.decode() or "{}")
+                if not isinstance(payload, dict) or "cards" not in payload:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Access-Control-Allow-Origin", "*")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"ok": False, "error": "Invalid configuration: 'cards' array required"}).encode())
+                    return
+
+                # Create timestamped backup before writing
+                from datetime import datetime, timezone
+                backup_dir = self.repo_root / ".creative" / "backups"
+                backup_dir.mkdir(parents=True, exist_ok=True)
+                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                backup_path = backup_dir / f"creative.config.{timestamp}.json"
+                if self.config_path.exists():
+                    backup_path.write_bytes(self.config_path.read_bytes())
+
+                # Atomic write
+                temp_path = self.config_path.with_suffix(".tmp")
+                temp_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
+                temp_path.replace(self.config_path)
+
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "message": "Configuration saved successfully",
+                    "backup": str(backup_path.relative_to(self.repo_root) if backup_path.is_relative_to(self.repo_root) else backup_path)
+                }).encode())
+            except Exception as e:
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+            return
+
+        # 2. Handle UI-triggered Export
         if unquoted == "/api/export":
             content_len = int(self.headers.get("Content-Length", 0))
             body_bytes = self.rfile.read(content_len) if content_len > 0 else b"{}"

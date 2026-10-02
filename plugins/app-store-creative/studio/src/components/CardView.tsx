@@ -1,6 +1,7 @@
 import React from 'react';
 import { CardConfig, TargetDevice, ThemeConfig } from '../types';
 import { DeviceFrame } from './DeviceFrame';
+import { STYLE_PRESETS, StylePresetId } from '../stylePresets';
 
 interface CardViewProps {
   card: CardConfig;
@@ -12,6 +13,7 @@ interface CardViewProps {
   localizedText?: { headline: string; subheadline?: string };
   isExport?: boolean;
   connected?: boolean;
+  onUpdateText?: (field: 'headline' | 'subheadline', value: string) => void;
 }
 
 export const CardView: React.FC<CardViewProps> = ({
@@ -21,13 +23,28 @@ export const CardView: React.FC<CardViewProps> = ({
   theme,
   localizedText,
   isExport = false,
+  onUpdateText,
 }) => {
   const headline = localizedText?.headline || card.headline;
   const subheadline = localizedText?.subheadline || card.subheadline;
   const layout = card.layout || 'phone_bottom';
 
-  // Compute background
-  const bg = card.customBackground || theme.background;
+  // Resolve theme with style preset if specified
+  const preset = theme.stylePreset && (theme.stylePreset in STYLE_PRESETS)
+    ? STYLE_PRESETS[theme.stylePreset as StylePresetId]
+    : undefined;
+
+  const resolvedTheme: ThemeConfig = {
+    ...theme,
+    headlineColor: theme.headlineColor || preset?.theme.headlineColor || '#FFFFFF',
+    subheadlineColor: theme.subheadlineColor || preset?.theme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
+    bezelStyle: theme.bezelStyle || preset?.theme.bezelStyle || 'natural',
+    shadow: theme.shadow || preset?.theme.shadow || 'dramatic',
+    background: card.customBackground || (theme.background?.colors?.length ? theme.background : (preset?.theme.background || theme.background)),
+  };
+
+  // Compute background style
+  const bg = card.customBackground || resolvedTheme.background;
   const getBackgroundStyle = () => {
     if (bg.type === 'solid' && bg.colors?.[0]) {
       return { backgroundColor: bg.colors[0] };
@@ -43,12 +60,20 @@ export const CardView: React.FC<CardViewProps> = ({
     };
   };
 
+  const isFeatureGraphic = target === 'google_play_feature_graphic' || layout === 'feature_graphic_banner';
+
   const getLayoutClasses = () => {
+    if (isFeatureGraphic) {
+      return 'flex-row items-center justify-between px-10 py-6';
+    }
     switch (layout) {
       case 'phone_center':
         return 'justify-center items-center py-8';
       case 'phone_bleed':
         return 'justify-between items-center pb-0';
+      case 'phone_floating_isometric':
+      case 'phone_perspective_hero':
+      case 'split_dual_perspective':
       case 'phone_tilt_left':
       case 'phone_tilt_right':
       case 'phone_bottom':
@@ -57,14 +82,24 @@ export const CardView: React.FC<CardViewProps> = ({
     }
   };
 
-  const previewWidth = 400;
-  const previewHeight = 869;
+  // Calculate layout-specific default 3D offsets if not explicitly set
+  const computedOffset = {
+    x: card.deviceOffset?.x ?? 0,
+    y: card.deviceOffset?.y ?? (layout === 'phone_floating_isometric' ? 40 : 25),
+    scale: card.deviceOffset?.scale ?? (layout === 'phone_perspective_hero' ? 1.08 : 1),
+    rotate: card.deviceOffset?.rotate ?? (layout === 'phone_floating_isometric' ? -6 : 0),
+    rotateX: card.deviceOffset?.rotateX ?? (layout === 'phone_floating_isometric' ? 14 : layout === 'phone_perspective_hero' ? 18 : 0),
+    rotateY: card.deviceOffset?.rotateY ?? (layout === 'phone_floating_isometric' ? -12 : 0),
+  };
+
+  const previewWidth = isFeatureGraphic ? 600 : 400;
+  const previewHeight = isFeatureGraphic ? 293 : 869;
 
   return (
     <div
       data-card-id={card.id}
       data-card-index={index}
-      className={`relative flex flex-col overflow-hidden text-center select-none shadow-2xl transition-all duration-300 ${
+      className={`relative flex ${isFeatureGraphic ? 'flex-row items-center justify-between p-8' : 'flex-col'} overflow-hidden text-center select-none shadow-2xl transition-all duration-300 ${
         isExport ? 'w-full h-full' : 'rounded-[32px] ring-1 ring-white/10'
       } ${getLayoutClasses()}`}
       style={{
@@ -78,22 +113,30 @@ export const CardView: React.FC<CardViewProps> = ({
       <div className="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
 
       {/* Top Marketing Copy Section */}
-      <div className="relative z-20 pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center">
+      <div className={`relative z-20 ${isFeatureGraphic ? 'text-left max-w-[50%] px-4' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
         <h2
-          className="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2 drop-shadow-md"
+          contentEditable={!isExport && !!onUpdateText}
+          suppressContentEditableWarning
+          onBlur={(e) => onUpdateText?.('headline', e.currentTarget.textContent || '')}
+          className="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2 drop-shadow-md outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
           style={{
-            color: theme.headlineColor || '#FFFFFF',
-            fontFamily: theme.fontFamily,
+            color: resolvedTheme.headlineColor || '#FFFFFF',
+            fontFamily: resolvedTheme.fontFamily,
           }}
         >
           {headline}
         </h2>
         {subheadline && (
           <p
-            className="text-sm font-medium tracking-normal leading-snug drop-shadow-sm max-w-[280px]"
+            contentEditable={!isExport && !!onUpdateText}
+            suppressContentEditableWarning
+            onBlur={(e) => onUpdateText?.('subheadline', e.currentTarget.textContent || '')}
+            className={`text-sm font-medium tracking-normal leading-snug drop-shadow-sm outline-none focus:ring-1 focus:ring-blue-400 rounded px-1 ${
+              isFeatureGraphic ? 'max-w-[320px]' : 'max-w-[280px]'
+            }`}
             style={{
-              color: theme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
-              fontFamily: theme.fontFamily,
+              color: resolvedTheme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
+              fontFamily: resolvedTheme.fontFamily,
             }}
           >
             {subheadline}
@@ -102,13 +145,19 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Device Frame Display Area */}
-      <div className="relative z-10 flex-1 w-full flex items-end justify-center overflow-visible pb-0">
+      <div className={`relative z-10 ${isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
         <DeviceFrame
           screenshot={card.screenshot}
-          offset={card.deviceOffset}
-          theme={theme}
+          offset={computedOffset}
+          theme={resolvedTheme}
           target={target}
-          className={layout === 'phone_bleed' ? 'scale-110 translate-y-12' : 'translate-y-6'}
+          className={
+            isFeatureGraphic
+              ? 'scale-75 -translate-y-4'
+              : layout === 'phone_bleed'
+              ? 'scale-110 translate-y-12'
+              : 'translate-y-6'
+          }
         />
       </div>
 

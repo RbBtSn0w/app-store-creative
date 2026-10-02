@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TargetDevice, TARGET_DIMENSIONS } from '../types';
-import { Smartphone, Globe, Layers, Download, CheckCircle, Sparkles } from 'lucide-react';
+import { STYLE_PRESETS, StylePresetId } from '../stylePresets';
+import { COPY_FORMULAS, CopyFormula } from '../copyFormulas';
+import { Smartphone, Globe, Layers, Download, CheckCircle, Sparkles, Palette, Lightbulb, Save, Loader2 } from 'lucide-react';
 
 interface ToolbarProps {
   targets: TargetDevice[];
@@ -14,6 +16,12 @@ interface ToolbarProps {
   cardCount: number;
   onTriggerExport: () => void;
   isExporting?: boolean;
+  stylePreset?: string;
+  onStylePresetChange?: (presetId: string) => void;
+  isDirty?: boolean;
+  isSaving?: boolean;
+  onSaveConfig?: () => void;
+  onApplyCopyFormula?: (formula: CopyFormula) => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -28,8 +36,15 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   cardCount,
   onTriggerExport,
   isExporting = false,
+  stylePreset,
+  onStylePresetChange,
+  isDirty = false,
+  isSaving = false,
+  onSaveConfig,
+  onApplyCopyFormula,
 }) => {
   const currentDim = TARGET_DIMENSIONS[currentTarget];
+  const [showCopyMenu, setShowCopyMenu] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#12151E]/90 backdrop-blur-md border-b border-white/10 px-6 py-3 flex items-center justify-between shadow-lg text-white">
@@ -101,6 +116,60 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <Layers className="w-3.5 h-3.5" />
           <span>Connected Canvas</span>
         </button>
+
+        {/* Style Preset Selector */}
+        {onStylePresetChange && (
+          <div className="flex items-center space-x-1.5 bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs">
+            <Palette className="w-3.5 h-3.5 text-pink-400" />
+            <select
+              value={stylePreset || ''}
+              onChange={(e) => onStylePresetChange(e.target.value)}
+              className="bg-transparent text-white focus:outline-none cursor-pointer font-medium max-w-[130px] truncate"
+            >
+              <option value="" className="bg-[#181C26] text-white">Theme: Custom</option>
+              {Object.values(STYLE_PRESETS).map((p) => (
+                <option key={p.id} value={p.id} className="bg-[#181C26] text-white">
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Copy Ideas Menu */}
+        {onApplyCopyFormula && (
+          <div className="relative">
+            <button
+              onClick={() => setShowCopyMenu(!showCopyMenu)}
+              className="flex items-center space-x-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-amber-300 font-medium transition-all"
+              title="Marketing Headline Formulas"
+            >
+              <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+              <span>Copy Ideas</span>
+            </button>
+            {showCopyMenu && (
+              <div className="absolute top-full mt-2 left-0 w-80 bg-[#161B26] border border-white/15 rounded-xl shadow-2xl p-2 z-50 flex flex-col space-y-1">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-white/40 px-2 py-1">Headline Formulas</span>
+                {COPY_FORMULAS.map((f, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      onApplyCopyFormula(f);
+                      setShowCopyMenu(false);
+                    }}
+                    className="text-left px-2.5 py-1.5 hover:bg-white/10 rounded-lg text-xs flex flex-col transition-all"
+                  >
+                    <span className="font-semibold text-white flex items-center justify-between">
+                      {f.headline}
+                      <span className="text-[9px] uppercase font-mono text-blue-400 bg-blue-500/10 px-1 rounded">{f.role}</span>
+                    </span>
+                    <span className="text-[11px] text-white/60 line-clamp-1">{f.subheadline}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Right Action Buttons */}
@@ -109,6 +178,22 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
           <span>{cardCount} Cards Ready</span>
         </div>
+
+        {onSaveConfig && (
+          <button
+            onClick={onSaveConfig}
+            disabled={isSaving || !isDirty}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md active:scale-95 transition-all ${
+              isDirty
+                ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                : 'bg-white/5 text-white/40 border border-white/10 cursor-not-allowed'
+            }`}
+            title="Save changes back to creative.config.json"
+          >
+            {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            <span>{isSaving ? 'Saving...' : isDirty ? 'Save Config *' : 'Saved'}</span>
+          </button>
+        )}
 
         <button
           onClick={onTriggerExport}

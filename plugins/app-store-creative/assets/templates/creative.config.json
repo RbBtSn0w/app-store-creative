@@ -12,6 +12,7 @@
     "iphone_6_5"
   ],
   "theme": {
+    "stylePreset": "liquid_glass",
     "background": {
       "type": "gradient",
       "colors": ["#0A0E1A", "#1E1B4B", "#311042"],
