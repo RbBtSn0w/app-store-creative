@@ -1,0 +1,194 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AppStoreCreativeConfig",
+  "description": "Declarative configuration schema for App Store Creative releases (v2.0)",
+  "type": "object",
+  "required": ["project", "theme", "cards"],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["id", "name", "bundleId"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the project"
+        },
+        "name": {
+          "type": "string",
+          "description": "Product display name"
+        },
+        "bundleId": {
+          "type": "string",
+          "description": "Apple bundle identifier (e.g. com.example.app)"
+        },
+        "defaultLocale": {
+          "type": "string",
+          "default": "en-US"
+        },
+        "locales": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["en-US"]
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "description": "Target App Store device form factors to generate",
+      "items": {
+        "type": "string",
+        "enum": [
+          "iphone_6_9",
+          "iphone_6_7",
+          "iphone_6_5",
+          "iphone_5_5",
+          "ipad_13",
+          "ipad_12_9",
+          "mac_16_10",
+          "watch_ultra"
+        ]
+      },
+      "default": ["iphone_6_9"]
+    },
+    "theme": {
+      "type": "object",
+      "description": "Global visual styling for screenshot cards",
+      "properties": {
+        "background": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["solid", "gradient", "mesh", "image"],
+              "default": "gradient"
+            },
+            "colors": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["#0F172A", "#1E293B"]
+            },
+            "angle": {
+              "type": "number",
+              "default": 135
+            }
+          }
+        },
+        "fontFamily": {
+          "type": "string",
+          "default": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
+        },
+        "headlineColor": {
+          "type": "string",
+          "default": "#FFFFFF"
+        },
+        "subheadlineColor": {
+          "type": "string",
+          "default": "rgba(255, 255, 255, 0.75)"
+        },
+        "bezelStyle": {
+          "type": "string",
+          "enum": ["natural", "titanium_black", "titanium_natural", "silver", "midnight", "flat"],
+          "default": "natural"
+        },
+        "shadow": {
+          "type": "string",
+          "enum": ["soft", "dramatic", "subtle", "none"],
+          "default": "dramatic"
+        }
+      }
+    },
+    "connectedTrack": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, cards form a continuous canvas panorama where elements span across card boundaries"
+    },
+    "cards": {
+      "type": "array",
+      "description": "Sequence of marketing screenshot cards",
+      "items": {
+        "type": "object",
+        "required": ["id", "headline"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Card identifier (e.g. 01-hero)"
+          },
+          "headline": {
+            "type": "string",
+            "description": "Primary value-proposition headline"
+          },
+          "subheadline": {
+            "type": "string",
+            "description": "Supporting explanatory text"
+          },
+          "screenshot": {
+            "type": "string",
+            "description": "Relative path to raw source screenshot image"
+          },
+          "layout": {
+            "type": "string",
+            "enum": [
+              "phone_bottom",
+              "phone_center",
+              "phone_tilt_left",
+              "phone_tilt_right",
+              "phone_bleed",
+              "split_dual",
+              "pure_text"
+            ],
+            "default": "phone_bottom"
+          },
+          "deviceOffset": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number", "default": 0 },
+              "y": { "type": "number", "default": 0 },
+              "scale": { "type": "number", "default": 1 },
+              "rotate": { "type": "number", "default": 0 }
+            }
+          },
+          "customBackground": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["solid", "gradient", "image"] },
+              "colors": { "type": "array", "items": { "type": "string" } },
+              "angle": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "previewVideo": {
+      "type": "object",
+      "description": "App Preview video production configuration",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "source": { "type": "string", "description": "Relative path to raw screen recording" },
+        "fps": { "type": "number", "default": 30 },
+        "duration": { "type": "number", "default": 20 },
+        "orientation": { "type": "string", "enum": ["portrait", "landscape"], "default": "portrait" },
+        "audio": {
+          "type": "object",
+          "properties": {
+            "required": { "type": "boolean", "default": false },
+            "addSilentTrackIfMissing": { "type": "boolean", "default": true }
+          }
+        }
+      }
+    },
+    "localizations": {
+      "type": "object",
+      "description": "Localized strings mapping: locale -> card_id -> { headline, subheadline }",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "subheadline": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,3 +8,7 @@ __pycache__/
 
 # Generated creative outputs are project-owned and must not enter the plugin package.
 artifacts/
+.creative/
+
+# Node dependencies
+node_modules/
