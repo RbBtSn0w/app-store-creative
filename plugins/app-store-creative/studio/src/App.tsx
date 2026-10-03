@@ -5,6 +5,7 @@ import { localizedFields, resolveCard, updateVariant } from './project';
 import { releaseState } from './releaseState';
 import { ExportView } from './ExportView';
 import { STYLE_PRESETS } from './stylePresets';
+import { downloadDraft } from './downloadDraft';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -140,9 +141,7 @@ export const App: React.FC = () => {
     finally { setBusy(false); }
   };
   const recoverDraft = () => {
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(new Blob([JSON.stringify(state.current, null, 2)], { type: 'application/json' }));
-    link.download = 'creative-draft.json'; link.click(); URL.revokeObjectURL(link.href);
+    downloadDraft(state.current);
   };
 
   if (loading) return <main className="p-10">Opening your project…</main>;

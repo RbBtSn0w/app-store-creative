@@ -3,12 +3,9 @@
 
 import json
 import base64
-import hashlib
-import threading
 import uuid
 import studio_contract as contract
 import mimetypes
-import os
 import urllib.parse
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
