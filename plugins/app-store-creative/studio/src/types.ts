@@ -100,6 +100,20 @@ export interface CardOffset {
   rotateY?: number;
 }
 
+export interface LocalizedCard {
+  headline?: string;
+  subheadline?: string;
+  screenshot?: string;
+  inheritDefault?: boolean;
+}
+
+export interface CardVariant {
+  screenshot?: string;
+  layout?: CardConfig['layout'];
+  deviceOffset?: CardOffset;
+  localizations?: Record<string, LocalizedCard>;
+}
+
 export interface CardConfig {
   id: string;
   headline: string;
@@ -122,6 +136,7 @@ export interface CardConfig {
     | 'feature_graphic_banner';
   deviceOffset?: CardOffset;
   customBackground?: BackgroundConfig;
+  variants?: Partial<Record<TargetDevice, CardVariant>>;
 }
 
 export interface CreativeConfig {
@@ -144,5 +159,6 @@ export interface CreativeConfig {
       addSilentTrackIfMissing?: boolean;
     };
   };
-  localizations?: Record<string, Record<string, { headline: string; subheadline?: string; screenshot?: string }>>;
+  localizations?: Record<string, Record<string, LocalizedCard>>;
+  studio?: { requireExportEvidence?: boolean };
 }

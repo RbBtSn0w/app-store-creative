@@ -2,6 +2,11 @@
 """Localhost Studio HTTP server for App Store Creative v2.0."""
 
 import json
+import base64
+import hashlib
+import threading
+import uuid
+import studio_contract as contract
 import mimetypes
 import os
 import urllib.parse
@@ -31,155 +36,185 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
         # Suppress routine request logging to keep CLI output clean
         pass
 
-    def do_OPTIONS(self):
-        """Handle CORS pre-flight requests."""
-        self.send_response(204)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+    def _json(self, data, status=200, etag=None):
+        body = json.dumps(data, ensure_ascii=False).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        if etag:
+            self.send_header("ETag", etag)
         self.end_headers()
+        self.wfile.write(body)
+
+    def _local_request(self):
+        try:
+            host = urllib.parse.urlsplit('//' + self.headers.get('Host', '')).hostname
+        except ValueError:
+            host = None
+        if host not in ('localhost', '127.0.0.1', '::1'):
+            self._json({'ok': False, 'error': 'Open Studio using a loopback address'}, 403)
+            return False
+        return True
+
+    def do_OPTIONS(self):
+        self._json({"ok": False, "error": "Cross-origin requests are not supported"}, 403)
 
     def do_GET(self):
-        raw_path = self.path.split("?")[0]
-        unquoted = urllib.parse.unquote(raw_path)
-
-        # 1. API: Get current creative.config.json
-        if unquoted == "/api/config":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            if self.config_path.exists():
-                self.wfile.write(self.config_path.read_bytes())
-            else:
-                self.wfile.write(b"{}")
+        if not self._local_request():
             return
-
-        # 2. API: Health Check
-        if unquoted == "/api/health":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "ok", "version": "2.0.0"}).encode())
+        path = urllib.parse.unquote(self.path.split("?")[0])
+        if path == "/api/config":
+            try:
+                with contract.WRITE_LOCK:
+                    data = self.config_bytes if getattr(self, 'config_bytes', None) is not None else (
+                        self.config_path.read_bytes() if self.config_path.exists() else b'{}')
+                    config = json.loads(data)
+                    if config != {}:
+                        contract.check_config(config)
+                        # Materialize existing visual defaults for legacy manifests in the editor.
+                        config.setdefault('theme', {}).setdefault('background', {'type': 'gradient', 'colors': ['#0A0E1A', '#311042']})
+                        config.setdefault('targets', ['iphone_6_9'])
+                        config['project'].setdefault('locales', ['en-US'])
+                        for card in config['cards']:
+                            card.setdefault('headline', card['id'])
+                    self._json(config, etag='"' + (contract.digest(data) if getattr(self, 'config_bytes', None) is not None or self.config_path.exists() else 'missing') + '"')
+            except (ValueError, TypeError) as error:
+                self._json({'ok': False, 'error': f'Project needs repair: {error}'}, 400)
+            except OSError as error:
+                self._json({'ok': False, 'error': f'Could not read project: {error}'}, 500)
             return
-
-        clean_rel = unquoted.lstrip("/")
-
-        # 3. Serve local project screenshots / assets securely
-        if clean_rel:
-            repo_candidate = self.repo_root / clean_rel
-            if is_safe_child(self.repo_root, repo_candidate) and repo_candidate.is_file():
-                self._serve_file(repo_candidate)
+        if path == "/api/health":
+            import export_engine
+            self._json({"status": "ok", "version": "2.0.0", "chrome": bool(export_engine.find_chrome_binary())})
+            return
+        if path == "/api/status":
+            if self.job.get('running'):
+                self._json(dict(self.job))
                 return
-
-        # 4. Serve Studio frontend assets from dist/ securely
-        if clean_rel:
-            dist_candidate = self.studio_dist / clean_rel
-            if is_safe_child(self.studio_dist, dist_candidate) and dist_candidate.is_file():
-                self._serve_file(dist_candidate)
-                return
-
-        # 5. SPA Fallback: serve dist/index.html
-        index_file = self.studio_dist / "index.html"
-        if index_file.exists():
-            self._serve_file(index_file, "text/html")
+            try:
+                import validator
+                with contract.WRITE_LOCK:
+                    reviewed_revision = contract.revision(self.config_path)
+                    config = contract.check_config(json.loads(self.config_path.read_bytes()))
+                    _, input_errors = contract.input_hashes(self.repo_root, config)
+                    import export_engine
+                    if not export_engine.find_chrome_binary():
+                        input_errors.append('Install Chrome or Chromium before exporting')
+                    result = validator.run_validation(self.repo_root, self.config_path, write_lockfile=False)
+                    if reviewed_revision != contract.revision(self.config_path):
+                        raise ValueError('Inputs changed while checking; review and check again')
+                self._json({**self.job, "running": False, "validation": result, "configRevision": reviewed_revision, "inputErrors": input_errors})
+            except Exception as error:
+                self._json({**self.job, 'running': False, 'validation': None, 'error': str(error)})
             return
-
-        self.send_error(404, "File Not Found")
+        rel = path.lstrip('/')
+        candidate = self.repo_root / rel
+        snapshot = getattr(self, 'asset_bytes', {}).get(rel)
+        if snapshot is not None and is_safe_child(self.repo_root, candidate):
+            self._serve_file(candidate, content=snapshot)
+            return
+        # Serve only image assets from the consuming project, never its secrets or source.
+        if rel and is_safe_child(self.repo_root, candidate) and candidate.is_file() and candidate.suffix.lower() in ('.png', '.jpg', '.jpeg', '.webp'):
+            if not any(part.startswith('.') for part in Path(rel).parts) or rel.startswith('.creative/assets/'):
+                self._serve_file(candidate)
+                return
+        dist = self.studio_dist / rel
+        if rel and is_safe_child(self.studio_dist, dist) and dist.is_file():
+            self._serve_file(dist)
+            return
+        if Path(rel).suffix:
+            self.send_error(404, "Asset not found")
+            return
+        index = self.studio_dist / 'index.html'
+        if index.exists():
+            self._serve_file(index, 'text/html')
+        else:
+            self.send_error(404, "Studio bundle not found")
 
     def do_POST(self):
-        raw_path = self.path.split("?")[0]
-        unquoted = urllib.parse.unquote(raw_path)
-
-        # 1. API: Save updated creative.config.json (Bidirectional Studio Editing)
-        if unquoted == "/api/config":
-            content_len = int(self.headers.get("Content-Length", 0))
-            body_bytes = self.rfile.read(content_len) if content_len > 0 else b"{}"
-            try:
-                payload = json.loads(body_bytes.decode() or "{}")
-                if not isinstance(payload, dict) or "cards" not in payload:
-                    self.send_response(400)
-                    self.send_header("Content-Type", "application/json")
-                    self.send_header("Access-Control-Allow-Origin", "*")
-                    self.end_headers()
-                    self.wfile.write(json.dumps({"ok": False, "error": "Invalid configuration: 'cards' array required"}).encode())
-                    return
-
-                # Create timestamped backup before writing
-                from datetime import datetime, timezone
-                backup_dir = self.repo_root / ".creative" / "backups"
-                backup_dir.mkdir(parents=True, exist_ok=True)
-                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-                backup_path = backup_dir / f"creative.config.{timestamp}.json"
-                if self.config_path.exists():
-                    backup_path.write_bytes(self.config_path.read_bytes())
-
-                # Atomic write
-                temp_path = self.config_path.with_suffix(".tmp")
-                temp_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False))
-                temp_path.replace(self.config_path)
-
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({
-                    "ok": True,
-                    "message": "Configuration saved successfully",
-                    "backup": str(backup_path.relative_to(self.repo_root) if backup_path.is_relative_to(self.repo_root) else backup_path)
-                }).encode())
-            except json.JSONDecodeError as e:
-                self.send_response(400)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"ok": False, "error": f"Invalid JSON payload: {str(e)}"}).encode())
-            except Exception as e:
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+        if not self._local_request():
             return
-
-        # 2. Handle UI-triggered Export
-        if unquoted == "/api/export":
-            content_len = int(self.headers.get("Content-Length", 0))
-            body_bytes = self.rfile.read(content_len) if content_len > 0 else b"{}"
-            try:
-                payload = json.loads(body_bytes.decode() or "{}")
-                # Import export_engine dynamically
+        origin = self.headers.get('Origin')
+        host = self.headers.get('Host', '')
+        if origin and origin != f'http://{host}':
+            self._json({"ok": False, "error": "Cross-origin writes are not allowed"}, 403)
+            return
+        if self.headers.get('Content-Type', '').split(';')[0] != 'application/json':
+            self._json({"ok": False, "error": "Use application/json"}, 415)
+            return
+        path = urllib.parse.unquote(self.path.split('?')[0])
+        try:
+            length = int(self.headers.get('Content-Length', '0'))
+            if length <= 0 or length > 30 * 1024 * 1024 or self.headers.get('Transfer-Encoding'):
+                self._json({"ok": False, "error": "Request size must be between 1 byte and 30 MB"}, 413)
+                return
+            self.connection.settimeout(20)
+            payload = json.loads(self.rfile.read(length))
+            if not isinstance(payload, dict):
+                raise ValueError('Request must be a JSON object')
+            if path == '/api/config':
+                contract.check_config(payload)
+                with contract.WRITE_LOCK:
+                    expected = self.headers.get('If-Match')
+                    if expected and expected != contract.revision(self.config_path):
+                        self._json({"ok": False, "error": "Project changed in another tab or agent. Reload or keep your draft."}, 409)
+                        return
+                    if self.config_path.exists():
+                        backup = self.repo_root / '.creative/backups' / f'creative.config.{uuid.uuid4().hex}.json'
+                        backup.parent.mkdir(parents=True, exist_ok=True)
+                        backup.write_bytes(self.config_path.read_bytes())
+                    contract.atomic_json(self.config_path, payload)
+                    self._json({"ok": True}, etag=contract.revision(self.config_path))
+                return
+            if path == '/api/assets':
+                data = base64.b64decode(payload.get('data', ''), validate=True)
+                width, height, extension = contract.inspect_capture(data)
+                target = self.repo_root / '.creative/assets' / f'{contract.digest(data)}.{extension}'
+                if not is_safe_child(self.repo_root, target):
+                    raise ValueError('Asset directory escapes project')
+                with contract.WRITE_LOCK:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    if not target.exists():
+                        target.write_bytes(data)
+                    elif target.read_bytes() != data:
+                        raise ValueError('Stored asset differs from its content identity')
+                self._json({"ok": True, "path": '/' + str(target.relative_to(self.repo_root)),
+                            "width": width, "height": height, "name": str(payload.get('name', 'Capture'))})
+                return
+            if path == '/api/export':
                 import export_engine
-                targets = [payload["target"]] if "target" in payload else None
-                locales = [payload["locale"]] if "locale" in payload else None
+                import validator
+                with contract.WRITE_LOCK:
+                    if self.job.get('running'):
+                        self._json({"ok": False, "error": "An export is already running"}, 409)
+                        return
+                    if self.headers.get('If-Match') != contract.revision(self.config_path):
+                        self._json({"ok": False, "error": "Save the current project before exporting"}, 409)
+                        return
+                    self.job.clear()
+                    self.job.update(running=True, completed=0, total=0)
+                try:
+                    def progress(completed, total, item):
+                        self.job.update(completed=completed, total=total, item=item)
+                    result = export_engine.run_export(self.repo_root, self.config_path,
+                        targets=[payload['target']] if payload.get('scope') == 'selected' else None,
+                        locales=[payload['locale']] if payload.get('scope') == 'selected' else None,
+                        progress=progress, expected_revision=self.headers.get('If-Match'))
+                    validation = validator.run_validation(self.repo_root, self.config_path)
+                    self.job.update(running=False, completed=result['total_rendered'], validation=validation)
+                    self._json({"ok": result.get('status') == 'PASS', "scope": payload.get('scope', 'all'),
+                                "result": result, "validation": validation})
+                finally:
+                    self.job['running'] = False
+                return
+            self._json({"ok": False, "error": "Unknown endpoint"}, 404)
+        except (ValueError, KeyError, TypeError) as error:
+            self._json({"ok": False, "error": str(error)}, 400)
+        except Exception as error:
+            self._json({"ok": False, "error": str(error)}, 500)
 
-                res = export_engine.run_export(
-                    repo_root=self.repo_root,
-                    config_path=self.config_path,
-                    targets=targets,
-                    locales=locales,
-                )
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({
-                    "ok": True,
-                    "message": f"Successfully exported {res.get('total_rendered', 0)} assets to artifacts/",
-                    "total_rendered": res.get("total_rendered", 0)
-                }).encode())
-            except Exception as e:
-                self.send_response(500)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
-            return
-
-        self.send_error(404, "Not Found")
-
-    def _serve_file(self, file_path: Path, content_type: Optional[str] = None):
+    def _serve_file(self, file_path: Path, content_type: Optional[str] = None, content=None):
         if not content_type:
             suffix = file_path.suffix.lower()
             if suffix in (".js", ".mjs"):
@@ -197,7 +232,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
         content_type = content_type or "application/octet-stream"
 
         try:
-            content = file_path.read_bytes()
+            if content is None:
+                content = file_path.read_bytes()
             self.send_response(200)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(content)))
@@ -208,16 +244,23 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             self.send_error(500, f"Error reading file: {e}")
 
 
+def make_handler(root, config, config_bytes=None, asset_bytes=None):
+    """Bind immutable server identity without mutating a global handler class."""
+    return type('ProjectStudioHandler', (StudioRequestHandler,), {
+        'repo_root': root.resolve(), 'config_path': config.resolve(),
+        'config_bytes': config_bytes, 'asset_bytes': asset_bytes or {}, 'job': {'running': False},
+    })
+
+
 def run_studio_server(port: int = 3100, repo_root: Optional[Path] = None, config_path: Optional[Path] = None):
     """Run Studio HTTP server synchronously with SO_REUSEADDR enabled."""
     repo = repo_root or Path.cwd()
     cfg = config_path or (repo / "creative.config.json")
-    StudioRequestHandler.repo_root = repo.resolve()
-    StudioRequestHandler.config_path = cfg.resolve()
+    handler = make_handler(repo, cfg)
 
     ThreadingHTTPServer.allow_reuse_address = True
     server_address = ("127.0.0.1", port)
-    httpd = ThreadingHTTPServer(server_address, StudioRequestHandler)
+    httpd = ThreadingHTTPServer(server_address, handler)
     print(f"🚀 App Store Creative Studio running at: http://localhost:{port}")
     try:
         httpd.serve_forever()

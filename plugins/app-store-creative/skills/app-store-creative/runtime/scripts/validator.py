@@ -2,6 +2,7 @@
 """Zero-network release validator and release-lock generator for App Store Creative v2.0."""
 
 import hashlib
+import studio_contract as contract
 import json
 import os
 import shutil
@@ -114,13 +115,24 @@ def run_validation(
     artifacts_dir: Optional[Path] = None,
     write_lockfile: bool = True,
 ) -> Dict[str, Any]:
+    # Studio saves and export publication share this lock; external writers are
+    # also detected by the snapshot checks before verification is published.
+    with contract.WRITE_LOCK:
+        return _run_validation(repo_root, config_path, artifacts_dir, write_lockfile)
+
+
+def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
     """Validate all assets in artifacts against App Store rules, with zero network dependencies."""
     cfg_file = config_path or (repo_root / "creative.config.json")
     if not cfg_file.exists():
         raise FileNotFoundError(f"Configuration file not found: {cfg_file}")
 
-    config = json.loads(cfg_file.read_text())
+    config_bytes = cfg_file.read_bytes()
+    config_hash = contract.digest(config_bytes)
+    config = json.loads(config_bytes)
     art_dir = artifacts_dir or (repo_root / "artifacts")
+    output_hashes = {str(path.relative_to(art_dir)): compute_sha256(path)
+                     for pattern in ('**/*.png', '**/*.mp4') for path in art_dir.glob(pattern)}
 
     errors: List[str] = []
     if config.get("previewVideo", {}).get("enabled"):
@@ -136,6 +148,30 @@ def run_validation(
     for name in expected:
         if not (art_dir / name).is_file():
             errors.append(f"Missing declared screenshot: {name}")
+    sources, input_errors = contract.input_hashes(repo_root, config)
+    capture_sources = sources.copy()
+    errors.extend(input_errors)
+    preview = config.get("previewVideo", {})
+    if preview.get("enabled") and preview.get("source") and (repo_root / preview["source"]).is_file():
+        sources[str(preview["source"])] = compute_sha256(repo_root / preview["source"])
+    evidence_file = art_dir / '.export-evidence.json'
+    evidence_hash = compute_sha256(evidence_file) if evidence_file.is_file() else None
+    if config.get('studio', {}).get('requireExportEvidence'):
+        evidence_file = art_dir / '.export-evidence.json'
+        try:
+            evidence = json.loads(evidence_file.read_text())
+        except (OSError, ValueError):
+            evidence = {}
+        for name in expected:
+            record = evidence.get(name, {})
+            output = art_dir / name
+            locale, target, _ = name.split('/')
+            scoped_sources, _ = contract.input_hashes(repo_root, config, [target], [locale])
+            if (record.get('config_hash') != config_hash
+                or record.get('source_hashes') != scoped_sources
+                or not output.is_file() or record.get('sha256') != compute_sha256(output)
+                or record.get('render_ready') is not True):
+                errors.append(f'Missing or stale render evidence: {name}; export the current project')
     preview = config.get("previewVideo", {})
     if preview.get("enabled"):
         source = preview.get("source")
@@ -220,30 +256,52 @@ def run_validation(
         except Exception as exc:
             errors.append(f"Failed to validate video {rel}: {exc}")
 
-    status = "PASS" if not errors else "FAIL"
-
     # Write release-lock.json
     lock_data = {
         "schema_version": 2,
-        "status": status,
+        "status": "PASS" if not errors else "FAIL",
         "verified_at": datetime.now(timezone.utc).isoformat(),
         "git_commit": get_git_commit(repo_root),
-        "config_hash": compute_sha256(cfg_file),
+        "config_hash": config_hash,
         "artifacts_dir": str(art_dir.resolve()),
         "config_path": str(cfg_file.resolve()),
-        "source_hashes": {str(config["previewVideo"]["source"]): compute_sha256(repo_root / config["previewVideo"]["source"])}
-            if preview.get("enabled") and preview.get("source") and (repo_root / preview["source"]).is_file() else {},
+        "source_hashes": sources,
         "assets_count": len(asset_records),
         "assets": asset_records,
         "errors": errors,
     }
 
+    try:
+        changed = compute_sha256(cfg_file) != config_hash
+        current_sources, current_input_errors = contract.input_hashes(repo_root, config)
+        changed = changed or current_sources != capture_sources or current_input_errors != input_errors
+        changed = changed or any(compute_sha256(contract.local_asset(repo_root, name)) != sha
+                                  for name, sha in sources.items())
+        changed = changed or any(compute_sha256(art_dir / name) != record['sha256']
+                                  for name, record in asset_records.items())
+        changed = changed or output_hashes != {str(path.relative_to(art_dir)): compute_sha256(path)
+            for pattern in ('**/*.png', '**/*.mp4') for path in art_dir.glob(pattern)}
+        if config.get('studio', {}).get('requireExportEvidence'):
+            changed = changed or (compute_sha256(evidence_file) if evidence_file.is_file() else None) != evidence_hash
+    except (OSError, ValueError):
+        changed = True
+    if changed:
+        errors.append('Configuration, sources, outputs or render evidence changed during validation; retry with stable inputs')
+        lock_data['status'] = 'FAIL'
+
     if write_lockfile:
         lock_dir = repo_root / ".creative"
         lock_dir.mkdir(parents=True, exist_ok=True)
         lock_file = lock_dir / "release-lock.json"
-        lock_file.write_text(json.dumps(lock_data, indent=2))
-        print(f"🔒 Immutable release evidence written to: {lock_file}")
+        with contract.WRITE_LOCK:
+            if lock_file.exists():
+                previous = lock_file.read_bytes()
+                history_file = lock_dir / 'release-history' / f'{contract.digest(previous)}.json'
+                if not history_file.exists():
+                    history_file.parent.mkdir(parents=True, exist_ok=True)
+                    history_file.write_bytes(previous)
+            contract.atomic_json(lock_file, lock_data)
+        print(f"🔒 Current release evidence written to: {lock_file}")
 
     if errors:
         print("❌ Verification FAILED with issues:")

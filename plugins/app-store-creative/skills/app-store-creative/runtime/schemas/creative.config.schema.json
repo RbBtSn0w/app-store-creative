@@ -98,6 +98,10 @@
             "angle": {
               "type": "number",
               "default": 135
+            },
+            "imageUrl": {
+              "type": "string",
+              "description": "Project-relative local background image path."
             }
           }
         },
@@ -189,7 +193,111 @@
             "properties": {
               "type": { "type": "string", "enum": ["solid", "gradient", "image"] },
               "colors": { "type": "array", "items": { "type": "string" } },
-              "angle": { "type": "number" }
+              "angle": { "type": "number" },
+              "imageUrl": {
+                "type": "string",
+                "description": "Project-relative local background image path."
+              }
+            }
+          },
+          "variants": {
+            "type": "object",
+            "description": "Additive target-specific capture/layout overrides. Target localization overrides project localization.",
+            "propertyNames": {
+              "enum": [
+                "iphone_6_9",
+                "iphone_6_7",
+                "iphone_6_5",
+                "iphone_5_5",
+                "ipad_13",
+                "ipad_12_9",
+                "mac_16_10",
+                "watch_ultra",
+                "google_play_phone",
+                "google_play_tablet_7",
+                "google_play_tablet_10",
+                "google_play_feature_graphic"
+              ]
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "screenshot": {
+                  "type": "string",
+                  "description": "Relative path to raw source screenshot image"
+                },
+                "layout": {
+                  "type": "string",
+                  "enum": [
+                    "phone_bottom",
+                    "phone_center",
+                    "phone_tilt_left",
+                    "phone_tilt_right",
+                    "phone_bleed",
+                    "split_dual",
+                    "pure_text",
+                    "phone_floating_isometric",
+                    "phone_perspective_hero",
+                    "split_dual_perspective",
+                    "feature_graphic_banner",
+                    "mac_native_hero",
+                    "mac_native_left",
+                    "mac_native_right"
+                  ],
+                  "default": "phone_bottom"
+                },
+                "deviceOffset": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "y": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "scale": {
+                      "type": "number",
+                      "default": 1
+                    },
+                    "rotate": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "rotateX": {
+                      "type": "number",
+                      "default": 0
+                    },
+                    "rotateY": {
+                      "type": "number",
+                      "default": 0
+                    }
+                  }
+                },
+                "localizations": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "headline": {
+                        "type": "string"
+                      },
+                      "subheadline": {
+                        "type": "string"
+                      },
+                      "screenshot": {
+                        "type": "string",
+                        "description": "Relative path to the product capture for this locale"
+                      },
+                      "inheritDefault": {
+                        "type": "boolean",
+                        "description": "Explicit review acceptance of inherited default copy or capture for this locale and target."
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -236,8 +344,22 @@
           "properties": {
             "headline": { "type": "string" },
             "subheadline": { "type": "string" },
-            "screenshot": { "type": "string", "description": "Relative path to the product capture for this locale" }
+            "screenshot": { "type": "string", "description": "Relative path to the product capture for this locale" },
+            "inheritDefault": {
+              "type": "boolean",
+              "description": "Explicit review acceptance of inherited default copy or capture for this locale and target."
+            }
           }
+        }
+      }
+    },
+    "studio": {
+      "type": "object",
+      "properties": {
+        "requireExportEvidence": {
+          "type": "boolean",
+          "default": false,
+          "description": "Require current config, source, output, and render-readiness evidence for every declared screenshot. Studio-created projects enable this; legacy configs retain existing validation behavior."
         }
       }
     }

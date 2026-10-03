@@ -1,5 +1,7 @@
-import React from 'react';
-import { CardConfig, TargetDevice, ThemeConfig, getTargetScalingInfo } from '../types';
+import React, { useEffect, useRef, useState } from 'react';
+import { reviewCard } from '../layoutReview';
+import { requireConfiguredFont } from '../fontReview';
+import { CardConfig, TargetDevice, ThemeConfig, getTargetScalingInfo, LocalizedCard } from '../types';
 import { DeviceFrame } from './DeviceFrame';
 import { STYLE_PRESETS, StylePresetId } from '../stylePresets';
 
@@ -10,9 +12,10 @@ interface CardViewProps {
   target: TargetDevice;
   theme: ThemeConfig;
   locale?: string;
-  localizedText?: { headline: string; subheadline?: string; screenshot?: string };
+  localizedText?: LocalizedCard;
   isExport?: boolean;
   connected?: boolean;
+  onReview?: (findings: string[]) => void;
   onUpdateText?: (field: 'headline' | 'subheadline', value: string) => void;
 }
 
@@ -26,9 +29,27 @@ export const CardView: React.FC<CardViewProps> = ({
   localizedText,
   isExport = false,
   onUpdateText,
+  onReview,
 }) => {
-  const headline = localizedText?.headline || card.headline;
-  const subheadline = localizedText?.subheadline || card.subheadline;
+  const preview = useRef<HTMLDivElement>(null);
+  const reviewCallback = useRef(onReview); reviewCallback.current = onReview;
+  const [findings, setFindings] = useState<string[]>([]);
+  useEffect(() => {
+    if (isExport || !preview.current) return;
+    let active = true;
+    const element = preview.current;
+    let fontIssue = '';
+    const review = () => { if (active) { const next = [...reviewCard(element), ...(fontIssue ? [fontIssue] : [])]; setFindings(next); reviewCallback.current?.(next); } };
+    const observer = new ResizeObserver(review);
+    observer.observe(element);
+    for (const text of element.querySelectorAll('h2, p')) observer.observe(text);
+    element.addEventListener('load', review, true);
+    void document.fonts.ready.then(() => requireConfiguredFont(theme.fontFamily)).catch(reason => { fontIssue = reason.message; }).then(review);
+    review();
+    return () => { active = false; observer.disconnect(); element.removeEventListener('load', review, true); };
+  }, [card, theme, target, localizedText, isExport]);
+  const headline = localizedText?.headline ?? card.headline;
+  const subheadline = localizedText?.subheadline ?? card.subheadline;
   const layout = card.layout || 'phone_bottom';
   const isNativeMac = target.startsWith('mac_') && layout.startsWith('mac_native_');
   const isNativeSide = isNativeMac && layout !== 'mac_native_hero';
@@ -44,13 +65,16 @@ export const CardView: React.FC<CardViewProps> = ({
     subheadlineColor: preset?.theme.subheadlineColor || theme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
     bezelStyle: preset?.theme.bezelStyle || theme.bezelStyle || 'natural',
     shadow: preset?.theme.shadow || theme.shadow || 'dramatic',
-    background: card.customBackground || (preset?.theme.background || theme.background),
+    background: card.customBackground || preset?.theme.background || theme.background || { type: 'gradient', colors: ['#0A0E1A', '#311042'] },
   };
 
   // Compute background style
   const bg = card.customBackground || resolvedTheme.background;
   const getBackgroundStyle = () => {
-    if (bg.type === 'solid' && bg.colors?.[0]) {
+    if (bg.type === 'image' && bg.imageUrl) {
+      return { backgroundImage: `url(${JSON.stringify(bg.imageUrl)})`, backgroundSize: 'cover', backgroundPosition: 'center' };
+    }
+    if (bg.type === 'solid'  && bg.colors?.[0]) {
       return { backgroundColor: bg.colors[0] };
     }
     if (bg.type === 'gradient' && bg.colors && bg.colors.length >= 2) {
@@ -117,6 +141,7 @@ export const CardView: React.FC<CardViewProps> = ({
 
   const cardContent = (
     <div
+      ref={preview}
       data-card-id={card.id}
       data-card-index={index}
       className={`relative flex ${isFeatureGraphic ? 'flex-row items-center justify-between p-8' : isNativeSide ? '' : 'flex-col'} overflow-hidden text-center select-none shadow-2xl transition-all duration-300 ${
@@ -145,15 +170,16 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Top Marketing Copy Section */}
-      <div className={`relative z-20 ${isNativeSide ? 'text-left w-[240px] shrink-0' : isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
+      <div data-copy-region className={`relative z-20 ${isNativeSide ? 'text-left w-[240px] shrink-0' : isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
         <h2
           contentEditable={!isExport && !!onUpdateText}
           suppressContentEditableWarning
           onBlur={(e) => onUpdateText?.('headline', e.currentTarget.textContent || '')}
-          className="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2 drop-shadow-md outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
+          className="text-3xl font-extrabold tracking-tight leading-tight mb-2 drop-shadow-md outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
           style={{
             color: resolvedTheme.headlineColor || '#FFFFFF',
             fontFamily: resolvedTheme.fontFamily,
+            overflowWrap: 'anywhere',
           }}
         >
           {headline}
@@ -169,6 +195,7 @@ export const CardView: React.FC<CardViewProps> = ({
             style={{
               color: resolvedTheme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
               fontFamily: resolvedTheme.fontFamily,
+            overflowWrap: 'anywhere',
             }}
           >
             {subheadline}
@@ -177,12 +204,12 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Device Frame Display Area */}
-      <div className={`relative z-10 ${isNativeSide ? 'flex-1 h-full min-w-0 flex items-center justify-center' : isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-4' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
+      {layout !== 'pure_text' && <div data-device-region className={`relative z-10 ${isNativeSide ? 'flex-1 h-full min-w-0 flex items-center justify-center' : isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-4' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
         <DeviceFrame
           nativeWindow={isNativeMac}
           maxWidth={isNativeSide ? 320 : 540}
           maxHeight={isNativeSide ? 360 : 280}
-          screenshot={localizedText?.screenshot || card.screenshot}
+          screenshot={localizedText?.screenshot ?? card.screenshot}
           offset={computedOffset}
           theme={resolvedTheme}
           target={target}
@@ -196,7 +223,7 @@ export const CardView: React.FC<CardViewProps> = ({
               : 'translate-y-6'
           }
         />
-      </div>
+      </div>}
 
       {/* Visual metadata badge */}
       {!isExport && (
@@ -232,5 +259,7 @@ export const CardView: React.FC<CardViewProps> = ({
     );
   }
 
-  return cardContent;
+  return <>{cardContent}{findings.length > 0 && <p role="alert" className="text-sm text-amber-200 mt-3 max-w-sm">
+    {findings.join('. ')}
+  </p>}</>;
 };

@@ -48,7 +48,7 @@ def run(args):
             video_engine.produce_preview_from_config(root, config_path=cfg, output_dir=out)
         # Automatically update release lock on successful export
         lock_res = validator.run_validation(root, config_path=cfg, artifacts_dir=out, write_lockfile=True)
-        status = lock_res.get("status", "PASS") if isinstance(lock_res, dict) else "PASS"
+        status = "FAIL" if export_res.get("status") == "FAIL" else (lock_res.get("status", "PASS") if isinstance(lock_res, dict) else "PASS")
         return {"status": status, "export": export_res, "lock": lock_res}
 
     if args.command == "verify":

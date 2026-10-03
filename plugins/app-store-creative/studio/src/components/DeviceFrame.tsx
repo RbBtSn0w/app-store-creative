@@ -68,7 +68,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
 
   if (isMac && nativeWindow && screenshot) {
     return (
-      <div data-native-window="true"
+      <div data-device-frame data-native-window="true"
         className={`relative select-none ${getShadow()} ${className}`}
         style={{ transform: transform3d, transformOrigin: 'center center' }}>
         <img src={screenshot} alt="Mac App Screenshot" className="block object-contain"
@@ -80,7 +80,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
   // RENDER MAC FRAME
   if (isMac) {
     return (
-      <div
+      <div data-device-frame
         className={`relative transition-transform duration-200 select-none ${getShadow()} ${className}`}
         style={{
           transform: transform3d,
@@ -108,7 +108,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
   // RENDER IPAD / TABLET FRAME
   if (isTablet) {
     return (
-      <div
+      <div data-device-frame
         className={`relative transition-transform duration-200 select-none ${getShadow()} ${className}`}
         style={{
           transform: transform3d,
@@ -136,7 +136,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
 
   // DEFAULT: PHONE CHASSIS (IPHONE / ANDROID)
   return (
-    <div
+    <div data-device-frame
       className={`relative transition-transform duration-200 select-none ${getShadow()} ${className}`}
       style={{
         transform: transform3d,

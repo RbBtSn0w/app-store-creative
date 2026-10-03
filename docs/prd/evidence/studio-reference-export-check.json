@@ -1,0 +1,890 @@
+{
+  "observed_at": "2026-10-03T02:08:37.145280+00:00",
+  "fixture": "synthetic application; not a commercial product or user pilot",
+  "platform": "macOS",
+  "chrome_version": "154.0.8037.97",
+  "export_status": "PASS",
+  "rendered": 24,
+  "elapsed_seconds": 32.88506491699991,
+  "validation_status": "PASS",
+  "config_hash": "de3c5a9ee8ba5349f462c075a10197b2fc7d5519c3fbcff40f6a2387c88c3390",
+  "source_hashes": {
+    "captures/phone-en.jpg": "6516024fbc71295dc3d4a218f64854eb4c7d24033cf8625fc165a0e02a1916ee",
+    "captures/mac-en.jpg": "2709e0711ea289a9ff3213a74f9397cf23165a4d21c4886ad611020d75617d0e",
+    "captures/phone-zh.jpg": "99ad1a32a560592338e3975bb2729e5fbb26271e2df0c7c52cbf41876aa8b519",
+    "captures/mac-zh.jpg": "cff4fc7ef5af6375e47241bfe68fbe2dd3af52f88173f6522956b728ce584177"
+  },
+  "assets": {
+    "en-US/mac_16_10/card-05.png": {
+      "sha256": "ca77af79ebe36f27ae8b07a5ca9110317e83546a96357c00302c0d96aec87fba",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1191926,
+      "has_alpha": false
+    },
+    "en-US/mac_16_10/card-04.png": {
+      "sha256": "cace987e49b3298d6637687704cf439dc6d8fda926f847ca29e1070f4872f000",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1203225,
+      "has_alpha": false
+    },
+    "en-US/mac_16_10/card-06.png": {
+      "sha256": "dbc9c674e252e360db2257725ff2ea7a4f9bf7bcf163dd28f40723346ca0798f",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1250132,
+      "has_alpha": false
+    },
+    "en-US/mac_16_10/card-03.png": {
+      "sha256": "77c984c3542a49ef15381745519ba57d90f1a6fd42214c384620fea2f390540b",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1187922,
+      "has_alpha": false
+    },
+    "en-US/mac_16_10/card-02.png": {
+      "sha256": "d9328b25c32c9371d6222ae83add52251db9c74ee906406775d6d06333e453f2",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1208556,
+      "has_alpha": false
+    },
+    "en-US/mac_16_10/card-01.png": {
+      "sha256": "f1f4d5af3cac45c6a34be5fb134bde7cf1b0c9f5bd242a9286722807d9a70445",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1254734,
+      "has_alpha": false
+    },
+    "en-US/iphone_6_9/card-05.png": {
+      "sha256": "c666d5f0062748d2c49869c8731f33896e2d1711982738635b244739da82feac",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 859577,
+      "has_alpha": false
+    },
+    "en-US/iphone_6_9/card-04.png": {
+      "sha256": "d739747e36aa5a0a36b509125863e4a1cb8420cd0e926c148f7c4d921ebbaf93",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 849739,
+      "has_alpha": false
+    },
+    "en-US/iphone_6_9/card-06.png": {
+      "sha256": "5e9577ea737b7f8b89e7acd08eccd103e21215a7731c8359b6d206388e4aab75",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 872962,
+      "has_alpha": false
+    },
+    "en-US/iphone_6_9/card-03.png": {
+      "sha256": "45621026e648d9d7b467183e1899d2fdca7525fb9c29ae602b893ea17792f16c",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 838762,
+      "has_alpha": false
+    },
+    "en-US/iphone_6_9/card-02.png": {
+      "sha256": "501f2029e4083ba7236865d716e1f1536b28bd13f3dd639a1ff8763e754f0f98",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 834493,
+      "has_alpha": false
+    },
+    "en-US/iphone_6_9/card-01.png": {
+      "sha256": "f8b5188bce9cd36e9c97ea1cb03e5f9ef8b3a343dbc9eef28f64583971f52ad6",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 892159,
+      "has_alpha": false
+    },
+    "zh-Hans/mac_16_10/card-05.png": {
+      "sha256": "526453b636e38b960a3db1c0b13a73bcebff5e0652c1c91be7bc702a2261f2aa",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1140981,
+      "has_alpha": false
+    },
+    "zh-Hans/mac_16_10/card-04.png": {
+      "sha256": "5d99f250081c597fc0a6c0b291eabc4bf5c4900599141a5110ec23409221c6e6",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1170121,
+      "has_alpha": false
+    },
+    "zh-Hans/mac_16_10/card-06.png": {
+      "sha256": "1807c24d76191c3333476f49da31ac8bb4f2b6f72a9951b22eb5fbf8f69419cf",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1211728,
+      "has_alpha": false
+    },
+    "zh-Hans/mac_16_10/card-03.png": {
+      "sha256": "fdb040dc3f425a13dae00bacd24e8511a9933267a0644a35468f43a9d54f85dd",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1146786,
+      "has_alpha": false
+    },
+    "zh-Hans/mac_16_10/card-02.png": {
+      "sha256": "360d16d9dd2bee653f51eb9fcd74fd73946edc278a96f5cf7c2334d07622631d",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1169744,
+      "has_alpha": false
+    },
+    "zh-Hans/mac_16_10/card-01.png": {
+      "sha256": "551f67bf946786307c026585c9f01844325c60549353aadf5de0ec0583cdfe37",
+      "width": 2880,
+      "height": 1800,
+      "size_bytes": 1215649,
+      "has_alpha": false
+    },
+    "zh-Hans/iphone_6_9/card-05.png": {
+      "sha256": "218138b3452dc7ab3943d58b6773fcea7a220678786a8361fb0853f0d85ce1d5",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 759073,
+      "has_alpha": false
+    },
+    "zh-Hans/iphone_6_9/card-04.png": {
+      "sha256": "e067ba481fa006f6c3c244c836c7bf2e3ab514ceb86a46a15acd3bed9af84c9c",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 762033,
+      "has_alpha": false
+    },
+    "zh-Hans/iphone_6_9/card-06.png": {
+      "sha256": "be17de4989e44060e946fdc4339221c9c853628a698680c71c3d62d3eaf234f9",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 782796,
+      "has_alpha": false
+    },
+    "zh-Hans/iphone_6_9/card-03.png": {
+      "sha256": "53daf3522cbe4b5274a58dfc35baba73d11487c54e956da4407c2c36a6ac0615",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 747588,
+      "has_alpha": false
+    },
+    "zh-Hans/iphone_6_9/card-02.png": {
+      "sha256": "071942016da43287228f1b0ab87e8c5f33d9f90f2db58d867b35bede0def5a67",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 745679,
+      "has_alpha": false
+    },
+    "zh-Hans/iphone_6_9/card-01.png": {
+      "sha256": "e29ea4f4f6a4b112d3727fa41d458d6d3025d64e0f8c10d4182a0ce357bcc6b5",
+      "width": 1320,
+      "height": 2868,
+      "size_bytes": 800843,
+      "has_alpha": false
+    }
+  },
+  "geometry_comparison": {
+    "method": "Settled Studio preview and actual native Chrome export DOM; normalized by canvas width; text and line counts exact; numeric tolerance 0.0025",
+    "results": [
+      {
+        "name": "en-US/iphone_6_9/card-01.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/iphone_6_9/card-02.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/iphone_6_9/card-03.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/iphone_6_9/card-04.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/iphone_6_9/card-05.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/iphone_6_9/card-06.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/mac_16_10/card-01.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/mac_16_10/card-02.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/mac_16_10/card-03.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/mac_16_10/card-04.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/mac_16_10/card-05.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "en-US/mac_16_10/card-06.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/iphone_6_9/card-01.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/iphone_6_9/card-02.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/iphone_6_9/card-03.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/iphone_6_9/card-04.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/iphone_6_9/card-05.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/iphone_6_9/card-06.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/mac_16_10/card-01.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/mac_16_10/card-02.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/mac_16_10/card-03.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/mac_16_10/card-04.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/mac_16_10/card-05.png",
+        "geometry_matches": true
+      },
+      {
+        "name": "zh-Hans/mac_16_10/card-06.png",
+        "geometry_matches": true
+      }
+    ]
+  },
+  "render_geometry": {
+    "en-US/iphone_6_9/card-01.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "Plan your day",
+          "left": 0.2611718611283736,
+          "top": 0.11999999537612453,
+          "width": 0.4776172059955019,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": 0,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "en-US/iphone_6_9/card-02.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "Build a routine",
+          "left": 0.24738281712387547,
+          "top": 0.11999999537612453,
+          "width": 0.5052343195134943,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -1,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "en-US/iphone_6_9/card-03.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "Take a break",
+          "left": 0.2788281296238755,
+          "top": 0.11999999537612453,
+          "width": 0.4423436945134943,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -2,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "en-US/iphone_6_9/card-04.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "Learn something",
+          "left": 0.20257811112837357,
+          "top": 0.11999999537612453,
+          "width": 0.5948437315044981,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -3,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "en-US/iphone_6_9/card-05.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "Review progress",
+          "left": 0.20640624075224906,
+          "top": 0.11999999537612453,
+          "width": 0.5871484467477509,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -4,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "en-US/iphone_6_9/card-06.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "Stay focused",
+          "left": 0.2660937453761245,
+          "top": 0.11999999537612453,
+          "width": 0.4678124630089962,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -5,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "en-US/mac_16_10/card-01.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "Plan your day",
+          "left": 0.3673177083333333,
+          "top": 0.044444444444444446,
+          "width": 0.26534288194444444,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": 0,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "en-US/mac_16_10/card-02.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "Build a routine",
+          "left": 0.35965711805555556,
+          "top": 0.044444444444444446,
+          "width": 0.2806857638888889,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -1,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "en-US/mac_16_10/card-03.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "Take a break",
+          "left": 0.37712673611111114,
+          "top": 0.044444444444444446,
+          "width": 0.24574652777777778,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -2,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "en-US/mac_16_10/card-04.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "Learn something",
+          "left": 0.334765625,
+          "top": 0.044444444444444446,
+          "width": 0.33046875,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -3,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "en-US/mac_16_10/card-05.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "Review progress",
+          "left": 0.3368923611111111,
+          "top": 0.044444444444444446,
+          "width": 0.3261935763888889,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -4,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "en-US/mac_16_10/card-06.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "Stay focused",
+          "left": 0.37005208333333334,
+          "top": 0.044444444444444446,
+          "width": 0.2598958333333333,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -5,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "zh-Hans/iphone_6_9/card-01.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "\u89c4\u5212\u4e00\u5929",
+          "left": 0.3512109236283736,
+          "top": 0.11999999537612453,
+          "width": 0.2975781296238755,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": 0,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "zh-Hans/iphone_6_9/card-02.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "\u5efa\u7acb\u4e60\u60ef",
+          "left": 0.3512109236283736,
+          "top": 0.11999999537612453,
+          "width": 0.2975781296238755,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -1,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "zh-Hans/iphone_6_9/card-03.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "\u4f11\u606f\u4e00\u4e0b",
+          "left": 0.3512109236283736,
+          "top": 0.11999999537612453,
+          "width": 0.2975781296238755,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -2,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "zh-Hans/iphone_6_9/card-04.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "\u5b66\u4e60\u65b0\u77e5\u8bc6",
+          "left": 0.31652344212387545,
+          "top": 0.11999999537612453,
+          "width": 0.3669530926328717,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -3,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "zh-Hans/iphone_6_9/card-05.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "\u56de\u987e\u8fdb\u5c55",
+          "left": 0.3512109236283736,
+          "top": 0.11999999537612453,
+          "width": 0.2975781296238755,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -4,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "zh-Hans/iphone_6_9/card-06.png": {
+      "height": 2.172500147964015,
+      "texts": [
+        {
+          "text": "\u4fdd\u6301\u4e13\u6ce8",
+          "left": 0.3512109236283736,
+          "top": 0.11999999537612453,
+          "width": 0.2975781296238755,
+          "height": 0.09375,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.075,
+        "top": 0.49499997225674713,
+        "width": 0.85,
+        "height": 1.799999815044981
+      },
+      "background": {
+        "left": -5,
+        "top": 0,
+        "width": 6,
+        "height": 2.172500147964015
+      }
+    },
+    "zh-Hans/mac_16_10/card-01.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "\u89c4\u5212\u4e00\u5929",
+          "left": 0.4173394097222222,
+          "top": 0.044444444444444446,
+          "width": 0.16532118055555556,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": 0,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "zh-Hans/mac_16_10/card-02.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "\u5efa\u7acb\u4e60\u60ef",
+          "left": 0.4173394097222222,
+          "top": 0.044444444444444446,
+          "width": 0.16532118055555556,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -1,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "zh-Hans/mac_16_10/card-03.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "\u4f11\u606f\u4e00\u4e0b",
+          "left": 0.4173394097222222,
+          "top": 0.044444444444444446,
+          "width": 0.16532118055555556,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -2,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "zh-Hans/mac_16_10/card-04.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "\u5b66\u4e60\u65b0\u77e5\u8bc6",
+          "left": 0.3980685763888889,
+          "top": 0.044444444444444446,
+          "width": 0.20386284722222223,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -3,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "zh-Hans/mac_16_10/card-05.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "\u56de\u987e\u8fdb\u5c55",
+          "left": 0.4173394097222222,
+          "top": 0.044444444444444446,
+          "width": 0.16532118055555556,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -4,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    },
+    "zh-Hans/mac_16_10/card-06.png": {
+      "height": 0.625,
+      "texts": [
+        {
+          "text": "\u4fdd\u6301\u4e13\u6ce8",
+          "left": 0.4173394097222222,
+          "top": 0.044444444444444446,
+          "width": 0.16532118055555556,
+          "height": 0.052083333333333336,
+          "lines": 1
+        }
+      ],
+      "device": {
+        "left": 0.18888888888888888,
+        "top": 0.16909722222222223,
+        "width": 0.6222222222222222,
+        "height": 0.3888888888888889
+      },
+      "background": {
+        "left": -5,
+        "top": 0,
+        "width": 6,
+        "height": 0.625
+      }
+    }
+  }
+}

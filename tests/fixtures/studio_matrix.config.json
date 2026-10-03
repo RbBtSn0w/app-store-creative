@@ -1,0 +1,188 @@
+{
+  "project": {
+    "id": "studio-reference",
+    "name": "Studio reference fixture",
+    "bundleId": "com.example.studioreference",
+    "defaultLocale": "en-US",
+    "locales": [
+      "en-US",
+      "zh-Hans"
+    ]
+  },
+  "targets": [
+    "iphone_6_9",
+    "mac_16_10"
+  ],
+  "theme": {
+    "background": {
+      "type": "gradient",
+      "colors": [
+        "#17213b",
+        "#311042"
+      ],
+      "angle": 110
+    }
+  },
+  "studio": {
+    "requireExportEvidence": true
+  },
+  "cards": [
+    {
+      "id": "card-01",
+      "headline": "Plan your day",
+      "layout": "phone_bottom",
+      "variants": {
+        "iphone_6_9": {
+          "screenshot": "/captures/phone-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "规划一天",
+              "screenshot": "/captures/phone-zh.jpg"
+            }
+          }
+        },
+        "mac_16_10": {
+          "layout": "mac_native_hero",
+          "screenshot": "/captures/mac-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "规划一天",
+              "screenshot": "/captures/mac-zh.jpg"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "card-02",
+      "headline": "Build a routine",
+      "layout": "phone_bottom",
+      "variants": {
+        "iphone_6_9": {
+          "screenshot": "/captures/phone-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "建立习惯",
+              "screenshot": "/captures/phone-zh.jpg"
+            }
+          }
+        },
+        "mac_16_10": {
+          "layout": "mac_native_hero",
+          "screenshot": "/captures/mac-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "建立习惯",
+              "screenshot": "/captures/mac-zh.jpg"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "card-03",
+      "headline": "Take a break",
+      "layout": "phone_bottom",
+      "variants": {
+        "iphone_6_9": {
+          "screenshot": "/captures/phone-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "休息一下",
+              "screenshot": "/captures/phone-zh.jpg"
+            }
+          }
+        },
+        "mac_16_10": {
+          "layout": "mac_native_hero",
+          "screenshot": "/captures/mac-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "休息一下",
+              "screenshot": "/captures/mac-zh.jpg"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "card-04",
+      "headline": "Learn something",
+      "layout": "phone_bottom",
+      "variants": {
+        "iphone_6_9": {
+          "screenshot": "/captures/phone-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "学习新知识",
+              "screenshot": "/captures/phone-zh.jpg"
+            }
+          }
+        },
+        "mac_16_10": {
+          "layout": "mac_native_hero",
+          "screenshot": "/captures/mac-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "学习新知识",
+              "screenshot": "/captures/mac-zh.jpg"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "card-05",
+      "headline": "Review progress",
+      "layout": "phone_bottom",
+      "variants": {
+        "iphone_6_9": {
+          "screenshot": "/captures/phone-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "回顾进展",
+              "screenshot": "/captures/phone-zh.jpg"
+            }
+          }
+        },
+        "mac_16_10": {
+          "layout": "mac_native_hero",
+          "screenshot": "/captures/mac-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "回顾进展",
+              "screenshot": "/captures/mac-zh.jpg"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "card-06",
+      "headline": "Stay focused",
+      "layout": "phone_bottom",
+      "variants": {
+        "iphone_6_9": {
+          "screenshot": "/captures/phone-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "保持专注",
+              "screenshot": "/captures/phone-zh.jpg"
+            }
+          }
+        },
+        "mac_16_10": {
+          "layout": "mac_native_hero",
+          "screenshot": "/captures/mac-en.jpg",
+          "localizations": {
+            "zh-Hans": {
+              "headline": "保持专注",
+              "screenshot": "/captures/mac-zh.jpg"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "connectedTrack": true
+}
