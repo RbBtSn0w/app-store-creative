@@ -43,3 +43,21 @@ it('renders the localized product capture with the localized headline', () => {
   expect(markup).toContain('/zh.png');
   expect(markup).not.toContain('/en.png');
 });
+
+it('does not restore an explicitly cleared localized subheadline', () => {
+  const markup = renderToStaticMarkup(<CardView
+    card={{ id: 'hero', headline: 'English', subheadline: 'Default subheadline' }} index={0}
+    target="iphone_6_9" theme={{ background: { type: 'solid', colors: ['#000'] } }}
+    localizedText={{ headline: 'Chinese', subheadline: '' }} isExport />);
+  expect(markup).not.toContain('Default subheadline');
+});
+
+
+it('keeps markup in user copy as literal text', () => {
+  const markup = renderToStaticMarkup(<CardView card={{ id: 'safe', headline: '<script>alert("copy")</script>',
+    subheadline: '<b>Still text</b>', layout: 'pure_text' }} index={0} target="iphone_6_9"
+    theme={{ background: { type: 'solid', colors: ['#111111'] } }} isExport />);
+  expect(markup).toContain('&lt;script&gt;');
+  expect(markup).toContain('&lt;b&gt;Still text&lt;/b&gt;');
+  expect(markup).not.toContain('<script>');
+});

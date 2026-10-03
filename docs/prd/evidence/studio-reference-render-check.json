@@ -1,0 +1,184 @@
+{
+  "date": "2026-10-03",
+  "surface": "Codex in-app browser",
+  "scope": "Synthetic reference render-readiness check; not production export or visual parity acceptance",
+  "config_sha256": "4de5f1065c57214f04a449b8f1175dee9735269adca0f65979c1dc3d726cc880",
+  "source_hashes": {
+    "captures/phone-en.jpg": "6516024fbc71295dc3d4a218f64854eb4c7d24033cf8625fc165a0e02a1916ee",
+    "captures/mac-en.jpg": "2709e0711ea289a9ff3213a74f9397cf23165a4d21c4886ad611020d75617d0e",
+    "captures/phone-zh.jpg": "99ad1a32a560592338e3975bb2729e5fbb26271e2df0c7c52cbf41876aa8b519",
+    "captures/mac-zh.jpg": "cff4fc7ef5af6375e47241bfe68fbe2dd3af52f88173f6522956b728ce584177"
+  },
+  "passed_combinations": 24,
+  "results": [
+    {
+      "id": "card-01",
+      "target": "iphone_6_9",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-02",
+      "target": "iphone_6_9",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-03",
+      "target": "iphone_6_9",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-04",
+      "target": "iphone_6_9",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-05",
+      "target": "iphone_6_9",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-06",
+      "target": "iphone_6_9",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-01",
+      "target": "iphone_6_9",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-02",
+      "target": "iphone_6_9",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-03",
+      "target": "iphone_6_9",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-04",
+      "target": "iphone_6_9",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-05",
+      "target": "iphone_6_9",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-06",
+      "target": "iphone_6_9",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-01",
+      "target": "mac_16_10",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-02",
+      "target": "mac_16_10",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-03",
+      "target": "mac_16_10",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-04",
+      "target": "mac_16_10",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-05",
+      "target": "mac_16_10",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-06",
+      "target": "mac_16_10",
+      "locale": "en-US",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-01",
+      "target": "mac_16_10",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-02",
+      "target": "mac_16_10",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-03",
+      "target": "mac_16_10",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-04",
+      "target": "mac_16_10",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-05",
+      "target": "mac_16_10",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    },
+    {
+      "id": "card-06",
+      "target": "mac_16_10",
+      "locale": "zh-Hans",
+      "ready": "true",
+      "error": null
+    }
+  ],
+  "production_export_verified": false
+}
