@@ -275,7 +275,7 @@ def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
         changed = compute_sha256(cfg_file) != config_hash
         current_sources, current_input_errors = contract.input_hashes(repo_root, config)
         changed = changed or current_sources != capture_sources or current_input_errors != input_errors
-        changed = changed or any(compute_sha256(contract.local_asset(repo_root, name)) != sha
+        changed = changed or any(compute_sha256(contract.local_asset(repo_root, name, config)) != sha
                                   for name, sha in sources.items())
         changed = changed or any(compute_sha256(art_dir / name) != record['sha256']
                                   for name, record in asset_records.items())

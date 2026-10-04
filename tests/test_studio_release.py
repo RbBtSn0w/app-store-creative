@@ -12,6 +12,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).parents[1] / "plugins/app-store-creative/scripts"))
 import export_engine
 import validator
+import studio_contract
 from test_v2_workflow import create_mock_png
 
 
@@ -61,8 +62,8 @@ class StudioReleaseTests(unittest.TestCase):
             second = source.read_bytes()
             b, _ = self.request(ctx, "/api/assets", {"name": "capture.png", "data": base64.b64encode(second).decode()})
             self.assertNotEqual(a["path"], b["path"])
-            self.assertEqual((self.root / a["path"].lstrip("/")).read_bytes(), first)
-            self.assertEqual((self.root / b["path"].lstrip("/")).read_bytes(), second)
+            self.assertEqual(studio_contract.local_asset(self.root, a["path"], self.config).read_bytes(), first)
+            self.assertEqual(studio_contract.local_asset(self.root, b["path"], self.config).read_bytes(), second)
             with self.assertRaises(urllib.error.HTTPError) as corrupt:
                 self.request(ctx, "/api/assets", {"name": "bad.png", "data": base64.b64encode(first[:40]).decode()})
             self.assertEqual(corrupt.exception.code, 400)

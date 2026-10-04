@@ -221,6 +221,7 @@ class TestV2Workflow(unittest.TestCase):
         cfg_file = self.root / "creative.config.json"
         cfg_file.write_text(self.template_config.read_text())
 
+        original_config = cfg_file.read_bytes()
         with export_engine.LocalServerContext(self.root, cfg_file) as ctx:
             # 1. Fetch current config via GET /api/config
             get_req = urllib.request.Request(f"http://127.0.0.1:{ctx.port}/api/config")
@@ -247,11 +248,14 @@ class TestV2Workflow(unittest.TestCase):
             saved_disk = json.loads(cfg_file.read_text())
             self.assertEqual(saved_disk["cards"][0]["headline"], "Updated Headline From Test")
 
-            # 4. Verify backup was created in .creative/backups/
-            backup_dir = self.root / ".creative/backups"
-            self.assertTrue(backup_dir.exists())
-            backups = list(backup_dir.glob("creative.config.*.json"))
-            self.assertGreaterEqual(len(backups), 1)
+            # 4. Verify the original bytes have a managed configuration backup.
+            import artifact_lifecycle
+            core = artifact_lifecycle.Lifecycle(self.root, json.loads(self.template_config.read_text()))
+            backups = [core._read('artifacts', p.stem) for p in (core.paths.workspace / 'records/artifacts').glob('*.json')]
+            backups = [record for record in backups if record['role'] == 'configuration']
+            self.assertEqual(len(backups), 1)
+            self.assertEqual(core.object_path(backups[0]['sha256']).read_bytes(), original_config)
+            self.assertFalse((self.root / '.creative/backups').exists())
 
             # 5. Verify server gracefully handles invalid/malformed JSON
             invalid_post = urllib.request.Request(

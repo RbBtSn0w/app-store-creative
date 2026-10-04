@@ -130,9 +130,26 @@ def resolve_card(config, card, target, locale):
     return result, localized
 
 
-def local_asset(root, name):
+def local_asset(root, name, config=None):
     if not isinstance(name, str) or not name or '://' in name or name.startswith('data:'):
         raise ValueError("Assign an existing local capture")
+    from input_lifecycle import imported_identity, SNAPSHOT_INDEX
+    if imported_identity(name):
+        logical = name.lstrip('/')
+        snapshot = root / SNAPSHOT_INDEX
+        if snapshot.is_file() and not snapshot.is_symlink():
+            expected = json.loads(snapshot.read_text()).get(logical)
+            candidate = root / logical
+            if candidate.resolve() != candidate or not candidate.is_file() or digest(candidate.read_bytes()) != expected:
+                raise ValueError('Managed input snapshot integrity failure')
+            return candidate
+        if config is None:
+            raise ValueError('Managed input resolution requires project configuration')
+        from artifact_lifecycle import Lifecycle
+        try:
+            return Lifecycle(root, config).resolve_import(logical)[1]
+        except OSError as error:
+            raise ValueError('Missing managed input') from error
     path = (root / name.lstrip('/')).resolve()
     if not path.is_relative_to(root.resolve()) or not path.is_file():
         raise ValueError(f"Missing or escaped local capture: {name}")
@@ -140,6 +157,7 @@ def local_asset(root, name):
 
 
 def input_hashes(root, config, targets=None, locales=None):
+    from input_lifecycle import imported_identity as imported_identity_for_hash
     sources = {}
     findings = []
     strict = config.get('studio', {}).get('requireExportEvidence', False)
@@ -160,12 +178,13 @@ def input_hashes(root, config, targets=None, locales=None):
                     if resolved.get('layout') != 'pure_text':
                         name = resolved.get('screenshot')
                         if name or strict:
-                            path = local_asset(root, name)
-                            sources[str(path.relative_to(root.resolve()))] = digest(path.read_bytes())
+                            path = local_asset(root, name, config)
+                            sources[name.lstrip('/') if imported_identity_for_hash(name) else str(path.relative_to(root.resolve()))] = digest(path.read_bytes())
                     bg = resolved.get('customBackground', config.get('theme', {}).get('background', {}))
                     if bg.get('type') == 'image':
-                        path = local_asset(root, bg.get('imageUrl'))
-                        sources[str(path.relative_to(root.resolve()))] = digest(path.read_bytes())
+                        name = bg.get('imageUrl')
+                        path = local_asset(root, name, config)
+                        sources[name.lstrip('/') if imported_identity_for_hash(name) else str(path.relative_to(root.resolve()))] = digest(path.read_bytes())
                 except ValueError as error:
                     findings.append(f"{label}: {error}")
     return sources, findings

@@ -3,7 +3,6 @@
 
 import json
 import base64
-import uuid
 import studio_contract as contract
 import mimetypes
 import urllib.parse
@@ -90,7 +89,7 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 self._json(dict(self.job))
                 return
             try:
-                import validator
+                import production_lifecycle
                 with contract.WRITE_LOCK:
                     reviewed_revision = contract.revision(self.config_path)
                     config = contract.check_config(json.loads(self.config_path.read_bytes()))
@@ -98,18 +97,44 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     import export_engine
                     if not export_engine.find_chrome_binary():
                         input_errors.append('Install Chrome or Chromium before exporting')
-                    result = validator.run_validation(self.repo_root, self.config_path, write_lockfile=False)
+                    current = production_lifecycle.latest(self.repo_root, self.config_path)
                     if reviewed_revision != contract.revision(self.config_path):
                         raise ValueError('Inputs changed while checking; review and check again')
-                self._json({**self.job, "running": False, "validation": result, "configRevision": reviewed_revision, "inputErrors": input_errors})
+                self._json({**self.job, **current, "running": False, "configRevision": reviewed_revision, "inputErrors": input_errors})
             except Exception as error:
                 self._json({**self.job, 'running': False, 'validation': None, 'error': str(error)})
+            return
+        if path.startswith('/api/artifacts/'):
+            try:
+                from artifact_lifecycle import Lifecycle
+                parts = path.split('/', 4)
+                if len(parts) != 5:
+                    raise ValueError('Missing artifact identity')
+                core = Lifecycle(self.repo_root, json.loads(self.config_path.read_text()), self.config_path)
+                candidate = core._read('candidates', parts[3])
+                for identity in candidate['artifacts']:
+                    artifact = core.verify_artifact(identity)
+                    if artifact.get('logical_path') == parts[4] and artifact['role'] in ('screenshot', 'poster', 'preview'):
+                        self._serve_file(core.object_path(artifact['sha256']), 'video/mp4' if artifact['role'] == 'preview' else 'image/png')
+                        return
+                raise ValueError('Artifact is not part of candidate')
+            except (ValueError, OSError) as error:
+                self._json({'error': str(error)}, 404)
             return
         rel = path.lstrip('/')
         candidate = self.repo_root / rel
         snapshot = getattr(self, 'asset_bytes', {}).get(rel)
         if snapshot is not None and is_safe_child(self.repo_root, candidate):
             self._serve_file(candidate, content=snapshot)
+            return
+        if rel.startswith('api/inputs/'):
+            try:
+                from artifact_lifecycle import Lifecycle
+                core = Lifecycle(self.repo_root, json.loads(self.config_path.read_text()), self.config_path)
+                imported, source = core.resolve_import(rel)
+                self._serve_file(source, 'image/png' if rel.endswith('.png') else 'image/jpeg')
+            except (ValueError, OSError) as error:
+                self._json({'error': str(error)}, 404)
             return
         # Serve only image assets from the consuming project, never its secrets or source.
         if rel and is_safe_child(self.repo_root, candidate) and candidate.is_file() and candidate.suffix.lower() in ('.png', '.jpg', '.jpeg', '.webp'):
@@ -157,27 +182,27 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     if expected and expected != contract.revision(self.config_path):
                         self._json({"ok": False, "error": "Project changed in another tab or agent. Reload or keep your draft."}, 409)
                         return
+                    from artifact_lifecycle import Lifecycle
+                    core = Lifecycle(self.repo_root, payload, self.config_path)
                     if self.config_path.exists():
-                        backup = self.repo_root / '.creative/backups' / f'creative.config.{uuid.uuid4().hex}.json'
-                        backup.parent.mkdir(parents=True, exist_ok=True)
-                        backup.write_bytes(self.config_path.read_bytes())
+                        previous = json.loads(self.config_path.read_text())
+                        previous_core = Lifecycle(self.repo_root, previous, self.config_path)
+                        owned = (previous_core.paths.workspace / 'owner.json').exists()
+                        if owned and previous_core.paths.binding() != core.paths.binding():
+                            raise ValueError('Existing storage requires explicit relocate before changing roots')
+                        if owned and previous.get('project', {}).get('id') != payload.get('project', {}).get('id'):
+                            raise ValueError('Managed project identity cannot change during configuration save')
+                        (previous_core if owned else core).backup_configuration(self.config_path.read_bytes(), 'studio-user')
                     contract.atomic_json(self.config_path, payload)
                     self._json({"ok": True}, etag=contract.revision(self.config_path))
                 return
             if path == '/api/assets':
                 data = base64.b64decode(payload.get('data', ''), validate=True)
-                width, height, extension = contract.inspect_capture(data)
-                target = self.repo_root / '.creative/assets' / f'{contract.digest(data)}.{extension}'
-                if not is_safe_child(self.repo_root, target):
-                    raise ValueError('Asset directory escapes project')
+                from artifact_lifecycle import Lifecycle
                 with contract.WRITE_LOCK:
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    if not target.exists():
-                        target.write_bytes(data)
-                    elif target.read_bytes() != data:
-                        raise ValueError('Stored asset differs from its content identity')
-                self._json({"ok": True, "path": '/' + str(target.relative_to(self.repo_root)),
-                            "width": width, "height": height, "name": str(payload.get('name', 'Capture'))})
+                    core = Lifecycle(self.repo_root, json.loads(self.config_path.read_text()), self.config_path)
+                    imported = core.import_capture(data, str(payload.get('name', 'Capture')), 'studio-user')
+                self._json({'ok': True, **imported})
                 return
             if path == '/api/export':
                 import export_engine
@@ -194,12 +219,14 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 try:
                     def progress(completed, total, item):
                         self.job.update(completed=completed, total=total, item=item)
-                    result = export_engine.run_export(self.repo_root, self.config_path,
+                    import production_lifecycle
+                    result = production_lifecycle.produce(self.repo_root, self.config_path,
                         targets=[payload['target']] if payload.get('scope') == 'selected' else None,
                         locales=[payload['locale']] if payload.get('scope') == 'selected' else None,
                         progress=progress, expected_revision=self.headers.get('If-Match'))
-                    validation = validator.run_validation(self.repo_root, self.config_path)
-                    self.job.update(running=False, completed=result['total_rendered'], validation=validation)
+                    validation = result['validation']
+                    self.job.update(running=False, completed=result['export']['total_rendered'], validation=validation,
+                                    candidate_id=result['candidate_id'], run_id=result['run_id'])
                     self._json({"ok": result.get('status') == 'PASS', "scope": payload.get('scope', 'all'),
                                 "result": result, "validation": validation})
                 finally:

@@ -5,6 +5,32 @@
   "type": "object",
   "required": ["project", "theme", "cards"],
   "properties": {
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "workspaceRoot": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Storage path resolved relative to the consuming project root; external locations require explicit absolute paths."
+        },
+        "objectRoot": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Storage path resolved relative to the consuming project root; external locations require explicit absolute paths."
+        },
+        "releaseRoot": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Storage path resolved relative to the consuming project root; external locations require explicit absolute paths."
+        },
+        "publicationRoot": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Storage path resolved relative to the consuming project root; external locations require explicit absolute paths."
+        }
+      }
+    },
     "project": {
       "type": "object",
       "required": ["id", "name", "bundleId"],
