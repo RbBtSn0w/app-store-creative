@@ -25,6 +25,11 @@ class ProductionLifecycleTests(unittest.TestCase):
                        'publishing': {'version': '1.5'}, 'storage': {'workspaceRoot': 'managed'}}
         self.cfg = self.root / 'creative.config.json'; self.cfg.write_text(json.dumps(self.config))
 
+    def test_export_output_override_names_flag_and_storage_migration(self):
+        args = cli.build_parser().parse_args(['export', '--repo', str(self.root), '--output-dir', 'outputs'])
+        with self.assertRaisesRegex(ValueError, r'--output-dir.*storage.workspaceRoot'):
+            cli.run(args)
+
     def renderer(self, repo_root, config_path=None, output_dir=None, **kwargs):
         output_dir = output_dir or repo_root / 'artifacts'
         output = output_dir / 'en-US/mac_16_10/hero.png'

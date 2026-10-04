@@ -43,7 +43,7 @@ def run(args):
 
     if args.command == "export":
         if getattr(args, 'output_dir', None):
-            raise ValueError('Configure storage roots instead of overriding managed attempt output paths')
+            raise ValueError('export --output-dir is unsupported for managed attempts; configure storage.workspaceRoot in creative.config.json instead (and storage.objectRoot for retained media)')
         cfg = project_path(getattr(args, 'config', None))
         return production_lifecycle.produce(root, cfg, targets=getattr(args, 'targets', None),
             locales=getattr(args, 'locales', None), with_video=getattr(args, 'with_video', False))
@@ -140,7 +140,7 @@ def build_parser():
 
     exp = cmd("export")
     exp.add_argument("--config", type=Path, help="Path to creative.config.json")
-    exp.add_argument("--output-dir", type=Path, help="Output directory for rendered assets")
+    exp.add_argument("--output-dir", type=Path, help="Unsupported for managed export; configure storage.workspaceRoot in creative.config.json instead")
     exp.add_argument("--target", action="append", dest="targets", help="Specific target to export (repeatable)")
     exp.add_argument("--locale", action="append", dest="locales", help="Specific locale to export (repeatable)")
     exp.add_argument("--with-video", action="store_true", help="Also synthesize App Preview video")

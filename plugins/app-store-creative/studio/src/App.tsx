@@ -44,8 +44,8 @@ export const App: React.FC = () => {
   const [layoutFindings, setLayoutFindings] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[]; candidate_id?: string; run_id?: string;
-    validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } }>({});
+  const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[]; candidate_id?: string | null; run_id?: string;
+    validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } | null }>({});
   const state = useRef(config); state.current = config;
   const revision = useRef<string | undefined>(undefined);
   const version = useRef(0);
