@@ -140,6 +140,7 @@ export interface CardConfig {
 }
 
 export interface CreativeConfig {
+  storage?: { workspaceRoot?: string; objectRoot?: string; releaseRoot?: string; publicationRoot?: string };
   project: ProjectInfo;
   targets: TargetDevice[];
   theme: ThemeConfig;

@@ -15,6 +15,8 @@ if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 
 import creative_workflow as engine
+import lifecycle_commands
+import production_lifecycle
 import export_engine
 import studio_server
 import validator
@@ -27,37 +29,32 @@ def ns(**values):
 
 def run(args):
     root = (args.repo or Path.cwd()).resolve()
+    def project_path(value):
+        return (value if value.is_absolute() else root / value).resolve() if value else None
+
+    if args.command in ("run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input"):
+        return lifecycle_commands.execute(args)
 
     # Modern v2 commands
     if args.command in ("dev", "studio"):
-        cfg = args.config.resolve() if getattr(args, "config", None) else None
+        cfg = project_path(getattr(args, "config", None))
         studio_server.run_studio_server(port=args.port, repo_root=root, config_path=cfg)
         return {"status": "ok", "message": f"Studio stopped on port {args.port}"}
 
     if args.command == "export":
-        cfg = args.config.resolve() if getattr(args, "config", None) else None
-        out = args.output_dir.resolve() if getattr(args, "output_dir", None) else None
-        export_res = export_engine.run_export(
-            repo_root=root,
-            config_path=cfg,
-            output_dir=out,
-            targets=getattr(args, "targets", None),
-            locales=getattr(args, "locales", None),
-        )
-        if getattr(args, "with_video", False):
-            video_engine.produce_preview_from_config(root, config_path=cfg, output_dir=out)
-        # Automatically update release lock on successful export
-        lock_res = validator.run_validation(root, config_path=cfg, artifacts_dir=out, write_lockfile=True)
-        status = "FAIL" if export_res.get("status") == "FAIL" else (lock_res.get("status", "PASS") if isinstance(lock_res, dict) else "PASS")
-        return {"status": status, "export": export_res, "lock": lock_res}
+        if getattr(args, 'output_dir', None):
+            raise ValueError('export --output-dir is unsupported for managed attempts; configure storage.workspaceRoot in creative.config.json instead (and storage.objectRoot for retained media)')
+        cfg = project_path(getattr(args, 'config', None))
+        return production_lifecycle.produce(root, cfg, targets=getattr(args, 'targets', None),
+            locales=getattr(args, 'locales', None), with_video=getattr(args, 'with_video', False))
 
     if args.command == "verify":
         # Support both legacy --release plan verification and modern declarative verification
         if getattr(args, "release", None):
             planned = engine.command_plan(ns(root=root, manifest=args.release, run_id=args.run_id))
             return {"run_id": planned["run_id"], "verified": [engine.command_verify(ns(root=root, task_id=t)) for t in planned["task_ids"]]}
-        cfg = args.config.resolve() if getattr(args, "config", None) else None
-        out = args.output_dir.resolve() if getattr(args, "output_dir", None) else None
+        cfg = project_path(getattr(args, "config", None))
+        out = project_path(getattr(args, "output_dir", None))
         return validator.run_validation(root, config_path=cfg, artifacts_dir=out, write_lockfile=True)
 
     if args.command == "publish":
@@ -133,6 +130,8 @@ def build_parser():
         x.add_argument("--repo", type=Path, default=Path.cwd())
         return x
 
+    lifecycle_commands.add_commands(sub)
+
     # Modern v2 Subcommands
     for name in ("dev", "studio"):
         dev = cmd(name)
@@ -141,7 +140,7 @@ def build_parser():
 
     exp = cmd("export")
     exp.add_argument("--config", type=Path, help="Path to creative.config.json")
-    exp.add_argument("--output-dir", type=Path, help="Output directory for rendered assets")
+    exp.add_argument("--output-dir", type=Path, help="Unsupported for managed export; configure storage.workspaceRoot in creative.config.json instead")
     exp.add_argument("--target", action="append", dest="targets", help="Specific target to export (repeatable)")
     exp.add_argument("--locale", action="append", dest="locales", help="Specific locale to export (repeatable)")
     exp.add_argument("--with-video", action="store_true", help="Also synthesize App Preview video")

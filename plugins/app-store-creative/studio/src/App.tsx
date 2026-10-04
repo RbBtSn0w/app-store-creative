@@ -44,8 +44,8 @@ export const App: React.FC = () => {
   const [layoutFindings, setLayoutFindings] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[];
-    validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } }>({});
+  const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[]; candidate_id?: string | null; run_id?: string;
+    validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } | null }>({});
   const state = useRef(config); state.current = config;
   const revision = useRef<string | undefined>(undefined);
   const version = useRef(0);
@@ -114,7 +114,7 @@ export const App: React.FC = () => {
       const health = await request('/api/health');
       if (!health.body.chrome) throw new Error('Install Chrome or Chromium before exporting. Your project is saved.');
       const { body } = await request('/api/export', { scope, target, locale }, revision.current, 30 * 60 * 1000);
-      setStatus({ validation: body.validation });
+      setStatus({ validation: body.validation, candidate_id: body.result?.candidate_id, run_id: body.result?.run_id });
       if (!body.ok) throw new Error(body.result?.errors?.join('\n') || 'Export needs attention');
       setNotice(scope === 'selected' ? 'Selected set exported. Full release verification is shown separately.' : 'Full matrix exported. Review the verification result.');
     } catch (reason) { setError((reason as Error).message); }
@@ -236,17 +236,17 @@ export const App: React.FC = () => {
       </div>
       <section className="m-6 p-5 border border-white/10 rounded-xl">
         <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy} onClick={refreshStatus}>Check current files</button></div>
-        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : legacyChecked ? 'These files passed legacy checks. Enable reviewed rendering before treating them as a verified release.' : 'Export and verify the full matrix before preparing a store handoff.'} Outputs are saved in this project’s artifacts folder.</p>
+        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : legacyChecked ? 'These files passed legacy checks. Enable reviewed rendering before treating them as a verified release.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
         {!config.studio?.requireExportEvidence && <button onClick={() => {
           edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
           if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
         }}>Enable reviewed rendering</button>}
         {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto">{errors.map((finding, index) => <li key={index}>{finding}</li>)}</ul>}
-        {!dirty && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
+        {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
           <ul className="grid gap-2 my-3 text-sm">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
             const name = `${language}/${device}/${card.id}.png`;
             return Object.hasOwn(status.validation!.assets, name) ? <li key={name}><a className="text-indigo-200 underline" target="_blank" rel="noreferrer"
-              href={'/artifacts/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
+              href={'/api/artifacts/' + encodeURIComponent(status.candidate_id || '') + '/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
           })))}</ul>}
         {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
       </section>
