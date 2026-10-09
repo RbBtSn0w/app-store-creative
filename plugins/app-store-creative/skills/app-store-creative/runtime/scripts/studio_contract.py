@@ -69,8 +69,13 @@ def check_background(value, label):
 
 
 def check_config(config):
+    if isinstance(config, dict):
+        from artifact_policy import resolve
+        resolve(config)
     if not isinstance(config, dict) or not isinstance(config.get('cards'), list):
         raise ValueError("Configuration requires a cards array")
+    from project_identity import require_project_identity
+    require_project_identity(config)
     for field in ('project',):
         if not isinstance(config.get(field), dict):
             raise ValueError(f'Configuration requires a {field} object')

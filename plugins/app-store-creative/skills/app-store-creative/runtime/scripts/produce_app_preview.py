@@ -5,8 +5,15 @@ import argparse, hashlib, json, math, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 
-def build_command(contract: dict, output: Path) -> list[str]:
-    ffmpeg = shutil.which("ffmpeg") or "ffmpeg"
+def overlay_coordinate(value, bound, name):
+    if (isinstance(value, bool) or not isinstance(value, (int, float))
+            or not -bound <= value <= bound or not math.isfinite(value)):
+        raise ValueError('Overlay coordinate ' + name + ' must be a finite canvas position')
+    return value
+
+
+def build_command(contract: dict, output: Path, tools=None) -> list[str]:
+    ffmpeg = tools.paths["ffmpeg"] if tools is not None else shutil.which("ffmpeg") or "ffmpeg"
     segments = contract.get("segments") or []
     if not isinstance(segments, list) or not segments: raise ValueError("contract requires non-empty segments")
     width = int(contract["width"]); height = int(contract["height"]); fps = float(contract["fps"]); duration = float(contract["duration"])
@@ -56,7 +63,9 @@ def build_command(contract: dict, output: Path) -> list[str]:
             filters.append(f"[{current}]drawtext=text='{escaped}':x=(w-text_w)/2:y=h*0.85:enable='between(t,{start},{end})'[{target}]")
         elif overlay.get("type") == "image":
             source_index = overlay_inputs[image_index]; image_index += 1
-            filters.append(f"[{source_index}:v:0]format=rgba[overlay{index}];[{current}][overlay{index}]overlay=x={overlay.get('x', 0)}:y={overlay.get('y', 0)}:enable='between(t,{start},{end})'[{target}]")
+            x = overlay_coordinate(overlay.get('x', 0), width, 'x')
+            y = overlay_coordinate(overlay.get('y', 0), height, 'y')
+            filters.append(f"[{source_index}:v:0]format=rgba[overlay{index}];[{current}][overlay{index}]overlay=x={x}:y={y}:enable='between(t,{start},{end})'[{target}]")
         else: raise ValueError("overlay type must be text or image")
         current = target
     command += ["-filter_complex", ";".join(filters), "-map", f"[{current}]", "-map", "[a]", "-t", str(duration),
@@ -65,8 +74,8 @@ def build_command(contract: dict, output: Path) -> list[str]:
     return command
 
 
-def validate_output(path: Path, contract: dict) -> dict:
-    probe = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+def validate_output(path: Path, contract: dict, tools=None) -> dict:
+    probe = subprocess.run([tools.paths["ffprobe"] if tools is not None else "ffprobe", "-v", "error", "-show_entries",
                             "format=duration:stream=codec_type,codec_name,width,height,r_frame_rate", "-of", "json", str(path)],
                            check=True, text=True, capture_output=True)
     payload = json.loads(probe.stdout); streams = payload.get("streams", [])
@@ -87,17 +96,17 @@ def digest(path: Path) -> str:
         return result.hexdigest()
 
 
-def probe_media(path: Path) -> dict:
-    result = subprocess.run(["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", str(path)],
+def probe_media(path: Path, tools=None) -> dict:
+    result = subprocess.run([tools.paths["ffprobe"] if tools is not None else "ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", str(path)],
                             check=True, text=True, capture_output=True)
     return json.loads(result.stdout)
 
 
-def preflight_sources(contract: dict) -> list[dict]:
+def preflight_sources(contract: dict, tools=None) -> list[dict]:
     sources = []
     for segment in contract["segments"]:
         path = Path(segment["path"]).resolve()
-        probe = probe_media(path)
+        probe = probe_media(path, tools)
         if not any(s.get("codec_type") == "video" for s in probe.get("streams", [])):
             raise ValueError(f"source has no video: {path}")
         if float(segment.get("start", 0)) + float(segment["duration"]) > float(probe["format"]["duration"]) + 0.01:
@@ -118,27 +127,29 @@ def execute(contract: dict, output: Path, receipt: Path, snapshot: Path) -> dict
         if path.exists(): raise ValueError(f"refusing to overwrite existing artifact: {path}")
     if len({p.resolve() for p in (output, receipt, snapshot)}) != 3:
         raise ValueError("output, receipt, and snapshot must be distinct")
-    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
-        raise ValueError("ffmpeg and ffprobe are required")
-    filters = subprocess.run(["ffmpeg", "-hide_banner", "-filters"], check=True, capture_output=True, text=True).stdout
+    from media_tool_identity import MediaTools
+    tools = MediaTools()
+    command = build_command(contract, output, tools)
+    filters = subprocess.run([tools.paths["ffmpeg"], "-hide_banner", "-filters"], check=True, capture_output=True, text=True).stdout
     if any(o.get("type") == "text" for o in contract.get("overlays", [])) and "drawtext" not in filters:
         raise ValueError("this ffmpeg build lacks drawtext; use an image overlay or a build with drawtext")
-    sources = preflight_sources(contract)
+    sources = preflight_sources(contract, tools)
     for path in (output, receipt, snapshot): path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=output.parent) as scratch:
         encoded = Path(scratch) / output.name
-        actual_command = build_command(contract, encoded)
+        actual_command = build_command(contract, encoded, tools)
         subprocess.run(actual_command, check=True, capture_output=True)
-        probe = validate_output(encoded, contract)
+        probe = validate_output(encoded, contract, tools)
         image = Path(scratch) / "acceptance.png"
         # Six evenly spaced real frames; editorial review remains a human decision.
-        snapshot_command = ["ffmpeg", "-hide_banner", "-nostdin", "-y", "-i", str(encoded),
+        snapshot_command = [tools.paths["ffmpeg"], "-hide_banner", "-nostdin", "-y", "-i", str(encoded),
                             "-vf", f"fps=6/{float(contract['duration'])},scale=480:-1,tile=3x2",
                             "-frames:v", "1", str(image)]
         subprocess.run(snapshot_command, check=True, capture_output=True)
         if any(digest(Path(s["path"])) != s["sha256"] for s in sources):
             raise ValueError("source changed while producing preview")
-        result = {"schema_version": 1, "producer": "app-store-creative", "kind": "preview-production",
+        tools.verify()
+        result = {"schema_version": 1, "tools": tools.evidence, "producer": "app-store-creative", "kind": "preview-production",
                   "contract_sha256": hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest(),
                   "sources": sources, "contract": contract, "segments": contract["segments"],
                   "command": command, "execution_command": actual_command,

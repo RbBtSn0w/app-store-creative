@@ -85,6 +85,8 @@ func run() async throws {
         }
     }
     try await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
+    // End recording before stream shutdown so shutdown latency is not encoded.
+    try stream.removeRecordingOutput(recording)
     try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
         stream.stopCapture { error in
             if let error { continuation.resume(throwing: error) } else { continuation.resume() }

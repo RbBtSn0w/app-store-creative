@@ -1,2 +1,10 @@
 #!/bin/sh
-exec python3 "$(dirname "$0")/creative_workflow.py" "$@"
+set -eu
+if [ -n "${APP_STORE_CREATIVE_PYTHON:-}" ]; then
+  creative_python="$APP_STORE_CREATIVE_PYTHON"
+elif [ -x /opt/homebrew/bin/python3 ]; then
+  creative_python=/opt/homebrew/bin/python3
+else
+  creative_python=python3
+fi
+exec "$creative_python" "$(dirname "$0")/app_store_creative.py" "$@"

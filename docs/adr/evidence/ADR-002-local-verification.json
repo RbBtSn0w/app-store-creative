@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "scope": "Local source and isolated package verification; not release approval",
+  "base_commit": "50a6414c7e83257bcc3ec691e9a604cc6605f5ef",
+  "source_regression": {
+    "executed": 999,
+    "passed": 966,
+    "skipped": 33,
+    "skip_scope": "Independent filesystem environment required",
+    "test_seconds": 662.765,
+    "source_files": 316,
+    "sources_unchanged": true,
+    "source_fingerprint_map_sha256": "570b8b0ea8e4ce2239ca904765b745239f8f3638b8b7825e843bfdbdc292260b",
+    "log_sha256": "d032ff081e86a6f5fed9488d41a405b4db9104ea249aee749c5ba769aa299c65"
+  },
+  "package": {
+    "version": "0.3.0",
+    "sha256": "8d2aefd40fad910e3cfd8c536bb5388014655e62c560205d59262fcb789c27c8",
+    "files": 238,
+    "all_files_equal_source": true,
+    "isolated_tests_passed": 41,
+    "isolated_test_seconds": 28.861
+  },
+  "release_complete": false,
+  "remote_ci_verified": false,
+  "production_storage_verified": false,
+  "two_real_products_verified": false
+}

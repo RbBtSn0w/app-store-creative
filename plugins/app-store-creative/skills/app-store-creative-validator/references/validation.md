@@ -2,14 +2,14 @@
 
 ## Structural checks
 
-Compare actual media with the plan and release manifest:
+Compare actual media with the candidate matrix and immutable recipe snapshot:
 
 - exact locales, device/display types, scenes, filenames, counts, and order;
 - exact screenshot dimensions, PNG encoding, color policy, alpha policy, and hashes;
 - exact preview dimensions, orientation, container, codec, frame rate, duration, audio policy, and hashes;
 - no missing or unexpected media; all receipts refer to the current source revision and inputs.
 
-Use the engine `verify` command for workflow invariants. Use platform tools such as `sips`, `file`, hashing utilities, and `ffprobe` for media facts.
+Use `candidate validate` for workflow invariants and immutable validation evidence. Use platform tools such as `sips`, `file`, hashing utilities, and `ffprobe` for media facts.
 
 ## Visual checks
 

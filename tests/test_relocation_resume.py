@@ -59,3 +59,27 @@ class RelocationResumeTests(unittest.TestCase):
         path.write_text(json.dumps(intent))
         with self.assertRaisesRegex(ValueError, 'evidence'):
             self.store.resume_relocation(plan['id'], 'owner', 'Resume')
+
+    def test_completed_resume_refuses_changed_target_control_without_repair(self):
+        import hashlib
+        from artifact_lifecycle import canonical
+        _, plan = self.prepared()
+        self.store.switch_relocation(plan['id'], 'owner', 'Move')
+        key = hashlib.sha256(canonical(plan['from'])).hexdigest()
+        path = Path(plan['to']['workspace']) / 'records/storage-bindings' / (key + '.json')
+        changed = json.loads(path.read_text()); changed['switch_sha256'] = '0' * 64
+        path.write_text(json.dumps(changed))
+        before = path.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'control|activation'):
+            self.store.resume_relocation(plan['id'], 'owner', 'Recheck completed switch')
+        self.assertEqual(path.read_bytes(), before)
+        import subprocess
+        import sys
+        cli = Path(__file__).parents[1] / 'plugins/app-store-creative/scripts/app_store_creative.py'
+        result = subprocess.run([sys.executable, str(cli), 'storage', 'resume-relocate',
+            '--repo', str(self.root), '--source-workspace', str(self.store.paths.workspace),
+            '--id', plan['id'], '--actor', 'owner', '--reason', 'Recheck completed switch',
+            '--confirm', 'RESUME'], capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('activation verification failed', result.stderr)
+        self.assertEqual(path.read_bytes(), before)

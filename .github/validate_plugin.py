@@ -11,8 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "app-store-creative"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
-EXPECTED_PLUGIN_VERSION = "0.2.10"
-EXPECTED_TEMPLATE_VERSION = "0.1.0"
+EXPECTED_PLUGIN_VERSION = "0.3.0"
 
 
 def require(condition: bool, message: str) -> None:
@@ -33,36 +32,15 @@ def main() -> None:
     encoded = json.dumps(data)
     require("[" + "TO" + "DO:" not in encoded, "plugin manifest contains a placeholder")
 
-    templates = {}
-    for template_name in ("project.json", "release.json"):
-        template = json.loads(
-            (PLUGIN / "assets" / "templates" / template_name).read_text(encoding="utf-8")
-        )
-        require(template.get("plugin_version") == EXPECTED_TEMPLATE_VERSION, f"stale {template_name}")
-        templates[template_name] = template
-
-    project = templates["project.json"]
-    require(project.get("product", {}).get("bundle_id"), "project template requires a bundle ID")
-    require(project.get("product", {}).get("platforms"), "project template requires platforms")
-    require(project.get("dependencies", {}).get("figma", {}).get("plugin") == "figma", "missing Figma dependency")
-    require(project.get("capture", {}).get("adapter"), "project template requires a capture adapter")
-    require(project.get("paths", {}).get("release_manifest"), "project template requires release paths")
-
-    release = templates["release.json"]
-    require(release.get("targets"), "release template requires targets")
-    require(release.get("locales") and release.get("scenes"), "release template requires locales and scenes")
-    require(release.get("preview", {}).get("codec"), "release template requires a preview contract")
-    require(release.get("approval_policy", {}).get("upload") == "required", "upload approval must be required")
-    require(release.get("approval_policy", {}).get("confirmation_tokens") == {
-        "approve": "APPROVE",
-        "promote": "PROMOTE",
-        "upload": "UPLOAD",
-    }, "release template confirmation tokens must match the stable CLI")
-    require(release.get("publishing") == {
-        "engine_upload_mode": "dry-run",
-        "mutation_executor": "official-asc-plugin",
-    }, "v0.1 publishing contract must preserve the ASC boundary")
-    require(release.get("remoteWrite") is False, "remoteWrite must default to false")
+    recipe = json.loads((PLUGIN / "assets/templates/creative.config.json").read_text())
+    require(recipe.get("project", {}).get("id"), "recipe template requires a stable project ID")
+    require(recipe.get("project", {}).get("locales"), "recipe template requires locales")
+    require(recipe.get("targets") and recipe.get("cards"), "recipe template requires media targets and cards")
+    runtime = PLUGIN / "skills/app-store-creative/runtime"
+    for obsolete in ("scripts/creative_workflow.py", "scripts/asc_handoff.py",
+                     "schemas/task.schema.json", "assets/templates/project.json",
+                     "assets/templates/release.json"):
+        require(not (runtime / obsolete).exists(), f"retired workflow payload: {obsolete}")
 
     marketplace = json.loads(MARKETPLACE.read_text(encoding="utf-8"))
     entries = [entry for entry in marketplace.get("plugins", []) if entry.get("name") == PLUGIN.name]
@@ -76,7 +54,9 @@ def main() -> None:
     }, "unexpected marketplace policy")
 
     runtime = PLUGIN / "skills/app-store-creative/runtime"
-    for required in ("scripts/app_store_creative.py", "scripts/asc_handoff.py",
+    for required in ("scripts/app_store_creative.py", "scripts/publication_lifecycle.py",
+                         "scripts/artifact_policy.py", "scripts/media_budget.py", "scripts/relocation_object_observations.py",
+                         "scripts/operation_history.py", "scripts/runtime_identity.py", "scripts/media_tool_identity.py", "scripts/asc_observation_adapter.py", "scripts/external_media_store.py", "scripts/external_delivery_archive.py",
                          "scripts/record_app_window.py", "scripts/record_app_window.swift",
                          "scripts/produce_app_preview.py",
                      "schemas/creative.config.schema.json", "assets/templates/creative.config.json",

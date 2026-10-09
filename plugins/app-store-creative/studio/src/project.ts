@@ -1,5 +1,9 @@
 import type { CardConfig, CreativeConfig, LocalizedCard, TargetDevice } from './types';
 
+export function defaultCardLayout(target: TargetDevice): NonNullable<CardConfig['layout']> {
+  return target.startsWith('mac_') ? 'mac_native_hero' : 'phone_bottom';
+}
+
 export function localizedFields(config: CreativeConfig, card: CardConfig, target: TargetDevice, locale: string): LocalizedCard {
   return { ...config.localizations?.[locale]?.[card.id], ...card.variants?.[target]?.localizations?.[locale] };
 }

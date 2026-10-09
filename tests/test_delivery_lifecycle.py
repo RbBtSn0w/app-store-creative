@@ -123,5 +123,67 @@ class DeliveryLifecycleTests(unittest.TestCase):
         self.assertEqual((Path(d['local_path']) / 'manifest.json').read_bytes(), snapshot)
         self.assertEqual(second['parent_revision'], d['id'])
 
+    def test_poster_from_another_preview_fails_candidate_binding(self):
+        from unittest.mock import patch
+        attempt = self.store.start_attempt(self.run['id'], 'preview', 'agent')
+        video = self.root / 'preview.mp4'; video.write_bytes(b'fixture video')
+        first = self.store.register(attempt['id'], video, 'preview', inputs=[self.input['id']],
+                                    logical_path='preview/app_preview.mp4')
+        second = self.store.register(attempt['id'], video, 'preview', inputs=[self.input['id']],
+                                     logical_path='preview/app_preview.mp4')
+        poster = self.store.register(attempt['id'], self.root / 'source.png', 'poster',
+                                     inputs=[first['id']], logical_path='preview/poster.png')
+        self.store.finish_attempt(attempt['id'], 'succeeded')
+        candidate = self.store.select(self.run['id'], [self.output['id'], second['id'], poster['id']])
+        with patch('validator.run_validation', return_value={'errors':[], 'assets':[], 'source_hashes':{}}):
+            validation = self.store.validate_candidate(candidate['id'])
+        self.assertTrue(any('Poster must reference the selected preview' in error for error in validation['errors']))
+
+
+    def test_declared_required_poster_cannot_be_omitted_from_candidate(self):
+        from unittest.mock import patch
+        self.store.config['previewVideo'] = {'enabled':True, 'posterRequired':True}
+        run = self.store.start_run({})
+        attempt = self.store.start_attempt(run['id'], 'render', 'agent')
+        shot = self.store.register(attempt['id'], self.root / 'source.png', 'screenshot',
+                                   inputs=[self.input['id']], logical_path='en-US/mac_16_10/hero.png')
+        video = self.root / 'preview.mp4'; video.write_bytes(b'video fixture')
+        preview = self.store.register(attempt['id'], video, 'preview', inputs=[self.input['id']],
+                                      logical_path='preview/app_preview.mp4')
+        self.store.finish_attempt(attempt['id'], 'succeeded')
+        candidate = self.store.select(run['id'], [shot['id'], preview['id']])
+        with patch('validator.run_validation', return_value={'errors':[], 'assets':[], 'source_hashes':{}}):
+            validation = self.store.validate_candidate(candidate['id'])
+        self.assertEqual(validation['status'], 'FAIL')
+        self.assertTrue(any('Missing declared output: preview/poster.png' in error for error in validation['errors']))
+
+
+    def test_source_invalidation_preserves_approval_but_blocks_new_approval_and_seal(self):
+        validation, approval = self.approved()
+        original = self.store._path('approvals', approval['id']).read_bytes()
+        candidate = self.store.status(self.run['id'])['candidates'][0]
+        self.assertEqual(candidate['design_approvals'][0]['binding_status'], 'PASS')
+        self.store.config['cards'][0]['headline'] = 'Changed after approval'
+        candidate = self.store.status(self.run['id'])['candidates'][0]
+        self.assertEqual(candidate['design_approvals'][0]['binding_status'], 'STALE')
+        with self.assertRaisesRegex(ValueError, 'configuration'):
+            self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human:second-approval')
+        with self.assertRaisesRegex(ValueError, 'configuration'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        self.assertEqual(self.store._path('approvals', approval['id']).read_bytes(), original)
+
+
+    def test_discard_is_separate_from_source_validity_and_blocks_promotion(self):
+        validation, approval = self.approved()
+        self.store.discard_candidate(self.candidate['id'], 'owner', 'Choose another composition')
+        candidate = self.store.status(self.run['id'])['candidates'][0]
+        self.assertEqual(candidate['source_status'], 'PASS')
+        self.assertEqual(candidate['disposition']['reason'], 'Choose another composition')
+        self.assertEqual(candidate['design_approvals'][0]['binding_status'], 'STALE')
+        with self.assertRaisesRegex(ValueError, 'discarded'):
+            self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human:approval')
+        with self.assertRaisesRegex(ValueError, 'discarded'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+
 if __name__ == '__main__':
     unittest.main()

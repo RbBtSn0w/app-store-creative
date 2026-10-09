@@ -1,11 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CardView } from './components/CardView';
 import { CreativeConfig, TargetDevice, TARGET_DIMENSIONS, CardConfig } from './types';
-import { localizedFields, resolveCard, updateVariant } from './project';
+import { defaultCardLayout, localizedFields, resolveCard, updateVariant } from './project';
 import { releaseState } from './releaseState';
 import { ExportView } from './ExportView';
 import { STYLE_PRESETS } from './stylePresets';
 import { downloadDraft } from './downloadDraft';
+import { RunHistory } from './RunHistory';
+import { DeliveryHistory } from './DeliveryHistory';
+import { InventoryView } from './InventoryView';
+import { MediaBudgetPanel } from './MediaBudgetPanel';
+import { OperationHistory } from './OperationHistory';
+import { PublicationHistory } from './PublicationHistory';
+import { ObservationEvidence } from './ObservationEvidence';
+import { MaintenancePanel } from './MaintenancePanel';
+import { RelocationMaintenance } from './RelocationMaintenance';
+import { RelocationStatusPanel } from './RelocationStatusPanel';
+import { RelocationActions } from './RelocationActions';
+import { RelocationRecovery } from './RelocationRecovery';
+import { CandidateApproval } from './CandidateApproval';
+import { StorageSettings } from './StorageSettings';
+import { loadStoragePreview, storageSaveConflict, type StoragePreview } from './storagePreview';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -39,6 +54,10 @@ export const App: React.FC = () => {
   const [selected, setSelected] = useState('');
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [storagePreview, setStoragePreview] = useState<StoragePreview | null>(null);
+  const [storageError, setStorageError] = useState('');
+  const [checkingStorage, setCheckingStorage] = useState(false);
+  const storageCheckGeneration = useRef(0);
   const [busy, setBusy] = useState(false);
   const [operation, setOperation] = useState<'import' | 'export'>('import');
   const [layoutFindings, setLayoutFindings] = useState<Record<string, string>>({});
@@ -51,6 +70,7 @@ export const App: React.FC = () => {
   const version = useRef(0);
   const draftDirty = useRef(dirty); draftDirty.current = dirty;
   const saveJob = useRef<Promise<string | undefined> | null>(null);
+  const storageChanged = useRef(false);
   const params = new URLSearchParams(window.location.search);
   const exporting = params.get('export') === 'true';
   const refreshStatus = useCallback(async () => {
@@ -92,13 +112,32 @@ export const App: React.FC = () => {
     if (!state.current) return;
     const next = typeof change === 'function' ? change(state.current) : change;
     state.current = next; setConfig(next); version.current++; setDirty(true); setStatus({}); setNotice('');
+    storageCheckGeneration.current++; setStoragePreview(null); setStorageError(''); setCheckingStorage(false);
+  };
+  const previewDirectories = async (snapshot = state.current): Promise<StoragePreview> => {
+    if (!snapshot) throw new Error('Create a project first');
+    const generation = ++storageCheckGeneration.current, startedAt = version.current;
+    setStoragePreview(null); setStorageError(''); setCheckingStorage(true);
+    try {
+      const report = await loadStoragePreview(snapshot);
+      if (generation === storageCheckGeneration.current && startedAt === version.current) setStoragePreview(report);
+      return report;
+    } catch (reason) {
+      if (generation === storageCheckGeneration.current && startedAt === version.current) setStorageError((reason as Error).message);
+      throw reason;
+    } finally { if (generation === storageCheckGeneration.current) setCheckingStorage(false); }
   };
   const save = (): Promise<string | undefined> => {
+    if (storageChanged.current) return Promise.reject(new Error('Storage switching was requested. Reload the project after checking relocation status.'));
     if (saveJob.current) return saveJob.current;
     if (!state.current) return Promise.reject(new Error('Create a project first'));
     const snapshot = state.current, startedAt = version.current;
     setSaving(true); setError('');
-    const job = request('/api/config', snapshot, revision.current).then(({ revision: next }) => {
+    const job = previewDirectories(snapshot).then(report => {
+      const conflict = storageSaveConflict(report);
+      if (conflict) throw new Error(conflict);
+      return request('/api/config', snapshot, revision.current);
+    }).then(({ revision: next }) => {
       revision.current = next;
       if (version.current === startedAt) setDirty(false);
       setStatus({}); void refreshStatus(); setNotice(version.current === startedAt ? 'Project saved' : 'Earlier edits saved. Newer changes still need saving.'); return next;
@@ -157,10 +196,10 @@ export const App: React.FC = () => {
   const layoutErrors = config.cards.some(card => !!layoutFindings[`${target}/${locale}/${card.id}`]);
   const checked = !layoutErrors && !dirty && !busy && !error && status.configRevision === revision.current && status.validation?.status === 'PASS';
   const verified = checked && config.studio?.requireExportEvidence === true;
-  const legacyChecked = checked && !config.studio?.requireExportEvidence;
+  const policyChecked = checked && !config.studio?.requireExportEvidence;
   const total = config.cards.length * config.targets.length * (config.project.locales?.length || 1);
   const stateLabel = releaseState({ hasCards: !!config.cards.length, dirty, saving, busy,
-    exporting: operation === 'export', verified, legacyChecked, error: !!error, inputsChecked: status.inputErrors !== undefined,
+    exporting: operation === 'export', verified, policyChecked, error: !!error, inputsChecked: status.inputErrors !== undefined,
     inputsMissing: !!status.inputErrors?.length, layoutErrors }) +
     (busy && status.total ? ` · ${status.completed || 0}/${status.total}` : '');
   const mutate = (change: Parameters<typeof updateVariant>[4]) => { if (active) edit(current => updateVariant(current, active.id, target, locale, change)); };
@@ -180,6 +219,9 @@ export const App: React.FC = () => {
       {error}<div className="flex gap-3 mt-2"><button onClick={recoverDraft}>Download current draft</button>
         <button onClick={() => { if (!dirty || confirm('Reload the project? Download your draft first to preserve unsaved changes.')) location.reload(); }}>Reload project</button></div></section>}
     {notice && <p role="status" className="mx-6 mt-4 text-indigo-200">{notice}</p>}
+    <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
+      checking={checkingStorage} disabled={busy || saving}
+      onCheck={() => { void previewDirectories().catch(() => {}); }} />
     {creating ? <form className="max-w-xl mx-auto p-8 space-y-5" onSubmit={async event => {
       event.preventDefault(); try { await save(); setTarget(state.current!.targets[0]); setLocale(state.current!.project.defaultLocale || 'en-US'); setCreating(false); } catch (reason) { setError((reason as Error).message); }
     }}><h2 className="text-2xl font-semibold">Start with your real app</h2>
@@ -226,7 +268,7 @@ export const App: React.FC = () => {
             <label className="flex gap-2 mt-2"><input type="checkbox" checked={!!fields.inheritDefault} onChange={event => mutate({ inheritDefault: event.target.checked })} />I reviewed the inherited content</label></div>}
           <label>Headline<textarea value={resolved.headline} onChange={event => mutate({ headline: event.target.value })} /></label>
           <label>Subheadline<textarea value={resolved.subheadline || ''} onChange={event => mutate({ subheadline: event.target.value })} /></label>
-          <label>Composition<select value={resolved.layout || 'phone_bottom'} onChange={event => mutate({ layout: event.target.value as CardConfig['layout'] })}>{layouts.map(value => <option key={value} value={value}>{layoutName(value)}</option>)}</select></label>
+          <label>Composition<select value={resolved.layout || defaultCardLayout(target)} onChange={event => mutate({ layout: event.target.value as CardConfig['layout'] })}>{layouts.map(value => <option key={value} value={value}>{layoutName(value)}</option>)}</select></label>
           {resolved.screenshot ? <img className="max-h-32 mx-auto rounded object-contain" src={resolved.screenshot} alt="Assigned real capture" /> : <p className="text-amber-200 text-sm">{resolved.layout === 'pure_text' ? 'Text-only composition. No capture is needed.' : 'No capture assigned to this composition.'}</p>}
           <label className="upload">Replace capture for {locale}<input type="file" accept="image/png,image/jpeg" onChange={event => { if (event.target.files) void importFiles(event.target.files, true); event.target.value = ''; }} /></label>
           <div className="flex gap-2"><button disabled={config.cards[0]?.id === active.id} onClick={() => edit(current => { const cards = [...current.cards]; const index = cards.findIndex(card => card.id === active.id); [cards[index - 1], cards[index]] = [cards[index], cards[index - 1]]; return { ...current, cards }; })}>Move earlier</button>
@@ -236,11 +278,11 @@ export const App: React.FC = () => {
       </div>
       <section className="m-6 p-5 border border-white/10 rounded-xl">
         <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy} onClick={refreshStatus}>Check current files</button></div>
-        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : legacyChecked ? 'These files passed legacy checks. Enable reviewed rendering before treating them as a verified release.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
+        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
         {!config.studio?.requireExportEvidence && <button onClick={() => {
           edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
           if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
-        }}>Enable reviewed rendering</button>}
+        }}>Require rendering evidence</button>}
         {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto">{errors.map((finding, index) => <li key={index}>{finding}</li>)}</ul>}
         {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
           <ul className="grid gap-2 my-3 text-sm">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
@@ -250,6 +292,19 @@ export const App: React.FC = () => {
           })))}</ul>}
         {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
       </section>
+      {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
+      <RunHistory />
+      <DeliveryHistory />
+      <PublicationHistory />
+      <ObservationEvidence />
+      <InventoryView />
+      <MediaBudgetPanel />
+      <MaintenancePanel />
+      <RelocationMaintenance />
+          <RelocationActions onStorageChange={() => { storageChanged.current = true; setError('Storage switching was requested. Check relocation status, then reload before saving or exporting.'); }} />
+      <RelocationStatusPanel />
+      <RelocationRecovery onStorageChange={() => { storageChanged.current = true; setError('Recovery was requested. Check operation status, then reload before saving or exporting.'); }} />
+      <OperationHistory />
     </>}
   </main>;
 };

@@ -228,8 +228,10 @@ def export_single_card(
             raise ValueError('Output dimensions or RGB format do not match target')
     except ValueError as error:
         return fail(str(error))
-    if metadata is not None and isinstance(getattr(res, 'geometry', None), dict):
-        metadata['geometry'] = res.geometry
+    if metadata is not None:
+        metadata['browser_identity'] = getattr(res, 'browser_identity', {'status': 'UNKNOWN'})
+        if isinstance(getattr(res, 'geometry', None), dict):
+            metadata['geometry'] = res.geometry
     return True
 
 
@@ -284,7 +286,8 @@ def run_export(
                             card_id=card['id'], target=target, locale=locale, output_path=dest, diagnostics=diagnostics, metadata=metadata)
                         if ok:
                             results.append({'card_id': card['id'], 'target': target, 'locale': locale,
-                                            'path': str(out_root / name), 'name': name, 'render_geometry': metadata.get('geometry')})
+                                            'path': str(out_root / name), 'name': name, 'render_geometry': metadata.get('geometry'),
+                                            'browser_identity': metadata.get('browser_identity', {'status': 'UNKNOWN'})})
                         else:
                             errors.append(f"{name}: {'; '.join(diagnostics) or 'Rendering failed; check images, fonts, and layout'}")
                         if progress:
@@ -313,7 +316,8 @@ def run_export(
                     temp_path.replace(output)
                     evidence[name] = {'config_hash': contract.digest(config_bytes), 'source_hashes': contract.input_hashes(repo_root, config, [result['target']], [result['locale']])[0],
                                       'sha256': contract.digest(output.read_bytes()), 'render_ready': True,
-                                      'render_geometry': result.get('render_geometry')}
+                                      'render_geometry': result.get('render_geometry'),
+                                      'browser_identity': result.get('browser_identity', {'status': 'UNKNOWN'})}
                 contract.atomic_json(evidence_path, evidence)
             else:
                 results = []

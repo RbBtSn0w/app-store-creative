@@ -88,3 +88,26 @@ its production receipt with the project evidence. `export --with-video` then
 performs the existing store-format export. App-specific actions, demonstration
 data, copy, and locale selection remain in the consuming project. Creating an ASC
 version, uploading, and remote auditing remain the official ASC plugin's work.
+
+### Native take and normalized recording
+
+The recorder preserves `<output-stem>.native.mov` as the unmodified
+ScreenCaptureKit take. ScreenCaptureKit's minimum frame interval is a cadence
+limit, not a constant-frame-rate guarantee. The executor validates native scope,
+codec, dimensions, bounded duration and positive cadence before using identified
+FFmpeg to produce the requested constant-frame-rate output. It never pads a
+truncated acquisition to simulate success.
+
+The receipt binds both file hashes, native and normalized probes, normalization
+command and tool identities. Managed recording registers the native take as a
+capture dependency of the portable recording receipt; the normalized capture
+retains that receipt. Failed native or normalization output remains a partial
+artifact. Existing native files, normalized outputs and receipts are never
+replaced. Allocate a new attempt for retry.
+
+Native acquisition may retain up to ten seconds beyond the requested interval;
+this bounded tail is preserved in the native take and removed during
+normalization. A take shorter than the requested duration beyond the existing
+rounding tolerance is rejected. The normalized output retains the strict
+requested-duration and frame-rate gates. Native timing tolerance is not a
+successful-output tolerance and does not imply the app interaction was reviewed.

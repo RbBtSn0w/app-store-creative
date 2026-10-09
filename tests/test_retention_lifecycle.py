@@ -187,6 +187,77 @@ class RetentionTests(unittest.TestCase):
         self.assertFalse(self.store._quarantine_path(operation['id'], plan['objects'][0]['sha256']).exists())
         self.assertEqual(self.store.purge_cleanup(plan['id'], actor='owner', reason='Retry')['status'], 'purged')
 
+    def test_completed_purge_rejects_reappeared_files_without_deleting_them(self):
+        data, operation = self.quarantined()
+        plan = self.store.plan_purge(operation['id'], quarantine_days=0)
+        self.store.purge_cleanup(plan['id'], actor='owner', reason='Disposable fixture')
+        path = self.store._quarantine_path(operation['id'], data['sha256'])
+        path.write_bytes(b'Preserve new owner data')
+        with self.assertRaisesRegex(ValueError, 'reappeared'):
+            self.store.purge_cleanup(plan['id'], actor='owner', reason='Recheck')
+        self.assertEqual(path.read_bytes(), b'Preserve new owner data')
+
+    def test_completed_purge_rejects_changed_receipt_plan_and_intent(self):
+        import json
+        _, operation = self.quarantined()
+        plan = self.store.plan_purge(operation['id'], quarantine_days=0)
+        result = self.store.purge_cleanup(plan['id'], actor='owner', reason='Disposable fixture')
+        changes = [
+            (self.store._path('maintenance', operation['id'], 'purged'), 'bytes_removed', result['bytes_removed'] + 1),
+            (self.store._path('maintenance', operation['id'], 'purged'), 'status', 'quarantined'),
+            (self.store._path('maintenance', plan['id']), 'quarantine_days', 1),
+            (self.store._path('maintenance', operation['id'], 'purge-intent'), 'reason', 'Changed intent'),
+        ]
+        for path, key, value in changes:
+            with self.subTest(record=path.name, field=key):
+                before = path.read_bytes()
+                data = json.loads(before); data[key] = value
+                path.write_text(json.dumps(data))
+                with self.assertRaisesRegex(ValueError, 'binding differs'):
+                    self.store.purge_cleanup(plan['id'], actor='owner', reason='Recheck')
+                self.assertEqual(json.loads(path.read_text())[key], value)
+                path.write_bytes(before)
+        self.assertEqual(self.store.purge_cleanup(plan['id'], actor='owner', reason='Recheck'), result)
+
+    def test_missing_object_without_file_checkpoint_cannot_complete_purge(self):
+        from unittest.mock import patch
+        data, operation = self.quarantined()
+        plan = self.store.plan_purge(operation['id'], quarantine_days=0)
+        original = self.store._record
+        def interrupted(category, body, suffix=None):
+            result = original(category, body, suffix)
+            if suffix == 'purge-intent':
+                raise OSError('Intent persisted before file checkpoint')
+            return result
+        with patch.object(self.store, '_record', side_effect=interrupted):
+            with self.assertRaises(OSError):
+                self.store.purge_cleanup(plan['id'], 'owner', 'Disposable fixture')
+        self.store._quarantine_path(operation['id'], data['sha256']).unlink()
+        with self.assertRaisesRegex(ValueError, 'checkpoint'):
+            self.store.purge_cleanup(plan['id'], 'owner', 'Recheck missing object')
+        self.assertFalse(self.store._path('maintenance', operation['id'], 'purged').exists())
+
+    def test_same_byte_replacement_after_checkpoint_is_preserved(self):
+        from unittest.mock import patch
+        data, operation = self.quarantined()
+        plan = self.store.plan_purge(operation['id'], quarantine_days=0)
+        original = self.store._record
+        def interrupted(category, body, suffix=None):
+            result = original(category, body, suffix)
+            if suffix == 'purge-file-0':
+                raise OSError('Checkpoint persisted before unlink')
+            return result
+        with patch.object(self.store, '_record', side_effect=interrupted):
+            with self.assertRaises(OSError):
+                self.store.purge_cleanup(plan['id'], 'owner', 'Disposable fixture')
+        path = self.store._quarantine_path(operation['id'], data['sha256'])
+        substitute = path.with_name('replacement'); substitute.write_bytes(path.read_bytes()); substitute.replace(path)
+        inode = path.stat().st_ino
+        with self.assertRaisesRegex(ValueError, 'identity differs'):
+            self.store.purge_cleanup(plan['id'], 'owner', 'Preserve replaced object')
+        self.assertEqual(path.stat().st_ino, inode)
+        self.assertFalse(self.store._path('maintenance', operation['id'], 'purged').exists())
+
     def test_cli_purge_requires_explicit_confirmation(self):
         import json
         from pathlib import Path

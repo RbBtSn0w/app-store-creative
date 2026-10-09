@@ -5,7 +5,10 @@
     "name": "HabitFlow",
     "bundleId": "com.example.habitflow",
     "defaultLocale": "en-US",
-    "locales": ["en-US", "zh-Hans"]
+    "locales": [
+      "en-US",
+      "zh-Hans"
+    ]
   },
   "targets": [
     "iphone_6_9",
@@ -15,7 +18,11 @@
     "stylePreset": "liquid_glass",
     "background": {
       "type": "gradient",
-      "colors": ["#0A0E1A", "#1E1B4B", "#311042"],
+      "colors": [
+        "#0A0E1A",
+        "#1E1B4B",
+        "#311042"
+      ],
       "angle": 145
     },
     "fontFamily": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
@@ -81,16 +88,22 @@
     "zh-Hans": {
       "01-hero": {
         "headline": "培养持久好习惯",
-        "subheadline": "专为 Apple 生态打造的极简习惯追踪"
+        "subheadline": "专为 Apple 生态打造的极简习惯追踪",
+        "screenshot": "capture/zh-Hans/01-dashboard.png"
       },
       "02-analytics": {
         "headline": "数据洞察，一目了然",
-        "subheadline": "连续打卡天数与智能完成度热力图"
+        "subheadline": "连续打卡天数与智能完成度热力图",
+        "screenshot": "capture/zh-Hans/02-analytics.png"
       },
       "03-widgets": {
         "headline": "锁屏微件，触手可及",
-        "subheadline": "支持待机显示与交互式桌面小组件"
+        "subheadline": "支持待机显示与交互式桌面小组件",
+        "screenshot": "capture/zh-Hans/03-widgets.png"
       }
     }
+  },
+  "studio": {
+    "requireExportEvidence": true
   }
 }
