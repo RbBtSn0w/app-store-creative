@@ -13,3 +13,8 @@ it('exposes the portable backend name for an external declaration', () => {
   expect(html).toContain('team-media');
   expect(html).not.toContain('Backend path');
 });
+it('shows an explicit media budget without inventing one for exploration', () => {
+  const html = renderToStaticMarkup(<ArchivePolicySettings onChange={() => {}} />);
+  expect(html).toContain('Media budget (bytes)');
+  expect(html).toContain('Leave empty for exploration');
+});

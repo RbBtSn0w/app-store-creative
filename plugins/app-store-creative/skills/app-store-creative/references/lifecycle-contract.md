@@ -21,6 +21,11 @@ requires a portable named `backend`, for example `team-media`; Git and LFS must
 not declare a backend. Backend access locations remain in protected host-local
 `mediaBackends`, not in the shared policy. The media budget remains in
 `artifactPolicy.mediaBudgetBytes`.
+This field must be explicitly declared as a nonnegative integer before producing
+the run that will be sealed. Omitting it remains valid for exploration, but formal
+sealing and independent package verification refuse the undeclared budget. The
+budget is advisory: exceeding it produces a warning, not automatic deletion or
+a paid-service change.
 
 The original run snapshot binds the declaration. Sealing refuses an undeclared
 run even if the current configuration was later changed. Produce a new run after

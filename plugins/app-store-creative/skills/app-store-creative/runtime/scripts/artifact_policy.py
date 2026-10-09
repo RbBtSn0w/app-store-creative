@@ -26,3 +26,11 @@ def inspect(core):
     return {'schema_version': 1, 'policy': policy,
             'policy_sha256': hashlib.sha256(canonical(policy)).hexdigest(),
             'source': 'project' if 'artifactPolicy' in config else 'defaults', 'writes_performed': False}
+
+
+def require_media_budget(config):
+    policy = resolve(config)
+    declaration = config.get('artifactPolicy')
+    if not isinstance(declaration, dict) or 'mediaBudgetBytes' not in declaration:
+        raise ValueError('An explicit media budget is required for formal delivery')
+    return policy['mediaBudgetBytes']

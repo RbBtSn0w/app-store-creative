@@ -34,6 +34,7 @@ class NativePreviewArchiveTests(unittest.TestCase):
                 'targets':['mac_16_10'],'cards':[{'id':'hero','screenshot':'fixture.png'}],
                 'previewVideo':{'enabled':True,'posterRequired':True,'duration':15,'source':'sources/input-0.mp4','locales':['en-US']}}
             cfg['archivePolicy'] = {'schema_version': 1, 'mediaMode': 'git'}
+            cfg['artifactPolicy'] = {'schema_version': 1, 'mediaBudgetBytes': 1073741824}
             (project / 'creative.config.json').write_text(json.dumps(cfg))
             timeline = project / 'timeline.json'; timeline.write_text(json.dumps({'width':1920,'height':1080,
                 'fps':30,'duration':15,'segments':[{'path':take.name,'duration':15,'has_audio':False}]}))

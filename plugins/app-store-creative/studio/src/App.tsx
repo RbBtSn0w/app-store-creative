@@ -220,7 +220,14 @@ export const App: React.FC = () => {
       {error}<div className="flex gap-3 mt-2"><button onClick={recoverDraft}>Download current draft</button>
         <button onClick={() => { if (!dirty || confirm('Reload the project? Download your draft first to preserve unsaved changes.')) location.reload(); }}>Reload project</button></div></section>}
     {notice && <p role="status" className="mx-6 mt-4 text-indigo-200">{notice}</p>}
-    <ArchivePolicySettings policy={config.archivePolicy} disabled={busy || saving} onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))} />
+    <ArchivePolicySettings policy={config.archivePolicy} budget={config.artifactPolicy?.mediaBudgetBytes} disabled={busy || saving}
+      onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))}
+      onBudgetChange={budget => edit(current => {
+        const policy = { ...current.artifactPolicy, schema_version: 1 as const };
+        if (budget === undefined) delete policy.mediaBudgetBytes;
+        else policy.mediaBudgetBytes = budget;
+        return { ...current, artifactPolicy: policy };
+      })} />
     <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
       checking={checkingStorage} disabled={busy || saving}
       onCheck={() => { void previewDirectories().catch(() => {}); }} />

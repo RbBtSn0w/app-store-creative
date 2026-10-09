@@ -145,6 +145,7 @@ export type ArchivePolicy =
 
 export interface CreativeConfig {
   archivePolicy?: ArchivePolicy;
+  artifactPolicy?: { schema_version: 1; trialRetentionDays?: number; diagnosticRetentionDays?: number; quarantineDays?: number; mediaBudgetBytes?: number };
   storage?: { workspaceRoot?: string; objectRoot?: string; releaseRoot?: string; publicationRoot?: string };
   project: ProjectInfo;
   targets: TargetDevice[];

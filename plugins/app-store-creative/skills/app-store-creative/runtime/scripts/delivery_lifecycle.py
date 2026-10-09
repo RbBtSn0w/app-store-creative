@@ -194,6 +194,8 @@ def verify_archive(package, expected_sha256=None):
     recipe_config = json.loads((package / 'recipe/config.json').read_text())
     from archive_policy import resolve as resolve_archive_policy
     archive_policy = resolve_archive_policy(recipe_config, required=True)
+    from artifact_policy import require_media_budget
+    require_media_budget(recipe_config)
     if manifest.get('archive_policy') != archive_policy:
         raise ValueError('Manifest archive policy differs from recipe declaration')
     _verify_portable_recipe(recipe_config)
@@ -591,6 +593,8 @@ class DeliveryOperations:
             self._check_design_approval(candidate_id, run, validation, approval)
             from archive_policy import resolve as resolve_archive_policy
             archive_policy = resolve_archive_policy(run['config'], required=True)
+            from artifact_policy import require_media_budget
+            require_media_budget(run['config'])
             if parent_revision:
                 parent = self._read('deliveries', parent_revision)
                 if parent['project_id'] != run['config']['project']['id'] or parent['target'] != run['target']:

@@ -16,11 +16,13 @@ class DeliveryLifecycleTests(unittest.TestCase):
     def setUp(self):
         DeliveryLifecycleTests.prepare(self, getattr(self, 'archive_policy', {'schema_version': 1, 'mediaMode': 'git'}))
 
-    def prepare(self, archive_policy):
+    def prepare(self, archive_policy, media_budget=1073741824):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name).resolve()
         self.config = {'project': {'id': 'demo', 'name': 'Demo', 'bundleId': 'example.demo', 'locales': ['en-US']},
                        'targets': ['mac_16_10'], 'cards': [{'id': 'hero', 'screenshot': 'source.png'}]}
+        if media_budget is not None:
+            self.config['artifactPolicy'] = {'schema_version': 1, 'mediaBudgetBytes': media_budget}
         if archive_policy is not None:
             self.config['archivePolicy'] = archive_policy
         self.store = lifecycle.Lifecycle(self.root, self.config)
@@ -44,6 +46,15 @@ class DeliveryLifecycleTests(unittest.TestCase):
         validation, approval = self.approved()
         before = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
         with self.assertRaisesRegex(ValueError, 'explicit archive policy'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        after = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        self.assertEqual(after, before)
+
+    def test_seal_requires_explicit_media_budget_before_writes(self):
+        self.prepare(self.config['archivePolicy'], media_budget=None)
+        validation, approval = self.approved()
+        before = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        with self.assertRaisesRegex(ValueError, 'explicit media budget'):
             self.store.seal(self.candidate['id'], validation['id'], approval['id'])
         after = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
         self.assertEqual(after, before)

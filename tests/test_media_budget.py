@@ -8,9 +8,16 @@ class MediaBudgetTests(unittest.TestCase):
     setUp = fixtures.DeliveryLifecycleTests.setUp
     approved = fixtures.DeliveryLifecycleTests.approved
 
+    def test_undeclared_trial_budget_remains_unconfigured(self):
+        config = {key: value for key, value in self.config.items() if key != 'artifactPolicy'}
+        core = Lifecycle(self.root, config)
+        report = core.media_budget()
+        self.assertEqual(report['status'], 'NOT_CONFIGURED')
+        self.assertIsNone(report['configured_limit_bytes'])
+
     def test_candidate_forecast_and_retained_revision_budget(self):
         forecast = self.store.media_budget(self.candidate['id'])
-        self.assertEqual(forecast['status'], 'NOT_CONFIGURED')
+        self.assertEqual(forecast['status'], 'WITHIN_BUDGET')
         self.assertEqual(forecast['candidate_payload_bytes'], self.input['size_bytes'] + self.output['size_bytes'])
         validation, approval = self.approved()
         self.store.seal(self.candidate['id'], validation['id'], approval['id'])

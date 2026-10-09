@@ -87,6 +87,7 @@ class ImportedArchiveBindingTests(unittest.TestCase):
         from input_lifecycle import SNAPSHOT_INDEX
         fixture = self.fixture
         fixture.config['archivePolicy'] = {'schema_version': 1, 'mediaMode': 'git'}
+        fixture.config['artifactPolicy'] = {'schema_version': 1, 'mediaBudgetBytes': 1073741824}
         core = lifecycle.Lifecycle(fixture.root, fixture.config)
         imported = core.import_capture((fixture.root / 'capture.png').read_bytes(), 'capture.png', actor='owner')
         fixture.config['cards'][0]['screenshot'] = imported['path']

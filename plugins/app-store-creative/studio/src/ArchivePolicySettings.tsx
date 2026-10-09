@@ -1,7 +1,9 @@
 import type { ArchivePolicy } from './types';
 
-export function ArchivePolicySettings({ policy, onChange, disabled = false }: {
+export function ArchivePolicySettings({ policy, onChange, budget, onBudgetChange, disabled = false }: {
   policy?: ArchivePolicy;
+  budget?: number;
+  onBudgetChange?: (budget: number | undefined) => void;
   onChange: (policy: ArchivePolicy | undefined) => void;
   disabled?: boolean;
 }) {
@@ -19,6 +21,9 @@ export function ArchivePolicySettings({ policy, onChange, disabled = false }: {
       <option value="lfs">Git LFS</option>
       <option value="external">External media storage</option>
     </select></label>
+    <label>Media budget (bytes)<input disabled={disabled} type="number" min="0" step="1" value={budget ?? ''}
+      onChange={event => onBudgetChange?.(event.target.value === '' ? undefined : event.target.valueAsNumber)} /></label>
+    <p className="text-sm text-white/60">Leave empty for exploration. Declare a budget before producing a release run. Budget warnings do not delete files or enable paid storage.</p>
     {policy?.mediaMode === 'external' && <>
       <label>Backend name<input disabled={disabled} required pattern="[A-Za-z0-9][A-Za-z0-9_.-]{0,63}" value={policy.backend}
         onChange={event => onChange({ ...policy, backend: event.target.value })} /></label>
