@@ -26,6 +26,15 @@
 
 这些勾选表示能力已实现，不表示下方完整验收已关闭。
 
+## 最新归档边界修正
+
+归档边界审查发现：已登记采集缺少逻辑路径时，导入会成功，但其来源闭包无法在候选验证阶段物化。现已在导入入口拒绝该输入，并确保拒绝发生在创建新运行之前。
+
+- RED：新增回归测试因未抛出错误失败，证明缺口。
+- GREEN：导入/生产14项通过；封存、来源、清单、分层便携归档与原生视频归档25项通过。
+- 新分发包完整 smoke 检查通过；从解压包独立运行导入/生产14项通过，包SHA256为`1a737a26e635a199a628c89383f2f0fe645cb6e9e65421a69afa840a88bfe95f`。证据：`/tmp/creative-archive-path-installed-proof.json`。
+- 本修正随当前变更提交；下方全量与远端CI对应修正前版本，新提交的远端CI仍须独立核对。
+
 ## 最新验证证据
 
 | 项目 | 结果及范围 | 证据 |
@@ -34,9 +43,12 @@
 | 独立卷专项 | PR head `cda553c`对应源码独立APFS卷33项通过，75.014秒退出0；已卸载且is_mount为false。全量原skip结果保留 | `/tmp/creative-pr11-crossfs-acceptance-proof.json` |
 | Studio 中断恢复 | 安装包真实 SIGKILL 后 INCOMPLETE/RESTORING，按原意图恢复至 PASS；合成夹具 | `/tmp/creative-studio-installed-restore-proof.json` |
 | 来源与设计 | Levelory中英文10份真实采集；新候选10份原采集进入依赖闭包，成图与已审查版本哈希一致 | `/tmp/creative-levelory-linked-design-provenance-proof.json` |
-| 真实视频/封面 | Dev窗口采集及UI操作均成功；20秒1920×1080、30fps、H.264/AAC；原生录像、标准化回执及poster依赖完整 | `/tmp/creative-levelory-real-preview-proof.json` |
+| 真实视频/封面 | Dev窗口采集及UI操作均成功；20秒1920×1080、30fps、H.264/AAC；原生录像、标准化回执及poster依赖完整 | `/tmp/creative-levelory-framed-preview-proof.json` |
 | 坐标边界 | 叠加层拒绝滤镜字符串、布尔值、非有限值及越界数值；20项相关组合通过 | `/tmp/creative-overlay-coordinate-green.log` |
 | 安装包 | 238份载荷与当前源码逐字节一致；隔离安装41项28.861秒通过；源码仓库不在PYTHONPATH | `/tmp/creative-overlay-fixed-package-proof.json`、`/tmp/creative-overlay-installed-regression-proof.json` |
+
+| 完整物料候选 | Levelory候选`94b210b7ce2a4661b8cf3bfbeb238e6c`技术校验PASS；10截图、1预览、1封面，65份来源依赖；尚未人工批准或封存 | `/tmp/creative-levelory-complete-candidate-proof.json` |
+| 远端CI | run 37900640870，提交`77a193a`，全部步骤成功；包含源码测试、Studio构建和分发包检查 | `/tmp/creative-pr11-ci-success.json` |
 
 此前全量因复现坐标边界问题被主动终止，日志保留、不计成功；当前999项是修复后的新终态。完整包验证和远端CI分别记录，不能相互代替。
 
@@ -44,15 +56,16 @@
 
 - [ ] 完整维护矩阵关闭：剩余权限、路径替换、协调边界及永久删除浏览器最终执行；当次删除授权尚未收到。
 - [ ] 正式持久存储验收：长期保存、访问控制、成本与独立取回；正式位置尚未确定。
-- [ ] Levelory完整闭环：截图审核缺口与视频构图修正、真实批准、封存、发布交接和干净工作区取回。真实生产技术链已通过；中文UI残留英文、合集侧栏截断及视频右侧黑边仍待处理。
+- [ ] Levelory完整闭环：截图审核缺口、真实批准、封存、发布交接和干净工作区取回。真实生产技术链已通过；视频右侧黑边已在独立采集源树修正；中文UI残留英文、合集侧栏截断仍待审核处理。完整12份物料候选技术校验PASS，人工审核、封存及取回尚未关闭。
 - [ ] 第二个不同真实产品完整闭环：产品及仓库尚未确定；不能使用合成夹具替代。
 - [ ] 真实失败/取消/重试/隔离/恢复与归档取回的产品级演练。
 - [ ] ASC新合同完整远端验收及当前封面故障关闭：最新只读查询仍为previewImage 0×0；此前时间码调整成功不等于封面修复。
 - [x] 当前包独立安装专项与逐字节载荷核验；不替代更新后的真实工作流验收。
 - [ ] 完整差异审查及最新敏感证据检查。
 - [x] 整改提交保存到独立分支；不代表发行完成。
-- [x] Draft PR #11创建并关联当前任务；远端head为`cda553c5539824f3f118d2661951d437b9600b1a`。
-- [ ] 远端CI及实际产品归档的准确提交/PR绑定；首次CI因runner缺少FFmpeg失败，已补测试前工具安装，待新运行。
+- [x] Draft PR #11创建并关联当前任务；远端head为`77a193a430f5a8f9d44fe65adf6e11eab4060b2b`（此处记录上一已验证远端提交）。
+- [x] 远端CI：首次缺少FFmpeg问题已修复；run 37900640870在提交77a193a上全部成功。
+- [ ] 实际产品归档的准确提交/PR绑定。
 - [ ] 合并main、推送、插件更新和更新后的实际工作流复验。
 
 ## 后续顺序

@@ -24,6 +24,8 @@ class InputOperations:
         artifact = self.verify_artifact(artifact_id)
         if artifact['role'] != 'capture' or artifact.get('partial'):
             raise ValueError('Input requires a complete capture artifact')
+        if not artifact.get('logical_path'):
+            raise ValueError('Capture import requires an archival logical path')
         outcome = self._read('attempts', artifact['attempt_id'], 'outcome')
         if outcome['status'] != 'succeeded':
             raise ValueError('Capture acquisition did not succeed')

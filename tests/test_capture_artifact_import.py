@@ -81,3 +81,14 @@ class CaptureArtifactImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'complete capture'):
             core.import_capture_artifact(artifact['id'], 'fixture')
         self.assertEqual(set((core.paths.workspace/'records/runs').glob('*.json')), before)
+
+    def test_capture_without_archive_path_rejected_before_new_run(self):
+        core = Lifecycle.from_configuration(self.root, self.cfg)
+        run = core.start_run({'stage': 'capture'})
+        attempt = core.start_attempt(run['id'], 'capture', 'fixture')
+        artifact = core.register(attempt['id'], self.root/'capture.png', 'capture')
+        core.finish_attempt(attempt['id'], 'succeeded')
+        before = set((core.paths.workspace/'records/runs').glob('*.json'))
+        with self.assertRaisesRegex(ValueError, 'logical path'):
+            core.import_capture_artifact(artifact['id'], 'fixture')
+        self.assertEqual(set((core.paths.workspace/'records/runs').glob('*.json')), before)
