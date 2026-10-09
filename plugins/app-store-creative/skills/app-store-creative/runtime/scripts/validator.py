@@ -52,31 +52,8 @@ def get_git_commit(repo_root: Path) -> Optional[str]:
 
 
 def read_image_meta(path: Path) -> Tuple[int, int, bool]:
-    """Read image width, height, and check if alpha exists using sips or pure python PNG header parse."""
-    # Fast path: sips on macOS
-    if shutil.which("sips"):
-        try:
-            w_proc = subprocess.run(["sips", "-g", "pixelWidth", str(path)], capture_output=True, text=True, check=True)
-            h_proc = subprocess.run(["sips", "-g", "pixelHeight", str(path)], capture_output=True, text=True, check=True)
-            a_proc = subprocess.run(["sips", "-g", "hasAlpha", str(path)], capture_output=True, text=True, check=True)
-
-            w = int(w_proc.stdout.strip().split()[-1])
-            h = int(h_proc.stdout.strip().split()[-1])
-            has_alpha = a_proc.stdout.strip().split()[-1].lower() == "yes"
-            return w, h, has_alpha
-        except Exception:
-            pass
-
-    # Fallback pure python PNG header parsing
-    data = path.read_bytes()
-    if data[:8] != b"\x89PNG\r\n\x1a\n":
-        raise ValueError(f"Not a valid PNG file: {path}")
-    w = int.from_bytes(data[16:20], "big")
-    h = int.from_bytes(data[20:24], "big")
-    color_type = data[25]
-    # color_type 6 = RGBA, 4 = Gray+Alpha, or tRNS chunk in paletted/gray
-    has_alpha = color_type in (4, 6) or (b"tRNS" in data)
-    return w, h, has_alpha
+    """Validate PNG chunks and pixel data before returning image metadata."""
+    return contract.inspect_png(path.read_bytes())
 
 
 def match_target_spec(path_part: str) -> Optional[str]:

@@ -133,20 +133,14 @@ class TestV2Workflow(unittest.TestCase):
         self.assertLess(port, 3150)
 
     def test_trns_alpha_detection_in_fallback_reader(self):
-        # Create a PNG with a tRNS chunk
         png_path = self.root / "trns_sample.png"
-        raw_data = b"\x89PNG\r\n\x1a\n" + b"\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\x00\x00\n\x08\x03\x00\x00\x00" + b"\x00\x00\x00\x06tRNS\x00\x01\x02\x03\x04\x05"
-        png_path.write_bytes(raw_data)
-
-        # Force pure python path by temporarily disabling sips check
-        import shutil
-        original_which = shutil.which
-        shutil.which = lambda cmd: None if cmd == "sips" else original_which(cmd)
-        try:
-            _, _, has_alpha = validator.read_image_meta(png_path)
-            self.assertTrue(has_alpha)
-        finally:
-            shutil.which = original_which
+        create_mock_png(png_path, 10, 10)
+        data = png_path.read_bytes()
+        payload = struct.pack(">HHH", 255, 255, 255)
+        transparency = (struct.pack(">I", len(payload)) + b"tRNS" + payload
+                        + struct.pack(">I", zlib.crc32(b"tRNS" + payload) & 0xFFFFFFFF))
+        png_path.write_bytes(data[:33] + transparency + data[33:])
+        self.assertEqual(validator.read_image_meta(png_path), (10, 10, True))
 
     def test_google_play_target_specs(self):
         gp_keys = ["google_play_phone", "google_play_tablet_7", "google_play_tablet_10", "google_play_feature_graphic"]
