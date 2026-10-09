@@ -66,3 +66,22 @@ core.start_run({})
                 finally:
                     path.unlink()
                     path.write_bytes(original)
+
+    def test_replaced_lock_after_acquisition_refuses_before_creating_records(self):
+        import fcntl
+        from unittest.mock import patch
+        self.store.start_run({})
+        records = self.store.paths.workspace / 'records'
+        before = {path: path.read_bytes() for path in records.rglob('*.json')}
+        lock = self.store.paths.workspace / 'write.lock'
+        original = fcntl.flock
+        def acquire(stream, operation):
+            original(stream, operation)
+            if operation == fcntl.LOCK_EX:
+                replacement = lock.with_name('replacement.lock')
+                replacement.write_bytes(b'')
+                replacement.replace(lock)
+        with patch('artifact_lifecycle.fcntl.flock', side_effect=acquire):
+            with self.assertRaisesRegex(ValueError, 'lock identity changed'):
+                self.store.start_run({})
+        self.assertEqual({path: path.read_bytes() for path in records.rglob('*.json')}, before)

@@ -187,6 +187,9 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                     and (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino))):
                 raise ValueError('Workspace lock must remain the same regular file')
             fcntl.flock(stream, fcntl.LOCK_EX)
+            current = lock.lstat()
+            if (current.st_dev, current.st_ino) != (opened.st_dev, opened.st_ino):
+                raise ValueError('Workspace lock identity changed')
             self._check_storage_write_fence()
             self._check_storage_activation()
             self._live_configuration()
