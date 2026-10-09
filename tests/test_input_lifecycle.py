@@ -158,3 +158,16 @@ class InputTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(result.stdout)['reason'], 'Unused import')
         self.assertEqual(core.resolve_import(imported['path'])[1].read_bytes(), (self.root / 'capture.png').read_bytes())
+
+
+    def test_configuration_backup_failure_records_terminal_attempt(self):
+        core = lifecycle.Lifecycle(self.root, self.config)
+        with mock.patch.object(core, 'register', side_effect=OSError('fixture registration failure')):
+            with self.assertRaisesRegex(OSError, 'fixture registration failure'):
+                core.backup_configuration(b'configuration bytes', actor='owner')
+        # Attempt records use the run status API as the authoritative observation.
+        runs = list((core.paths.workspace / 'records/runs').glob('*.json'))
+        self.assertEqual(len(runs), 1)
+        attempt = core.status(runs[0].stem)['attempts'][0]
+        self.assertEqual(attempt['outcome']['status'], 'failed')
+        self.assertIn('fixture registration failure', attempt['outcome']['reason'])

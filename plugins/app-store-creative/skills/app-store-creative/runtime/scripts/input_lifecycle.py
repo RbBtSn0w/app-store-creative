@@ -88,11 +88,16 @@ class InputOperations:
             raise ValueError('Configuration backup requires actor')
         run = self.start_run({'stage': 'configuration-backup'})
         attempt = self.start_attempt(run['id'], 'configuration-backup', actor)
-        source = self.work_path(attempt['id']) / 'creative.config.json'
-        source.write_bytes(data)
-        artifact = self.register(attempt['id'], source, 'configuration', logical_path='creative.config.json')
-        self.finish_attempt(attempt['id'], 'succeeded')
-        return artifact
+        try:
+            source = self.work_path(attempt['id']) / 'creative.config.json'
+            source.write_bytes(data)
+            artifact = self.register(attempt['id'], source, 'configuration', logical_path='creative.config.json')
+            self.finish_attempt(attempt['id'], 'succeeded')
+            return artifact
+        except BaseException as error:
+            if not self._path('attempts', attempt['id'], 'outcome').exists():
+                self.finish_attempt(attempt['id'], 'failed', reason=str(error) or type(error).__name__)
+            raise
 
     def discard_input(self, import_id, actor, reason):
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():

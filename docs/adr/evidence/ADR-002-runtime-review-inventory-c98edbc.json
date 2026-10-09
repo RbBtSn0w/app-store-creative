@@ -42,8 +42,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_installation.py",
       "sha256": "d04f1bbd61dad5ee2c3fcadbf0964491dd1723db54458e91fa1dabecb9fa2759",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-input-configuration-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_layers.py",
@@ -54,8 +54,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_preparation.py",
       "sha256": "2f4b98fc282c43b3b999226890950fe3eec813b78b204e960888ca9c430c9b7f",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-input-configuration-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/delivery_lifecycle.py",
@@ -89,9 +89,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py",
-      "sha256": "7cf6e6ab60396432fe986f5c6b3ccc8f99357036b229ed91e94a26b6a83613e5",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "f9345b0866ae47f50503e7d88ab80af1e35e14f22378dc28449c23fee57bcc06",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-input-configuration-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/inventory_lifecycle.py",
