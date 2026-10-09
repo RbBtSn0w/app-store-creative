@@ -653,8 +653,8 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
             raise ValueError('Git media archive must be inside project')
         if media_mode == 'lfs':
             pattern = escape_pattern(releases) + '/**/media/**'
-            if ' ' in releases:
-                pattern = json.dumps(releases + '/**/media/**')
+            if any(char.isspace() or char == '"' for char in releases):
+                pattern = json.dumps(pattern, ensure_ascii=False)
             attributes.append(pattern + ' filter=lfs diff=lfs merge=lfs -text')
         return {'gitignore': ignores, 'gitattributes': attributes,
                 'tracked_roots': [relative(p) for p in (self.paths.releases, self.paths.publications) if relative(p)],

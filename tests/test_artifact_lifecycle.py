@@ -228,5 +228,23 @@ class ArtifactLifecycleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.store.list_runs(cursor='missing')
 
+    def test_lfs_policy_matches_literal_custom_release_directory(self):
+        subprocess.run(['git', '-C', str(self.root), 'init', '-q'], check=True)
+        for name in ('媒体 assets', 'archive [set]', 'archive *', 'archive "one"'):
+            with self.subTest(name=name):
+                cfg = {**self.cfg, 'storage': {**self.cfg['storage'], 'releaseRoot': name}}
+                core = lifecycle.Lifecycle(self.root, cfg)
+                policy = core.git_policy('lfs')
+                (self.root/'.gitattributes').write_text('\n'.join(policy['gitattributes'])+'\n')
+                media = name+'/revision/media/shot.png'
+                response = subprocess.run(['git', '-C', str(self.root), 'check-attr', '-z',
+                    'filter', '--', media], check=True, capture_output=True)
+                self.assertEqual(response.stdout.split(b'\0')[2], b'lfs')
+                other = name.replace('[set]', 's').replace('*', 'other')
+                if other != name:
+                    response = subprocess.run(['git', '-C', str(self.root), 'check-attr', '-z',
+                        'filter', '--', other+'/revision/media/shot.png'], check=True, capture_output=True)
+                    self.assertEqual(response.stdout.split(b'\0')[2], b'unspecified')
+
 if __name__ == '__main__':
     unittest.main()
