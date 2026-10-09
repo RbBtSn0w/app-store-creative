@@ -36,8 +36,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/chrome_renderer.py",
       "sha256": "ec1d41cc13a0926480d05518f8143ce151921c5b9d24b94359338dcbcb234026",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-chrome-renderer-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_installation.py",
