@@ -264,14 +264,14 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_quarantine.py",
       "sha256": "55b796b65d273e9fbc6942a3852f8cd9e336746c50d05e8ee7bbbe95428ac2d2",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-relocation-retention-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_retention.py",
       "sha256": "4b441e706ae90d470dcc92f7bb655a5a6851029626b1e20934e975aa80cfbe78",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-relocation-retention-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py",
