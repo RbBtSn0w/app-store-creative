@@ -25,5 +25,17 @@
     "actual_media_regression": true
   },
   "real_product_acceptance": false,
-  "overall_review_complete": false
+  "overall_review_complete": false,
+  "independent_distribution": {
+    "root": "/private/tmp/creative-f9bfbdd-installed-tmorj69m",
+    "source_runtime_used": false,
+    "package_sha256": "99cbdf9a55a0ace7fbac0a0063af990e06e4a2471ae4dff9eed96221e3708575",
+    "returncode": 0,
+    "log_sha256": "666fa5fe4711da8fa22a70397558c4b5ee0f6caae2ab566003383bf65bc1d615",
+    "source_head": "f9bfbddfeff15425bc71d2e1c9b4078a316f9007",
+    "tests": 11,
+    "seconds": 0.358,
+    "result": "PASS",
+    "scope": "Producer contracts, actual preview media generation and safe staging; complete packaging smoke passed"
+  }
 }
