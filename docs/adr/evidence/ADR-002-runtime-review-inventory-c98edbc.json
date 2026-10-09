@@ -114,14 +114,14 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_fences.py",
       "sha256": "ba67fcfeee5d066b7b2451c50818d2e825ee4ad3639386257ae3e6078a7f3bae",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-maintenance-observation-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_observations.py",
       "sha256": "29451dd39c4264549c7da743420b80f3e155d5335926060efd381821eddb090c",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-maintenance-observation-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_poster.py",
@@ -306,8 +306,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/source_dispositions.py",
       "sha256": "cfe17519dfefb968925b9a200aeac8bacddefecda38ae49f49ba9329bd1f55e8",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-maintenance-observation-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py",
