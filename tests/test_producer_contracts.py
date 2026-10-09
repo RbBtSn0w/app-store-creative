@@ -89,4 +89,3 @@ class ProducerContractTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "overwrite"):
                 preview.execute(contract, output, output.with_suffix(".json"), output.with_suffix(".png"))
             self.assertEqual(output.read_bytes(), b"previous-preview")
-

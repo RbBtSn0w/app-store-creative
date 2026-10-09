@@ -24,5 +24,19 @@
   "release_complete": false,
   "remote_ci_verified": false,
   "production_storage_verified": false,
-  "two_real_products_verified": false
+  "two_real_products_verified": false,
+  "post_full_regression_format_changes": [
+    {
+      "path": "tests/test_producer_contracts.py",
+      "kind": "Trailing blank lines removed; executable content unchanged",
+      "before_sha256": "5685d5e674b2b848f72a1f5a773d30e13b3393cd752a8c6d38d3bf1d544ace65",
+      "after_sha256": "276f0d5758eebcd415ec5421f1af113f5043f0ea47f1f91109795b58d4b9b6a3"
+    },
+    {
+      "path": "tests/test_status_input_contract.py",
+      "kind": "Trailing blank lines removed; executable content unchanged",
+      "before_sha256": "94d8f559b48fcfefde46a4d487006c116eb718210d275c5fe82ab9ce405a65a5",
+      "after_sha256": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb"
+    }
+  ]
 }

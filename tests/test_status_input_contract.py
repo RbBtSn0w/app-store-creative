@@ -18,4 +18,3 @@ class StatusInputContractTests(unittest.TestCase):
     def test_delivery(self):self.check('delivery_status')
     def test_publication(self):self.check('publication_status')
     def test_preparation(self):self.check('external_preparation_status')
-
