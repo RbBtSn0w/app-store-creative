@@ -1,0 +1,14 @@
+{
+  "base_head": "3580e3adcc1e4c79295f077601ad345d49ef0b18",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.py",
+  "sha256": "bfca16a0abcd1664fad53805621a54656c635c2f14392e01b1a3ce933d9a3148",
+  "scope": "Entire native recorder Python executor; isolated execution fixtures do not prove real macOS recording acceptance",
+  "finding": {
+    "before": "A receipt created during recording was overwritten and execution returned success.",
+    "red": "New ownership regression failed: expected return 2, observed 0.",
+    "fix": "Publish a synced descriptor-bound staged receipt with exclusive hard-link publication. Existing receipts and aliases are never overwritten.",
+    "green": "22 focused recorder, managed recording, staging, normalization, producer and probe contract tests passed in 0.810 seconds."
+  },
+  "validation_log_sha256": "d4c134648f56cb2f23acbfa1fcdccf9501e012d49b7215bb3ddf563b8160ffe4",
+  "overall_review_complete": false
+}

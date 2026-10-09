@@ -1,4 +1,5 @@
 """Recorder compilation pins SDK/target and preserves the Swift driver entrypoint."""
+import hashlib
 import subprocess
 from pathlib import Path
 import tempfile
@@ -6,7 +7,7 @@ import unittest
 from unittest.mock import patch
 import test_managed_recording
 from recording_adapters import validate_execution_identity
-from record_app_window import compile_recorder
+from record_app_window import compile_recorder, main
 
 
 class RecorderExecutionIdentityTests(unittest.TestCase):
@@ -44,3 +45,36 @@ class RecorderExecutionIdentityTests(unittest.TestCase):
         identity['environment']['architecture'] = '/private/machine'
         with self.assertRaisesRegex(ValueError, 'environment'):
             validate_execution_identity(identity)
+
+
+class RecorderReceiptOwnershipTests(unittest.TestCase):
+    def test_receipt_created_during_recording_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / 'recording.mov'
+            receipt = root / 'recording.receipt.json'
+            class FixtureTools:
+                evidence = []
+                @staticmethod
+                def digest(path):
+                    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            def compile_fixture(source, binary):
+                binary.write_bytes(b'fixture-recorder')
+                return ['fixture-compiler'], {}, FixtureTools.digest(source)
+            def normalize_fixture(plan, native, destination, tools):
+                native.write_bytes(b'native')
+                destination.write_bytes(b'normalized')
+                receipt.write_bytes(b'owner receipt')
+                return {'probe': {}, 'output_sha256': FixtureTools.digest(destination),
+                        'native_sha256': FixtureTools.digest(native)}
+            with patch('record_app_window.platform.system', return_value='Darwin'), \
+                 patch('record_app_window.platform.mac_ver', return_value=('15.0', (), '')), \
+                 patch('record_app_window.shutil.which', return_value='fixture-tool'), \
+                 patch('record_app_window.compile_recorder', side_effect=compile_fixture), \
+                 patch('record_app_window.subprocess.run', return_value=subprocess.CompletedProcess([], 0)), \
+                 patch('media_tool_identity.MediaTools', FixtureTools), \
+                 patch('recording_normalization.normalize', side_effect=normalize_fixture):
+                result = main(['--bundle-id', 'fixture.dev', '--window-id', '42',
+                               '--output', str(output), '--receipt', str(receipt), '--execute'])
+            self.assertEqual(result, 2)
+            self.assertEqual(receipt.read_bytes(), b'owner receipt')

@@ -82,7 +82,7 @@ def main(argv=None):
         if not args.list_windows:
             if not shutil.which('ffprobe') or not shutil.which('ffmpeg'):
                 raise ValueError('ffmpeg and ffprobe are required to normalize the recording')
-            receipt = args.receipt or args.output.with_suffix('.receipt.json')
+            receipt = (args.receipt or args.output.with_suffix('.receipt.json')).resolve()
             if receipt.resolve() == args.output.resolve(): raise ValueError('receipt and output must be distinct')
             native_output = args.output.with_name(args.output.stem + ".native.mov")
             for path in (args.output, native_output, receipt):
@@ -118,7 +118,11 @@ def main(argv=None):
                       'native_output': {'path': str(native_output.resolve()), 'sha256': normalization['native_sha256']},
                       'normalization': normalization,
                       'output': {'path': str(args.output.resolve()), 'sha256': sha, 'probe': media}, 'uploaded': False}
-            receipt.write_text(json.dumps(result, indent=2) + '\n')
+            from safe_staging import staged_file
+            with staged_file(receipt.parent) as staged:
+                staged.stream.write((json.dumps(result, indent=2) + '\n').encode('utf-8'))
+                staged.sync()
+                staged.publish(receipt)
             print(json.dumps({'executed': True, 'receipt': str(receipt.resolve())})); return 0
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         print(str(error), file=sys.stderr)

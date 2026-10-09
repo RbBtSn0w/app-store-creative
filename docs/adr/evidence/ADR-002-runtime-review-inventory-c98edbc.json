@@ -138,8 +138,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py",
       "sha256": "66b3a6cf67958707a4a3d86ebdbf0c5b69a31714345e23e20a10286bf33437e0",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-managed-recording-review-3580e3a.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py",
@@ -221,9 +221,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.py",
-      "sha256": "8beb3434baa4196b4932f023661db72083df77f4805b811511481ca108add261",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "bfca16a0abcd1664fad53805621a54656c635c2f14392e01b1a3ce933d9a3148",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-recorder-receipt-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_adapters.py",
@@ -353,8 +353,8 @@
     }
   ],
   "counts": {
-    "CURRENT_FULL_MODULE_REVIEW": 19,
+    "CURRENT_FULL_MODULE_REVIEW": 20,
     "CURRENT_PARTIAL_FUNCTION_REVIEW": 2,
-    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 37
+    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 36
   }
 }

@@ -56,7 +56,7 @@
 
 交付模块逐函数审查已覆盖：配置/清单/来源图、候选批准与封存、状态/定位、目录变化/恢复及独立Git取回。剩余目录/恢复/取回专项27项通过；仓库整体审查仍未完成。证据见`evidence/ADR-002-delivery-module-review-c98edbc.json`。
 
-当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，19个有匹配当前内容的完整模块审查证据、2个有明确函数范围证据、37个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
+当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，21个有匹配当前内容的完整模块审查证据、2个有明确函数范围证据、35个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
 
 ## 完整验收与发行 checklist
 
@@ -96,3 +96,7 @@ Git暂存规则模块已完整审查，搬迁调用边界已核对：实际Git�
 录制适配器及标准化模块完整审查，7项实际媒体工具回归与9项合同/身份检查通过；真实第二产品录制及授权验收仍待完成。证据见`evidence/ADR-002-recording-contract-review-e70e281.json`。
 
 受管理Preview及封面模块完整审查复现输入目录失败遗漏终态；已纳入异常处理。新回归先失败，修复后周边13项通过；当前运行时修正需新分发及完整CI验证。证据见`evidence/ADR-002-preview-poster-review.json`。
+
+Preview目录准备修复已提交3580e3a，独立分发13项通过，对应CI run37936880419运行中。受管理原生录屏模块审查及周边7项通过；录屏执行器另行审查。证据见`evidence/ADR-002-managed-recording-review-3580e3a.json`。
+
+原生录屏执行器完整审查复现并修复收据覆盖竞态：录制期间新建收据不再被覆盖，采用同步暂存与排他发布；22项隔离回归通过。该修正尚待新提交的完整CI，不等于真实桌面录制验收。上一提交3580e3a的CI run37936880419已成功。证据见`evidence/ADR-002-recorder-receipt-review.json`。
