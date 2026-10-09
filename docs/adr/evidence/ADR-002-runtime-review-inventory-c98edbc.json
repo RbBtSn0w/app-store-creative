@@ -84,8 +84,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/forward_source_copies.py",
       "sha256": "d8d7471dfc312141e1ff50f35c80b033a62b7159c41ea1fe4e99994c16799a9d",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-forward-source-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py",
