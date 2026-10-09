@@ -6,8 +6,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app_store_creative.py",
       "sha256": "76555d98930e3ba1cf980f744ed19f1eef3748f31bb62147fb9bc76d11efa04b",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-cli-entry-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/archive_policy.py",
