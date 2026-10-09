@@ -323,9 +323,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_control_projection.py",
-      "sha256": "483b5d1d5cc221e54ee8aad5587918bb1819dd4f30c98509486dcace47a28e07",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "2c9a1ed36503f22fd2f17b10116be736e56d41784d9be417b7441966ddfa8df3",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-control-projection-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_contract.py",

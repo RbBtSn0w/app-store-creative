@@ -172,3 +172,22 @@ class StorageControlProjectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'rollback evidence'):
             restore(self.store, self.store.paths.workspace, 'new-operation', 'storage-activations', key, None, after)
         self.assertEqual(path.read_bytes(), canonical(modified))
+
+
+    def test_failed_replacement_preserves_substituted_temporary_owner_file(self):
+        key, before, after = self.records()
+        path = self.store._path('storage-activations', key)
+        self.store._write_path(path, before)
+        replaced = []
+        def replace(source, destination, **options):
+            temporary = path.parent / source
+            retained = temporary.with_name(temporary.name + '-original')
+            temporary.rename(retained)
+            temporary.write_bytes(b'owner temporary file')
+            replaced.append(temporary)
+            raise OSError('Replacement interrupted after substitution')
+        with patch('storage_control_projection.os.replace', side_effect=replace):
+            with self.assertRaisesRegex(OSError, 'after substitution'):
+                self.publish(key, before, after)
+        self.assertEqual(path.read_bytes(), canonical(before))
+        self.assertEqual(replaced[0].read_bytes(), b'owner temporary file')

@@ -1,0 +1,22 @@
+{
+  "base_head": "9914846",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_control_projection.py",
+  "sha256": "2c9a1ed36503f22fd2f17b10116be736e56d41784d9be417b7441966ddfa8df3",
+  "scope": "Entire storage control projection module; callers must retain mutation lock and verified relocation authority",
+  "finding": {
+    "red": "Replacement error after temporary inode substitution deleted the owner replacement; regression raised FileNotFoundError.",
+    "fix": "Pin created temporary inode, verify before publication and clean only matching inode; substituted owner file is retained."
+  },
+  "checks": [
+    "Only activation/binding views replace; immutable business records excluded",
+    "Exact predecessor bytes and durable transition journal before publish",
+    "Bound rollback preserves history and rejects foreign edits"
+  ],
+  "validation": {
+    "tests": 19,
+    "seconds": 3.801,
+    "result": "PASS",
+    "log_sha256": "f4700249445b8755e2cedaeecb11eff83128ea86839b57e49e3e10d116ee0397"
+  },
+  "overall_review_complete": false
+}

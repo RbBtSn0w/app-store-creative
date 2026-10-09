@@ -93,6 +93,7 @@ def publish(core, workspace, plan_id, category, key, before, after):
     parent_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     temporary = '.control-' + secrets.token_hex(16)
     created = False
+    created_identity = None
     try:
         parent_stat = os.fstat(parent_fd)
         current_stat = path.parent.stat()
@@ -102,6 +103,8 @@ def publish(core, workspace, plan_id, category, key, before, after):
             fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
                          0o600, dir_fd=parent_fd)
             created = True
+            info = os.fstat(fd)
+            created_identity = (info.st_dev, info.st_ino)
             with os.fdopen(fd, 'wb') as stream:
                 stream.write(new_bytes); stream.flush(); os.fsync(stream.fileno())
             if _read(path) != actual:
@@ -109,6 +112,9 @@ def publish(core, workspace, plan_id, category, key, before, after):
             current_stat = path.parent.stat()
             if (parent_stat.st_dev, parent_stat.st_ino) != (current_stat.st_dev, current_stat.st_ino):
                 raise ValueError('Storage control parent identity changed before replacement')
+            info = os.stat(temporary, dir_fd=parent_fd, follow_symlinks=False)
+            if (info.st_dev, info.st_ino) != created_identity:
+                raise ValueError('Storage control temporary identity changed')
             if actual is None:
                 os.link(temporary, path.name, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
             else:
@@ -118,7 +124,13 @@ def publish(core, workspace, plan_id, category, key, before, after):
         os.fsync(parent_fd)
     finally:
         if created:
-            os.unlink(temporary, dir_fd=parent_fd)
+            try:
+                info = os.stat(temporary, dir_fd=parent_fd, follow_symlinks=False)
+            except FileNotFoundError:
+                pass
+            else:
+                if (info.st_dev, info.st_ino) == created_identity:
+                    os.unlink(temporary, dir_fd=parent_fd)
         os.close(parent_fd)
     _sync_history(path, workspace)
     return {'path': str(path), 'journal_path': str(history), 'status': 'PUBLISHED'}
