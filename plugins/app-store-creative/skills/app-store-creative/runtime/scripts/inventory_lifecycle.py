@@ -84,6 +84,8 @@ class InventoryOperations:
             if purged_path.exists():
                 result = self._read('maintenance', operation['id'], 'purged')
                 if result['status'] == 'purged':
+                    from maintenance_observations import completed_purge
+                    completed_purge(self, self._read('maintenance', result['plan_id']))
                     purged.update(item['sha256'] for item in operation['objects'])
             for item in operation['objects']:
                 try:

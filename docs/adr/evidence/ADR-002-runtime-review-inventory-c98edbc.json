@@ -95,9 +95,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/inventory_lifecycle.py",
-      "sha256": "696e7b3be0c522a53b80e26f9874e826561727fbff06550494b63885e37c2efe",
-      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
-      "evidence": "ADR-002-inventory-review-ffa1460.json"
+      "sha256": "de22fa31f82d3758c9326779b416a9369f6559f98f80a21772d5f3b569cc4397",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-inventory-purge-proof-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py",

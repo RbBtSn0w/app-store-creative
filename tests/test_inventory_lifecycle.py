@@ -115,3 +115,18 @@ class InventoryTests(unittest.TestCase):
             self.store.start_attempt(run['id'], 'render', 'agent')
         self.assertEqual(list(outside.iterdir()), [])
         self.assertEqual(list((self.store.paths.workspace / 'records/attempts').glob('*/started.json')), [])
+
+
+    def test_invalid_purge_receipt_cannot_hide_missing_objects(self):
+        import json
+        artifact = self.artifact()
+        plan = self.store.plan_cleanup(retention_days=0)
+        operation = self.store.quarantine_cleanup(plan['id'], actor='owner', reason='Discarded')
+        purge = self.store.plan_purge(operation['id'], quarantine_days=0)
+        self.store.purge_cleanup(purge['id'], actor='owner', reason='Expired')
+        path = self.store._path('maintenance', operation['id'], 'purged')
+        receipt = json.loads(path.read_text())
+        receipt['bytes_removed'] += 1
+        path.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(ValueError, 'receipt binding differs'):
+            self.store.inventory()
