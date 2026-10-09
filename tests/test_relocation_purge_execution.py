@@ -148,3 +148,17 @@ class RelocationPurgeExecutionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'stale'):
                 active.purge_relocation(plan['id'], 'owner', 'Retention expired')
         self.assertEqual(sum(Path(item['path']).exists() for item in plan['files']), 1)
+
+
+    def test_observation_rejects_changed_completion_byte_count(self):
+        import json
+        import purge_observations
+        active, receipt, artifact, plan = self.purge_plan()
+        active.purge_relocation(plan['id'], 'owner', 'Retention expired')
+        path = active._path('maintenance', receipt['id'], 'purged')
+        result = json.loads(path.read_text())
+        result['logical_bytes_removed'] += 1
+        path.write_text(json.dumps(result))
+        with self.assertRaisesRegex(ValueError, 'receipt differs'):
+            purge_observations.context(active, receipt['id'])
+        self.assertTrue(active.inventory()['quarantine_preparations']['unverified_operations'])

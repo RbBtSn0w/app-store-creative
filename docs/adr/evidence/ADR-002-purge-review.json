@@ -1,0 +1,29 @@
+{
+  "base_head": "c4885543342a303f61dd39bc928eb4311dc7780b",
+  "scope": "Entire relocation purge planner, guards, executor and observation modules; object retention purge is separate scope",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_guards.py": "c2c72172c1b9ba63ff998ba94fcf8db648575db8992ecaa893038a2ddedbfe5e",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_execution.py": "7293a32a1cdb2a96ada3d11207ca642d8750a7b336bdeb61329e67fe5015545d",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_observations.py": "4afff23a957ba4f92572cc8d675283d540ae299c92211131a6190f3a0595bb74",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_purge.py": "ab181c8f5e2319625d9c1698cc54ba6b2c249be9db87c9c5629338a796a62f79"
+  },
+  "finding": {
+    "red": "Completion receipt logical_bytes_removed changed by one byte was accepted by observation context.",
+    "fix": "Observation verifies the exact plan byte sum, consistently with execution retry verification."
+  },
+  "checks": [
+    "Independent active recovery inode required before deletion",
+    "Configuration, references, roots, plan and intent rechecked across each deletion",
+    "Exact inode tombstone checkpoint; unknown files and reappeared owner files preserved",
+    "Original plan resumes after real child process SIGKILL at intent, file and receipt stages",
+    "Public archive restore after purge verifies media and refuses existing owner destination"
+  ],
+  "validation": {
+    "tests": 29,
+    "seconds": 29.536,
+    "result": "PASS",
+    "log_sha256": "730af9c8f1a796b0de0d80f8b61081d523883bf4b3237cd2128a6ac9a4a7d2c6"
+  },
+  "real_product_acceptance": false,
+  "overall_review_complete": false
+}

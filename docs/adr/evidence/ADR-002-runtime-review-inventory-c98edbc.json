@@ -186,20 +186,20 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_execution.py",
       "sha256": "7293a32a1cdb2a96ada3d11207ca642d8750a7b336bdeb61329e67fe5015545d",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-purge-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_guards.py",
       "sha256": "c2c72172c1b9ba63ff998ba94fcf8db648575db8992ecaa893038a2ddedbfe5e",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-purge-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_observations.py",
-      "sha256": "36634566f5ab643b3967af632ec45067c00c9cef47b839bd5fe4aaa6a449d9da",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "4afff23a957ba4f92572cc8d675283d540ae299c92211131a6190f3a0595bb74",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-purge-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_commit.py",
@@ -258,8 +258,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_purge.py",
       "sha256": "ab181c8f5e2319625d9c1698cc54ba6b2c249be9db87c9c5629338a796a62f79",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-purge-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_quarantine.py",

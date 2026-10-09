@@ -19,7 +19,8 @@ def context(core, identity, relocated=False):
     if done.exists() or done.is_symlink():
         receipt = core._read('maintenance', identity, 'purged')
         if (receipt.get('status') != 'PURGED' or receipt.get('plan_id') != plan['id']
-                or receipt.get('purge_intent_sha256') != _hash(intent)):
+                or receipt.get('purge_intent_sha256') != _hash(intent)
+                or receipt.get('logical_bytes_removed') != sum(item['size_bytes'] for item in plan['files'])):
             raise ValueError('Purge observation receipt differs')
         for index, item in enumerate(plan['files']):
             if _existing_checkpoint(core, plan, index) is None:
