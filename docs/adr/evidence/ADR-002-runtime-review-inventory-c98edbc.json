@@ -240,8 +240,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py",
       "sha256": "7e2df2338826648d639227ee573699287f51ede6ea93d829b7a7cf21712c8584",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-relocation-inventory-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py",
