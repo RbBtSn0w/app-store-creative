@@ -252,8 +252,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_object_observations.py",
       "sha256": "d67264e58f7cbd697ce5543153d3036b47e5adb9eb89b35c47f78e3deea64e2c",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-staging-object-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_purge.py",
@@ -312,8 +312,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py",
       "sha256": "594df0ee5784673b188619526cda86f3c2bc242e598198f03a9b3551440ffb56",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-staging-object-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_configuration.py",

@@ -56,7 +56,7 @@
 
 交付模块逐函数审查已覆盖：配置/清单/来源图、候选批准与封存、状态/定位、目录变化/恢复及独立Git取回。剩余目录/恢复/取回专项27项通过；仓库整体审查仍未完成。证据见`evidence/ADR-002-delivery-module-review-c98edbc.json`。
 
-当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，40个有匹配当前内容的完整模块审查证据、2个有明确函数范围证据、16个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
+当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，42个有匹配当前内容的完整模块审查证据、2个有明确函数范围证据、14个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
 
 ## 完整验收与发行 checklist
 
@@ -118,3 +118,5 @@ Preview合成器及生产编排完成完整审查，修复视频、验收图及�
 Preview发布修复f9bfbdd的完整分发包验证通过；独立解压运行时11项通过（0.358秒），涵盖实际媒体及并发文件保护，未使用源码运行时。完整CI run37939733056仍在运行。证据补充至`evidence/ADR-002-preview-publication-review.json`。
 
 截图渲染器完整审查与7项传输/身份回归通过；浏览器实际验收不由该单元范围替代。最新源码f9bfbdd的完整CI run37939733056已确认成功，含Preview发布修复；当前整体审查及产品验收未完成。证据见`evidence/ADR-002-chrome-renderer-review.json`。
+
+暂存库存及搬迁对象观察两模块完成完整审查，42项回归通过（58.387秒），无新增缺陷。缺少读锁不创建状态，激活与字节完整性分开核对，替换目录及未知文件保守保留。证据见`evidence/ADR-002-staging-object-review.json`。
