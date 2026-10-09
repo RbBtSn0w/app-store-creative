@@ -140,6 +140,8 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         require_project_identity(config)
         from artifact_policy import resolve
         self.artifact_policy = resolve(config)
+        from archive_policy import resolve as resolve_archive_policy
+        self.archive_policy = resolve_archive_policy(config)
         self.paths = StoragePaths.resolve(root, config)
         self.config = json.loads(canonical(config))
         self.config_path = Path(config_path).resolve() if config_path is not None else self.paths.project / 'creative.config.json'

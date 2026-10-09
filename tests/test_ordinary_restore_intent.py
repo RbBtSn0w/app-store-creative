@@ -20,10 +20,10 @@ class OrdinaryRestoreIntentTests(unittest.TestCase):
 
     def interrupt(self, operation):
         original = retention_lifecycle.os.link
-        def interrupted(source, destination):
+        def interrupted(source, destination, **kwargs):
             if Path(destination).parent.parent == self.store.paths.objects:
                 raise OSError('Injected interruption')
-            return original(source, destination)
+            return original(source, destination, **kwargs)
         with patch('retention_lifecycle.os.link', side_effect=interrupted):
             with self.assertRaisesRegex(OSError, 'Injected'):
                 self.store.restore_cleanup(operation['id'], 'owner', 'Restore')
@@ -85,8 +85,8 @@ sys.path.insert(0, sys.argv[1])
 from artifact_lifecycle import Lifecycle
 core = Lifecycle.from_configuration(Path(sys.argv[2]), Path(sys.argv[2])/'creative.config.json')
 original = os.link
-def interrupted(source, destination):
-    result = original(source, destination)
+def interrupted(source, destination, **kwargs):
+    result = original(source, destination, **kwargs)
     if Path(destination).parent.parent == core.paths.objects:
         os.kill(os.getpid(), signal.SIGKILL)
     return result

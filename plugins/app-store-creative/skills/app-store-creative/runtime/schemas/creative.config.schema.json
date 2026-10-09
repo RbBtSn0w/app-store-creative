@@ -548,6 +548,50 @@
           "minimum": 0
         }
       }
+    },
+    "archivePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "mediaMode"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "type": "integer"
+        },
+        "mediaMode": {
+          "enum": [
+            "git",
+            "lfs",
+            "external"
+          ]
+        },
+        "backend": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$"
+        }
+      },
+      "if": {
+        "properties": {
+          "mediaMode": {
+            "const": "external"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "backend"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "backend"
+          ]
+        }
+      }
     }
   }
 }

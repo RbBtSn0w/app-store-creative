@@ -101,6 +101,13 @@
       "issue": "Path-based temporary cleanup remains; destination-directory substitution needs reproduction before deciding whether it shares the external-store defect.",
       "status": "RESOLVED_BY_SHARED_STAGING_PENDING_FULL_CI",
       "evidence": "ADR-002-shared-staging.json"
+    },
+    {
+      "file": "creative.config.schema.json / delivery_lifecycle.py / publication_lifecycle.py",
+      "issue": "ADR-002 requires explicit project media mode/backend declaration; configuration lacks this contract and retrieval proof only infers observed mode. Declared-versus-actual policy enforcement is incomplete.",
+      "status": "IMPLEMENTED_AND_TARGETED_VERIFIED_PENDING_FULL_LATEST_CI_AND_PRODUCT_ACCEPTANCE",
+      "requirement": "ADR-002-artifact-lifecycle-and-release-archive.md:203",
+      "evidence": "ADR-002-archive-policy-contract.json"
     }
   ]
 }

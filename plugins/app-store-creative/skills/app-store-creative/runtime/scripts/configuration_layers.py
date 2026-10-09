@@ -80,6 +80,8 @@ def verify_local_git_protection(path):
 def compose(root, project, local=None):
     from project_identity import require_project_identity
     require_project_identity(project)
+    from archive_policy import resolve as resolve_archive_policy
+    resolve_archive_policy(project)
     if not isinstance(project, dict):
         raise ValueError('Project configuration must be an object')
     shared = project.get('storage', {})

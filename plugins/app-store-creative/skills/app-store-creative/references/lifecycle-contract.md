@@ -6,6 +6,29 @@ The runtime lifecycle core owns records and storage. Producers execute capture, 
 
 Use `--help` on each nested command before execution. Record IDs returned by commands; do not infer IDs, success, or ownership from filenames. Source imports are managed artifacts. Attempts require current lease tokens for registration and termination; recover an expired attempt explicitly, preserving the original interruption. Register input dependencies and portable logical paths for all outputs. Standalone producer files are not automatically candidates or approved releases.
 
+## Explicit Archive Choice
+
+Exploration may omit `archivePolicy`. Before producing the run that will be sealed,
+choose and declare one shared project policy. The runtime never infers a choice
+from installed tools, existing pointer files, or host-local backend configuration.
+
+```json
+{"archivePolicy": {"schema_version": 1, "mediaMode": "lfs"}}
+```
+
+Allowed modes are `git`, `lfs`, and `external`. An external declaration additionally
+requires a portable named `backend`, for example `team-media`; Git and LFS must
+not declare a backend. Backend access locations remain in protected host-local
+`mediaBackends`, not in the shared policy. The media budget remains in
+`artifactPolicy.mediaBudgetBytes`.
+
+The original run snapshot binds the declaration. Sealing refuses an undeclared
+run even if the current configuration was later changed. Produce a new run after
+choosing the policy. Delivery records, manifests, and portable recipes retain the
+same choice; independent verification rejects disagreement. Externalization and
+publication require the actual retrieved mode and backend to match that choice.
+No historical policy is inferred or backfilled.
+
 ## Design Approval and Sealing
 
 Validate the candidate, present the exact result to the human, and record a real authorization reference only after approval:

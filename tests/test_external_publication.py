@@ -6,6 +6,7 @@ import test_publication_lifecycle as fixtures
 
 
 class ExternalPublicationTests(unittest.TestCase):
+    archive_policy = {'schema_version': 1, 'mediaMode': 'external', 'backend': 'team'}
     setUp = fixtures.PublicationLifecycleTests.setUp
     git = fixtures.PublicationLifecycleTests.git
 

@@ -21,6 +21,9 @@ def _location(path):
 def externalize(package, destination, backend, backend_root, expected_manifest_sha256):
     package = _location(package); destination = _location(destination)
     verify_archive(package, expected_manifest_sha256)
+    from archive_policy import require_retrieval
+    require_retrieval(json.loads((package / 'recipe/config.json').read_text()),
+                      {'media_mode': 'external', 'backend': backend})
     if destination.exists() or destination.is_symlink():
         raise ValueError('External metadata destination already exists')
     store = FileSystemMediaStore(backend, backend_root)

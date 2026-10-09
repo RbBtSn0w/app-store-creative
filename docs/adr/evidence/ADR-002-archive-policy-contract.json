@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "scope": "Explicit archive policy declaration, sealed identity, independent retrieval and publication gates; no compatibility inference",
+  "baseline_head": "24634da72213b0b46a18f3a44194c51bb771b8db",
+  "full_regression_before_final_binding_fixes": {
+    "exit_code": 0,
+    "source_fingerprints_checked": 241,
+    "changed": [],
+    "log_sha256": "af4cd5af1dc390d523e85481f22126a7ce24b3900ebe3088c0220ef0dd315d22",
+    "summary": "Ran 1013 tests in 660.259s\n\nOK (skipped=33)",
+    "applies_before_final_binding_fixes": true
+  },
+  "final_binding_regression": {
+    "tests": 36,
+    "seconds": 15.181,
+    "exit_code": 0,
+    "log_sha256": "65301b79e6425b77215dfdd47eb7aa430d3ec392b8b3b6e32c09bbf4ebd73d2c"
+  },
+  "ci_failure_fix": {
+    "run": 37906639568,
+    "head": "24634da",
+    "failure_count": 1,
+    "error_count": 6,
+    "cause": "Test os.link fault injector rejected directory descriptor keyword arguments before reaching intended object interruption",
+    "restore_tests": 12,
+    "restore_tests_passed": true
+  },
+  "final_package": {
+    "sha256": "20ca930b9c75ed684d28951934dd3e72d6f5f9cf3c8aeaf56fde49aedf44059f",
+    "complete_distribution_smoke_passed": true
+  },
+  "installed_configuration_tests": {
+    "count": 4,
+    "exit_code": 0,
+    "scope": "Package before final retrieval/publication binding fixes"
+  },
+  "missing_module_rejects_before_distribution": true,
+  "full_latest_ci_verified": false,
+  "full_review_complete": false,
+  "real_product_acceptance_complete": false
+}

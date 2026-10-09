@@ -7,6 +7,7 @@ from external_delivery_archive import externalize, restore_external
 
 
 class ExternalDeliveryArchiveTests(unittest.TestCase):
+    archive_policy = {'schema_version': 1, 'mediaMode': 'external', 'backend': 'team'}
     setUp=fixtures.DeliveryLifecycleTests.setUp
     approved=fixtures.DeliveryLifecycleTests.approved
 

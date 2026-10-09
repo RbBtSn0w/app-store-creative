@@ -92,3 +92,18 @@ class PublicationRetrievalProofTests(unittest.TestCase):
                     self.store.export_publication(saved['id'], write=True)
                 self.assertFalse(self.store.publication_status(saved['id'])['retrieval_verified'])
                 self.assertFalse((self.store.paths.publications / saved['id']).exists())
+
+    def test_committed_plan_cannot_redeclare_sealed_archive_mode(self):
+        from artifact_lifecycle import identifier
+        plan = self.store.plan_publication(self.delivery['id'], self.persist(), self.target)
+        body = json.loads(json.dumps(plan))
+        body['id'] = identifier()
+        body['archive_policy'] = {'schema_version': 1, 'mediaMode': 'lfs'}
+        body['retrieval_proof']['media_mode'] = 'lfs'
+        body['archive_remote'] = 'archive'
+        body['retrieval_proof']['remote_name'] = 'archive'
+        body['retrieval_proof']['source_scope'] = 'configured-remote'
+        with self.store.transaction():
+            saved = self.store._record('publications', body, 'plan')
+        with self.assertRaisesRegex(ValueError, 'archive policy'):
+            self.store.approve_upload(saved['id'], 'owner', 'fixture:approval')

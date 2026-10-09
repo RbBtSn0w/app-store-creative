@@ -24,6 +24,7 @@ class InputTests(unittest.TestCase):
         self.assertEqual(core.plan_cleanup(retention_days=0)['objects'], [])
 
     def test_external_objects_remain_resolvable_and_package_portable(self):
+        self.config['archivePolicy'] = {'schema_version': 1, 'mediaMode': 'git'}
         self.config['storage'] = {'workspaceRoot': str(self.root.parent / (self.root.name + '-external'))}
         self.cfg.write_text(json.dumps(self.config))
         self.addCleanup(__import__('shutil').rmtree, Path(self.config['storage']['workspaceRoot']), True)

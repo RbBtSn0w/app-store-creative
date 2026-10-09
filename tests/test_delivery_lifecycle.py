@@ -14,10 +14,15 @@ from test_v2_workflow import create_mock_png
 
 class DeliveryLifecycleTests(unittest.TestCase):
     def setUp(self):
+        DeliveryLifecycleTests.prepare(self, getattr(self, 'archive_policy', {'schema_version': 1, 'mediaMode': 'git'}))
+
+    def prepare(self, archive_policy):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name).resolve()
         self.config = {'project': {'id': 'demo', 'name': 'Demo', 'bundleId': 'example.demo', 'locales': ['en-US']},
                        'targets': ['mac_16_10'], 'cards': [{'id': 'hero', 'screenshot': 'source.png'}]}
+        if archive_policy is not None:
+            self.config['archivePolicy'] = archive_policy
         self.store = lifecycle.Lifecycle(self.root, self.config)
         self.run = self.store.start_run({'version': '1.5', 'platform': 'MAC_OS'})
         a = self.store.start_attempt(self.run['id'], 'render', 'agent')
@@ -33,6 +38,15 @@ class DeliveryLifecycleTests(unittest.TestCase):
         self.assertEqual(validation['status'], 'PASS', validation.get('errors'))
         approval = self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human-message:approved')
         return validation, approval
+
+    def test_seal_requires_declared_archive_policy_before_writes(self):
+        self.prepare(None)
+        validation, approval = self.approved()
+        before = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        with self.assertRaisesRegex(ValueError, 'explicit archive policy'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        after = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        self.assertEqual(after, before)
 
     def test_approval_requires_real_media_validation(self):
         self.store.object_path(self.output['sha256']).write_bytes(b'broken')
@@ -54,6 +68,8 @@ class DeliveryLifecycleTests(unittest.TestCase):
     def test_sealed_package_restores_without_original_workspace(self):
         v, approval = self.approved()
         delivery = self.store.seal(self.candidate['id'], v['id'], approval['id'])
+        self.assertEqual(delivery['archive_policy'], self.config['archivePolicy'])
+        self.assertEqual(json.loads((Path(delivery['local_path']) / 'manifest.json').read_text())['archive_policy'], self.config['archivePolicy'])
         package = Path(delivery['local_path']); clone = self.root / 'independent-clone'
         shutil.copytree(package, clone)
         shutil.rmtree(self.store.paths.workspace)

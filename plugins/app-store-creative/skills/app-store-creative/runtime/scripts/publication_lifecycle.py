@@ -73,6 +73,8 @@ class PublicationOperations:
 
     def _require_retrieval_proof(self, plan):
         proof = plan.get('retrieval_proof')
+        from archive_policy import require_retrieval
+        require_retrieval({'archivePolicy': plan.get('archive_policy')}, proof)
         if (not isinstance(proof, dict) or proof.get('retrieval_verified') is not True
                 or proof.get('package_verified') is not True or proof.get('recipe_verified') is not True
                 or proof.get('provenance_verified') is not True
@@ -105,10 +107,15 @@ class PublicationOperations:
             from delivery_lifecycle import verify_git_archive
             retrieval = verify_git_archive(self.paths.project, archive_commit, relative, delivery['manifest_sha256'], archive_remote)
             config = json.loads((package / 'recipe/config.json').read_text())
+            from archive_policy import require_retrieval
+            archive_policy = require_retrieval(config, retrieval)
+            if delivery.get('archive_policy') != archive_policy:
+                raise ValueError('Delivery archive policy differs from retrieved recipe')
             assets = publication_assets(manifest, config, package, relative + '/')
             identity = identifier()
             body = {'id': identity, 'delivery_id': delivery_id, 'target': remote_target,
                     'archive_commit': archive_commit, 'archive_remote': archive_remote, 'manifest_sha256': delivery['manifest_sha256'],
+                    'archive_policy': archive_policy,
                     'archive_path': relative, 'retrieval_proof': retrieval, 'assets': assets, 'executor': 'official-asc-plugin',
                     'remote_write': False, 'required_actions': ['Resolve and confirm version localization resources',
                         'Obtain explicit upload approval for this plan hash', 'Execute through the official ASC plugin',
@@ -120,6 +127,8 @@ class PublicationOperations:
         from delivery_lifecycle import verify_archive, check_delivery_manifest
         self._require_retrieval_proof(plan)
         delivery = self._read('deliveries', plan['delivery_id'])
+        if plan.get('archive_policy') != delivery.get('archive_policy'):
+            raise ValueError('Publication archive policy differs from sealed delivery')
         check_remote_target(plan.get('target'), delivery)
         package = None
         if delivery['manifest_sha256'] != plan['manifest_sha256']:
@@ -191,8 +200,13 @@ class PublicationOperations:
                 from delivery_lifecycle import check_delivery_manifest
                 check_delivery_manifest(manifest, delivery)
                 config = json.loads((package / 'recipe/config.json').read_text())
+                from archive_policy import require_retrieval
+                archive_policy = require_retrieval(config, retrieval)
+                if delivery.get('archive_policy') != archive_policy:
+                    raise ValueError('Delivery archive policy differs from retrieved recipe')
                 assets = publication_assets(manifest, config, package)
             body = {'id': identifier(), 'delivery_id': delivery['id'], 'target': remote_target,
+                'archive_policy': archive_policy,
                 'external_archive_id': external_archive_id, 'backend': saved['backend'],
                 'descriptor_sha256': saved['descriptor_sha256'], 'archive_commit': archive_commit,
                 'archive_remote': archive_remote, 'manifest_sha256': delivery['manifest_sha256'],

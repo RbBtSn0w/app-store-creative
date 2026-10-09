@@ -9,6 +9,7 @@ from delivery_lifecycle import verify_git_archive
 
 @unittest.skipUnless(shutil.which('git-lfs'), 'Git LFS required')
 class GitLFSRetrievalTests(unittest.TestCase):
+    archive_policy = {'schema_version': 1, 'mediaMode': 'lfs'}
     setUp = fixtures.PublicationLifecycleTests.setUp
     git = fixtures.PublicationLifecycleTests.git
 

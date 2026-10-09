@@ -24,7 +24,8 @@ def relative_name(value):
 
 def check_delivery_manifest(manifest, delivery):
     fields = (('revision_id', 'id'), ('project_id', 'project_id'),
-              ('target', 'target'), ('parent_revision', 'parent_revision'))
+              ('target', 'target'), ('parent_revision', 'parent_revision'),
+              ('archive_policy', 'archive_policy'))
     if not isinstance(manifest, dict) or any(manifest.get(left) != delivery.get(right)
                                              for left, right in fields):
         raise ValueError('Delivery identity differs from sealed archive')
@@ -191,6 +192,10 @@ def verify_archive(package, expected_sha256=None):
     verify_provenance(package, manifest, file_hashes)
     import studio_contract
     recipe_config = json.loads((package / 'recipe/config.json').read_text())
+    from archive_policy import resolve as resolve_archive_policy
+    archive_policy = resolve_archive_policy(recipe_config, required=True)
+    if manifest.get('archive_policy') != archive_policy:
+        raise ValueError('Manifest archive policy differs from recipe declaration')
     _verify_portable_recipe(recipe_config)
     _, findings = studio_contract.input_hashes(package / 'recipe', recipe_config)
     preview = recipe_config.get('previewVideo', {})
@@ -584,6 +589,8 @@ class DeliveryOperations:
             candidate, run, validation = self._validated(candidate_id, validation_id)
             approval = self._read('approvals', approval_id)
             self._check_design_approval(candidate_id, run, validation, approval)
+            from archive_policy import resolve as resolve_archive_policy
+            archive_policy = resolve_archive_policy(run['config'], required=True)
             if parent_revision:
                 parent = self._read('deliveries', parent_revision)
                 if parent['project_id'] != run['config']['project']['id'] or parent['target'] != run['target']:
@@ -644,6 +651,7 @@ class DeliveryOperations:
                          for path in sorted(staged.rglob('*')) if path.is_file()]
                 manifest = {'schema_version': 1, 'revision_id': revision, 'project_id': project,
                             'target': target, 'parent_revision': parent_revision,
+                            'archive_policy': archive_policy,
                             'candidate_sha256': validation['candidate_sha256'], 'assets': artifacts,
                             'recipe_inputs': inputs, 'files': files}
                 (staged / 'manifest.json').write_bytes(canonical(manifest))
@@ -654,6 +662,7 @@ class DeliveryOperations:
             return self._record('deliveries', {'id': revision, 'candidate_id': candidate_id,
                 'validation_id': validation_id, 'approval_id': approval_id, 'project_id': project,
                 'target': target, 'parent_revision': parent_revision,
+                'archive_policy': archive_policy,
                 'manifest_sha256': result['manifest_sha256'], 'local_path': str(destination),
                 'storage': self.paths.binding(),
                 'package_verified': True, 'recipe_verified': True})
@@ -745,6 +754,9 @@ def verify_git_archive(root, commit, archive_path, expected_sha256, remote=None)
             run(['-C', str(checkout), 'lfs', 'fetch', 'origin', commit])
             run(['-C', str(checkout), 'lfs', 'checkout', '--', relative])
         result = verify_archive(package, expected_sha256)
+        from archive_policy import require_retrieval
+        require_retrieval(json.loads((package / 'recipe/config.json').read_text()),
+                          {'media_mode': media_mode})
         return {**result, 'retrieval_verified': True, 'archive_commit': commit,
                 'archive_path': relative, 'media_mode': media_mode,
                 'source_scope': 'configured-remote' if remote else 'local-repository', 'remote_name': remote,

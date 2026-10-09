@@ -11,6 +11,29 @@ class ArchiveManifestContractTests(unittest.TestCase):
     setUp = fixtures.DeliveryLifecycleTests.setUp
     approved = fixtures.DeliveryLifecycleTests.approved
 
+    def test_manifest_archive_policy_cannot_disagree_with_sealed_recipe(self):
+        validation, approval = self.approved()
+        delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        package = Path(delivery['local_path'])
+        path = package / 'manifest.json'
+        original = json.loads(path.read_text())
+        for policy in (None, {'schema_version': 1, 'mediaMode': 'lfs'}):
+            with self.subTest(policy=policy):
+                manifest = {**original, 'archive_policy': policy}
+                path.write_text(json.dumps(manifest))
+                with self.assertRaisesRegex(ValueError, 'archive policy'):
+                    verify_archive(package)
+
+    def test_git_declared_delivery_cannot_be_externalized(self):
+        from external_delivery_archive import externalize
+        validation, approval = self.approved()
+        delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        with self.assertRaisesRegex(ValueError, 'archive policy'):
+            externalize(Path(delivery['local_path']), self.root / 'metadata', 'team',
+                        self.root / 'backend', delivery['manifest_sha256'])
+        self.assertFalse((self.root / 'metadata').exists())
+        self.assertFalse((self.root / 'backend').exists())
+
     def test_invalid_manifest_types_and_bindings_are_rejected(self):
         validation, approval = self.approved()
         delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
@@ -63,6 +86,7 @@ class ImportedArchiveBindingTests(unittest.TestCase):
         import production_lifecycle
         from input_lifecycle import SNAPSHOT_INDEX
         fixture = self.fixture
+        fixture.config['archivePolicy'] = {'schema_version': 1, 'mediaMode': 'git'}
         core = lifecycle.Lifecycle(fixture.root, fixture.config)
         imported = core.import_capture((fixture.root / 'capture.png').read_bytes(), 'capture.png', actor='owner')
         fixture.config['cards'][0]['screenshot'] = imported['path']

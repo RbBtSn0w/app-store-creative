@@ -72,6 +72,8 @@ def check_config(config):
     if isinstance(config, dict):
         from artifact_policy import resolve
         resolve(config)
+        from archive_policy import resolve as resolve_archive_policy
+        resolve_archive_policy(config)
     if not isinstance(config, dict) or not isinstance(config.get('cards'), list):
         raise ValueError("Configuration requires a cards array")
     from project_identity import require_project_identity

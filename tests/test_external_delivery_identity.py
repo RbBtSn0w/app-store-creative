@@ -5,6 +5,7 @@ import test_external_publication as fixtures
 
 
 class ExternalDeliveryIdentityTests(unittest.TestCase):
+    archive_policy = {'schema_version': 1, 'mediaMode': 'external', 'backend': 'team'}
     setUp = fixtures.ExternalPublicationTests.setUp
     git = fixtures.ExternalPublicationTests.git
     persist_external = fixtures.ExternalPublicationTests.persist_external
