@@ -3,6 +3,7 @@ import hashlib
 import os
 from pathlib import Path
 import re
+import secrets
 import shutil
 import stat
 import tempfile
@@ -63,9 +64,20 @@ class FileSystemMediaStore:
         destination.parent.mkdir(parents=True, exist_ok=True)
         if destination.parent.resolve() != destination.parent:
             raise ValueError('External retrieval destination parent changed')
-        descriptor, temporary = tempfile.mkstemp(prefix='.creative-object-', dir=destination.parent)
-        staged = Path(temporary)
+        parent_descriptor = os.open(destination.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        staged_name = None
+        staged_identity = None
         try:
+            parent_info = os.fstat(parent_descriptor)
+            current = destination.parent.lstat()
+            if (destination.parent.resolve() != destination.parent
+                    or (current.st_dev, current.st_ino) != (parent_info.st_dev, parent_info.st_ino)):
+                raise ValueError('External retrieval destination parent changed')
+            staged_name = '.creative-object-' + secrets.token_hex(16)
+            descriptor = os.open(staged_name, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                                 0o600, dir_fd=parent_descriptor)
+            staged_info = os.fstat(descriptor)
+            staged_identity = (staged_info.st_dev, staged_info.st_ino)
             with os.fdopen(descriptor, 'wb') as output:
                 source_descriptor = os.open(source, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
                 with os.fdopen(source_descriptor, 'rb') as stream:
@@ -77,16 +89,37 @@ class FileSystemMediaStore:
                     if (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (after.st_size, after.st_mtime_ns, after.st_ctime_ns):
                         raise ValueError('External media source changed during copy')
                 output.flush(); os.fsync(output.fileno())
-            with staged.open('rb') as stream:
+            copied_descriptor = os.open(staged_name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
+                                        dir_fd=parent_descriptor)
+            with os.fdopen(copied_descriptor, 'rb') as stream:
+                copied_info = os.fstat(stream.fileno())
+                if (not stat.S_ISREG(copied_info.st_mode)
+                        or (copied_info.st_dev, copied_info.st_ino) != staged_identity):
+                    raise ValueError('External staged object identity changed')
                 copied_sha = hashlib.file_digest(stream, 'sha256').hexdigest()
-            if copied_sha != sha or staged.stat().st_size != size:
+            if copied_sha != sha or copied_info.st_size != size:
                 raise ValueError('External copied object integrity differs')
-            os.link(staged, destination, follow_symlinks=False)
-            sync_directory(destination.parent)
+            current = destination.parent.lstat()
+            if (destination.parent.resolve() != destination.parent
+                    or (current.st_dev, current.st_ino) != (parent_info.st_dev, parent_info.st_ino)):
+                raise ValueError('External retrieval destination parent changed')
+            os.link(staged_name, destination.name, src_dir_fd=parent_descriptor,
+                    dst_dir_fd=parent_descriptor, follow_symlinks=False)
+            os.fsync(parent_descriptor)
             for directory in created:
                 sync_directory(directory.parent)
         finally:
-            staged.unlink(missing_ok=True)
+            try:
+                if staged_name is not None:
+                    try:
+                        current = os.stat(staged_name, dir_fd=parent_descriptor, follow_symlinks=False)
+                    except FileNotFoundError:
+                        pass
+                    else:
+                        if (current.st_dev, current.st_ino) == staged_identity:
+                            os.unlink(staged_name, dir_fd=parent_descriptor)
+            finally:
+                os.close(parent_descriptor)
 
     def persist(self, source):
         source = Path(source)

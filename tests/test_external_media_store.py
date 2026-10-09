@@ -49,6 +49,30 @@ class ExternalMediaStoreTests(unittest.TestCase):
         self.assertEqual(destination.read_bytes(),b'owner')
 
 
+    def test_replaced_destination_parent_preserves_unknown_file(self):
+        import shutil
+        from unittest.mock import patch
+        source = self.root/'source'; source.write_bytes(b'known media')
+        parent = self.root/'destination'; parent.mkdir()
+        displaced = self.root/'displaced'; foreign = self.root/'foreign'; foreign.mkdir()
+        original = shutil.copyfileobj
+        sentinel = []
+        def replace_parent(stream, output):
+            original(stream, output)
+            staged = next(parent.glob('.creative-object-*'))
+            parent.rename(displaced)
+            parent.symlink_to(foreign, target_is_directory=True)
+            note = foreign/staged.name; note.write_bytes(b'owner data')
+            sentinel.append(note)
+        with patch('external_media_store.shutil.copyfileobj', side_effect=replace_parent):
+            with self.assertRaises((ValueError, OSError)):
+                self.backend._copy(source, parent/'output',
+                    hashlib.sha256(source.read_bytes()).hexdigest(), source.stat().st_size)
+        self.assertTrue(sentinel[0].exists(), 'Failure cleanup removed unregistered owner data')
+        self.assertEqual(sentinel[0].read_bytes(), b'owner data')
+        self.assertFalse((foreign/'output').exists())
+
+
 class ManagedExternalMediaTests(unittest.TestCase):
     setUp=test_artifact_lifecycle.ArtifactLifecycleTests.setUp
 
