@@ -1,0 +1,19 @@
+{
+  "scope": "LocalServerContext startup failure cleanup",
+  "runtime_sha256": "d5fb65f5f01b44b70c2c29a509f5f9acbf10a75694857824a816916ca562277e",
+  "red": "Health failure left listener reachable; connect_ex returned 0",
+  "green": {
+    "tests": 32,
+    "seconds": 10.1,
+    "result": "PASS",
+    "modules": [
+      "test_export_server_cleanup",
+      "test_v2_workflow",
+      "test_studio_release"
+    ]
+  },
+  "limitations": [
+    "Does not establish whole export module acceptance",
+    "Real product export and latest full CI remain separate gates"
+  ]
+}
