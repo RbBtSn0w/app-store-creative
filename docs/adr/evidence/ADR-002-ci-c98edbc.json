@@ -1,0 +1,19 @@
+{
+  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "run": 37934358374,
+  "conclusion": "success",
+  "python": {
+    "executed": 1022,
+    "passed": 989,
+    "skipped": 33,
+    "seconds": 498.03
+  },
+  "studio": {
+    "files": 31,
+    "passed": 93
+  },
+  "typecheck": "PASS",
+  "build": "PASS",
+  "distribution": "PASS",
+  "log_sha256": "870fc698f640990979c9f9a0693cba26afef4ae5237fcc48e549557a60682de5"
+}

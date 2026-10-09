@@ -22,7 +22,7 @@
     "result": "PASS",
     "log_sha256": "461cd75c7542044d5cfbe4d09aa7ea96c2ec43d13351c7f52132fb15d2b2d924",
     "red_log_sha256": "705cea69765cd529f90efad0bcd76cf00c964365d3e7357dde2d52e0b2c7b28c",
-    "full_ci": "Uncommitted fix not covered",
+    "full_ci": "c98edbc run37934358374 success",
     "installed": {
       "package_sha256": "2e9472cd32d60fc1cb5717da5ad11458e9d0ed202fccac2d34b538036ace2083",
       "modules": [
@@ -37,6 +37,30 @@
       "tests": 35,
       "seconds": 37.017,
       "result": "PASS"
+    },
+    "final_seal_callers": {
+      "tests": 96,
+      "seconds": 65.399,
+      "result": "PASS",
+      "log_sha256": "92eaa8df5ac1aa139d569c6b2f850afae8005b8f54d877dc1008cefcee116a5b"
+    },
+    "final_installed": {
+      "head": "c98edbc675305951f94968b61745b911b455819b",
+      "package_sha256": "d15cc64dbffe8b3ba654edc2750205c43e9d0ccbaa4c24b3035ba128e3b16464",
+      "modules": [
+        "test_archive_manifest_contract",
+        "test_layered_archive_portability",
+        "test_external_delivery_archive",
+        "test_ordinary_restore_intent",
+        "test_archive_policy_independent_retrieval"
+      ],
+      "exit_code": 0,
+      "log_sha256": "fdc42ceada76bd8b58200321761a1bcfa5696b670f8df87974221a70dea56265",
+      "source_runtime_used": false,
+      "tests": 29,
+      "seconds": 13.896,
+      "result": "PASS"
     }
-  }
+  },
+  "verified_head": "c98edbc675305951f94968b61745b911b455819b"
 }

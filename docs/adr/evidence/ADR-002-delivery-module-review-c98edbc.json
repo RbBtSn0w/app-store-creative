@@ -1,0 +1,23 @@
+{
+  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_module": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/delivery_lifecycle.py",
+  "sha256": "ae8ce36b9b9807e21a9dcd26c993b509e3ba6dadc6b5e7550f5345a68fb5f741",
+  "scope": "Entire delivery_lifecycle module, combining configuration/manifest/provenance, candidates/approval/sealing, status/location, directory changes/restoration and independent Git retrieval review",
+  "supporting_evidence": [
+    "ADR-002-recipe-approval-binding-gap.json",
+    "ADR-002-candidate-approval-review-c98edbc.json"
+  ],
+  "additional_validation": {
+    "tests": 27,
+    "seconds": 7.015,
+    "result": "PASS",
+    "log_sha256": "29126bac7903e9831f8a5be5a3a75150213be314e8481a1bd515a1b888068b41"
+  },
+  "limitations": [
+    "Module review does not prove all repository changes reviewed",
+    "Synthetic directory recovery does not replace complete real-product maintenance acceptance",
+    "Git/remote retrieval tests do not establish chosen production persistent backend"
+  ],
+  "new_findings": [],
+  "overall_review_complete": false
+}

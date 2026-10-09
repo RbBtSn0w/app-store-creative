@@ -1,0 +1,360 @@
+{
+  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "scope": "Changed runtime Python module inventory only. Prior evidence is not automatically promoted to current full-module review. Frontend, schemas, skills, packaging and tests remain separate review scopes.",
+  "overall_review_complete": false,
+  "modules": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app_store_creative.py",
+      "sha256": "76555d98930e3ba1cf980f744ed19f1eef3748f31bb62147fb9bc76d11efa04b",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/archive_policy.py",
+      "sha256": "f421c8e91cd09dd2d4197c95897ad1f6e5cc6310bbeb686ace99d91af0e0b063",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-configuration-review-a28e698.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_lifecycle.py",
+      "sha256": "f92a6e6d579e50dc3b038436d52c3d41b9b12e6b86a0a0bfb2398414484569e9",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_policy.py",
+      "sha256": "9ad2b2c302e9e17ba5286736e112f5114daee8ffeadbbce5ab55d2534e20de3f",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py",
+      "sha256": "08e9db0993efc0dd7e22fa14d40bc7c6f2b56e9d0fbd924c377540a09b8971ae",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-publication-review-c98edbc.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/chrome_renderer.py",
+      "sha256": "ec1d41cc13a0926480d05518f8143ce151921c5b9d24b94359338dcbcb234026",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_installation.py",
+      "sha256": "d04f1bbd61dad5ee2c3fcadbf0964491dd1723db54458e91fa1dabecb9fa2759",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_layers.py",
+      "sha256": "b3413f081be26ba2fe0af9d73506a3746dc37d18f7a91b9b4ce5e7bc8f6c93c7",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-configuration-review-a28e698.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_preparation.py",
+      "sha256": "2f4b98fc282c43b3b999226890950fe3eec813b78b204e960888ca9c430c9b7f",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/delivery_lifecycle.py",
+      "sha256": "ae8ce36b9b9807e21a9dcd26c993b509e3ba6dadc6b5e7550f5345a68fb5f741",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-delivery-module-review-c98edbc.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/export_engine.py",
+      "sha256": "e9042124ecbee3e27118f07402427f39688c55d5435baeec5950437cb34ea25c",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_delivery_archive.py",
+      "sha256": "1bf5a7fe01043df3fab074a0c5888cb27dbd48286e5426cef8f14b89da2ebe3b",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-external-storage-review-c98edbc.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_media_store.py",
+      "sha256": "514ea3f216aa5dde7fdf1fe7275b7c002d3e35c471dd202b52b308cc07db15ab",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-external-storage-review-c98edbc.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/forward_source_copies.py",
+      "sha256": "d8d7471dfc312141e1ff50f35c80b033a62b7159c41ea1fe4e99994c16799a9d",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py",
+      "sha256": "7cf6e6ab60396432fe986f5c6b3ccc8f99357036b229ed91e94a26b6a83613e5",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/inventory_lifecycle.py",
+      "sha256": "696e7b3be0c522a53b80e26f9874e826561727fbff06550494b63885e37c2efe",
+      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
+      "evidence": "ADR-002-inventory-review-ffa1460.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py",
+      "sha256": "a2f97ceddcbd231b40db434e50c7c8c769ac14d80fd27028600e3aa5175d5a70",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lifecycle_commands.py",
+      "sha256": "a9821e24e487a0bc3eaef5e4a53430400136e6f6e1ea2bdcc5aea0093cddc4e8",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_fences.py",
+      "sha256": "ba67fcfeee5d066b7b2451c50818d2e825ee4ad3639386257ae3e6078a7f3bae",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_observations.py",
+      "sha256": "29451dd39c4264549c7da743420b80f3e155d5335926060efd381821eddb090c",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_poster.py",
+      "sha256": "e1ca04ac3764a2dd1d4b341242c53f835da34cc289ee8aa2dff80587d5b52130",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py",
+      "sha256": "85761b4d3a48c21b6dfa56e52e681d5b0861def1759e449d1fc3b5c136473b69",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py",
+      "sha256": "66b3a6cf67958707a4a3d86ebdbf0c5b69a31714345e23e20a10286bf33437e0",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py",
+      "sha256": "13c6a2bde2f5a958f2a1b4d899c5bfcd93c317982489371ed375a0a6b48e0edd",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py",
+      "sha256": "b12c8136f8763705bf16f941d01658be8b4608bd2fede2ec42c9f56d8a9c272c",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",
+      "sha256": "82bb4b3fe80d3f3e86f6bb52393d66edffb2faa903190a5515bd08a07d9f68be",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/produce_app_preview.py",
+      "sha256": "2955a9ecfbba20de89341204bfaf4bfb9efc721de758fa4a64b2b9ed2de87fc8",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/production_lifecycle.py",
+      "sha256": "245c4576a6964169851a446f083968b46683264589e19e63292c716f9ede4d7a",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/project_identity.py",
+      "sha256": "602c7114ceaed27be4ab29aa45bedc89ae1983a0d8a43b90fe32f50f530500bc",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/publication_lifecycle.py",
+      "sha256": "48866f30557b4a166d1e4c9e25ee87fc6eeadc8a95a28ccc4f2592eab3a5b29d",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-publication-review-c98edbc.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_execution.py",
+      "sha256": "7293a32a1cdb2a96ada3d11207ca642d8750a7b336bdeb61329e67fe5015545d",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_guards.py",
+      "sha256": "c2c72172c1b9ba63ff998ba94fcf8db648575db8992ecaa893038a2ddedbfe5e",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_observations.py",
+      "sha256": "36634566f5ab643b3967af632ec45067c00c9cef47b839bd5fe4aaa6a449d9da",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_commit.py",
+      "sha256": "fe5c225098d7b12f3416ad0b89d52a2e8320d2beb78813be99132950827cc0c7",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_inventory.py",
+      "sha256": "18c40643c47609dbbf5fe395ba44610726fd72c6ae0718fd6fe6148b79d98e88",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_locations.py",
+      "sha256": "d07f47a01384a95e2b2aacf6bec72eea5d966645d1c1ae47fa3b32450200cb3f",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.py",
+      "sha256": "8beb3434baa4196b4932f023661db72083df77f4805b811511481ca108add261",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_adapters.py",
+      "sha256": "b7c35114eb7ac0fbe7ca3634534351273aa4f12cff46025b407b65e121ca0d13",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_normalization.py",
+      "sha256": "4372db64a647a4edb421e28c34d443e941591e41a04725aa3ac02a98660004b1",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py",
+      "sha256": "7e2df2338826648d639227ee573699287f51ede6ea93d829b7a7cf21712c8584",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py",
+      "sha256": "37142a9730d247e8eddb6b55e31dbff7573efaa1f39ecfe242da64bffbfbb455",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_object_observations.py",
+      "sha256": "d67264e58f7cbd697ce5543153d3036b47e5adb9eb89b35c47f78e3deea64e2c",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_purge.py",
+      "sha256": "ab181c8f5e2319625d9c1698cc54ba6b2c249be9db87c9c5629338a796a62f79",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_quarantine.py",
+      "sha256": "55b796b65d273e9fbc6942a3852f8cd9e336746c50d05e8ee7bbbe95428ac2d2",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_retention.py",
+      "sha256": "4b441e706ae90d470dcc92f7bb655a5a6851029626b1e20934e975aa80cfbe78",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py",
+      "sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4",
+      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
+      "evidence": "ADR-002-private-evidence-review-a28e698.json"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/retention_lifecycle.py",
+      "sha256": "2a4b08f40f08aa9c1b77d4f8e230a0cac546eb3ce39d43a0219a73db1b06292c",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py",
+      "sha256": "efcb6f2cd5223c641c6a67f6f14b36ba1eba3f970e18f90c5a6ffbc18d76d2b0",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py",
+      "sha256": "f2679b571002a1c0915cb5d94d6bdfe4dd0788787fa0247b1e0e2f721189dbcf",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/safe_staging.py",
+      "sha256": "ec48f134d6f480c6e26667f1603cc69d31c5b289ba819f38ff3c28a91300275f",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/source_dispositions.py",
+      "sha256": "cfe17519dfefb968925b9a200aeac8bacddefecda38ae49f49ba9329bd1f55e8",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py",
+      "sha256": "594df0ee5784673b188619526cda86f3c2bc242e598198f03a9b3551440ffb56",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_configuration.py",
+      "sha256": "df4bff3d169f619edf8c242e7a3d8145b22b208a4f05ca7cf607ad57936846fb",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_control_projection.py",
+      "sha256": "483b5d1d5cc221e54ee8aad5587918bb1819dd4f30c98509486dcace47a28e07",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_contract.py",
+      "sha256": "aad543dd38cd1dcb6e6936b15c2224c7af452b46b6271561213c8cb38edabdac",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py",
+      "sha256": "618fdc7aa87d64b1247e181575b2c3e12490fdf32e2356858f2e7938767b6cab",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/validator.py",
+      "sha256": "7cdbd515a1132e287860cb106ecbb94c53310feb6cf0518802be57e80a8d38c1",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py",
+      "sha256": "cc271e65271240350c58e4c7bb5338f3f2b07eb32992e675f6bd36d470eb4598",
+      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
+      "evidence": null
+    }
+  ],
+  "counts": {
+    "CURRENT_FULL_MODULE_REVIEW": 7,
+    "CURRENT_PARTIAL_FUNCTION_REVIEW": 2,
+    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 49
+  }
+}

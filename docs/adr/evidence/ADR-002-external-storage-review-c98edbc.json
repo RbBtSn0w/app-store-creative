@@ -1,0 +1,33 @@
+{
+  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_media_store.py",
+      "sha256": "514ea3f216aa5dde7fdf1fe7275b7c002d3e35c471dd202b52b308cc07db15ab",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_delivery_archive.py",
+      "sha256": "1bf5a7fe01043df3fab074a0c5888cb27dbd48286e5426cef8f14b89da2ebe3b",
+      "scope": "Entire module"
+    }
+  ],
+  "checks": [
+    "Named immutable version references strictly typed without private roots",
+    "Persist returns only after independent exact-byte retrieval",
+    "Missing or corrupt versions never fall back",
+    "Unknown destination files preserved on refusal",
+    "Managed roots do not overlap external store",
+    "Complete manifest descriptor coverage and independent Git checkout verified",
+    "All restored packages invoke shared approved configuration validation"
+  ],
+  "validation": {
+    "tests": 20,
+    "seconds": 7.626,
+    "result": "PASS",
+    "log_sha256": "d483cdb3c045cb0d5f691ac2aa7c36c36bf369055fbf02230d5e9389d112bee2"
+  },
+  "new_findings": [],
+  "production_backend_acceptance_complete": false,
+  "overall_review_complete": false
+}

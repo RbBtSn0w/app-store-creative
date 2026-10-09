@@ -1,0 +1,36 @@
+{
+  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/delivery_lifecycle.py",
+      "sha256": "ae8ce36b9b9807e21a9dcd26c993b509e3ba6dadc6b5e7550f5345a68fb5f741",
+      "functions": [
+        "_candidate",
+        "_closure",
+        "_materialize",
+        "candidate_review",
+        "validate_candidate",
+        "_validated",
+        "approve_design",
+        "_check_design_approval"
+      ]
+    }
+  ],
+  "checks": [
+    "Current and immutable run recipe identity checked",
+    "Changed declared source bytes rejected",
+    "Producer source eligibility and complete closure verified",
+    "Declared output matrix and selected poster-preview binding checked",
+    "Validation policy, candidate hash, run and configuration identity bound",
+    "Human actor and authorization reference required",
+    "Design approval target, candidate and validation scope rechecked at consumption"
+  ],
+  "validation": {
+    "tests": 23,
+    "seconds": 13.521,
+    "result": "PASS",
+    "log_sha256": "7e20790058e29f99ed19d3c31c62a50c7ca4e634753bbff80b2b287717c91b4d"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}
