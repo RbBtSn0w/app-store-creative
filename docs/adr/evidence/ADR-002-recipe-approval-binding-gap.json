@@ -1,0 +1,42 @@
+{
+  "approved_config_sha256": "bc9d9487e01e026cd4ea475902839f955d8b90ce4cda3f9844eb4aa609b387c9",
+  "changed_budget": 7,
+  "verification": {
+    "package_verified": true,
+    "recipe_verified": true,
+    "provenance_verified": true,
+    "manifest_sha256": "acdf4db0dd50c23f6146e175b645871d848fc82bdefb95c4f5b2abc391009db1",
+    "assets_count": 1,
+    "files_count": 7
+  },
+  "finding": "Recipe configuration changed while original design approval retained",
+  "head": "6faa6b5eceade889d89e8d4709c7d036e2f3fd58",
+  "status": "IMPLEMENTED_SCOPED_VALIDATION_PASSED",
+  "scope": "Standalone archive approval/configuration consistency; authoritative expected manifest hash rejects rewritten manifests",
+  "required_fix": "Bind approved configuration to the portable recipe transformation without legacy backfill",
+  "overall_review_complete": false,
+  "fix": "Mandatory portable reviewed-config evidence matches the approved configuration identity; shared deterministic source-reference transformation must reproduce recipe/config.json. No compatibility fallback.",
+  "validation": {
+    "tests": 33,
+    "seconds": 25.78,
+    "result": "PASS",
+    "log_sha256": "461cd75c7542044d5cfbe4d09aa7ea96c2ec43d13351c7f52132fb15d2b2d924",
+    "red_log_sha256": "705cea69765cd529f90efad0bcd76cf00c964365d3e7357dde2d52e0b2c7b28c",
+    "full_ci": "Uncommitted fix not covered",
+    "installed": {
+      "package_sha256": "2e9472cd32d60fc1cb5717da5ad11458e9d0ed202fccac2d34b538036ace2083",
+      "modules": [
+        "test_archive_manifest_contract",
+        "test_delivery_lifecycle",
+        "test_external_publication",
+        "test_native_preview_archive"
+      ],
+      "exit_code": 0,
+      "log_sha256": "b168c8b8ed71f5433e8cfd9b024604f8d4a0f04e0c21122594d2b0b4b88d3e0e",
+      "source_runtime_used": false,
+      "tests": 35,
+      "seconds": 37.017,
+      "result": "PASS"
+    }
+  }
+}

@@ -89,6 +89,21 @@ def _verify_portable_recipe(config):
         raise ValueError('Portable recipe contains runtime storage or provenance fields: ' + ', '.join(sorted(private)))
 
 
+def portable_recipe(config, input_names):
+    """Transform reviewed source references without guessing their original spelling."""
+    config = {key: value for key, value in config.items() if key != 'storage'}
+    _verify_portable_recipe(config)
+    def rewrite(value):
+        if isinstance(value, dict):
+            return {key: ('inputs/' + item.lstrip('/') if key in ('screenshot', 'source', 'imageUrl')
+                         and isinstance(item, str) and item.lstrip('/') in input_names else rewrite(item))
+                    for key, item in value.items()}
+        if isinstance(value, list):
+            return [rewrite(item) for item in value]
+        return value
+    return rewrite(config)
+
+
 def verify_archive(package, expected_sha256=None):
     from artifact_lifecycle import digest, safe_id
     import re
@@ -192,6 +207,16 @@ def verify_archive(package, expected_sha256=None):
     verify_provenance(package, manifest, file_hashes)
     import studio_contract
     recipe_config = json.loads((package / 'recipe/config.json').read_text())
+    reviewed_name = 'evidence/reviewed-config.json'
+    if reviewed_name not in names:
+        raise ValueError('Archive approved configuration evidence is missing')
+    reviewed_config = json.loads((package / reviewed_name).read_text())
+    _verify_portable_recipe(reviewed_config)
+    from artifact_lifecycle import configuration_identity
+    input_names = {record['path'][len('recipe/inputs/'):] for record in manifest['recipe_inputs']}
+    if (configuration_identity(reviewed_config) != config_hash
+            or portable_recipe(reviewed_config, input_names) != recipe_config):
+        raise ValueError('Archive recipe differs from approved configuration')
     from archive_policy import resolve as resolve_archive_policy
     archive_policy = resolve_archive_policy(recipe_config, required=True)
     from artifact_policy import require_media_budget
@@ -615,17 +640,11 @@ class DeliveryOperations:
                 _verify_portable_recipe(config)
                 input_names = {data['logical_path'] for identity, data in closure.items()
                                if identity not in candidate['artifacts'] and data['role'] != 'render-evidence'}
-                def rewrite(value):
-                    if isinstance(value, dict):
-                        return {key: ('inputs/' + item.lstrip('/') if key in ('screenshot', 'source', 'imageUrl')
-                                     and isinstance(item, str) and item.lstrip('/') in input_names else rewrite(item))
-                                for key, item in value.items()}
-                    if isinstance(value, list):
-                        return [rewrite(item) for item in value]
-                    return value
-                config = rewrite(config)
+                reviewed_config = config
+                config = portable_recipe(reviewed_config, input_names)
                 (staged / 'recipe' / 'config.json').write_bytes(canonical(config))
                 evidence = staged / 'evidence'; evidence.mkdir()
+                (evidence / 'reviewed-config.json').write_bytes(canonical(reviewed_config))
                 for data in closure.values():
                     if data['role'] == 'render-evidence':
                         name = relative_name(data['logical_path'])

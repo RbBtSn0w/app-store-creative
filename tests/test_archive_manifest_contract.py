@@ -11,6 +11,54 @@ class ArchiveManifestContractTests(unittest.TestCase):
     setUp = fixtures.DeliveryLifecycleTests.setUp
     approved = fixtures.DeliveryLifecycleTests.approved
 
+    def test_recipe_cannot_change_approved_configuration_with_updated_file_hashes(self):
+        from artifact_lifecycle import digest
+        validation, approval = self.approved()
+        delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        package = Path(delivery['local_path'])
+        recipe = package / 'recipe/config.json'
+        config = json.loads(recipe.read_text())
+        config['artifactPolicy']['mediaBudgetBytes'] = 7
+        recipe.write_text(json.dumps(config))
+        manifest_path = package / 'manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        record = next(item for item in manifest['files'] if item['path'] == 'recipe/config.json')
+        record.update(sha256=digest(recipe), size_bytes=recipe.stat().st_size)
+        manifest_path.write_text(json.dumps(manifest))
+        with self.assertRaisesRegex(ValueError, 'approved configuration'):
+            verify_archive(package)
+
+    def test_missing_reviewed_configuration_is_not_backfilled(self):
+        validation, approval = self.approved()
+        delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        package = Path(delivery['local_path'])
+        evidence = package / 'evidence/reviewed-config.json'
+        evidence.unlink()
+        manifest_path = package / 'manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        manifest['files'] = [item for item in manifest['files'] if item['path'] != 'evidence/reviewed-config.json']
+        manifest_path.write_text(json.dumps(manifest))
+        with self.assertRaisesRegex(ValueError, 'approved configuration evidence is missing'):
+            verify_archive(package)
+
+    def test_matching_modified_recipe_and_reviewed_config_still_require_original_approval(self):
+        from artifact_lifecycle import digest
+        validation, approval = self.approved()
+        delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        package = Path(delivery['local_path'])
+        manifest_path = package / 'manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        for name in ('recipe/config.json', 'evidence/reviewed-config.json'):
+            path = package / name
+            config = json.loads(path.read_text())
+            config['artifactPolicy']['mediaBudgetBytes'] = 7
+            path.write_text(json.dumps(config))
+            record = next(item for item in manifest['files'] if item['path'] == name)
+            record.update(sha256=digest(path), size_bytes=path.stat().st_size)
+        manifest_path.write_text(json.dumps(manifest))
+        with self.assertRaisesRegex(ValueError, 'approved configuration'):
+            verify_archive(package)
+
     def test_manifest_archive_policy_cannot_disagree_with_sealed_recipe(self):
         validation, approval = self.approved()
         delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
