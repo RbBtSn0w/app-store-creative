@@ -9,7 +9,7 @@
 - 分支：`feat/unified-artifact-lifecycle-v2`。
 - 基础提交：`50a6414c7e83257bcc3ec691e9a604cc6605f5ef`。
 - 隔离工作区：`/private/tmp/app-store-creative-redesign`。
-- 待发布版本：`0.3.0`；整改已提交；Draft PR准备中，尚未合并或发布。远端基线须在交付前再次核对。
+- 待发布版本：`0.3.0`；整改已提交；[Draft PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)已创建，尚未合并或发布。远端基线须在交付前再次核对。
 - 原插件仓库与 Levelory 用户改动保留；真实采集使用独立 Levelory 源树和 Dev 身份。
 
 ## 实现 checklist
@@ -31,7 +31,7 @@
 | 项目 | 结果及范围 | 证据 |
 | --- | --- | --- |
 | 当前源码全量 | 999 项执行，966 通过、33 跳过；662.765 秒；316 份源文件指纹一致；退出0 | `/tmp/creative-overlay-fixed-full-regression-proof.json`、同名日志 |
-| 独立卷专项 | 当期独立 APFS 卷33项通过并卸载；早于本次录屏/坐标变更，不称作当前全量跨卷通过 | `/tmp/creative-final-status-crossfs-acceptance-proof.json` |
+| 独立卷专项 | PR head `cda553c`对应源码独立APFS卷33项通过，75.014秒退出0；已卸载且is_mount为false。全量原skip结果保留 | `/tmp/creative-pr11-crossfs-acceptance-proof.json` |
 | Studio 中断恢复 | 安装包真实 SIGKILL 后 INCOMPLETE/RESTORING，按原意图恢复至 PASS；合成夹具 | `/tmp/creative-studio-installed-restore-proof.json` |
 | 来源与设计 | Levelory中英文10份真实采集；新候选10份原采集进入依赖闭包，成图与已审查版本哈希一致 | `/tmp/creative-levelory-linked-design-provenance-proof.json` |
 | 真实视频/封面 | Dev窗口采集及UI操作均成功；20秒1920×1080、30fps、H.264/AAC；原生录像、标准化回执及poster依赖完整 | `/tmp/creative-levelory-real-preview-proof.json` |
@@ -51,7 +51,8 @@
 - [x] 当前包独立安装专项与逐字节载荷核验；不替代更新后的真实工作流验收。
 - [ ] 完整差异审查及最新敏感证据检查。
 - [x] 整改提交保存到独立分支；不代表发行完成。
-- [ ] Draft PR、远端CI及实际产品归档的准确提交/PR绑定。
+- [x] Draft PR #11创建并关联当前任务；远端head为`cda553c5539824f3f118d2661951d437b9600b1a`。
+- [ ] 远端CI及实际产品归档的准确提交/PR绑定；首次CI因runner缺少FFmpeg失败，已补测试前工具安装，待新运行。
 - [ ] 合并main、推送、插件更新和更新后的实际工作流复验。
 
 ## 后续顺序
