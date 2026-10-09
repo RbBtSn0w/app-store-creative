@@ -161,15 +161,15 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/produce_app_preview.py",
-      "sha256": "2955a9ecfbba20de89341204bfaf4bfb9efc721de758fa4a64b2b9ed2de87fc8",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "994f17d02e39dbafb91c10f98acc92c42256d4dc0aac8f9d1bd39df20279aa9e",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-preview-publication-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/production_lifecycle.py",
       "sha256": "245c4576a6964169851a446f083968b46683264589e19e63292c716f9ede4d7a",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-preview-publication-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/project_identity.py",

@@ -122,6 +122,7 @@ def preflight_sources(contract: dict, tools=None) -> list[dict]:
 
 
 def execute(contract: dict, output: Path, receipt: Path, snapshot: Path) -> dict:
+    output, receipt, snapshot = (path.parent.resolve() / path.name for path in (output, receipt, snapshot))
     command = build_command(contract, output)
     for path in (output, receipt, snapshot):
         if path.exists(): raise ValueError(f"refusing to overwrite existing artifact: {path}")
@@ -156,9 +157,17 @@ def execute(contract: dict, output: Path, receipt: Path, snapshot: Path) -> dict
                   "output": {"path": str(output.resolve()), "sha256": digest(encoded), "probe": probe},
                   "acceptance_snapshot": {"path": str(snapshot.resolve()), "sha256": digest(image)},
                   "snapshot_command": snapshot_command, "uploaded": False}
-        shutil.move(str(image), snapshot)
-        shutil.move(str(encoded), output)
-        receipt.write_text(json.dumps(result, indent=2) + "\n")
+        from safe_staging import staged_file
+        for source, destination in ((image, snapshot), (encoded, output)):
+            with staged_file(destination.parent) as staged:
+                with source.open('rb') as stream:
+                    shutil.copyfileobj(stream, staged.stream)
+                staged.sync()
+                staged.publish(destination)
+        with staged_file(receipt.parent) as staged:
+            staged.stream.write((json.dumps(result, indent=2) + "\n").encode('utf-8'))
+            staged.sync()
+            staged.publish(receipt)
     return result
 
 

@@ -89,3 +89,30 @@ class ProducerContractTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "overwrite"):
                 preview.execute(contract, output, output.with_suffix(".json"), output.with_suffix(".png"))
             self.assertEqual(output.read_bytes(), b"previous-preview")
+
+
+    def test_preview_preserves_outputs_created_during_encoding(self):
+        import subprocess
+        for owned_name in ('preview.mp4', 'receipt.json', 'snapshot.png'):
+            with self.subTest(owned_name=owned_name), tempfile.TemporaryDirectory() as scratch:
+                root = Path(scratch).resolve()
+                output, receipt, snapshot = (root / name for name in ('preview.mp4', 'receipt.json', 'snapshot.png'))
+                owner = root / owned_name
+                class FixtureTools:
+                    paths = {'ffmpeg': 'fixture-ffmpeg'}
+                    evidence = []
+                    def verify(self):
+                        owner.write_bytes(b'owner bytes')
+                def run(command, **options):
+                    if '-filters' not in command:
+                        Path(command[-1]).write_bytes(b'encoded fixture')
+                    return subprocess.CompletedProcess(command, 0, '', '')
+                contract = {'width': 64, 'height': 64, 'fps': 30, 'duration': 1,
+                            'segments': [{'path': 'fixture.mov', 'duration': 1, 'has_audio': False}]}
+                with mock.patch('media_tool_identity.MediaTools', FixtureTools), \
+                     mock.patch.object(preview, 'preflight_sources', return_value=[]), \
+                     mock.patch.object(preview, 'validate_output', return_value={}), \
+                     mock.patch.object(preview.subprocess, 'run', side_effect=run):
+                    with self.assertRaises(OSError):
+                        preview.execute(contract, output, receipt, snapshot)
+                self.assertEqual(owner.read_bytes(), b'owner bytes')

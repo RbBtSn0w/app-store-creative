@@ -1,0 +1,29 @@
+{
+  "base_head": "4af9ae3",
+  "scope": "Entire preview composition executor and managed production orchestration; render engine, video engine and validator remain separate scopes",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/produce_app_preview.py": "994f17d02e39dbafb91c10f98acc92c42256d4dc0aac8f9d1bd39df20279aa9e",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/production_lifecycle.py": "245c4576a6964169851a446f083968b46683264589e19e63292c716f9ede4d7a"
+  },
+  "finding": {
+    "red": "All three publication race subcases overwrote files created during encoding without raising.",
+    "fix": "Canonicalize parent directories before execution; publish synced staged snapshot, video and receipt with exclusive no-overwrite links.",
+    "intermediate_failure": "Actual media regression exposed macOS temporary parent aliases; corrected before final validation."
+  },
+  "checks": [
+    "Input/source and configuration authority rechecked before candidate selection",
+    "Managed imported capture ancestry and reviewed recipe registered",
+    "Partial diagnostics and terminal failure preserved",
+    "Preview output contract, media tools and source hashes verified",
+    "Receipt published after video and snapshot; concurrent owner files preserved"
+  ],
+  "validation": {
+    "tests": 24,
+    "seconds": 7.863,
+    "result": "PASS",
+    "log_sha256": "30dc9f0b3a8a061087c85ffa13f18c7b68696c174bece02b31b629495f1cc223",
+    "actual_media_regression": true
+  },
+  "real_product_acceptance": false,
+  "overall_review_complete": false
+}
