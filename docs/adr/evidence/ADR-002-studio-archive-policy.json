@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "scope": "Studio explicit archive selection with no inferred default",
+  "typecheck_exit_code": 0,
+  "studio_tests": {
+    "files": 31,
+    "passed": 92,
+    "log_sha256": "3c0976ce05f13bb7098c4fe4e12b4cf505e4311aa66d4e93dce62c950f6eb5bf"
+  },
+  "build_exit_code": 0,
+  "distribution_smoke_passed": true,
+  "package_sha256": "c5e54a001c5014c2a639b7e5d6fcce81644fb7a1029ad97e87504207c6a24cac",
+  "backend_path_kept_host_local": true,
+  "running_or_saving_disables_policy_edit": true,
+  "real_browser_acceptance_complete": false,
+  "preceding_runtime_installed_acceptance": {
+    "commit": "f575ed619b25c3827728f368b0f94959ab0aaebb",
+    "exit_code": 0,
+    "output": "........................................\n----------------------------------------------------------------------\nRan 40 tests in 24.761s\n\nOK\n",
+    "package_sha256": "20ca930b9c75ed684d28951934dd3e72d6f5f9cf3c8aeaf56fde49aedf44059f",
+    "runtime_source": "isolated-extracted-package",
+    "source_repository_on_pythonpath": false
+  }
+}
