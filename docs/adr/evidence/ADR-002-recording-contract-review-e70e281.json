@@ -1,0 +1,43 @@
+{
+  "head": "e70e281af528a6a79354c738fbf7dce5e8501929",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_normalization.py",
+      "sha256": "4372db64a647a4edb421e28c34d443e941591e41a04725aa3ac02a98660004b1",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_adapters.py",
+      "sha256": "b7c35114eb7ac0fbe7ca3634534351273aa4f12cff46025b407b65e121ca0d13",
+      "scope": "Entire module"
+    }
+  ],
+  "checks": [
+    "Window-only recording contract and cursor exclusion",
+    "Explicit native output, dimensions and bounded cadence/duration",
+    "Native take SHA retained and rechecked after normalization",
+    "Short native takes rejected without padding",
+    "New normalization output never overwrites existing output",
+    "Strict output probe and portable compiler/encoder/probe identity fields"
+  ],
+  "validation": [
+    {
+      "tests": 7,
+      "seconds": 0.659,
+      "result": "PASS",
+      "actual_media_tools": true,
+      "log_sha256": "838b7943908aa70314d5653d91b9e4f183389568be49e93fb0ddce8d68f58153"
+    },
+    {
+      "tests": 9,
+      "seconds": 0.433,
+      "result": "PASS",
+      "log_sha256": "fe6971ac3d029a88b7900520d40a8a4cfb54bde606df51deca799137ecca2c15"
+    }
+  ],
+  "new_findings": [],
+  "limitations": [
+    "Synthetic media verifies normalization; does not replace real second-product acquisition or consent acceptance"
+  ],
+  "overall_review_complete": false
+}

@@ -38,7 +38,7 @@ def produce(core, run_id, contract_path, logical_path, owner):
     contract_path = Path(contract_path).resolve()
     contract = json.loads(contract_path.read_text())
     attempt = core.start_attempt(run_id, 'preview', owner)
-    work = Path(attempt['work_path']); inputs = work / 'inputs'; inputs.mkdir()
+    work = Path(attempt['work_path']); inputs = work / 'inputs'
     dependencies = []
     portable = json.loads(canonical(contract))
     outputs = [(work / 'preview.mp4', 'preview', logical_path),
@@ -46,6 +46,7 @@ def produce(core, run_id, contract_path, logical_path, owner):
                (work / 'frames.png', 'producer-evidence', 'evidence/preview-frames.png')]
     try:
         with core.keep_lease(attempt['id']):
+            inputs.mkdir()
             items = [*portable.get('segments', []), *portable.get('overlays', []), portable.get('end_card') or {}]
             for index, item in enumerate(items):
                 if 'path' in item and 'artifact_id' in item:

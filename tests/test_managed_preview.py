@@ -13,6 +13,23 @@ class ManagedPreviewTests(unittest.TestCase):
         path = self.root / 'timeline.json'; path.write_text(json.dumps({'segments': [{'path': 'take.mp4', 'duration': 20}]}))
         return path
 
+    def test_input_directory_failure_records_terminal_attempt(self):
+        from pathlib import Path
+        from managed_preview import produce
+        run = self.store.start_run({})
+        contract = self.contract()
+        original = Path.mkdir
+        def refuse(path, *args, **kwargs):
+            if path.name == 'inputs':
+                raise OSError('Input directory preparation failed')
+            return original(path, *args, **kwargs)
+        with patch('managed_preview.Path.mkdir', side_effect=refuse, autospec=True):
+            with self.assertRaisesRegex(OSError, 'Input directory preparation failed'):
+                produce(self.store, run['id'], contract, 'preview/app_preview.mp4', 'agent')
+        status = self.store.status(run['id'])
+        self.assertEqual(status['attempts'][0]['outcome']['status'], 'failed')
+        self.assertIn('Input directory preparation failed', status['attempts'][0]['outcome']['reason'])
+
     def test_snapshot_provenance_and_outputs_are_registered(self):
         from managed_preview import produce
         run = self.store.start_run({}); contract = self.contract()

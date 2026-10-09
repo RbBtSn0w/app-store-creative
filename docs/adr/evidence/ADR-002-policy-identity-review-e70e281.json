@@ -1,0 +1,45 @@
+{
+  "head": "e70e281af528a6a79354c738fbf7dce5e8501929",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py",
+      "sha256": "b12c8136f8763705bf16f941d01658be8b4608bd2fede2ec42c9f56d8a9c272c",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/project_identity.py",
+      "sha256": "602c7114ceaed27be4ab29aa45bedc89ae1983a0d8a43b90fe32f50f530500bc",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_policy.py",
+      "sha256": "9ad2b2c302e9e17ba5286736e112f5114daee8ffeadbbce5ab55d2534e20de3f",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py",
+      "sha256": "13c6a2bde2f5a958f2a1b4d899c5bfcd93c317982489371ed375a0a6b48e0edd",
+      "scope": "Entire module"
+    }
+  ],
+  "checks": [
+    "Project identity explicit and consistent across configuration/editor/execution",
+    "Media binaries pinned by resolved path/version/hash and rechecked after execution",
+    "Retention values strict versioned nonnegative integers",
+    "Formal delivery requires explicit budget; no guessed declaration",
+    "Budget query read-only and returns unknown for unverified deliveries",
+    "Logical retained payload forecast excludes unknown Git history and remote storage"
+  ],
+  "validation": {
+    "tests": 13,
+    "seconds": 3.362,
+    "result": "PASS",
+    "log_sha256": "90298eada17e0967c36a28c5277e78324258e468d21e3d9de18003d428539414"
+  },
+  "limitations": [
+    "Binary identity does not prove vendor authenticity",
+    "Budget is advisory and does not enable paid storage or authorize deletion"
+  ],
+  "new_findings": [],
+  "overall_review_complete": false
+}

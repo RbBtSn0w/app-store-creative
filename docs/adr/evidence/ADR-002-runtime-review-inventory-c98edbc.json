@@ -1,6 +1,6 @@
 {
   "head": "c98edbc675305951f94968b61745b911b455819b",
-  "scope": "Changed runtime Python module inventory only. Prior evidence is not automatically promoted to current full-module review. Frontend, schemas, skills, packaging and tests remain separate review scopes.",
+  "scope": "Current working tree changed runtime Python module inventory; reviewed module hashes are authoritative, uncommitted changes require new CI. Frontend, schemas, skills, packaging and tests remain separate review scopes.",
   "overall_review_complete": false,
   "modules": [
     {
@@ -24,8 +24,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_policy.py",
       "sha256": "9ad2b2c302e9e17ba5286736e112f5114daee8ffeadbbce5ab55d2534e20de3f",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-policy-identity-review-e70e281.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py",
@@ -126,14 +126,14 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_poster.py",
       "sha256": "e1ca04ac3764a2dd1d4b341242c53f835da34cc289ee8aa2dff80587d5b52130",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-preview-poster-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py",
-      "sha256": "85761b4d3a48c21b6dfa56e52e681d5b0861def1759e449d1fc3b5c136473b69",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "2ded0998d15d4237e7c8fe3f3fc6c83d90e759c4195fa699293f9ee785db59e9",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-preview-poster-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py",
@@ -144,14 +144,14 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py",
       "sha256": "13c6a2bde2f5a958f2a1b4d899c5bfcd93c317982489371ed375a0a6b48e0edd",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-policy-identity-review-e70e281.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py",
       "sha256": "b12c8136f8763705bf16f941d01658be8b4608bd2fede2ec42c9f56d8a9c272c",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-policy-identity-review-e70e281.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",
@@ -174,8 +174,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/project_identity.py",
       "sha256": "602c7114ceaed27be4ab29aa45bedc89ae1983a0d8a43b90fe32f50f530500bc",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-policy-identity-review-e70e281.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/publication_lifecycle.py",
@@ -228,14 +228,14 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_adapters.py",
       "sha256": "b7c35114eb7ac0fbe7ca3634534351273aa4f12cff46025b407b65e121ca0d13",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-recording-contract-review-e70e281.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_normalization.py",
       "sha256": "4372db64a647a4edb421e28c34d443e941591e41a04725aa3ac02a98660004b1",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-recording-contract-review-e70e281.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py",
@@ -353,8 +353,8 @@
     }
   ],
   "counts": {
-    "CURRENT_FULL_MODULE_REVIEW": 11,
+    "CURRENT_FULL_MODULE_REVIEW": 19,
     "CURRENT_PARTIAL_FUNCTION_REVIEW": 2,
-    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 45
+    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 37
   }
 }
