@@ -318,8 +318,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_configuration.py",
       "sha256": "df4bff3d169f619edf8c242e7a3d8145b22b208a4f05ca7cf607ad57936846fb",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-storage-video-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_control_projection.py",
@@ -348,8 +348,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py",
       "sha256": "cc271e65271240350c58e4c7bb5338f3f2b07eb32992e675f6bd36d470eb4598",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-storage-video-review.json"
     }
   ],
   "counts": {

@@ -1,0 +1,24 @@
+{
+  "base_head": "b720c2e",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_configuration.py": "df4bff3d169f619edf8c242e7a3d8145b22b208a4f05ca7cf607ad57936846fb",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py": "cc271e65271240350c58e4c7bb5338f3f2b07eb32992e675f6bd36d470eb4598"
+  },
+  "scope": "Entire storage draft preview and config-driven video adapter modules; storage resolver and actual encoding separately reviewed",
+  "checks": [
+    "Read-only draft resolves shared/local/default/derived sources consistently",
+    "Managed owner identity and unsafe aliases rejected; root changes require explicit relocation",
+    "Video adapter delegates to evidenced executor with bound receipt and frames",
+    "Managed orchestration retains video source, receipt/frame and poster ancestry",
+    "Failed/cancelled video retains partial bytes and diagnostic terminal outcome"
+  ],
+  "validation": {
+    "tests": 29,
+    "seconds": 3.509,
+    "result": "PASS",
+    "log_sha256": "e88067245dbbe56e85177a9b8cb5774b1a277b645af7a6ea63b4bd29d143e5cf",
+    "scope": "Storage CLI/HTTP/runtime and video delegation/dependency contracts; no new real-product encoding claimed"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}
