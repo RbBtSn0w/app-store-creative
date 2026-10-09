@@ -56,7 +56,7 @@
 
 交付模块逐函数审查已覆盖：配置/清单/来源图、候选批准与封存、状态/定位、目录变化/恢复及独立Git取回。剩余目录/恢复/取回专项27项通过；仓库整体审查仍未完成。证据见`evidence/ADR-002-delivery-module-review-c98edbc.json`。
 
-当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，7个有匹配当前内容的完整模块审查证据、2个有明确函数范围证据、49个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
+当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，11个有匹配当前内容的完整模块审查证据、2个有明确函数范围证据、45个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
 
 ## 完整验收与发行 checklist
 
@@ -82,3 +82,11 @@
 Git暂存规则模块已完整审查，搬迁调用边界已核对：实际Git规则、已跟踪文件、自定义路径、独立目标仓库及重试检查9项通过；整体搬迁模块审查仍未完成。证据见`evidence/ADR-002-git-staging-review-6faa6b5.json`。
 
 外部媒体存储及外部交付归档模块审查完成，20项通过；此实现为命名文件系统后端，不证明真实产品长期后端部署或服务级保障。证据见`evidence/ADR-002-external-storage-review-c98edbc.json`。
+
+运行时身份及事故模块完整审查，源码指纹、证据引用与递归保护8项通过；整体清理/搬迁删除模块不因此视为完成。证据见`evidence/ADR-002-identity-incident-review-c98edbc.json`。
+
+租约模块完整审查及提交前租约消费边界核对，过期、轮换、并发恢复与心跳9项通过；不代表整个业务记录核心已审查。证据见`evidence/ADR-002-lease-review-c98edbc.json`。
+
+提交日志及读锁模块完整审查，提交证据/显式放弃/公开只读查询35项通过；不等于操作执行、远端就绪或整个业务记录核心审查。证据见`evidence/ADR-002-history-review-c98edbc.json`。
+
+共享暂存模块及当前消费者边界审查完成，16项通过；补充暂存文件本身被替换与既有目标保护2项通过。新测试尚未被远端完整CI覆盖，运行时代码未改。证据见`evidence/ADR-002-staging-review-c98edbc.json`。

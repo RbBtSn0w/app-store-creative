@@ -102,8 +102,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py",
       "sha256": "a2f97ceddcbd231b40db434e50c7c8c769ac14d80fd27028600e3aa5175d5a70",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-lease-review-c98edbc.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lifecycle_commands.py",
@@ -156,8 +156,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",
       "sha256": "82bb4b3fe80d3f3e86f6bb52393d66edffb2faa903190a5515bd08a07d9f68be",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-history-review-c98edbc.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/produce_app_preview.py",
@@ -294,14 +294,14 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py",
       "sha256": "f2679b571002a1c0915cb5d94d6bdfe4dd0788787fa0247b1e0e2f721189dbcf",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-identity-incident-review-c98edbc.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/safe_staging.py",
       "sha256": "ec48f134d6f480c6e26667f1603cc69d31c5b289ba819f38ff3c28a91300275f",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-staging-review-c98edbc.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/source_dispositions.py",
@@ -353,8 +353,8 @@
     }
   ],
   "counts": {
-    "CURRENT_FULL_MODULE_REVIEW": 7,
+    "CURRENT_FULL_MODULE_REVIEW": 11,
     "CURRENT_PARTIAL_FUNCTION_REVIEW": 2,
-    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 49
+    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 45
   }
 }
