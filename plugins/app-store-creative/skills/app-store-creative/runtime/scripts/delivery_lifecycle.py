@@ -207,6 +207,7 @@ def verify_archive(package, expected_sha256=None):
     verify_provenance(package, manifest, file_hashes)
     import studio_contract
     recipe_config = json.loads((package / 'recipe/config.json').read_text())
+    _verify_portable_recipe(recipe_config)
     reviewed_name = 'evidence/reviewed-config.json'
     if reviewed_name not in names:
         raise ValueError('Archive approved configuration evidence is missing')
@@ -223,7 +224,6 @@ def verify_archive(package, expected_sha256=None):
     require_media_budget(recipe_config)
     if manifest.get('archive_policy') != archive_policy:
         raise ValueError('Manifest archive policy differs from recipe declaration')
-    _verify_portable_recipe(recipe_config)
     _, findings = studio_contract.input_hashes(package / 'recipe', recipe_config)
     preview = recipe_config.get('previewVideo', {})
     if preview.get('enabled'):
