@@ -38,9 +38,9 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
     run = core.start_run({'platform': platform, 'version': publishing.get('version') or 'draft'}, source_hashes=sources)
     attempt = core.start_attempt(run['id'], 'export', 'creative-producer')
     work = core.work_path(attempt['id']); input_root = work / 'inputs'; outputs = work / 'outputs'
-    input_root.mkdir(); outputs.mkdir()
     source_ids = []; original_hashes = {}
     try:
+        input_root.mkdir(); outputs.mkdir()
         with core.keep_lease(attempt['id']):
             if input_errors:
                 raise ValueError('; '.join(input_errors))

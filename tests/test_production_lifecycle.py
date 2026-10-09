@@ -53,6 +53,27 @@ class ProductionLifecycleTests(unittest.TestCase):
         self.assertFalse((self.root / 'artifacts').exists())
         self.assertFalse((self.root / '.creative').exists())
 
+    def test_input_directory_failure_has_terminal_attempt_and_diagnostic(self):
+        self.assert_directory_failure_recorded('inputs')
+
+    def test_output_directory_failure_has_terminal_attempt_and_diagnostic(self):
+        self.assert_directory_failure_recorded('outputs')
+
+    def assert_directory_failure_recorded(self, name):
+        original = Path.mkdir
+        def mkdir(path, *args, **kwargs):
+            if path.name == name and path.parent.parent.name == 'work':
+                raise PermissionError('Production directory denied')
+            return original(path, *args, **kwargs)
+        with mock.patch.object(Path, 'mkdir', mkdir):
+            with self.assertRaisesRegex(PermissionError, 'Production directory denied'):
+                production.produce(self.root)
+        records = list((self.root / 'managed/records/attempts').glob('*/outcome.json'))
+        self.assertEqual(len(records), 1)
+        self.assertEqual(json.loads(records[0].read_text())['status'], 'failed')
+        artifacts = [json.loads(path.read_text()) for path in (self.root / 'managed/records/artifacts').glob('*.json')]
+        self.assertTrue(any(item['role'] == 'diagnostic' and item['partial'] for item in artifacts))
+
     def test_failed_renderer_has_persistent_reason(self):
         with mock.patch('export_engine.run_export', side_effect=RuntimeError('Font failed')):
             with self.assertRaisesRegex(RuntimeError, 'Font failed'):
