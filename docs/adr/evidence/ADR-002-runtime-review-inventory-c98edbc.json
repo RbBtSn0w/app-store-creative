@@ -204,20 +204,20 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_commit.py",
       "sha256": "fe5c225098d7b12f3416ad0b89d52a2e8320d2beb78813be99132950827cc0c7",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-quarantine-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_inventory.py",
       "sha256": "18c40643c47609dbbf5fe395ba44610726fd72c6ae0718fd6fe6148b79d98e88",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-quarantine-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_locations.py",
       "sha256": "d07f47a01384a95e2b2aacf6bec72eea5d966645d1c1ae47fa3b32450200cb3f",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-quarantine-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.py",

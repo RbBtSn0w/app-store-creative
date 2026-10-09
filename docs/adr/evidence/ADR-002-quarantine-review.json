@@ -1,0 +1,26 @@
+{
+  "base_head": "e41729b074fd056341c1642e9506741037535365",
+  "scope": "Entire quarantine commit/restoration, inventory and projected location modules; preparation and relocation executors remain separate scopes",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_commit.py": "fe5c225098d7b12f3416ad0b89d52a2e8320d2beb78813be99132950827cc0c7",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_inventory.py": "18c40643c47609dbbf5fe395ba44610726fd72c6ae0718fd6fe6148b79d98e88",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_locations.py": "d07f47a01384a95e2b2aacf6bec72eea5d966645d1c1ae47fa3b32450200cb3f"
+  },
+  "checks": [
+    "Commit plan, prepared proof and exact source/retained inode locations are verified",
+    "Exclusive same-parent rename preserves inode and refuses owner destination",
+    "Interrupted multi-file commit and restore remain recoverable without overwriting owner bytes",
+    "Inventory exposes partial, unknown, unregistered, changed and unsafe content",
+    "Projected locations bind completed switch, staging root inode and per-file copy identities",
+    "Same-byte replacement and unknown files block forward/reverse recovery"
+  ],
+  "validation": {
+    "tests": 47,
+    "seconds": 64.542,
+    "result": "PASS",
+    "log_sha256": "5ad1f7a1b7e2e0d92c08257a13efee14e2217fc17b5b8084d1b1a9f41c6bd6a4"
+  },
+  "new_findings": [],
+  "real_product_acceptance": false,
+  "overall_review_complete": false
+}
