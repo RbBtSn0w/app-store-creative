@@ -329,9 +329,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_contract.py",
-      "sha256": "aad543dd38cd1dcb6e6936b15c2224c7af452b46b6271561213c8cb38edabdac",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "8aa06352e44f9fabb5f56a435ca05cca2d80660f2b49d70b99583715d93e19b7",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-studio-contract-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py",

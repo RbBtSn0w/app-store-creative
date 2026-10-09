@@ -56,7 +56,7 @@
 
 交付模块逐函数审查已覆盖：配置/清单/来源图、候选批准与封存、状态/定位、目录变化/恢复及独立Git取回。剩余目录/恢复/取回专项27项通过；仓库整体审查仍未完成。证据见`evidence/ADR-002-delivery-module-review-c98edbc.json`。
 
-当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，48个有匹配当前内容的完整模块审查证据、1个有明确函数范围证据、9个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
+当前运行时审查清单按文件哈希重新核对：58个变更Python模块中，49个有匹配当前内容的完整模块审查证据、1个有明确函数范围证据、8个仍需复核旧证据或继续审查。未变更模块、前端、schema、技能及分发配置另行审查，不据此计算整体完成率。清单见`evidence/ADR-002-runtime-review-inventory-c98edbc.json`。
 
 ## 完整验收与发行 checklist
 
@@ -130,3 +130,5 @@ Preview发布修复f9bfbdd的完整分发包验证通过；独立解压运行时
 搬迁库存模块完整审查，24项回归通过（28.152秒），无新增缺陷。覆盖未知文件、目录替换、缺失/不可读副本、别名、篡改意图、隔离/恢复及CLI/Studio一致性；不证明整体搬迁执行器完成审查。证据见`evidence/ADR-002-relocation-inventory-review.json`。
 
 顶层CLI入口完整审查，15项配置/ASC观察/生产回归通过（3.353秒），无新增缺陷。这里只证明顶层解析、路径和调度范围，完整命令实现及Studio仍单独待审查。证据见`evidence/ADR-002-cli-entry-review.json`。
+
+Studio共享合同完整审查，修复配置替换失败清理误删被替换暂存文件的问题。21项配置保存/输入/状态/清理回归通过（5.245秒）；服务端及前端仍需各自审查，新修复需完整CI验证。证据见`evidence/ADR-002-studio-contract-review.json`。

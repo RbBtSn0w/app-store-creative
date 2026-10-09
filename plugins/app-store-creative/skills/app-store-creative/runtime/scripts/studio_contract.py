@@ -2,6 +2,7 @@
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
 import shutil
@@ -29,11 +30,22 @@ def atomic_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix='.' + path.name, delete=False) as out:
         temporary = Path(out.name)
+        opened = os.fstat(out.fileno())
+        identity = (opened.st_dev, opened.st_ino)
         out.write((json.dumps(data, indent=2, ensure_ascii=False) + '\n').encode())
     try:
+        observed = temporary.lstat()
+        if (observed.st_dev, observed.st_ino) != identity:
+            raise ValueError('Configuration temporary identity changed')
         temporary.replace(path)
     finally:
-        temporary.unlink(missing_ok=True)
+        try:
+            observed = temporary.lstat()
+        except FileNotFoundError:
+            pass
+        else:
+            if (observed.st_dev, observed.st_ino) == identity:
+                temporary.unlink()
 
 
 def check_copy(fields, label):
