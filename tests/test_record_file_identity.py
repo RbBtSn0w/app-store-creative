@@ -85,3 +85,26 @@ core.start_run({})
             with self.assertRaisesRegex(ValueError, 'lock identity changed'):
                 self.store.start_run({})
         self.assertEqual({path: path.read_bytes() for path in records.rglob('*.json')}, before)
+
+    def test_object_parent_substitution_preserves_unregistered_owner_file(self):
+        import shutil
+        from unittest.mock import patch
+        run = self.store.start_run({})
+        attempt = self.store.start_attempt(run['id'], 'capture', 'fixture')
+        source = self.root/'source.png'; source.write_bytes(b'capture')
+        objects = self.store.paths.objects
+        displaced = self.root/'displaced'; foreign = self.root/'foreign'; foreign.mkdir()
+        original = shutil.copyfileobj
+        notes = []
+        def substitute(stream, output):
+            original(stream, output)
+            temporary = next(path for path in objects.iterdir() if path.name != '_owner.json')
+            objects.rename(displaced)
+            objects.symlink_to(foreign, target_is_directory=True)
+            note = foreign/temporary.name; note.write_bytes(b'owner data'); notes.append(note)
+        with patch('artifact_lifecycle.shutil.copyfileobj', side_effect=substitute):
+            with self.assertRaises((ValueError, OSError)):
+                self.store.register(attempt['id'], source, 'capture')
+        self.assertTrue(notes[0].exists(), 'Registration cleanup removed unregistered owner data')
+        self.assertEqual(notes[0].read_bytes(), b'owner data')
+        self.assertFalse((self.store.paths.workspace/'records/artifacts').exists())

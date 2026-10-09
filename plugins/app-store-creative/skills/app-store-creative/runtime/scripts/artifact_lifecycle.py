@@ -13,7 +13,6 @@ from pathlib import Path
 import re
 import shutil
 import stat
-import tempfile
 import uuid
 from delivery_lifecycle import DeliveryOperations, relative_name, verify_archive, restore_archive
 from publication_lifecycle import PublicationOperations
@@ -260,13 +259,11 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         path.parent.mkdir(parents=True, exist_ok=True)
         if path.exists() or path.is_symlink():
             raise ValueError('Immutable record already exists')
-        fd, tmp = tempfile.mkstemp(dir=path.parent)
-        try:
-            with os.fdopen(fd, 'wb') as stream:
-                stream.write(canonical(data)); stream.flush(); os.fsync(stream.fileno())
-            os.link(tmp, path)
-        finally:
-            Path(tmp).unlink(missing_ok=True)
+        from safe_staging import staged_file
+        with staged_file(path.parent) as staged:
+            staged.stream.write(canonical(data))
+            staged.sync()
+            staged.publish(path)
 
     def _record(self, category, data, suffix=None, precommit=None):
         if not isinstance(data, dict):
@@ -436,27 +433,26 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                 self.verify_artifact(identity)
             # Hash the staged bytes, not a mutable producer file.
             self._claim_objects()
-            fd, tmp = tempfile.mkstemp(dir=self.paths.objects)
-            try:
-                with os.fdopen(fd, 'wb') as stream, source.open('rb') as original:
-                    shutil.copyfileobj(original, stream); stream.flush(); os.fsync(stream.fileno())
-                staged = Path(tmp); sha = digest(staged); destination = self.object_path(sha)
+            from safe_staging import staged_file
+            with staged_file(self.paths.objects) as staged:
+                with source.open('rb') as original:
+                    shutil.copyfileobj(original, staged.stream)
+                sha, size = staged.inspect()
+                destination = self.object_path(sha)
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 try:
-                    os.link(staged, destination)
+                    staged.publish(destination)
                 except FileExistsError:
                     if digest(destination) != sha:
                         raise ValueError('Object integrity failure')
                 self._check_lease(attempt_id, lease_token)
                 return self._record('artifacts', {'id': identifier(), 'run_id': attempt['run_id'],
-                    'attempt_id': attempt_id, 'sha256': sha, 'size_bytes': staged.stat().st_size,
+                    'attempt_id': attempt_id, 'sha256': sha, 'size_bytes': size,
                     'role': role, 'media_type': media_type or mimetypes.guess_type(source.name)[0] or 'application/octet-stream',
                     'workspace_path': source.resolve().relative_to(self.paths.workspace).as_posix()
                         if source.resolve().is_relative_to(self.paths.workspace / 'work') else None,
                     'name': source.name, 'partial': bool(partial), 'inputs': inputs or [], 'logical_path': logical_path},
                     precommit=lambda: self._check_lease(attempt_id, lease_token))
-            finally:
-                Path(tmp).unlink(missing_ok=True)
 
     def verify_artifact(self, identity):
         data = self._read('artifacts', identity)

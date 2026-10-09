@@ -3,7 +3,6 @@ import hashlib
 import os
 from pathlib import Path
 import re
-import secrets
 import shutil
 import stat
 import tempfile
@@ -64,62 +63,23 @@ class FileSystemMediaStore:
         destination.parent.mkdir(parents=True, exist_ok=True)
         if destination.parent.resolve() != destination.parent:
             raise ValueError('External retrieval destination parent changed')
-        parent_descriptor = os.open(destination.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-        staged_name = None
-        staged_identity = None
-        try:
-            parent_info = os.fstat(parent_descriptor)
-            current = destination.parent.lstat()
-            if (destination.parent.resolve() != destination.parent
-                    or (current.st_dev, current.st_ino) != (parent_info.st_dev, parent_info.st_ino)):
-                raise ValueError('External retrieval destination parent changed')
-            staged_name = '.creative-object-' + secrets.token_hex(16)
-            descriptor = os.open(staged_name, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-                                 0o600, dir_fd=parent_descriptor)
-            staged_info = os.fstat(descriptor)
-            staged_identity = (staged_info.st_dev, staged_info.st_ino)
-            with os.fdopen(descriptor, 'wb') as output:
-                source_descriptor = os.open(source, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-                with os.fdopen(source_descriptor, 'rb') as stream:
-                    before = os.fstat(stream.fileno())
-                    if not stat.S_ISREG(before.st_mode):
-                        raise ValueError('External media source must be a regular file')
-                    shutil.copyfileobj(stream, output)
-                    after = os.fstat(stream.fileno())
-                    if (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (after.st_size, after.st_mtime_ns, after.st_ctime_ns):
-                        raise ValueError('External media source changed during copy')
-                output.flush(); os.fsync(output.fileno())
-            copied_descriptor = os.open(staged_name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
-                                        dir_fd=parent_descriptor)
-            with os.fdopen(copied_descriptor, 'rb') as stream:
-                copied_info = os.fstat(stream.fileno())
-                if (not stat.S_ISREG(copied_info.st_mode)
-                        or (copied_info.st_dev, copied_info.st_ino) != staged_identity):
-                    raise ValueError('External staged object identity changed')
-                copied_sha = hashlib.file_digest(stream, 'sha256').hexdigest()
-            if copied_sha != sha or copied_info.st_size != size:
+        from safe_staging import staged_file
+        with staged_file(destination.parent) as staged:
+            source_descriptor = os.open(source, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            with os.fdopen(source_descriptor, 'rb') as stream:
+                before = os.fstat(stream.fileno())
+                if not stat.S_ISREG(before.st_mode):
+                    raise ValueError('External media source must be a regular file')
+                shutil.copyfileobj(stream, staged.stream)
+                after = os.fstat(stream.fileno())
+                if (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (after.st_size, after.st_mtime_ns, after.st_ctime_ns):
+                    raise ValueError('External media source changed during copy')
+            copied_sha, copied_size = staged.inspect()
+            if copied_sha != sha or copied_size != size:
                 raise ValueError('External copied object integrity differs')
-            current = destination.parent.lstat()
-            if (destination.parent.resolve() != destination.parent
-                    or (current.st_dev, current.st_ino) != (parent_info.st_dev, parent_info.st_ino)):
-                raise ValueError('External retrieval destination parent changed')
-            os.link(staged_name, destination.name, src_dir_fd=parent_descriptor,
-                    dst_dir_fd=parent_descriptor, follow_symlinks=False)
-            os.fsync(parent_descriptor)
+            staged.publish(destination)
             for directory in created:
                 sync_directory(directory.parent)
-        finally:
-            try:
-                if staged_name is not None:
-                    try:
-                        current = os.stat(staged_name, dir_fd=parent_descriptor, follow_symlinks=False)
-                    except FileNotFoundError:
-                        pass
-                    else:
-                        if (current.st_dev, current.st_ino) == staged_identity:
-                            os.unlink(staged_name, dir_fd=parent_descriptor)
-            finally:
-                os.close(parent_descriptor)
 
     def persist(self, source):
         source = Path(source)

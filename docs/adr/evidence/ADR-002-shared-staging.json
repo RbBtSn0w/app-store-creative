@@ -1,0 +1,29 @@
+{
+  "base_head": "f89d644c72c4f768f3934c095a4868d01eb5e3f0",
+  "red": "Core registration cleanup deleted unregistered owner data after object-root substitution.",
+  "implementation": "Shared descriptor-bound staged_file used by immutable record writes, CAS registration and external media copy.",
+  "focused_tests": {
+    "executed": 53,
+    "elapsed_seconds": 3.475
+  },
+  "surrounding_tests": {
+    "executed": 42,
+    "elapsed_seconds": 27.205,
+    "scope": "Delivery, manifest, external archives/publications, native preview replay, production and relocation concurrency."
+  },
+  "remote_ci_covers_change": false,
+  "installed_package": {
+    "base_head": "f89d644c72c4f768f3934c095a4868d01eb5e3f0",
+    "package_sha256": "eac11f7a325a71c6d9a83d8980da0fc959605b6ff61e5ad289e0308ba9f68e14",
+    "source_equal_files": 240,
+    "mismatches": [],
+    "exit_code": 0,
+    "output": ".......................................................\n----------------------------------------------------------------------\nRan 55 tests in 21.152s\n\nOK\n",
+    "source_repo_in_pythonpath": false
+  },
+  "distribution_gate": {
+    "red": "Omitting safe_staging.py previously still produced a package.",
+    "green_tests": 5,
+    "elapsed_seconds": 2.899
+  }
+}
