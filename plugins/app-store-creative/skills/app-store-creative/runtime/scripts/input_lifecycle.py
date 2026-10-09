@@ -29,6 +29,11 @@ class InputOperations:
         outcome = self._read('attempts', artifact['attempt_id'], 'outcome')
         if outcome['status'] != 'succeeded':
             raise ValueError('Capture acquisition did not succeed')
+        errors = self.source_eligibility_errors(artifact_id)
+        if errors:
+            raise ValueError('; '.join(errors))
+        if any(not record.get('logical_path') for record in self._closure([artifact_id]).values()):
+            raise ValueError('Capture dependencies require archival logical paths')
         path = self.object_path(artifact['sha256'])
         data = path.read_bytes()
         import hashlib

@@ -92,3 +92,22 @@ class CaptureArtifactImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'logical path'):
             core.import_capture_artifact(artifact['id'], 'fixture')
         self.assertEqual(set((core.paths.workspace/'records/runs').glob('*.json')), before)
+
+    def test_invalid_upstream_capture_rejected_before_new_run(self):
+        for missing_path in (False, True):
+            with self.subTest(missing_path=missing_path):
+                core = Lifecycle.from_configuration(self.root, self.cfg)
+                run = core.start_run({'stage': 'capture'})
+                upstream = core.start_attempt(run['id'], 'capture', 'fixture')
+                parent = core.register(upstream['id'], self.root/'capture.png', 'capture',
+                    logical_path=None if missing_path else 'acquisition/upstream.png')
+                core.finish_attempt(upstream['id'], 'succeeded' if missing_path else 'failed',
+                    reason=None if missing_path else 'Upstream acquisition failed')
+                attempt = core.start_attempt(run['id'], 'capture', 'fixture')
+                artifact = core.register(attempt['id'], self.root/'capture.png', 'capture',
+                    logical_path='acquisition/derived.png', inputs=[parent['id']])
+                core.finish_attempt(attempt['id'], 'succeeded')
+                before = set((core.paths.workspace/'records/runs').glob('*.json'))
+                with self.assertRaises(ValueError):
+                    core.import_capture_artifact(artifact['id'], 'fixture')
+                self.assertEqual(set((core.paths.workspace/'records/runs').glob('*.json')), before)
