@@ -1,3 +1,4 @@
+import { maintenanceRequest } from './maintenanceRequest';
 import { useState } from 'react';
 import { maintenanceAllowed } from './maintenanceState';
 export function RelocationRecovery({ onStorageChange }: { onStorageChange: () => void }) {
@@ -14,9 +15,7 @@ export function RelocationRecovery({ onStorageChange }: { onStorageChange: () =>
     if (!allowed) return;
     onStorageChange(); setBusy(true); invalidate(); setError('');
     try {
-      const response = await fetch('/api/storage/' + action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, source_workspace: workspace, actor: actor.trim(), reason: reason.trim(), confirm: expected }) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Relocation recovery failed');
+      const value = await maintenanceRequest('/api/storage/' + action, { id, source_workspace: workspace, actor: actor.trim(), reason: reason.trim(), confirm: expected }) as {status?:string};
       setMessage('Recorded recovery result: ' + value.status + '. Check operation status, then reload the project before further writes.');
     } catch (failure) { setError(String(failure)); setMessage('The request may have completed. Check saved operation status and recovery evidence before retrying; do not change directories manually.'); }
     finally { setBusy(false); setUnresolved(true); }

@@ -1,3 +1,4 @@
+import { maintenanceRequest } from './maintenanceRequest';
 import { useState } from 'react';
 import { maintenanceAllowed } from './maintenanceState';
 
@@ -18,9 +19,7 @@ export function RelocationActions({ onStorageChange }: { onStorageChange: () => 
     setBusy(true); setError(''); setReviewed(false); setConfirmation('');
     try {
       const payload = action === 'plan' && reverse ? { id: reverseId } : action === 'plan' ? { storage: Object.fromEntries(Object.entries(roots).filter(([, value]) => value.trim()).map(([key, value]) => [key, value.trim()])) } : action === 'verify' ? { id: plan!.id } : { id: plan!.id, actor: actor.trim(), reason: reason.trim(), confirm: action.toUpperCase() };
-      const response = await fetch('/api/storage/' + action + ((action === 'plan' ? reverse : plan!.operation === 'reverse-relocation-plan') ? '-reverse-relocate' : '-relocate'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Relocation request failed');
+      const value = await maintenanceRequest('/api/storage/' + action + ((action === 'plan' ? reverse : plan!.operation === 'reverse-relocation-plan') ? '-reverse-relocate' : '-relocate'), payload) as {status?:string};
       if (action === 'plan') {
         const parsed = parseRelocationPlan(value);
         setPlan(parsed); setMessage('Plan saved. Review every source, target and file before preparing copies.');

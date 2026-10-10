@@ -1,3 +1,4 @@
+import { readHistory } from './historyRequest';
 import { useState } from 'react';
 import { parseRelocatedObjects, type RelocatedObjects } from './relocatedObjects';
 
@@ -17,9 +18,7 @@ export function RelocationStatusPanel() {
     setBusy(true); setObjects(null); setError('');
     try {
       if (!/^[a-z0-9]+$/.test(id)) throw new Error('Enter a saved relocation plan ID');
-      const response = await fetch('/api/storage/relocated-objects?id=' + encodeURIComponent(id), { cache: 'no-store' });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Copied-object inspection failed');
+      const value = await readHistory('/api/storage/relocated-objects?id=' + encodeURIComponent(id), 'copied object inspection');
       setObjects(parseRelocatedObjects(value, id));
     } catch (failure) { setError(String(failure)); }
     finally { setBusy(false); }
@@ -28,9 +27,7 @@ export function RelocationStatusPanel() {
     setBusy(true); setResult(null); setError('');
     try {
       if (!/^[a-z0-9]+$/.test(id)) throw new Error('Enter a saved relocation plan ID');
-      const response = await fetch('/api/storage/relocation-status?id=' + encodeURIComponent(id), { cache: 'no-store' });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Relocation status failed');
+      const value = await readHistory<RelocationStatus>('/api/storage/relocation-status?id=' + encodeURIComponent(id), 'relocation status');
       if (value.id !== id || typeof value.status !== 'string' || typeof value.recovery !== 'string'
           || typeof value.current_binding_writable !== 'boolean' || typeof value.target_activation_status !== 'string'
           || typeof value.media_integrity_verified !== 'boolean' || !Array.isArray(value.errors)
