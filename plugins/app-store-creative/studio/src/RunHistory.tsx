@@ -8,6 +8,34 @@ type Detail = {
   artifacts: { id: string; role: string; logical_path?: string; partial: boolean;
     candidate_eligible: boolean; eligibility_errors: string[] }[];
 };
+function record(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+function text(value: unknown): value is string { return typeof value === 'string' && value.trim().length > 0; }
+function optionalText(value: unknown): boolean { return value === undefined || typeof value === 'string'; }
+export function parseRunPage(value: unknown): Page {
+  if (!record(value) || !Array.isArray(value.runs) ||
+      !(value.next_cursor === null || text(value.next_cursor)) ||
+      !value.runs.every(run => record(run) && text(run.id) && text(run.created_at) &&
+        record(run.target) && optionalText(run.target.version) && optionalText(run.target.platform))) {
+    throw new Error('Production history response is incomplete.');
+  }
+  return value as Page;
+}
+export function parseRunDetail(value: unknown): Detail {
+  if (!record(value) || !Array.isArray(value.attempts) || !Array.isArray(value.artifacts) ||
+      !value.attempts.every(attempt => record(attempt) && text(attempt.id) && text(attempt.stage) &&
+        (attempt.outcome === null || (record(attempt.outcome) && text(attempt.outcome.status) &&
+          optionalText(attempt.outcome.reason)))) ||
+      !value.artifacts.every(artifact => record(artifact) && text(artifact.id) && text(artifact.role) &&
+        optionalText(artifact.logical_path) && typeof artifact.partial === 'boolean' &&
+        typeof artifact.candidate_eligible === 'boolean' && Array.isArray(artifact.eligibility_errors) &&
+        artifact.eligibility_errors.every(finding => typeof finding === 'string'))) {
+    throw new Error('Production history detail is incomplete.');
+  }
+  return value as Detail;
+}
+
 export function RunHistory() {
   const [runs, setRuns] = useState<Run[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -20,7 +48,7 @@ export function RunHistory() {
     const request = ++generation.current; setBusy(true); setError('');
     if (!more) { setDetail(null); setSelected(''); }
     try {
-      const page = await readHistory<Page>('/api/runs?limit=20' + (more && cursor ? '&cursor=' + encodeURIComponent(cursor) : ''));
+      const page = parseRunPage(await readHistory<unknown>('/api/runs?limit=20' + (more && cursor ? '&cursor=' + encodeURIComponent(cursor) : '')));
       if (request !== generation.current) return;
       setRuns(previous => more ? [...previous, ...page.runs.filter(run => !previous.some(item => item.id === run.id))] : page.runs);
       setCursor(page.next_cursor);
@@ -30,7 +58,7 @@ export function RunHistory() {
   async function inspect(run: Run) {
     const request = ++generation.current; setBusy(true); setError(''); setDetail(null); setSelected(run.id);
     try {
-      const result = await readHistory<Detail>('/api/runs/' + encodeURIComponent(run.id));
+      const result = parseRunDetail(await readHistory<unknown>('/api/runs/' + encodeURIComponent(run.id)));
       if (request === generation.current) setDetail(result);
     } catch (failure) { if (request === generation.current) setError(String(failure)); }
     finally { if (request === generation.current) setBusy(false); }
