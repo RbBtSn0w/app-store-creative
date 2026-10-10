@@ -591,7 +591,8 @@
       "file": "tests/test_managed_recording.py",
       "change": "A",
       "sha256": "5a463c568db666dd949888bfd2868b33ba0193bad725b8c622f998e5c5e090fe",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-executor-review.json"
     },
     {
       "file": "tests/test_media_budget.py",
@@ -748,19 +749,22 @@
       "file": "tests/test_recorder_execution_identity.py",
       "change": "A",
       "sha256": "a2d72e0eacfae488b5b7f3f11f32a6149b45c69a55ddfd2081525929bf3e0b12",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-executor-review.json"
     },
     {
       "file": "tests/test_recording_normalization.py",
       "change": "A",
       "sha256": "63e1a53c5397e6bb800939c4a595b25ee1a5081c74d4223ec6844827a017fb07",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-media-review.json"
     },
     {
       "file": "tests/test_recording_probe_contract.py",
       "change": "A",
       "sha256": "2be1c03426f3f50d49ebb73bffcfe7103dbe142c2d8fb2d5ed439c25c6fc1415",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-media-review.json"
     },
     {
       "file": "tests/test_relocation_backup_inventory.py",
@@ -1047,7 +1051,8 @@
       "file": "tests/test_studio_release.py",
       "change": "M",
       "sha256": "e27715f7b7ed97603ca4fa315926350127ddd523d34781212fbe5447a6a4ce9c",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-release-review.json"
     },
     {
       "file": "tests/test_studio_relocation_maintenance.py",
@@ -1102,7 +1107,8 @@
       "file": "tests/test_workflow.py",
       "change": "D",
       "sha256": null,
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-deleted-workflow-review.json"
     }
   ]
 }

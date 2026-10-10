@@ -1,0 +1,24 @@
+{
+  "scope": "Full 386-line deleted legacy workflow test file read from origin/main in two bounded ranges",
+  "deleted_source_sha256": "3b8e77de08a743c9837ba88f6dc5ec4668ab07391b3d4974fd9bd099440d3f11",
+  "retired_contracts": [
+    "Mutable deterministic task IDs, task claim replacement, promoted destination replacement/rollback, mutable current approval pointers and invalidate/recomplete CLI",
+    "Legacy public workflow API and source-map-v1 receipt storage layout"
+  ],
+  "retained_requirements_requiring_owning_test_evidence": [
+    "Lease ownership and explicit expiry recovery",
+    "Source/record integrity and no symlink escape",
+    "Independent human design/upload approvals bound to exact immutable identities",
+    "No user-file overwrite during media generation or archive restore",
+    "Recording window scope, duration and cursor policy",
+    "Preview source intervals, missing audio, overlays and dimension/media type verification",
+    "Read-only local observation cannot imply remote success"
+  ],
+  "assessment": "Deletion follows explicitly authorized fresh architecture. Do not restore compatibility tests. Owning current suites must independently cover retained invariants; this review does not assume complete replacement coverage.",
+  "already_verified_review_evidence": [
+    "ADR-002-test-delivery-publication-review.json",
+    "ADR-002-test-production-source-review.json",
+    "ADR-002-test-remote-observations-review.json"
+  ],
+  "remaining": "Recording/preview/safe-path/lease/audit owning test diff reviews still required"
+}
