@@ -229,7 +229,8 @@
       "file": "tests/test_artifact_commit_integrity.py",
       "change": "A",
       "sha256": "ff90a07ca284bba15b5850773f3622c706f36cf58bab94954e6b3822a1c75f26",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json"
     },
     {
       "file": "tests/test_artifact_handoff.py",
@@ -256,13 +257,15 @@
       "file": "tests/test_asc_observation_adapter.py",
       "change": "A",
       "sha256": "f6d15c00db240b5dbecfb8e978a65cbf23a801f56bb4a2bdb91e6e5480382a64",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json"
     },
     {
       "file": "tests/test_asc_observation_cli.py",
       "change": "A",
       "sha256": "072772417b24d9afc3ce13d9f64845e39543b1fe609307ec72af015910a6d680",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json"
     },
     {
       "file": "tests/test_attempt_audit_contract.py",
@@ -275,13 +278,15 @@
       "file": "tests/test_candidate_dependency_invalidation.py",
       "change": "A",
       "sha256": "d72316641066456af1c2259c7297154b1905515e98f94e3990e9b437eb82d8fa",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json"
     },
     {
       "file": "tests/test_candidate_review.py",
       "change": "A",
       "sha256": "2080918502a3d6092683d7707077002ab2df7265e60106cca5cc03251525483a",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json"
     },
     {
       "file": "tests/test_capture_artifact_import.py",
@@ -301,7 +306,8 @@
       "file": "tests/test_commit_abandonment.py",
       "change": "A",
       "sha256": "a7f1b6b8d8a1a3899eef929bc6f8c22c3e121e6ef633c92e3c9b349b3d65f1e5",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json"
     },
     {
       "file": "tests/test_configuration_cli.py",
@@ -425,7 +431,8 @@
       "file": "tests/test_consumer_validation_template.py",
       "change": "A",
       "sha256": "64cea1096e87ba322815a4600b032b813c92ac0cade5d26a5bb66ce5933148e9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
     },
     {
       "file": "tests/test_cross_filesystem_observation_evidence.py",
@@ -457,13 +464,15 @@
       "file": "tests/test_design_target_binding.py",
       "change": "A",
       "sha256": "4da112c0aef520b7e7c49d26d074deb2589a3dea9876b440284f09843db65625",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json"
     },
     {
       "file": "tests/test_diagnostic_retention.py",
       "change": "A",
       "sha256": "71e98dc45f90510054c7f965cc0031ca5d4cd4759f3e9d5dbeb9530a1323532d",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-private-evidence-diagnostics-review.json"
     },
     {
       "file": "tests/test_directory_change_recovery.py",
@@ -665,7 +674,8 @@
       "file": "tests/test_observation_evidence_retrieval.py",
       "change": "A",
       "sha256": "69459b5f6543fbea2762f2e73713dfe68cba74ac304ce8b66b43aaf05c12d519",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-private-evidence-diagnostics-review.json"
     },
     {
       "file": "tests/test_operation_history.py",
@@ -723,7 +733,8 @@
       "file": "tests/test_producer_contracts.py",
       "change": "A",
       "sha256": "5b80af7f37182f20fa987a51aa1f51bab21fbbd361023c7dbe9c83996d8023a1",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
     },
     {
       "file": "tests/test_production_lifecycle.py",
@@ -1047,7 +1058,8 @@
       "file": "tests/test_run_workflow_snapshot.py",
       "change": "A",
       "sha256": "952b66c5d78c64e00017a561323ba9c13a5d1efc82c3452ede279c28c001aa88",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json"
     },
     {
       "file": "tests/test_runtime_distribution.py",
@@ -1194,7 +1206,8 @@
       "file": "tests/test_video_execution_contract.py",
       "change": "A",
       "sha256": "93c2f3564a4e3b841e0c7f5ae5e1fe23d59bc0d5bce5b2f5fc4bd2ba3a6f497e",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
     },
     {
       "file": "tests/test_workflow.py",

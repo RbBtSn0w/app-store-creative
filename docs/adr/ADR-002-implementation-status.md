@@ -6,10 +6,10 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `9db1aa94b8c87ff25e10a2684f242b89fb753506`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `df459a84312f9206b7f70474d834598d6112a8f6`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 最近推送提交CI：[run 38050205130](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38050205130)，本次查询in_progress；e6e6829的run 38049888575已成功；9d57a9c的run 38049241718已成功并核对完整日志。
+- 最近推送提交CI：[run 38050565710](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38050565710)，本次查询in_progress；9db1aa9的run 38050205130已成功；9d57a9c的run 38049241718已成功并核对完整日志。
 - 已保存的最新详细CI证据绑定9d57a9c；最新远端成功状态与最终发行门禁分别核对，不能提前关闭最终发行门禁。
 
 ## 能力实现 checklist
@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
-| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异140/177，完整人工敏感信息审查未关闭 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异153/177，完整人工敏感信息审查未关闭 |
 | [ ] | 最新源码完整 CI | 最终源码的具体运行成功，并核对测试、类型、构建和分发结果 |
 | [ ] | 最新完整独立安装验收 | 使用最终分发包，证明不依赖源码运行时；此前包证据不能覆盖所有后续修复 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
@@ -51,7 +51,7 @@
 | --- | --- | --- |
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
-| 测试差异审查 | 140/177文件；剩余37个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 测试差异审查 | 153/177文件；剩余24个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
 | 独立分发包 | 9d57a9c包烟雾检查及103项回归通过（28.097秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-9d57a9c.json) |
@@ -76,7 +76,7 @@
 
 只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加140/177审查计数；不替代跨卷或真实进程崩溃验收。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加153/177审查计数；不替代跨卷或真实进程崩溃验收。
 
 录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
@@ -209,3 +209,13 @@ Studio维护及反向恢复两个测试完整审查，8项以ResourceWarning错�
 隔离进程崩溃与维护效果观察两个测试完整审查，9项以ResourceWarning错误模式通过（7.258秒）：真实SIGKILL提交/恢复续作、实际字节独立观察与重现文件保留有断言。[证据](evidence/ADR-002-test-quarantine-crash-status-review.json)。只读JSON范围与同卷夹具不冒充完整产品/跨卷验收。
 
 设计/上传批准完整性与人工授权合同三个测试完整审查，13项以ResourceWarning错误模式通过（5.729秒）：篡改/缺事件拒绝、畸形授权写前拒绝及有效提交错误范围的独立语义检查有断言。[证据](evidence/ADR-002-test-approval-integrity-scope-review.json)。夹具授权不是实际人工批准，不关闭真实产品或ASC门禁。
+
+候选依赖失效、审核恢复及设计目标三个测试完整审查，7项以ResourceWarning错误模式通过（1.428秒）：现场输入变更阻止新批准/封存、既有归档保持有效、重启精确审核恢复及目标不符拒绝有断言。[证据](evidence/ADR-002-test-candidate-review-target-review.json)。不代替实际人工批准、浏览器或产品/ASC验收。
+
+物料提交完整性、运行快照及提交放弃三个测试完整审查，15项以ResourceWarning错误模式通过（0.781秒）：元数据/失败状态篡改拒绝、运行绑定及明确放弃不可复用身份有断言。[证据](evidence/ADR-002-test-artifact-run-abandonment-review.json)。夹具失败不代替实际进程或产品验收。
+
+生产者合同、视频执行集成与消费方验证模板三个测试完整审查，15项以ResourceWarning错误模式通过（0.705秒）：源时段/封面时间码、并发文件不覆盖、失败/取消证据及实际模板委托有断言。[证据](evidence/ADR-002-test-producer-consumer-contract-review.json)。执行器mock不替代实际编码、真实产品或ASC验收。
+
+ASC适配器与规范化CLI两个测试完整审查，10项以ResourceWarning错误模式通过（0.451秒）：上传/处理/封面事实独立、范围/重复身份拒绝、响应/计划哈希与FIFO非阻塞有断言。[证据](evidence/ADR-002-test-asc-normalization-review.json)。合成响应不代表真实ASC故障关闭；隐私脱敏由独立范围验证。
+
+私有观察取回与诊断保留两个测试完整审查，12项以ResourceWarning错误模式通过（0.344秒）：可信locator/summary与敏感值拒绝、用户输出保留及诊断依赖/期限保护有断言。[证据](evidence/ADR-002-test-private-evidence-diagnostics-review.json)。负向取回不证明所有公开包无私有响应；实际后端与隐私全审仍保留。
