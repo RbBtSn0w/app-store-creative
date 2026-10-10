@@ -5,6 +5,15 @@ import { reviewCard } from './layoutReview';
 import { requireConfiguredFont } from './fontReview';
 import type { CreativeConfig, TargetDevice } from './types';
 
+export async function waitForExport(work: Promise<void>, timeoutMs = 6000): Promise<void> {
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error('Images or fonts did not become ready')), timeoutMs);
+  });
+  try { await Promise.race([work, timeout]); }
+  finally { clearTimeout(timer!); }
+}
+
 export function ExportView({ config, id, target, locale }: {
   config: CreativeConfig; id: string; target: TargetDevice; locale: string;
 }) {
@@ -15,8 +24,7 @@ export function ExportView({ config, id, target, locale }: {
   const card = index >= 0 ? resolveCard(config, config.cards[index], target, locale) : undefined;
   useEffect(() => {
     let active = true;
-    let timer: ReturnType<typeof setTimeout>;
-    const timeout = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error('Images or fonts did not become ready')), 6000); });
+    setReady(false); setError('');
     async function settle() {
       if (!root.current || !card) throw new Error('Requested card does not exist');
       await document.fonts.ready;
@@ -31,10 +39,10 @@ export function ExportView({ config, id, target, locale }: {
       await new Promise(resolve => setTimeout(resolve, 100));
       const findings = reviewCard(root.current.querySelector('[data-card-id]')!);
       if (findings.length) throw new Error(findings.join('. '));
-      if (active) setReady(true);
     }
-    Promise.race([settle(), timeout]).catch(reason => { if (active) setError(String(reason.message || reason)); }).finally(() => clearTimeout(timer));
-    return () => { active = false; clearTimeout(timer); };
+    waitForExport(settle()).then(() => { if (active) setReady(true); })
+      .catch(reason => { if (active) setError(String(reason.message || reason)); });
+    return () => { active = false; };
   }, [config, id, target, locale]);
   return <div ref={root} data-export-ready={ready ? 'true' : 'false'} data-export-error={error || undefined}>
     {card ? <CardView card={card} index={index} totalCards={config.cards.length} target={target}
