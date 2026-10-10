@@ -41,6 +41,20 @@ export function OperationHistoryReport({ report }: { report: Report }) {
 }
 
 type JournalEntry = { record: string; created_at: string; operation: string | null; recorded_status: string | null };
+export function parseOperationJournals(value: unknown): JournalEntry[] {
+  const data = value as {status: string; execution_verified: boolean; entries: JournalEntry[]};
+  if (!data || data.status !== 'OBSERVED' || data.execution_verified !== false || !Array.isArray(data.entries))
+    throw new Error('Invalid operation journal response');
+  for (const entry of data.entries) {
+    if (!entry || typeof entry !== 'object' || typeof entry.record !== 'string' || !entry.record
+        || typeof entry.created_at !== 'string' || !entry.created_at
+        || !(entry.operation === null || typeof entry.operation === 'string')
+        || !(entry.recorded_status === null || typeof entry.recorded_status === 'string'))
+      throw new Error('Invalid operation journal entry');
+  }
+  return data.entries;
+}
+
 export function OperationJournalReport({ entries }: { entries: JournalEntry[] }) {
   return <div className="mt-4 space-y-3"><h3 className="font-semibold">Migration and maintenance journals</h3>
     <p className="text-sm text-white/60">These are saved operation facts. This list does not verify execution or authorize recovery and deletion.</p>
@@ -72,9 +86,8 @@ export function OperationHistory() {
     const request = ++generation.current; setBusy(true); setError(''); setJournals(null);
     try {
       const data = await readHistory<{status: string; execution_verified: boolean; entries: JournalEntry[]}>('/api/history/operations', 'operation journals');
-      if (data.status !== 'OBSERVED' || data.execution_verified !== false || !Array.isArray(data.entries))
-        throw new Error('Invalid operation journal response');
-      if (request === generation.current) setJournals(data.entries);
+      const entries = parseOperationJournals(data);
+      if (request === generation.current) setJournals(entries);
     } catch (failure) { if (request === generation.current) setError((failure as Error).message); }
     finally { if (request === generation.current) setBusy(false); }
   }

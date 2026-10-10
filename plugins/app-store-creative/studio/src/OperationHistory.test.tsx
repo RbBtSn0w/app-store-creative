@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it } from 'vitest';
-import { OperationHistory, OperationHistoryReport, parseOperationHistory } from './OperationHistory';
+import { OperationHistory, OperationHistoryReport, parseOperationHistory, parseOperationJournals } from './OperationHistory';
 
 const specimen = () => ({ status: 'FAIL', events: [{ event_id: 'event', record: 'artifacts/asset.json',
   status: 'INCOMPLETE', created_at: '2026-10-07T00:00:00Z', actor: 'producer', run_id: 'run' }],
@@ -39,4 +39,13 @@ it('keeps explicitly abandoned missing commits distinct from committed records',
   const data = specimen(); data.events[0].status = 'ABANDONED';
   const html = renderToStaticMarkup(<OperationHistoryReport report={parseOperationHistory(data)} />);
   expect(html).toContain('Missing commit explicitly abandoned'); expect(html).not.toContain('Record committed');
+});
+
+it('rejects incomplete journal entries before rendering', () => {
+  const entry = {record:'maintenance/op.json', created_at:'2026-10-07T00:00:00Z', operation:null, recorded_status:'SWITCHED'};
+  const response = {status:'OBSERVED', execution_verified:false, entries:[entry]};
+  expect(parseOperationJournals(response)).toEqual([entry]);
+  for (const invalid of [null, {}, {...entry, record:42}, {...entry, operation:{}}, {...entry, recorded_status:false}]) {
+    expect(() => parseOperationJournals({...response, entries:[invalid]})).toThrow('Invalid operation journal');
+  }
 });

@@ -1,0 +1,22 @@
+{
+  "scope": "Full static review of OperationHistory and historyRequest; malformed journal-entry regression repair",
+  "files": {
+    "plugins/app-store-creative/studio/src/OperationHistory.tsx": "4ff10c5582b16fa1e14048afbf87b9cfe630981b6913d540e03b1ce647f3baf3",
+    "plugins/app-store-creative/studio/src/historyRequest.ts": "46ea4181a7ae41f87d46c0673fe76817f5a7f956c8e7bd90b3e78ef99f0a11a3"
+  },
+  "finding": "Journal list previously accepted null/incomplete entries after checking only the array envelope",
+  "red": "Focused regression failed because null entry did not throw; six existing tests passed",
+  "green": "11 tests passed across OperationHistory/historyRequest; typecheck and built distribution passed on Node25.8.2",
+  "remaining": [
+    "Full frontend suite for final source",
+    "Final CI and package",
+    "Real history/maintenance acceptance"
+  ],
+  "surrounding_verification": {
+    "frontend_tests": 94,
+    "files": 31,
+    "result": "PASS",
+    "package_smoke": "PASS",
+    "runtime": "Node25.8.2"
+  }
+}
