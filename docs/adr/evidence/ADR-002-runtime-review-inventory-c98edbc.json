@@ -1,5 +1,5 @@
 {
-  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "head": "17f447756cd941b3cf0082d95b721a4760527cef",
   "scope": "Current working tree changed runtime Python module inventory; reviewed module hashes are authoritative, uncommitted changes require new CI. Frontend, schemas, skills, packaging and tests remain separate review scopes.",
   "overall_review_complete": false,
   "modules": [
@@ -65,9 +65,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/export_engine.py",
-      "sha256": "e9042124ecbee3e27118f07402427f39688c55d5435baeec5950437cb34ea25c",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "d5fb65f5f01b44b70c2c29a509f5f9acbf10a75694857824a816916ca562277e",
+      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
+      "evidence": "ADR-002-export-server-cleanup.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_delivery_archive.py",
@@ -341,9 +341,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/validator.py",
-      "sha256": "7cdbd515a1132e287860cb106ecbb94c53310feb6cf0518802be57e80a8d38c1",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "28f4e890f6e42dbca03d8226efa1571e08827b80daf9e130ca91f9e7fce893d6",
+      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
+      "evidence": "ADR-002-validator-png-integrity.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py",
