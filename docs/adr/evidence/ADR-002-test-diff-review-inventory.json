@@ -248,7 +248,8 @@
       "file": "tests/test_artifact_policy.py",
       "change": "A",
       "sha256": "b527dd7d843d656c2f8bdc8be4681a9f7a0b58db136d5ee56a834104c068204f",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-retention-policy-review.json"
     },
     {
       "file": "tests/test_asc_observation_adapter.py",
@@ -1119,8 +1120,9 @@
     {
       "file": "tests/test_validation_policy_binding.py",
       "change": "A",
-      "sha256": "8c51efe1f8bebf2757bb4003de495d5fe8b4a64d1573ad16647a6e2b2a9b1102",
-      "review_status": "pending_full_diff_review"
+      "sha256": "9ba186c8dc0cc4e2f8b5f390525f01bb37a2faf93655259d77e1a0321398a83d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-validation-policy-review.json"
     },
     {
       "file": "tests/test_validator_png_integrity.py",
