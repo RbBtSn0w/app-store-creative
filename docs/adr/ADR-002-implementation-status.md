@@ -6,11 +6,11 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；当前源码以审查清单的文件SHA-256为准；发布提交以PR头为准，新增恢复锁修复待完整CI。
+- 分支：`feat/unified-artifact-lifecycle-v2`；当前源码以审查清单的文件SHA-256为准；发布提交以PR头为准，恢复锁修复完整CI已通过，最终头CI仍待核对。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0。原插件仓库和 Levelory 用户改动保留。
-- 本次恢复锁源码修复尚未获得完整CI结果，不能记为通过。
-- 最近已确认成功的完整 CI：[abb1845 / run 38007861055](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38007861055)。它覆盖Studio版本门禁，但不覆盖新增恢复锁修复。
+- 恢复锁和保存编辑锁修复已获得b2477be完整CI成功；后续技能/schema/文档提交仍需最终头CI。
+- 最近已确认成功的完整 CI：[b2477be / run 38008494830](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38008494830)。覆盖恢复锁及保存编辑锁修复，后续技能/schema/文档修改仍需最终头检查。
 
 ## 能力实现 checklist
 
@@ -122,3 +122,7 @@ creative.config schema其余部分完成静态审查；修正连接背景跨卡�
 生产专员、agent交接和迭代三个合同完成完整静态审查，未发现新缺陷；技能范围21个相对文件引用均存在（未验证锚点）。[范围证据](evidence/ADR-002-specialist-contract-review.json)。主生命周期合同仍仅部分审查，自动依赖失效和真实journey验收仍未关闭。
 
 主生命周期合同审查推进至第185行；修正配置分层标题尚未启用的矛盾描述，保留真实验收缺口。[范围证据](evidence/ADR-002-main-contract-review.json)。其余部分继续审查。
+
+主合同审查推进至第270行，统一六处历史本机配置层/独立写入状态矛盾；当前集成与真实验收缺口分别说明。运行38008494830仍在执行，未重启或记为成功。
+
+主生命周期合同354行完整静态审查完成。b2477be完整CI成功：Python1042项（1009通过、33跳过），前端93项、Node20类型/构建与独立分发烟雾检查通过。[CI证据](evidence/ADR-002-ci-b2477be.json)。后续提交最终CI及真实验收仍未关闭。
