@@ -342,8 +342,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/validator.py",
       "sha256": "28f4e890f6e42dbca03d8226efa1571e08827b80daf9e130ca91f9e7fce893d6",
-      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
-      "evidence": "ADR-002-validator-png-integrity.json"
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-validator-module-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py",
