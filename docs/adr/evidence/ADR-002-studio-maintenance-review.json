@@ -1,0 +1,46 @@
+{
+  "scope": "Full static review of ordinary maintenance panel and shared review/inspection helpers; no real deletion performed",
+  "files": {
+    "plugins/app-store-creative/studio/src/MaintenancePanel.tsx": "700af8974f30b906ad063d30c593363f599ea6b75745462e0b4d2da4ac419c1c",
+    "plugins/app-store-creative/studio/src/maintenanceState.ts": "191291b5e6d2150f351d1f970764be39154548b0506429842eb6b0c2f6af9133",
+    "plugins/app-store-creative/studio/src/maintenanceInspection.ts": "22a1574a43e3d58ba023a2aa3e73ea79a92c3bb36c44abd7fc1f7169e660714f",
+    "plugins/app-store-creative/studio/src/maintenanceRequest.ts": "9a3d631c721e2f1dad024a106bd1e92e8210ff2478ef588a1baa3065db1854bb"
+  },
+  "findings": [
+    "Stalled maintenance request had no bound; extracted existing request helper and added 20-second abort with uncertain-outcome message."
+  ],
+  "review_notes": [
+    "Plan creation, quarantine, recovery and permanent deletion remain distinct; selection resets authorization and typed confirmation.",
+    "Purge requires exact PURGE input plus actor/reason/review; runtime revalidation remains authoritative.",
+    "Uncertain mutation clears selection and blocks new writes until saved history is loaded; no automatic retry.",
+    "Execution observation binds selected identity, known verdict and PASS-only execution_verified; saved recorded status is separate.",
+    "Timeout releases UI via existing catch/finally, preserves unresolved mutation state and never retries or claims server cancellation."
+  ],
+  "verification": {
+    "tests": 4,
+    "files": 2,
+    "result": "PASS",
+    "runtime": "Node25.8.2"
+  },
+  "remaining": [
+    "Actual browser maintenance matrix",
+    "Real product lifecycle acceptance",
+    "Full final CI"
+  ],
+  "regression": {
+    "red": "No abort signal after 20001ms; expected aborted=true failed",
+    "green": "5 tests across 3 files passed; typecheck/build passed on Node25.8.2"
+  },
+  "surrounding_verification": {
+    "frontend_tests": 97,
+    "files": 32,
+    "types": "PASS",
+    "build": "PASS",
+    "package_smoke": "PASS",
+    "runtime": "Node25.8.2",
+    "additional_cases": [
+      "Successful response clears deadline without later abort",
+      "Server refusal preserves error and clears deadline"
+    ]
+  }
+}

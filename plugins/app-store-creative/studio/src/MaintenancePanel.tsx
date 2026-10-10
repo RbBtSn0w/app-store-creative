@@ -1,16 +1,9 @@
+import { maintenanceRequest as request } from './maintenanceRequest';
 import { useState } from 'react';
 import { readArtifactPolicy } from './artifactPolicy';
 import { parseMaintenanceInspection, type MaintenanceInspection } from './maintenanceInspection';
 import { maintenanceAllowed, purgeAllowed, parseMaintenance, type MaintenanceRecord } from './maintenanceState';
 
-async function request(path: string, payload?: unknown): Promise<unknown> {
-  const response = await fetch(path, payload === undefined ? { cache: 'no-store' } : {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.error || 'Maintenance request failed');
-  return result;
-}
 
 export function MaintenancePanel() {
   const [inspection, setInspection] = useState<MaintenanceInspection | null>(null);
