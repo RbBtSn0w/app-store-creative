@@ -194,7 +194,8 @@
       "file": "tests/test_approval_commit_integrity.py",
       "change": "A",
       "sha256": "2dd6ce1d4bdbf10039fe6390b055bb38216b3efed8c2f565685a0cca869b8950",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json"
     },
     {
       "file": "tests/test_archive_manifest_contract.py",
@@ -552,7 +553,8 @@
       "file": "tests/test_human_approval_contract.py",
       "change": "A",
       "sha256": "e95243751c9a889267bbdc033ae04e041d97e1c8d8c3faa15a1e2b3c01183b2f",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json"
     },
     {
       "file": "tests/test_incident_lifecycle.py",
@@ -600,13 +602,15 @@
       "file": "tests/test_maintenance_execution_status.py",
       "change": "A",
       "sha256": "ca902c2a6cebf67e828da8154c96f689843628a281fe0b3439182f4e3760010b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-quarantine-crash-status-review.json"
     },
     {
       "file": "tests/test_maintenance_relocation_coordination.py",
       "change": "A",
       "sha256": "905f6e8b2dffb4af40caec59ffa80c55a8dc9660d65d63f81d8472b5b40d6d09",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-coordination-review.json"
     },
     {
       "file": "tests/test_managed_poster.py",
@@ -654,7 +658,8 @@
       "file": "tests/test_object_purge_process_crash.py",
       "change": "A",
       "sha256": "a7d493afaef5415f4a567775c5c615ebe64f29ae555324e19c94b6fad6ee848c",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-purge-process-crash-review.json"
     },
     {
       "file": "tests/test_observation_evidence_retrieval.py",
@@ -752,7 +757,8 @@
       "file": "tests/test_purge_process_crash.py",
       "change": "A",
       "sha256": "b7789f521aa0617d96c6dfbebcaf5bd5211f1232fd80d1f9cf32e2a77d4e265a",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-purge-process-crash-review.json"
     },
     {
       "file": "tests/test_python_requirement.py",
@@ -776,7 +782,8 @@
       "file": "tests/test_quarantine_process_crash.py",
       "change": "A",
       "sha256": "02f1c353de7d4bf0a31daf2d74ae22aaab1060146b8065a20eb4ddbe4e7305a8",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-quarantine-crash-status-review.json"
     },
     {
       "file": "tests/test_record_commit_consumption.py",
@@ -845,7 +852,8 @@
       "file": "tests/test_relocation_configuration_resume.py",
       "change": "A",
       "sha256": "0c115586d65579010c1eecd6b829f255e47a32c7d4feabbba1e64a700642cc75",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-coordination-review.json"
     },
     {
       "file": "tests/test_relocation_preparation_process_crash.py",
@@ -865,13 +873,15 @@
       "file": "tests/test_relocation_purge_execution.py",
       "change": "A",
       "sha256": "391999a01a7581d7fc78222a2dbdcda4b485e29db1ea668b942e8ac14a549958",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-purge-review.json"
     },
     {
       "file": "tests/test_relocation_purge_plan.py",
       "change": "A",
       "sha256": "f515c04d290ac5642e337c6fe10f48f981cd0f290f26cb4d8de565f2e7d482d5",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-purge-review.json"
     },
     {
       "file": "tests/test_relocation_quarantine_commit.py",
@@ -1135,7 +1145,8 @@
       "file": "tests/test_studio_relocation_maintenance.py",
       "change": "A",
       "sha256": "3742737520eae97e442da7fca60bb192f408fe134ba399936dda5804160e34d9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-maintenance-recovery-review.json"
     },
     {
       "file": "tests/test_studio_relocation_status.py",
@@ -1148,13 +1159,15 @@
       "file": "tests/test_studio_reverse_recovery.py",
       "change": "A",
       "sha256": "3a88efaacfebe071a081b996eca78f4324300f2889d0cc981149c0fe99205c06",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-maintenance-recovery-review.json"
     },
     {
       "file": "tests/test_upload_approval_commit_integrity.py",
       "change": "A",
       "sha256": "f0b52274d5be27f95d3e590de8fc77f17d492362aa406926eb57d289c9035667",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json"
     },
     {
       "file": "tests/test_v2_workflow.py",
