@@ -1,0 +1,25 @@
+{
+  "scope": "Full new file diffs against origin/main for four storage/policy report tests",
+  "files": {
+    "plugins/app-store-creative/studio/src/StorageSettings.test.tsx": {
+      "sha256": "4c5bf776161c995472516b4015d34cbc1291842c5ea2054611647fb8c032d9e7",
+      "assessment": "Initial controls do not invent resolved paths; migration need rendered without ready-to-save claim. No change events or actual save exercised."
+    },
+    "plugins/app-store-creative/studio/src/ArchivePolicySettings.test.tsx": {
+      "sha256": "886d93c6a975a3bc19eeb57d7c5b3a7c54fa5cc6666c3fbe73a9c33e290262f0",
+      "assessment": "Undeclared policy and budget stay explicit; external backend portable name without local backend path. No selection events exercised."
+    },
+    "plugins/app-store-creative/studio/src/MediaBudgetPanel.test.tsx": {
+      "sha256": "d8cbbd664a12d729c0a4019012f3adf04f509d4fdd1e83f10d98df5118afdcfa",
+      "assessment": "Incomplete totals unknown while measured bytes separate; no implicit within-budget or maintenance button."
+    },
+    "plugins/app-store-creative/studio/src/InventoryView.test.tsx": {
+      "sha256": "985baffcdd89a88cd4e3ebd7fcaf15736049884acabc7c1f47a64f803be9dc47",
+      "assessment": "Explicit initial check; known empty local count distinct from unreadable storage; cancellation and changed files separate; unknown remote capacity retained."
+    }
+  },
+  "finding": "No weakened assertions or new skips found; all four use static markup, not browser interactions",
+  "limitations": [
+    "Real settings input/save and permission failures require browser/filesystem acceptance"
+  ]
+}

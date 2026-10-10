@@ -5,7 +5,8 @@
       "file": "plugins/app-store-creative/studio/src/ArchivePolicySettings.test.tsx",
       "change": "A",
       "sha256": "886d93c6a975a3bc19eeb57d7c5b3a7c54fa5cc6666c3fbe73a9c33e290262f0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/CandidateApproval.test.tsx",
@@ -25,13 +26,15 @@
       "file": "plugins/app-store-creative/studio/src/InventoryView.test.tsx",
       "change": "A",
       "sha256": "985baffcdd89a88cd4e3ebd7fcaf15736049884acabc7c1f47a64f803be9dc47",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/MediaBudgetPanel.test.tsx",
       "change": "A",
       "sha256": "d8cbbd664a12d729c0a4019012f3adf04f509d4fdd1e83f10d98df5118afdcfa",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/OperationHistory.test.tsx",
@@ -51,7 +54,8 @@
       "file": "plugins/app-store-creative/studio/src/RelocationPurgeReview.test.tsx",
       "change": "A",
       "sha256": "19e1ad70315bb01015e441f22f4d79c7ff782edc38c75568d43781040bae8c21",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/RunHistory.test.ts",
@@ -64,7 +68,8 @@
       "file": "plugins/app-store-creative/studio/src/StorageSettings.test.tsx",
       "change": "A",
       "sha256": "4c5bf776161c995472516b4015d34cbc1291842c5ea2054611647fb8c032d9e7",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/artifactPolicy.test.ts",
@@ -77,13 +82,15 @@
       "file": "plugins/app-store-creative/studio/src/components/CardView.test.tsx",
       "change": "M",
       "sha256": "8884033180f34276aae3ed13c5f72cdd327d08637127ce6d4bc12182c56d764c",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/copyFormulas.test.ts",
       "change": "D",
       "sha256": null,
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/deliveryStatus.test.ts",
@@ -110,7 +117,8 @@
       "file": "plugins/app-store-creative/studio/src/maintenanceInspection.test.ts",
       "change": "A",
       "sha256": "38f8c282e0db54584acd24b37bb9005ed1ddaca5ba64bd098cfe09f87e591cc9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/maintenanceRequest.test.ts",
@@ -123,7 +131,8 @@
       "file": "plugins/app-store-creative/studio/src/maintenanceState.test.ts",
       "change": "A",
       "sha256": "f28cbd166b4b6c47e6d2c33502d957ad9db078a7ec9ea64a2934c17db5fc9037",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/mediaBudget.test.ts",
@@ -150,25 +159,29 @@
       "file": "plugins/app-store-creative/studio/src/relocatedObjects.test.ts",
       "change": "A",
       "sha256": "1f2bba07cec51fba2d44dcac8a9f095a137ebb7a60025f7f74c1cbbcdb73819c",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/relocationMaintenanceState.test.ts",
       "change": "A",
       "sha256": "4c7c781f3215b9b03065438d7b46cc26c14d6726b9b81bf0d37c0d5b82fe13a7",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/relocationPurgeState.test.ts",
       "change": "A",
       "sha256": "1e5cf4d0365a2e87658a42b53d29be35750b17aa12cc723019bb9a42a8e1c309",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/relocationState.test.ts",
       "change": "A",
       "sha256": "aa3b5304920fd5008f5928c7bcdaec3fac94e1fa700f309164653471d9ea183e",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/storagePreview.test.ts",
