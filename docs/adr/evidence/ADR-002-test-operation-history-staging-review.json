@@ -1,0 +1,34 @@
+{
+  "scope": "Full current named test-file review",
+  "files": [
+    {
+      "file": "tests/test_operation_history.py",
+      "sha256": "1bced81c3e02c1cd7511d1b4e8ebbfea16a498a7ce9e07e7b0821ffed7b82f91"
+    },
+    {
+      "file": "tests/test_operation_journals.py",
+      "sha256": "4822291194e91b3c71455a137ed95235dbabd217bc604093ecf549a32efe15f7"
+    },
+    {
+      "file": "tests/test_safe_staging.py",
+      "sha256": "377d702c532f12cfc3e179fc123a1a6923c05015cff007f6a8a713341fad5669"
+    }
+  ],
+  "assessment": [
+    "Committed records, incomplete intents, missing events, malformed bindings and duplicate record claims remain distinguishable",
+    "Actual CLI and Studio HTTP journal/history reads match core and preserve observed bytes; unknown control schemas refuse without rewrite",
+    "Expired lease after intent persistence blocks artifact record publication; failed outcome intent remains NOT_COMMITTED after recovery",
+    "Substituted staging file and existing destination owner bytes are preserved; only owned staging cleaned"
+  ],
+  "verification": {
+    "tests": 19,
+    "seconds": 4.031,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_operation_history test_operation_journals test_safe_staging -q"
+  },
+  "limitations": [
+    "Failure and lease expiry are injected, not actual process crashes or power loss",
+    "Journal schema cases also change commit bytes; not fresh valid commit semantic schema proof",
+    "No real product, browser UI or cross-volume acceptance"
+  ]
+}

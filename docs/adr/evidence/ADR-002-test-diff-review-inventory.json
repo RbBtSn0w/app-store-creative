@@ -439,13 +439,15 @@
       "file": "tests/test_cross_filesystem_observation_evidence.py",
       "change": "A",
       "sha256": "4f41ddf317a262e404756580037ccab17e2337af81a1e38016d0568982779a3b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json"
     },
     {
       "file": "tests/test_cross_filesystem_process_crash.py",
       "change": "A",
       "sha256": "63c7ced6e70e5b02a132931737951e829d9e4cdcda9824379b039912830df4dd",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json"
     },
     {
       "file": "tests/test_delivery_lifecycle.py",
@@ -535,13 +537,15 @@
       "file": "tests/test_filesystem_permission_acceptance.py",
       "change": "A",
       "sha256": "08e9d4dda2015f28acaa7579ae0783ad84c86a1a289207e91ee77f2227d6073a",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json"
     },
     {
       "file": "tests/test_forward_source_inventory.py",
       "change": "A",
       "sha256": "fe9ad25f1a4195a3706ba090248db32348500940325b0559317c147165b58eb0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-forward-inventory-dependency-review.json"
     },
     {
       "file": "tests/test_git_archive_retrieval.py",
@@ -687,13 +691,15 @@
       "file": "tests/test_operation_history.py",
       "change": "A",
       "sha256": "1bced81c3e02c1cd7511d1b4e8ebbfea16a498a7ce9e07e7b0821ffed7b82f91",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json"
     },
     {
       "file": "tests/test_operation_journals.py",
       "change": "A",
       "sha256": "4822291194e91b3c71455a137ed95235dbabd217bc604093ecf549a32efe15f7",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json"
     },
     {
       "file": "tests/test_ordinary_restore_intent.py",
@@ -706,7 +712,8 @@
       "file": "tests/test_package_runtime.py",
       "change": "A",
       "sha256": "709ab72c9b83501d8749cb36a03b071914c871a7844e3d0936a0fe72a6a0d224",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json"
     },
     {
       "file": "tests/test_post_merge_archive_binding.py",
@@ -782,19 +789,22 @@
       "file": "tests/test_python_requirement.py",
       "change": "A",
       "sha256": "b3629f326459050e48ccea8f682d3fd153737391fd1b5fdd29c11728c54580b0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json"
     },
     {
       "file": "tests/test_quarantine_location_projection.py",
       "change": "A",
       "sha256": "6d62e338953e3e0990e715fe9b5220216a87963d04296242a76e35aa4b27d3fe",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
     },
     {
       "file": "tests/test_quarantine_location_recovery.py",
       "change": "A",
       "sha256": "b413ca4adcab123ccb27da7e43be52b04654ad0fd504d4481ef5c493345c7f2f",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
     },
     {
       "file": "tests/test_quarantine_process_crash.py",
@@ -996,7 +1006,8 @@
       "file": "tests/test_retention_dependency_contract.py",
       "change": "A",
       "sha256": "729cd6cad7ad8848289e551c9d936f0e50bd7533671e26137c50b3248f8daf71",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-forward-inventory-dependency-review.json"
     },
     {
       "file": "tests/test_retention_lifecycle.py",
@@ -1086,7 +1097,8 @@
       "file": "tests/test_safe_staging.py",
       "change": "A",
       "sha256": "377d702c532f12cfc3e179fc123a1a6923c05015cff007f6a8a713341fad5669",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json"
     },
     {
       "file": "tests/test_staging_proof_binding.py",
@@ -1113,19 +1125,22 @@
       "file": "tests/test_storage_control_projection.py",
       "change": "A",
       "sha256": "0fd1931812a48113093a90425ee205425940acc282f5fab57fcbac0ce1b0f62b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
     },
     {
       "file": "tests/test_studio_approval_flow.py",
       "change": "A",
       "sha256": "76a32b212030b22516523ee2594404ab66158823725e35474aa89bff62d16ab8",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
     },
     {
       "file": "tests/test_studio_atomic_json.py",
       "change": "A",
       "sha256": "10d41de41328e8268eb1899d301d6611696d8dc180bad1ead2bfb2af6e4b93ce",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json"
     },
     {
       "file": "tests/test_studio_delivery_status.py",
@@ -1138,7 +1153,8 @@
       "file": "tests/test_studio_maintenance.py",
       "change": "A",
       "sha256": "ec319e63c23b90a28e6efd11d37637a5018d2e01f519471e41c0a8493b7d012d",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
     },
     {
       "file": "tests/test_studio_publications.py",
@@ -1150,8 +1166,9 @@
     {
       "file": "tests/test_studio_read_origins.py",
       "change": "A",
-      "sha256": "b1c233314ede6cc4d86cf8134b05fa35b04bd74a22373eade9f081b89e2cad7a",
-      "review_status": "pending_full_diff_review"
+      "sha256": "3a814ce5e6689c1b87ee8f6c2efb839b24c8cdfa1b9a5b63bccec6c2c4edd182",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
     },
     {
       "file": "tests/test_studio_release.py",

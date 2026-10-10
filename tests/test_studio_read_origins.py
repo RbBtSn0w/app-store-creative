@@ -24,6 +24,7 @@ class StudioReadOriginTests(unittest.TestCase):
                             urllib.request.urlopen(request, timeout=5)
                         self.assertEqual(refused.exception.code, 403)
                         self.assertIsNone(refused.exception.headers.get('Access-Control-Allow-Origin'))
+                        refused.exception.close()
 
     def test_local_and_same_origin_media_reads_remain_available(self):
         with tempfile.TemporaryDirectory() as scratch:
@@ -51,4 +52,5 @@ class StudioReadOriginTests(unittest.TestCase):
                 with self.assertRaises(urllib.error.HTTPError) as refused:
                     urllib.request.urlopen(f'http://127.0.0.1:{ctx.port}/.creative/assets/old.png', timeout=5)
                 self.assertEqual(refused.exception.code, 404)
+                refused.exception.close()
                 self.assertEqual(legacy.read_bytes(), b'legacy fixture')
