@@ -1,0 +1,39 @@
+{
+  "scope": "Full static review of six Studio approval, delivery, publication and evidence panels plus handoff and maintenance validation helpers; not full frontend or real workflow acceptance",
+  "source_commit": "b2477beeb1eb41a23b904860edb2a3043ed01d9c",
+  "files": {
+    "CandidateApproval.tsx": "310db55883bf124db3ce8944df11eb0008a880fb680a963487401c05670506af",
+    "PublicationHistory.tsx": "092f413e853fda85b4d5799b7cdd6e6080a70f342911c63e807e99405b4fa411",
+    "DeliveryHistory.tsx": "0c5d75879956b50352eb100c1593100b6542117e3f4211b33c14009c67f93cec",
+    "ObservationEvidence.tsx": "071e7aefa71356eb484c9e682dd621d96239509a1def7a6a6c3b8913c97b5fce",
+    "PublicationHandoff.tsx": "f079538c58637c7ec0d791165528d45edd3be219c098ab1b15048a9770080eaf",
+    "EvidencePersistence.tsx": "be4bf31f04ff10655463638827a8e0ce1668566a7523d41939bed1d622b201ea",
+    "publicationHandoffState.ts": "23d3470a8120d9aa8d0d4aee1502650987c50f5cd103affc3761907727f2417e",
+    "maintenanceState.ts": "191291b5e6d2150f351d1f970764be39154548b0506429842eb6b0c2f6af9133"
+  },
+  "findings": [],
+  "review_notes": [
+    "CandidateApproval is keyed by candidate identity in App; validation, design approval and sealing remain separate; uncertain actions require saved review recovery.",
+    "Publication report requires PASS plus remote_verified; archive and retrieval results remain independently visible.",
+    "Delivery list and inspection use request generations to reject stale responses.",
+    "Evidence retention validates identity and size, requires confirmation, and disables repeat after uncertain outcome; external persistence remains separate.",
+    "Handoff preview validates plan identity, target, complete asset hashes and absence of remote writes; approval and export require explicit review and uncertain outcomes require reloading.",
+    "Evidence persistence uses configured backend identity, confirms independent readback, and blocks automatic retries after completion or uncertainty."
+  ],
+  "verification": {
+    "command": "npm test -- src/CandidateApproval.test.tsx src/PublicationHistory.test.tsx src/deliveryStatus.test.ts src/historyRequest.test.ts",
+    "result": "11 tests passed across 4 files",
+    "runtime": "Node 25.8.2"
+  },
+  "remaining": [
+    "Actual browser interactions",
+    "Other frontend modules",
+    "Latest full CI",
+    "Real products and ASC acceptance"
+  ],
+  "additional_verification": {
+    "command": "npm test -- src/publicationHandoffState.test.ts src/maintenanceState.test.ts",
+    "result": "4 tests passed across 2 files",
+    "runtime": "Node 25.8.2"
+  }
+}
