@@ -116,3 +116,5 @@ Studio服务端完成全路由静态审查，修复省略If-Match仍覆盖配置
 系统性参数检查：技能及引用文档中33条完整单行managed CLI示例均通过当前解析器；占位符替换后仅解析、不执行。可选括号及多行片段未纳入，不能据此宣布详细合同全部审查完成。[范围证据](evidence/ADR-002-documented-cli-parsing.json)。
 
 配置schema的四类目录、归档策略和保留/预算策略部分已对照运行时审查，相关17项测试通过（3.304秒）。[范围证据](evidence/ADR-002-storage-policy-schema-review.json)。其余schema部分未完成完整审查，形式封存的显式声明仍由运行时门禁执行。
+
+creative.config schema其余部分完成静态审查；修正连接背景跨卡范围及封面时间码用途两处描述，JSON解析通过。全部字段的渲染一致性和真实产品矩阵仍独立待验收，未把schema静态审查记为运行验收。

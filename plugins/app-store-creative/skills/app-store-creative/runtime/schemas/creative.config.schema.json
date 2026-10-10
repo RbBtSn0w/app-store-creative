@@ -194,7 +194,7 @@
     "connectedTrack": {
       "type": "boolean",
       "default": false,
-      "description": "When true, cards form a continuous canvas panorama where elements span across card boundaries"
+      "description": "When true, cards share a continuous background and decoration coordinate space. Headlines and product captures stay inside each card."
     },
     "cards": {
       "type": "array",
@@ -438,7 +438,7 @@
         },
         "posterFrameTimeCode": {
           "type": "string",
-          "description": "Optional poster frame timecode for ASC review, for example 00:00:05:00."
+          "description": "Poster extraction timecode in HH:MM:SS:FF, interpreted at the configured fps. Required for unified video export when posterRequired is true. Local extraction does not verify the ASC poster."
         },
         "fps": {
           "type": "number",
