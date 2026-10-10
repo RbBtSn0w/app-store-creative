@@ -355,7 +355,8 @@
       "file": "tests/test_configuration_local_relocation_plan.py",
       "change": "A",
       "sha256": "4af17c985054becbde2f6e2572c18e3d842e2e570e036b5fe7d95389ef4e61d0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json"
     },
     {
       "file": "tests/test_configuration_local_reverse_execution.py",
@@ -478,13 +479,15 @@
       "file": "tests/test_directory_change_recovery.py",
       "change": "A",
       "sha256": "fcf530fe178f2e974d1c063103d40c87f2f6a6088722a360773e409ca137a9c7",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json"
     },
     {
       "file": "tests/test_directory_exchange.py",
       "change": "A",
       "sha256": "12563d09bbdc85a30d8331a8afc2e89479ee19d8a6a1c58c99bc53100078db8e",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json"
     },
     {
       "file": "tests/test_export_server_cleanup.py",
@@ -518,7 +521,8 @@
       "file": "tests/test_external_publication.py",
       "change": "A",
       "sha256": "f69f3782613a0e065b915e64a81c5e8040e41e8dac1ffe3585f515a491a801b5",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-publication-purge-retrieval-review.json"
     },
     {
       "file": "tests/test_external_reference_contract.py",
@@ -550,13 +554,15 @@
       "file": "tests/test_git_lfs_retrieval.py",
       "change": "A",
       "sha256": "978fe7900265dfa82365f73c30477992a68703603af1d0b16c6f2fcd1df06979",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-git-remote-lfs-review.json"
     },
     {
       "file": "tests/test_git_remote_retrieval.py",
       "change": "A",
       "sha256": "3fb62d72be2280f173148f60632be5a461b3897777745cba33b9683125d98e17",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-git-remote-lfs-review.json"
     },
     {
       "file": "tests/test_human_approval_contract.py",
@@ -713,7 +719,8 @@
       "file": "tests/test_post_purge_retrieval.py",
       "change": "A",
       "sha256": "23a8ec9f2dbe4def28d0f9b0f5a599a8c9f98dcf6c5a94872cb843b78171d290",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-publication-purge-retrieval-review.json"
     },
     {
       "file": "tests/test_poster_validation.py",
