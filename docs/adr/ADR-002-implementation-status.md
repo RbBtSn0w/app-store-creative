@@ -6,10 +6,10 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `cead564acaf9fa0465d509875a98096a75e6f84e`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `e6e6829b71a31da533f9661014753ed66d17f163`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 最近推送提交CI：[run 38049535944](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38049535944)，本次查询单元测试in_progress；9d57a9c的run 38049241718已成功并核对完整日志。
+- 最近推送提交CI：[run 38049888575](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38049888575)，本次查询in_progress；cead564的run 38049535944已成功；9d57a9c的run 38049241718已成功并核对完整日志。
 - 已保存的最新详细CI证据绑定9d57a9c；最新远端成功状态与最终发行门禁分别核对，不能提前关闭最终发行门禁。
 
 ## 能力实现 checklist
@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
-| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异117/177，完整人工敏感信息审查未关闭 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异127/177，完整人工敏感信息审查未关闭 |
 | [ ] | 最新源码完整 CI | 最终源码的具体运行成功，并核对测试、类型、构建和分发结果 |
 | [ ] | 最新完整独立安装验收 | 使用最终分发包，证明不依赖源码运行时；此前包证据不能覆盖所有后续修复 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
@@ -51,7 +51,7 @@
 | --- | --- | --- |
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
-| 测试差异审查 | 117/177文件；剩余60个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 测试差异审查 | 127/177文件；剩余50个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
 | 独立分发包 | 9d57a9c包烟雾检查及103项回归通过（28.097秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-9d57a9c.json) |
@@ -76,7 +76,7 @@
 
 只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加117/177审查计数；不替代跨卷或真实进程崩溃验收。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加127/177审查计数；不替代跨卷或真实进程崩溃验收。
 
 录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
@@ -187,3 +187,13 @@ Studio发布HTTP/CLI测试完整审查，2项通过（2.485秒）：只读查询
 实际搬迁/准备进程崩溃两个测试完整审查，19项以ResourceWarning错误模式通过（25.054秒）：真实SIGKILL于意图、目录、配置、回执边界后由公开CLI恢复或回滚，准备重试保留原暂存字节。[证据](evidence/ADR-002-test-relocation-process-crash-review.json)。同卷夹具与选定中断点不证明真实产品、跨卷或断电。
 
 9d57a9c完整CI及日志已核对：Python1045项运行/33项跳过（286.757秒）、前端98项/33文件、类型检查、构建及完整分发烟雾全部通过。[证据](evidence/ADR-002-ci-9d57a9c.json)。最新HEAD与真实产品门禁单独保留。
+
+反向切换与回滚两个测试完整审查，23项以ResourceWarning错误模式通过（36.330秒）：新增运行/素材保留、旧源fence、共享workspace、重复恢复、外部变更拒绝及CLI显式来源有断言。[证据](evidence/ADR-002-test-reverse-switch-rollback-review.json)。注入中断与同卷夹具不替代真实产品或跨卷验收。
+
+搬迁状态与Studio HTTP控制两个测试完整审查，17项以ResourceWarning错误模式通过（14.096秒）：激活与媒体完整性独立、篡改拒绝、来源fence及HTTP正反切换有断言。[证据](evidence/ADR-002-test-relocation-status-review.json)。不冒充浏览器或跨卷/真实产品验收。
+
+重复正向搬迁与反向循环两个测试完整审查，15项以ResourceWarning错误模式通过（42.594秒）：前驱绑定保留、多次往返累计运行、共享workspace与篡改拒绝有断言。[证据](evidence/ADR-002-test-repeated-relocation-review.json)。现行格式前驱历史不是旧格式兼容；同卷夹具不证明真实产品与跨卷。
+
+反向计划与配置回滚两个测试完整审查，19项以ResourceWarning错误模式通过（21.792秒）：原位置/新数据绑定、失败/取消部分证据保留以及原始/安装/恢复inode替换拒绝有断言。[证据](evidence/ADR-002-test-reverse-plan-config-rollback-review.json)。不推断真实竞争、跨卷或产品验收。
+
+反向配置安装与正向配置准备两个测试完整审查，9项以ResourceWarning错误模式通过（12.208秒）：准备/安装证明传递、源身份替换拒绝及Git保护建议有断言。[证据](evidence/ADR-002-test-relocation-config-evidence-review.json)。不冒充真实跨卷或产品验收。

@@ -1,0 +1,32 @@
+{
+  "scope": "Full current relocation status and Studio HTTP control tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_status.py",
+      "sha256": "c374953ca4cac6d2d81d63d0c7aa0b9ccc9bee7a506f9021ac4698aa38f1859d"
+    },
+    {
+      "file": "tests/test_studio_relocation_status.py",
+      "sha256": "d2e957a82d1a092daaeab57e91663b7217c6e3b8af0c31a94621520c4ada7e15"
+    }
+  ],
+  "assessment": [
+    "Activation and copied media integrity remain separate; corrupted object reports FAIL even when activation verified",
+    "Source/target plan tampering, invalid receipt, changed binding/control journal or missing activation target never become verified success",
+    "Missing source fence never reenables source writes; status does not recreate missing target",
+    "JSON record snapshots unchanged by readonly observation; actual CLI and HTTP agree and scope overrides/duplicate ids rejected",
+    "Actual HTTP forward plan/prepare/switch uses exact confirmations; interrupted recovery requires correct explicit source",
+    "Actual HTTP reverse switch preserves both original and new artifact"
+  ],
+  "verification": {
+    "tests": 17,
+    "seconds": 14.096,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_status test_studio_relocation_status -q"
+  },
+  "limitations": [
+    "Readonly snapshots primarily JSON records, not complete media tree",
+    "HTTP service rather than browser UI; object inspection test name mentions restart but only one server context asserted",
+    "Single-filesystem fixtures and injected failures; real products and cross-volume matrix remain open"
+  ]
+}

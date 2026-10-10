@@ -1,0 +1,31 @@
+{
+  "scope": "Full current reverse installation and forward configuration preparation evidence tests",
+  "files": [
+    {
+      "file": "tests/test_reverse_configuration_installation.py",
+      "sha256": "9717d9ade940a7a32c8d3698183789e5152bb19492e2f2791a501949033fb843"
+    },
+    {
+      "file": "tests/test_relocation_configuration_preparation.py",
+      "sha256": "054ba0a44468f777f3aa3ac388ab1d734e57b6c333470a6e9ff1c68cceec8b5b"
+    }
+  ],
+  "assessment": [
+    "Forward switch intent consumes preparation proof and transfers exact proof to target workspace",
+    "Reverse switch transfers preparation and installed inode proof; own installed inode resumes after interrupted sync",
+    "Source inode replacement during directory publication or exchange blocks configuration write",
+    "Changed staged payload after publication refuses switch while keeping active config and source object",
+    "Actual local Git ignore suggestions cover configuration staging and installation evidence during forward and reverse switch"
+  ],
+  "verification": {
+    "tests": 9,
+    "seconds": 12.208,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_reverse_configuration_installation test_relocation_configuration_preparation -q"
+  },
+  "limitations": [
+    "Staged-payload test asserts config/source preservation but does not explicitly reread altered staging bytes",
+    "Injected interruption rather than real process crash",
+    "Disposable single-filesystem fixtures; actual products, cross-volume and browser acceptance remain open"
+  ]
+}

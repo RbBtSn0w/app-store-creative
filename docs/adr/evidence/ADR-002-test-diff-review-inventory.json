@@ -838,7 +838,8 @@
       "file": "tests/test_relocation_configuration_preparation.py",
       "change": "A",
       "sha256": "054ba0a44468f777f3aa3ac388ab1d734e57b6c333470a6e9ff1c68cceec8b5b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-config-evidence-review.json"
     },
     {
       "file": "tests/test_relocation_configuration_resume.py",
@@ -946,7 +947,8 @@
       "file": "tests/test_relocation_status.py",
       "change": "A",
       "sha256": "c374953ca4cac6d2d81d63d0c7aa0b9ccc9bee7a506f9021ac4698aa38f1859d",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-status-review.json"
     },
     {
       "file": "tests/test_remote_observations.py",
@@ -959,7 +961,8 @@
       "file": "tests/test_repeated_relocation.py",
       "change": "A",
       "sha256": "1473f201dafd3460679e4cf1210d1780358be62be958ceacde4d48fa02db2787",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-repeated-relocation-review.json"
     },
     {
       "file": "tests/test_retention_dependency_contract.py",
@@ -985,7 +988,8 @@
       "file": "tests/test_reverse_configuration_installation.py",
       "change": "A",
       "sha256": "9717d9ade940a7a32c8d3698183789e5152bb19492e2f2791a501949033fb843",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-config-evidence-review.json"
     },
     {
       "file": "tests/test_reverse_configuration_layers.py",
@@ -998,31 +1002,36 @@
       "file": "tests/test_reverse_configuration_rollback.py",
       "change": "A",
       "sha256": "ee4f073887efced3a4ed8f5a1cfb8e3e29b74fe268500a596ba2f0a8b7dcd6be",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-plan-config-rollback-review.json"
     },
     {
       "file": "tests/test_reverse_relocation_cycles.py",
       "change": "A",
       "sha256": "cbc830098f7bb054148ca34d1f5c1f9b6d8b05c4d7889001423ad2f06a22d4fd",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-repeated-relocation-review.json"
     },
     {
       "file": "tests/test_reverse_relocation_plan.py",
       "change": "A",
       "sha256": "6319b128bf394037d948e559fcbdc42ba130b348483edc2845d53dde054ce6d8",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-plan-config-rollback-review.json"
     },
     {
       "file": "tests/test_reverse_relocation_rollback.py",
       "change": "A",
       "sha256": "6c6052c6978b4bc8f10f1e91a1879f6bef26744b52fd74baafeef8cc84deadf4",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-switch-rollback-review.json"
     },
     {
       "file": "tests/test_reverse_relocation_switch.py",
       "change": "A",
       "sha256": "201a9fea4d22c6e35dfe4c6f1ca10727e36da404dba79397f14c66cf757ddbd9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-switch-rollback-review.json"
     },
     {
       "file": "tests/test_run_workflow_snapshot.py",
@@ -1132,7 +1141,8 @@
       "file": "tests/test_studio_relocation_status.py",
       "change": "A",
       "sha256": "d2e957a82d1a092daaeab57e91663b7217c6e3b8af0c31a94621520c4ada7e15",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-status-review.json"
     },
     {
       "file": "tests/test_studio_reverse_recovery.py",

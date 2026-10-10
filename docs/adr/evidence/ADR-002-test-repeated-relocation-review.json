@@ -1,0 +1,31 @@
+{
+  "scope": "Full current repeated forward and reverse cycle tests",
+  "files": [
+    {
+      "file": "tests/test_repeated_relocation.py",
+      "sha256": "1473f201dafd3460679e4cf1210d1780358be62be958ceacde4d48fa02db2787"
+    },
+    {
+      "file": "tests/test_reverse_relocation_cycles.py",
+      "sha256": "cbc830098f7bb054148ca34d1f5c1f9b6d8b05c4d7889001423ad2f06a22d4fd"
+    }
+  ],
+  "assessment": [
+    "Forward move after activated return retains exact predecessor binding evidence and resolves both prior locations to active binding",
+    "Repeated switches and object-only shared-workspace changes preserve original artifact and later runs",
+    "Receipt or configuration synchronization interruptions resume; rollback restores exact previous storage controls",
+    "Four activated reverse cycles preserve all accumulated runs in separate and shared workspaces",
+    "Altered predecessor, replaced activation or foreign project fence refuses recovery/planning while preserving configuration and fence"
+  ],
+  "verification": {
+    "tests": 15,
+    "seconds": 42.594,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_repeated_relocation test_reverse_relocation_cycles -q"
+  },
+  "limitations": [
+    "Current-format predecessor history only; no legacy compatibility or backfill",
+    "Disposable single-filesystem fixtures; no real products or cross-volume matrix",
+    "Injected interruptions rather than actual process termination; process-death evidence separate"
+  ]
+}
