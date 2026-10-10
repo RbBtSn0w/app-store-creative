@@ -11,13 +11,15 @@
       "file": "plugins/app-store-creative/studio/src/CandidateApproval.test.tsx",
       "change": "A",
       "sha256": "01567cb0b04b8ccb04d50a863960351ae9f646dc14dd414902fb370f314e8426",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/ExportView.test.ts",
       "change": "A",
       "sha256": "1695143ced42700feb53c5dbb6185ad7656de397bff0e0da71065164a039e058",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/InventoryView.test.tsx",
@@ -35,13 +37,15 @@
       "file": "plugins/app-store-creative/studio/src/OperationHistory.test.tsx",
       "change": "A",
       "sha256": "57ab9834b9e82889d6279ba6ad0cc37daef8de207782248d577b8f602f46878b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/PublicationHistory.test.tsx",
       "change": "A",
       "sha256": "1590700bc423475d65fba2d0d40115c4f2db1aa0acbc25382a3f652ae2434981",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/RelocationPurgeReview.test.tsx",
@@ -53,7 +57,8 @@
       "file": "plugins/app-store-creative/studio/src/RunHistory.test.ts",
       "change": "A",
       "sha256": "82e84bc53cdbccd5eb2434787cab6755c58e0b9365dd2aa9560b3c14a1f8afcf",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/StorageSettings.test.tsx",
@@ -65,7 +70,8 @@
       "file": "plugins/app-store-creative/studio/src/artifactPolicy.test.ts",
       "change": "A",
       "sha256": "af8a033bc447e106238f112548d2d001ec76c0b2cca366fda76381a74a9e1a8d",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/components/CardView.test.tsx",
@@ -83,19 +89,22 @@
       "file": "plugins/app-store-creative/studio/src/deliveryStatus.test.ts",
       "change": "A",
       "sha256": "5ad03ce8b4a9908001fb9d6e8f2782c9951cf07241cacfe8125cde5af713c712",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/historyRequest.test.ts",
       "change": "A",
       "sha256": "2709cda9b5a0d78cf97d77b0e385cf3ee72dd06d050aaa34e6ef8e076700b427",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/inventoryPresentation.test.ts",
       "change": "A",
       "sha256": "a5d99d715d95078d3aa276ed67a7ee5ff03b880d36df907d94fd05a244e9fb1c",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/maintenanceInspection.test.ts",
@@ -107,7 +116,8 @@
       "file": "plugins/app-store-creative/studio/src/maintenanceRequest.test.ts",
       "change": "A",
       "sha256": "4da8d711dc50bb3a503594af674e980dff4cb801fefd1671c1f69e703b7f50c9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/maintenanceState.test.ts",
@@ -119,19 +129,22 @@
       "file": "plugins/app-store-creative/studio/src/mediaBudget.test.ts",
       "change": "A",
       "sha256": "9bffe9084e52855e5f66707e2ada15d15c99d811b3738ca370339c825b4349ce",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/publicationHandoffState.test.ts",
       "change": "A",
       "sha256": "4bad0eeee51b96fe78776b85bbf7e3fb28b9972024c74873f3a02eeb90490f30",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/releaseState.test.ts",
       "change": "M",
       "sha256": "2e1ea68078666d939e71622c8afddf7097b2559c5cd1a0a598cde00b8043076b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
     },
     {
       "file": "plugins/app-store-creative/studio/src/relocatedObjects.test.ts",
@@ -161,7 +174,8 @@
       "file": "plugins/app-store-creative/studio/src/storagePreview.test.ts",
       "change": "A",
       "sha256": "4694886925665c418bfd8b7628367b225bb51492746129cd857ad5289d6b507c",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
     },
     {
       "file": "tests/test_approval_commit_integrity.py",

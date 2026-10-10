@@ -178,3 +178,9 @@ App完整319行编排静态审查完成，配置版本、脏状态、保存去�
 前端覆盖清单已生成：46个运行源文件均有与当前SHA-256匹配的静态审查证据，另1个仅测试引用的目录夹具已单独标记。[清单](evidence/ADR-002-frontend-review-inventory.json)。不以哈希匹配代替实际浏览器、完整测试差异或真实产品验收；最新553acc6运行38026618093仍在执行。
 
 98个变更ADR文档/证据完成凭据模式与链接域名筛查，未发现私钥、Bearer/JWT或签名查询参数，链接仅GitHub及本机地址。[筛查证据](evidence/ADR-002-sensitive-evidence-screening.json)。该筛查不替代完整人工敏感信息审查；测试差异已建立逐文件待审清单。[清单](evidence/ADR-002-test-diff-review-inventory.json)。
+
+4个新增前端历史/超时测试文件完成对origin/main的完整差异审查，断言覆盖迟到成功、结果未知且无重试、异常记录拒绝及观察/执行分离，未发现弱化断言或新增跳过。[范围证据](evidence/ADR-002-test-history-timeout-review.json)。其余测试差异与实际浏览器验收仍待完成，未重复运行未修改测试。
+
+目录预览、预算、保留策略、库存及本地交付/发布状态6个测试文件完成差异审查；未知容量、候选身份、过期/冲突及本地/远端语义断言未发现弱化，旧legacy检查仅替换为现行候选策略语义。[证据](evidence/ADR-002-test-policy-state-review.json)。累计10/177个变更测试文件已审查，不表示真实浏览器或持久后端验证完成。
+
+批准初始门禁、发布报告、交接解析与历史请求4个新增测试完成完整差异审查，累计14/177。未发现弱化断言；CandidateApproval测试仅证明初始静态门禁，实际验证/批准/封存交互仍需浏览器验收。[证据](evidence/ADR-002-test-publication-review.json)。

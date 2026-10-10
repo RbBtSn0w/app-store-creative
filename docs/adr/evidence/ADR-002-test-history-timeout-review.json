@@ -1,0 +1,23 @@
+{
+  "scope": "Full current diff review against origin/main for four frontend regression files",
+  "files": {
+    "plugins/app-store-creative/studio/src/ExportView.test.ts": {
+      "sha256": "1695143ced42700feb53c5dbb6185ad7656de397bff0e0da71065164a039e058",
+      "assessment": "Late resolution after timeout cannot invoke success; timer cleanup and original decode error are checked. Does not mount React effects."
+    },
+    "plugins/app-store-creative/studio/src/RunHistory.test.ts": {
+      "sha256": "82e84bc53cdbccd5eb2434787cab6755c58e0b9365dd2aa9560b3c14a1f8afcf",
+      "assessment": "Positive populated records and empty records accepted; null/malformed entries and string eligibility rejected before rendering."
+    },
+    "plugins/app-store-creative/studio/src/maintenanceRequest.test.ts": {
+      "sha256": "4da8d711dc50bb3a503594af674e980dff4cb801fefd1671c1f69e703b7f50c9",
+      "assessment": "Stalled write aborts once, outcome explicitly uncertain; no retry; successful read/refusal clear timers. Fake fetch honors abort, not server cancellation proof."
+    },
+    "plugins/app-store-creative/studio/src/OperationHistory.test.tsx": {
+      "sha256": "57ab9834b9e82889d6279ba6ad0cc37daef8de207782248d577b8f602f46878b",
+      "assessment": "Unknown/incomplete/abandoned commit states are distinct; journal observation cannot claim verified execution; malformed entries rejected. Static markup does not exercise interactive navigation."
+    }
+  },
+  "finding": "No weakened assertions or added skips found in reviewed diffs",
+  "remaining": "Other test diffs and actual browser acceptance remain open"
+}
