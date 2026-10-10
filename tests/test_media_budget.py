@@ -62,4 +62,5 @@ class MediaBudgetTests(unittest.TestCase):
                 with self.assertRaises(HTTPError) as failure:
                     test_studio_release.StudioReleaseTests.request(self, ctx, '/api/storage/media-budget?' + query)
                 self.assertEqual(failure.exception.code, 400)
+                failure.exception.close()
         self.assertEqual(before, {str(path):path.read_bytes() for path in records.rglob('*.json')})

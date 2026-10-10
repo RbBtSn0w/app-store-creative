@@ -1,0 +1,21 @@
+{
+  "scope": "Full current retrieval process deadline tests",
+  "file": "tests/test_retrieval_process_budget.py",
+  "sha256": "1306e830491814f799a7942e49073262304a9927f43facf8fcd414debedcfaeb",
+  "assessment": [
+    "Real owned process group timeout stops descendant ignoring SIGTERM",
+    "Exited leader cannot leave pipe-owning child running after timeout",
+    "Keyboard cancellation stops owned process and propagates interruption",
+    "Multiple commands share total budget rather than reset deadline per command"
+  ],
+  "verification": {
+    "tests": 4,
+    "seconds": 1.65,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_retrieval_process_budget -q"
+  },
+  "limitations": [
+    "Heartbeat timing uses actual .4-second timeout; slow process startup can fail fixture readiness assertion",
+    "No actual remote network or automatic retry policy acceptance"
+  ]
+}

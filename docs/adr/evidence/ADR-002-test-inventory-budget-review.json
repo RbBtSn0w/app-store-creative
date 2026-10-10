@@ -1,0 +1,31 @@
+{
+  "scope": "Full current inventory observation failure and media budget tests",
+  "files": [
+    {
+      "file": "tests/test_inventory_observation_failures.py",
+      "sha256": "320a844247f25eb8dee4abc781076a273bffbf1d0dfe726650b6ac5a8763a677"
+    },
+    {
+      "file": "tests/test_media_budget.py",
+      "sha256": "8e68fbc88c08efed05405430840da7bea35cf16506f4378a339d34841d4d84c6"
+    }
+  ],
+  "assessment": [
+    "Unreadable work/object trees report null capacity and scoped errors, never empty or missing objects",
+    "Incomplete reference/object observations block cleanup and relocation before mutations",
+    "Registered object stat failure remains unknown rather than silently hidden",
+    "Budget absent stays unconfigured; candidate/retained revision counted and remote/Git history costs remain unknown",
+    "Corrupt archive yields UNKNOWN budget; actual CLI/HTTP observations match core and preserve records"
+  ],
+  "fix": "Close captured HTTPError responses in budget negative cases; initial run emitted ResourceWarning, fixed run has none",
+  "verification": {
+    "tests": 10,
+    "seconds": 1.406,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_inventory_observation_failures test_media_budget -q"
+  },
+  "limitations": [
+    "Filesystem permission errors injected; real product permission acceptance separate",
+    "No permanent deletion or actual remote billing observed"
+  ]
+}

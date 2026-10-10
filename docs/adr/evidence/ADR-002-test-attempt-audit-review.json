@@ -1,0 +1,18 @@
+{
+  "scope": "Full current attempt audit contract regression",
+  "file": "tests/test_attempt_audit_contract.py",
+  "sha256": "d2fd393a8a93337a7f5955c5f68288dd7f3c613b827951f5f06fcc895060761e",
+  "assessment": [
+    "Blank or non-text stage/owner refuses before attempt creation",
+    "Blank or non-text failure reason refuses without ending attempt"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 0.036,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_attempt_audit_contract -q"
+  },
+  "limitations": [
+    "Selected malformed inputs only; positive audit lifecycle and other terminal statuses separate"
+  ]
+}

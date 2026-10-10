@@ -266,7 +266,8 @@
       "file": "tests/test_attempt_audit_contract.py",
       "change": "A",
       "sha256": "d2fd393a8a93337a7f5955c5f68288dd7f3c613b827951f5f06fcc895060761e",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-attempt-audit-review.json"
     },
     {
       "file": "tests/test_candidate_dependency_invalidation.py",
@@ -389,7 +390,8 @@
       "file": "tests/test_configuration_studio_inputs.py",
       "change": "A",
       "sha256": "04c9949f9debffd692d6fb60a340725d30dde3a2e4f2b984427b119981348bef",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-input-status-review.json"
     },
     {
       "file": "tests/test_configuration_studio_poster.py",
@@ -401,7 +403,8 @@
       "file": "tests/test_configuration_studio_save.py",
       "change": "A",
       "sha256": "4d5ea7b9514fa4c91cb341a019b14beaf75a4a23381581110879160c2d2c1fc4",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-save-review.json"
     },
     {
       "file": "tests/test_consumer_validation_template.py",
@@ -469,7 +472,8 @@
       "file": "tests/test_external_delivery_archive.py",
       "change": "A",
       "sha256": "d15845ed517d2e46225cb6236a4d73b85e453decb6a0c941ec8fa01e27386e3f",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-archive-review.json"
     },
     {
       "file": "tests/test_external_delivery_identity.py",
@@ -560,7 +564,8 @@
       "file": "tests/test_inventory_observation_failures.py",
       "change": "A",
       "sha256": "320a844247f25eb8dee4abc781076a273bffbf1d0dfe726650b6ac5a8763a677",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-inventory-budget-review.json"
     },
     {
       "file": "tests/test_layered_archive_portability.py",
@@ -573,7 +578,8 @@
       "file": "tests/test_lifecycle_record_schema.py",
       "change": "A",
       "sha256": "768aafa24d3c9758ef4492f621fd3b9acfe6df4218b7bce96af041bcc2e19974",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-record-schema-review.json"
     },
     {
       "file": "tests/test_maintenance_execution_status.py",
@@ -609,8 +615,9 @@
     {
       "file": "tests/test_media_budget.py",
       "change": "A",
-      "sha256": "584adacd3332e38f20f06228bcd7d30cbe5d14e6eb58b563280c050ad4420c75",
-      "review_status": "pending_full_diff_review"
+      "sha256": "8e68fbc88c08efed05405430840da7bea35cf16506f4378a339d34841d4d84c6",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-inventory-budget-review.json"
     },
     {
       "file": "tests/test_media_tool_identity.py",
@@ -937,7 +944,8 @@
       "file": "tests/test_retrieval_process_budget.py",
       "change": "A",
       "sha256": "1306e830491814f799a7942e49073262304a9927f43facf8fcd414debedcfaeb",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-retrieval-deadline-review.json"
     },
     {
       "file": "tests/test_reverse_configuration_installation.py",
@@ -1011,13 +1019,15 @@
       "file": "tests/test_staging_proof_binding.py",
       "change": "A",
       "sha256": "927cb8dfde0940b0d0f1e6826ea877870ab6fe4c524fd88b2173e3174c243beb",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-staging-proof-review.json"
     },
     {
       "file": "tests/test_status_input_contract.py",
       "change": "A",
       "sha256": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-input-status-review.json"
     },
     {
       "file": "tests/test_storage_configuration_preview.py",

@@ -1,0 +1,21 @@
+{
+  "scope": "Full current staging proof binding tests",
+  "file": "tests/test_staging_proof_binding.py",
+  "sha256": "927cb8dfde0940b0d0f1e6826ea877870ab6fe4c524fd88b2173e3174c243beb",
+  "assessment": [
+    "Byte-identical directory replacement plus rewritten identity proof cannot authorize initial switch",
+    "Rewritten proof blocks interrupted shared-workspace resume and prevents switched receipt",
+    "Inventory classifies rewritten proof unverified rather than VERIFIED staging",
+    "Reverse recovery resume and rollback reject changed proof without changing configuration"
+  ],
+  "verification": {
+    "tests": 4,
+    "seconds": 2.279,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_staging_proof_binding -q"
+  },
+  "limitations": [
+    "Cancellation and failed producer eligibility not covered by this file",
+    "Local fixture directory substitution, not cross-volume product drill"
+  ]
+}

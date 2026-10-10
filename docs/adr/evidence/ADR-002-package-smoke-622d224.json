@@ -1,0 +1,11 @@
+{
+  "source_commit": "622d224967d86a7dc4debf1ae27470f5a33f7bec",
+  "scope": "Complete packaged plugin isolated smoke test; uncommitted documentation/evidence changes do not modify runtime payload",
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "command": "python3 .github/package_plugin.py --output /tmp/creative-622d224-package.zip",
+  "result": "passed",
+  "limitations": [
+    "Package smoke test only; full installed 59-test regression and actual installed plugin workflow not repeated here",
+    "Not actual adg plugin update or real product acceptance"
+  ]
+}
