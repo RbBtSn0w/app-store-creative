@@ -108,8 +108,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lifecycle_commands.py",
       "sha256": "a9821e24e487a0bc3eaef5e4a53430400136e6f6e1ea2bdcc5aea0093cddc4e8",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-lifecycle-commands-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_fences.py",
