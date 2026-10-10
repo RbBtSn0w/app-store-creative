@@ -1,0 +1,31 @@
+{
+  "scope": "Full current configuration identity and rollback identity tests",
+  "files": [
+    {
+      "file": "tests/test_configuration_identity.py",
+      "sha256": "2671a316d510890355bc4081bcc2cdbb8b0b64892b72a42da94af10fc22a9ad3"
+    },
+    {
+      "file": "tests/test_configuration_rollback_identity.py",
+      "sha256": "627fdae656d4572679fbf3ce0cdbba817a07d7ec79536cfcd6ccede07aa28c45"
+    }
+  ],
+  "assessment": [
+    "Storage placement distinct from content recipe identity; recipe changes invalidate content identity",
+    "Equivalent absolute placement retains approved seal; actual root move requires explicit relocation",
+    "Same-byte source/installed/restored inode replacements refuse rollback without overwrite",
+    "Interrupted rollback resumes only from own installation proof",
+    "Temporary restoration file substitution refused; configuration identity rechecked after media snapshot validation",
+    "Git staging suggestions cover rollback restoration after installed interruption"
+  ],
+  "verification": {
+    "tests": 11,
+    "seconds": 6.918,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_configuration_identity test_configuration_rollback_identity -q"
+  },
+  "limitations": [
+    "Disposable local storage and fault injection used; not two-product or cross-volume acceptance",
+    "No existing user configuration changed"
+  ]
+}

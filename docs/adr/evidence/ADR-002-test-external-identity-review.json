@@ -1,0 +1,22 @@
+{
+  "scope": "Full current external delivery identity test file",
+  "file": "tests/test_external_delivery_identity.py",
+  "sha256": "6389e0d626c729df804b8befefa89b4dcf3bfd21b0600336df9a0a0a63b5eea0",
+  "assessment": [
+    "Changed committed delivery platform/project or publication asset fields refuse authorization/export",
+    "Fresh committed wrong checksum plan cannot create preparation receipt; retrieved bytes retained for diagnosis",
+    "Actual media larger than 30 MiB checked with streaming digests; byte modification rejected",
+    "Preparation status refuses corrupted plan/preparation and does not claim remote verification",
+    "FIFO refused before media open"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 2.326,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_external_delivery_identity -q"
+  },
+  "limitations": [
+    "Disposable filesystem backend, not selected long-term backend or actual ASC",
+    "Symlink/directory replacement not covered by this file; separate boundary tests required"
+  ]
+}

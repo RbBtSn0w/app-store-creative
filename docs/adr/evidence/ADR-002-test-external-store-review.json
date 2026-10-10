@@ -1,0 +1,22 @@
+{
+  "scope": "Full current external media store tests",
+  "file": "tests/test_external_media_store.py",
+  "sha256": "a1b0dc0c40138e4f58b75123dd7256fd6b9cba812c26edc74f0dd5fb87be7025",
+  "assessment": [
+    "Persisted immutable bytes independently retrieved after original source deletion and store restart",
+    "Missing or corrupt exact object never falls back; foreign backend and URL locator refused",
+    "Repeated persistence stable; restoration never overwrites owned destination",
+    "Destination parent substituted by symlink during copy refuses publication and preserves unknown owner file during cleanup",
+    "Managed missing CAS restored without artifact metadata changes; actual public CLI persistence/restoration verifies history"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 0.31,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_external_media_store -q"
+  },
+  "limitations": [
+    "Disposable local backend and fixture bytes; not real long-term media backend acceptance",
+    "Cross-filesystem and real product retrieval remain separate"
+  ]
+}

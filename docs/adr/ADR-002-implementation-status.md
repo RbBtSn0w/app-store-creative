@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
-| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异47/177，完整人工敏感信息审查未关闭 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异68/177，完整人工敏感信息审查未关闭 |
 | [ ] | 最新源码完整 CI | 最终源码的具体运行成功，并核对测试、类型、构建和分发结果 |
 | [ ] | 最新完整独立安装验收 | 使用最终分发包，证明不依赖源码运行时；此前包证据不能覆盖所有后续修复 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
@@ -51,7 +51,7 @@
 | --- | --- | --- |
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
-| 测试差异审查 | 47/177文件；剩余130个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 测试差异审查 | 68/177文件；剩余109个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
 | 独立分发包 | ec69c26包烟雾检查和59项回归通过，加载路径来自独立解压目录；不覆盖后续提交 | [证据](evidence/ADR-002-independent-package-ec69c26.json) |
@@ -76,8 +76,40 @@
 
 只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加47/177审查计数；不替代跨卷或真实进程崩溃验收。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加68/177审查计数；不替代跨卷或真实进程崩溃验收。
 
 录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
 录屏执行者与托管录屏测试完整审查，6项回归通过（0.623秒），编译driver别名、SDK/target、隐私字段拒绝、并发收据保留及原始/部分素材依赖有明确断言。[证据](evidence/ADR-002-test-recording-executor-review.json)。真实Swift编译及窗口替换门禁不由夹具证明。
+
+截图采集依赖导入测试完整审查，8项回归通过（0.822秒）：失败/部分/损坏采集及无效上游在创建新运行前拒绝，原始采集依赖在生产链保持。[证据](evidence/ADR-002-test-capture-dependency-review.json)。尺寸与重名导入属于独立范围，未由本文件证明。
+
+记录完整性两个测试文件审查及5项回归通过（0.394秒）：提交后字节篡改、FIFO阻塞替换、锁身份替换及对象目录符号链接替换均拒绝且保护外部文件。[证据](evidence/ADR-002-test-record-integrity-review.json)。重复意图消费不由该范围证明。
+
+工具、实现和产品身份三个测试完整审查，7项通过（0.853秒）：工具替换拒绝、位置无关实现哈希、封存逐尝试身份及无效产品身份写前拒绝均有断言。[证据](evidence/ADR-002-test-portable-identity-review.json)。对象失败注册及重复意图消费仍是独立范围。
+
+普通恢复意图测试完整审查，12项通过（0.634秒），包括真实子进程SIGKILL后保留原意图恢复、拒绝篡改/缺失意图及恢复期间阻断旧删除计划。[证据](evidence/ADR-002-test-restore-intent-review.json)。使用隔离夹具，不替代跨卷与两产品验收。
+
+配置内容/放置身份与回滚两个测试文件完整审查，11项通过（6.918秒），同字节inode替换、临时文件替换及验证后替换均阻止回滚覆盖，自己的安装证明支持中断恢复。[证据](evidence/ADR-002-test-configuration-identity-review.json)。
+
+外部交付身份测试完整审查，7项通过（2.326秒）：目标/项目/资产篡改阻断批准交接，实际大媒体流式校验、错误checksum与FIFO拒绝有断言。[证据](evidence/ADR-002-test-external-identity-review.json)。不替代真实长期后端、目录替换或ASC验收。
+
+交付定位与外部引用合同两个测试完整审查，5项通过（0.517秒）：搬迁映射不改原记录、越界/损坏包拒绝、非法引用写前拒绝。[证据](evidence/ADR-002-test-archive-location-review.json)。测试中的historical指现行设计搬迁前位置，不是旧格式兼容；符号链接替换仍需独立覆盖。
+
+外部媒体存储测试完整审查，7项通过（0.310秒）：源删除后独立取回、精确版本拒绝回退、目录符号链接替换拒绝并保留外部文件、CLI恢复不改原元数据。[证据](evidence/ADR-002-test-external-store-review.json)。实际长期后端及跨卷/两产品仍待验收。
+
+归档清单与来源图两个测试完整审查，12项通过（1.712秒）：重算哈希不能绕过原批准配置/审批语义，别名语义与来源闭包拒绝不完整/失败图，1200节点无递归验证通过。[证据](evidence/ADR-002-test-archive-contract-review.json)。真实封存及完整隐私审查仍独立验收。
+
+合并后归档绑定测试完整审查，真实本机Git squash/裸远端推送与独立取回1项通过（1.199秒）：新提交新发布范围不复用旧上传批准，原记录保留。[证据](evidence/ADR-002-test-post-merge-binding-review.json)。不替代真实GitHub归档PR绑定与发布。
+
+Git独立取回测试完整审查，2项通过（0.532秒）：移除工作树归档后实际clone取回明确提交/清单，未提交路径拒绝。[证据](evidence/ADR-002-test-git-retrieval-review.json)。未删除全部生产配置/源，不能据此声称完整生产环境隔离。
+
+独立取回策略测试完整审查，1项通过（0.324秒）：声明LFS但提交普通媒体字节会被独立取回拒绝。[证据](evidence/ADR-002-test-retrieval-policy-review.json)。文件名不代表正向LFS/外部恢复或完整生产目录隔离；这些门禁仍未关闭。
+
+分层归档可移植性测试完整审查，2项通过（1.227秒）：本机覆盖不进入归档JSON，重算哈希仍拒绝私有层字段，恢复后配方校验通过。[证据](evidence/ADR-002-test-layered-portability-review.json)。未执行恢复配方重新渲染，不记为独立再生产验收。
+
+原生Preview归档集成测试完整审查，2项通过（14.759秒）：实际合成视频/封面经CLI生产封存，删除原项目后从恢复包实际重放成功，便携工具/素材证据保留。[证据](evidence/ADR-002-test-native-preview-archive-review.json)。明确是合成媒体，不替代两真实产品或实际ASC闭环。
+
+归档策略配置测试完整审查，4项通过（0.047秒）：三入口非法声明写前拒绝、显式模式保留、探索不虚构选择、取回模式/后端必须匹配。[证据](evidence/ADR-002-test-archive-policy-review.json)。
+
+交付状态与Studio观察两个测试完整审查，5项通过（2.848秒）：损坏包拒绝成功、只读记录不变、远端UNKNOWN独立保留，重启HTTP与实际CLI一致。[证据](evidence/ADR-002-test-delivery-observation-review.json)。不替代实际浏览器和ASC验收。

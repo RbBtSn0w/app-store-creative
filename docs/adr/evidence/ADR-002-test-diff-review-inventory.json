@@ -200,25 +200,29 @@
       "file": "tests/test_archive_manifest_contract.py",
       "change": "A",
       "sha256": "66cc90d835f23d819011984fcd064e8b2561dd69ded4fb8fc0a4fa362d197b94",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-contract-review.json"
     },
     {
       "file": "tests/test_archive_policy_configuration.py",
       "change": "A",
       "sha256": "52394dc764ef58b33576c524f904c043252f14cb9daf60eb239a421fe822a4c9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-policy-review.json"
     },
     {
       "file": "tests/test_archive_policy_independent_retrieval.py",
       "change": "A",
       "sha256": "2aedbbdb0ce788672983a25153c66316109160f47b1a0ed3b3bb892ee19d8861",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-retrieval-policy-review.json"
     },
     {
       "file": "tests/test_archive_provenance.py",
       "change": "A",
       "sha256": "e1e90aac99b5466261827a742420f5c1666d93fb41a2ed5fa8e195ec6f8febad",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-contract-review.json"
     },
     {
       "file": "tests/test_artifact_commit_integrity.py",
@@ -280,7 +284,8 @@
       "file": "tests/test_capture_artifact_import.py",
       "change": "A",
       "sha256": "85dc6a69711ca66a11db7317df21bdc2668b6ab506002c35ecf02222169aba50",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-capture-dependency-review.json"
     },
     {
       "file": "tests/test_chrome_renderer.py",
@@ -371,7 +376,8 @@
       "file": "tests/test_configuration_rollback_identity.py",
       "change": "A",
       "sha256": "627fdae656d4572679fbf3ce0cdbba817a07d7ec79536cfcd6ccede07aa28c45",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-identity-review.json"
     },
     {
       "file": "tests/test_configuration_runtime.py",
@@ -426,7 +432,8 @@
       "file": "tests/test_delivery_status.py",
       "change": "A",
       "sha256": "f2deb7dba9f3493af8b483eb083a19b8e2df1cbcdf739460143460e85eb8fe74",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-delivery-observation-review.json"
     },
     {
       "file": "tests/test_design_target_binding.py",
@@ -468,13 +475,15 @@
       "file": "tests/test_external_delivery_identity.py",
       "change": "A",
       "sha256": "6389e0d626c729df804b8befefa89b4dcf3bfd21b0600336df9a0a0a63b5eea0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-identity-review.json"
     },
     {
       "file": "tests/test_external_media_store.py",
       "change": "A",
       "sha256": "a1b0dc0c40138e4f58b75123dd7256fd6b9cba812c26edc74f0dd5fb87be7025",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-store-review.json"
     },
     {
       "file": "tests/test_external_publication.py",
@@ -486,7 +495,8 @@
       "file": "tests/test_external_reference_contract.py",
       "change": "A",
       "sha256": "8609c1365018363d88b033f3b6944fe69611fbfbeebb0cfeddecd829bcaefbd1",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-location-review.json"
     },
     {
       "file": "tests/test_filesystem_permission_acceptance.py",
@@ -504,7 +514,8 @@
       "file": "tests/test_git_archive_retrieval.py",
       "change": "A",
       "sha256": "e5c1e2335dbea6b84328393f4805efca874373a74b5797de2beff258858c45d6",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-git-retrieval-review.json"
     },
     {
       "file": "tests/test_git_lfs_retrieval.py",
@@ -555,7 +566,8 @@
       "file": "tests/test_layered_archive_portability.py",
       "change": "A",
       "sha256": "d7bbb58ac6de1a849a12a91bffd9db57d99ef6f64bd65c9d8a922a2cfbca28ba",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-portability-review.json"
     },
     {
       "file": "tests/test_lifecycle_record_schema.py",
@@ -604,13 +616,15 @@
       "file": "tests/test_media_tool_identity.py",
       "change": "A",
       "sha256": "1009b3389db25c41a52d7829267004ab65398de06ef0f7243414854e1d230331",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-portable-identity-review.json"
     },
     {
       "file": "tests/test_native_preview_archive.py",
       "change": "A",
       "sha256": "9b11116b67fa265afea985b19d6a8d96b5c9d1150d07c1cc5c792cf48ddfc002",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-native-preview-archive-review.json"
     },
     {
       "file": "tests/test_object_purge_process_crash.py",
@@ -640,7 +654,8 @@
       "file": "tests/test_ordinary_restore_intent.py",
       "change": "A",
       "sha256": "4720909b10a1fac61a1505a6fa245f43b6c9312e83d5ea0145a1a686aeacdf7e",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-restore-intent-review.json"
     },
     {
       "file": "tests/test_package_runtime.py",
@@ -652,7 +667,8 @@
       "file": "tests/test_post_merge_archive_binding.py",
       "change": "A",
       "sha256": "a00154421a0d075afd425097514bb8020ca725590823a35e052d266ec3f93805",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-post-merge-binding-review.json"
     },
     {
       "file": "tests/test_post_purge_retrieval.py",
@@ -689,7 +705,8 @@
       "file": "tests/test_project_identity.py",
       "change": "A",
       "sha256": "55b1a93ff1ee7e2be1b51e7620ee1290a6c2709ce7b74e799fda95c937493995",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-portable-identity-review.json"
     },
     {
       "file": "tests/test_publication_retrieval_proof.py",
@@ -737,13 +754,15 @@
       "file": "tests/test_record_commit_consumption.py",
       "change": "A",
       "sha256": "dca6cc383f95bae33cff456180162a573d37976ff9d0d4b3cdcc9207f970a757",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-record-integrity-review.json"
     },
     {
       "file": "tests/test_record_file_identity.py",
       "change": "A",
       "sha256": "f87d397be3f3b39d1656d10a6994e2293d5224fe9bd86a1f465c936927871a41",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-record-integrity-review.json"
     },
     {
       "file": "tests/test_recorder_execution_identity.py",
@@ -979,7 +998,8 @@
       "file": "tests/test_runtime_identity.py",
       "change": "A",
       "sha256": "5fb31306542354c93a5290fc2bdf652b4f5659c96f32dc1dc6efcdf2742ac86b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-portable-identity-review.json"
     },
     {
       "file": "tests/test_safe_staging.py",
@@ -1027,7 +1047,8 @@
       "file": "tests/test_studio_delivery_status.py",
       "change": "A",
       "sha256": "ed71208c515f12ce5ef0fd1ca9cb336a1eb4e2cc65202e5716fd9b96cc22a96a",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-delivery-observation-review.json"
     },
     {
       "file": "tests/test_studio_maintenance.py",

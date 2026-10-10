@@ -1,0 +1,21 @@
+{
+  "scope": "Full current capture artifact import tests",
+  "file": "tests/test_capture_artifact_import.py",
+  "sha256": "85dc6a69711ca66a11db7317df21bdc2668b6ab506002c35ecf02222169aba50",
+  "assessment": [
+    "Imported acquisition remains explicit input dependency through screenshot production",
+    "Wrong role, corrupted object, failed acquisition, partial capture and missing logical path rejected before creating new run",
+    "Invalid upstream acquisition rejected transitively",
+    "CLI parser and dispatch preserve original acquisition dependency without requiring source file copy"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 0.822,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_capture_artifact_import -q"
+  },
+  "limitations": [
+    "Renderer is mocked; real browser output not proved",
+    "Dimension validation and duplicate filenames are outside this file and remain separate scopes"
+  ]
+}

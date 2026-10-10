@@ -1,0 +1,20 @@
+{
+  "scope": "Full current Git archive retrieval test",
+  "file": "tests/test_git_archive_retrieval.py",
+  "sha256": "e5c1e2335dbea6b84328393f4805efca874373a74b5797de2beff258858c45d6",
+  "assessment": [
+    "Actual independent clone verifies committed archive after original worktree archive removal",
+    "Proof binds requested exact commit and manifest hash without recreating original worktree archive",
+    "Uncommitted archive path cannot pass retrieval"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 0.532,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_git_archive_retrieval -q"
+  },
+  "limitations": [
+    "Local disposable Git repository, not real long-term remote backend",
+    "This file does not delete producer configuration or all source files; stronger isolation belongs to independent policy retrieval tests"
+  ]
+}

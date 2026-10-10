@@ -1,0 +1,29 @@
+{
+  "scope": "Full current delivery location and external reference tests",
+  "files": [
+    {
+      "file": "tests/test_delivery_locations.py",
+      "sha256": "53f7038f4ef58659ee673fffe92a72b40afae12318e3ee3035c1dae8b5ddf269"
+    },
+    {
+      "file": "tests/test_external_reference_contract.py",
+      "sha256": "8609c1365018363d88b033f3b6944fe69611fbfbeebb0cfeddecd829bcaefbd1"
+    }
+  ],
+  "assessment": [
+    "Sealed delivery retains original root binding and archive location",
+    "Verified relocation resolves existing immutable delivery without rewriting record; test historical label means current-design placement history, not legacy-format compatibility",
+    "Location outside original archive root and corrupt moved package refused",
+    "External reference rejects private root, invalid backend/provider/hash/version, and boolean numeric fields without backend writes"
+  ],
+  "verification": {
+    "tests": 5,
+    "seconds": 0.517,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_delivery_locations test_external_reference_contract -q"
+  },
+  "limitations": [
+    "Relocation mapping is committed fixture rather than full physical move",
+    "Symlink substitution requires separate filesystem store tests"
+  ]
+}
