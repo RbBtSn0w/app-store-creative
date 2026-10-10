@@ -6,10 +6,10 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `df459a84312f9206b7f70474d834598d6112a8f6`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `cc4b069cd12cb1e3a4675e0415c755c9d49851b2`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 最近推送提交CI：[run 38050565710](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38050565710)，本次查询in_progress；9db1aa9的run 38050205130已成功；9d57a9c的run 38049241718已成功并核对完整日志。
+- 最近推送提交CI：[run 38051343029](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38051343029)，最近查询in_progress；0479b56的run 38050792162已成功；9d57a9c的run 38049241718已成功并核对完整日志。
 - 已保存的最新详细CI证据绑定9d57a9c；最新远端成功状态与最终发行门禁分别核对，不能提前关闭最终发行门禁。
 
 ## 能力实现 checklist
@@ -52,9 +52,9 @@
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
 | 测试差异审查 | 177/177文件；全部文件已审查并核对当前哈希 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
-| 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
+| 凭据模式筛查 | cc4b069的503个变更UTF-8文件已筛查，无模式命中；不是完整人工审查，不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-screen-cc4b069.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
-| 独立分发包 | 9d57a9c包烟雾检查及103项回归通过（28.097秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-9d57a9c.json) |
+| 独立分发包 | cc4b069完整包烟雾检查及120项回归通过（28.782秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-cc4b069.json) |
 | 最新专项测试 | 发布顺序7项通过；真实SIGKILL租约确定时钟边界单项通过 | [发布](evidence/ADR-002-test-delivery-publication-review.json)、[租约](evidence/ADR-002-test-remote-observations-review.json) |
 
 测试通过、模块审查和哈希匹配各自证明其明确范围，不能替代真实产品、浏览器、长期后端或ASC验收。既有测试修改与删除、全部前端测试差异均已审查；新增运行时测试已完成差异审查；最终集成与真实产品门禁仍独立关闭。旧测试退休不允许丢失租约所有权、源完整性、批准分离和不覆盖用户文件等现行约束。
@@ -235,3 +235,5 @@ Python门禁、分发包及配置临时文件三个测试完整审查，5项通�
 正向来源库存及保留依赖两个测试完整审查，9项通过（4.694秒）：来源身份/额外文件、返回活动路径、清理依赖一致性有断言。[证据](evidence/ADR-002-test-forward-inventory-dependency-review.json)。端到端循环案例先触发提交完整性，独立纯验证器循环测试不能替代有效提交循环图验收。
 
 最后六个测试文件完整审查，40项断言通过（42.456秒）；来源读取测试出现3个未关闭HTTPError资源警告，已修复清理并重跑3项无警告通过（1.622秒）。[证据](evidence/ADR-002-test-final-location-studio-review.json)。177/177测试文件审查及当前哈希核对完成，不关闭完整敏感证据审查、跨卷、浏览器或真实产品验收。
+
+cc4b069完整分发包打包烟雾通过，独立解压环境120项回归通过（28.782秒）；sys.path及运行时模块路径断言排除源码运行时。[证据](evidence/ADR-002-independent-package-cc4b069.json)。503个变更UTF-8文件凭据模式筛查无命中。[证据](evidence/ADR-002-sensitive-screen-cc4b069.json)。实际adg安装、人工敏感信息审查与真实产品门禁仍未关闭。
