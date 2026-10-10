@@ -1,0 +1,17 @@
+{
+  "scope": "Full current export server cleanup regression",
+  "file": "tests/test_export_server_cleanup.py",
+  "sha256": "d6e90534c7d61a02bce4b5560e886145fef561d0f86c844f44d01625a699c704",
+  "assessment": [
+    "Injected health probe failure raises readiness error; owned actual listener refuses subsequent socket connection and background thread has stopped before final cleanup"
+  ],
+  "verification": {
+    "tests": 1,
+    "seconds": 0.508,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_export_server_cleanup -q"
+  },
+  "limitations": [
+    "Health failure only; no browser rendering or actual successful export acceptance"
+  ]
+}

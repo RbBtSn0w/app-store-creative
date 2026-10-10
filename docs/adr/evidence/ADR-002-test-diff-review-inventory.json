@@ -398,7 +398,8 @@
       "file": "tests/test_configuration_studio_poster.py",
       "change": "A",
       "sha256": "aa31d7c75bdc18833de1147a7b1f467bdf2fe36f4a2fe04dadcd51b9989bad30",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-production-review.json"
     },
     {
       "file": "tests/test_configuration_studio_save.py",
@@ -467,7 +468,8 @@
       "file": "tests/test_export_server_cleanup.py",
       "change": "A",
       "sha256": "d6e90534c7d61a02bce4b5560e886145fef561d0f86c844f44d01625a699c704",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-server-cleanup-review.json"
     },
     {
       "file": "tests/test_external_delivery_archive.py",
@@ -598,7 +600,8 @@
       "file": "tests/test_managed_poster.py",
       "change": "A",
       "sha256": "0dad08722b9067d072ca093683f8866817d8a2fd79f3ef7249dd06f7fb30b9e5",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-production-review.json"
     },
     {
       "file": "tests/test_managed_preview.py",
@@ -688,13 +691,15 @@
       "file": "tests/test_poster_validation.py",
       "change": "A",
       "sha256": "11905f4edca7af09dc4dc4e1e468cfe964410c9d4d0ce290c8ffa263e532c298",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-contract-review.json"
     },
     {
       "file": "tests/test_preview_overlay_coordinates.py",
       "change": "A",
       "sha256": "258432530a55a15f5dcaf10794e00be4194442a830670e1a54d42f70062bd196",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-production-review.json"
     },
     {
       "file": "tests/test_producer_contracts.py",
@@ -725,8 +730,9 @@
     {
       "file": "tests/test_publication_target_consumption.py",
       "change": "A",
-      "sha256": "f51aca40946e584b2263140722714f420e4963e6a833c460273a1b3ff3155dcf",
-      "review_status": "pending_full_diff_review"
+      "sha256": "ef950818e3311512865dd5e92946b9c32153770d1fd403b9dcec342ccc6f87ae",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-consumption-review.json"
     },
     {
       "file": "tests/test_purge_process_crash.py",
@@ -1071,7 +1077,8 @@
       "file": "tests/test_studio_publications.py",
       "change": "A",
       "sha256": "d6e47228caa4c9fb9f3b733f17bbb1bc321c1e62471b35341ccba13e1dc9d5b4",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-publication-review.json"
     },
     {
       "file": "tests/test_studio_read_origins.py",
@@ -1128,7 +1135,8 @@
       "file": "tests/test_validator_png_integrity.py",
       "change": "A",
       "sha256": "636cfb71c1b5c3efa19e3a12ae75a8e9b7afc4d02349b270d993b3431509f586",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-png-integrity-review.json"
     },
     {
       "file": "tests/test_video_execution_contract.py",

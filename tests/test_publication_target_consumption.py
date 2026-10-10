@@ -59,3 +59,21 @@ class PublicationTargetConsumptionTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'assets'):
                     self.store.export_publication(saved['id'], write=True)
                 self.assertFalse((self.store.paths.publications / saved['id']).exists())
+
+    def test_committed_invalid_target_still_refuses_approval_and_handoff(self):
+        from artifact_lifecycle import identifier
+        plan = self.store.plan_publication(self.delivery['id'], self.persist(), self.target)
+        approvals = self.store.paths.workspace / 'records/approvals'
+        before = {path: path.read_bytes() for path in approvals.glob('*.json')}
+        for changes in ({'platform': 'IOS'}, {'app_id': True}, {'version_id': ' '}):
+            with self.subTest(changes=changes):
+                with self.store.transaction():
+                    saved = self.store._record('publications',
+                        {**plan, 'id': identifier(), 'target': {**plan['target'], **changes}}, 'plan')
+                self.assertEqual(self.store._read('publications', saved['id'], 'plan'), saved)
+                for operation in (lambda: self.store.approve_upload(saved['id'], 'owner', 'fixture:upload'),
+                                  lambda: self.store.export_publication(saved['id'], write=True)):
+                    with self.assertRaisesRegex(ValueError, 'platform|required'):
+                        operation()
+                self.assertEqual({path: path.read_bytes() for path in approvals.glob('*.json')}, before)
+                self.assertFalse((self.store.paths.publications / saved['id']).exists())

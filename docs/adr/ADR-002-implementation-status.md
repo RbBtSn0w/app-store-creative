@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
-| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异80/177，完整人工敏感信息审查未关闭 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异88/177，完整人工敏感信息审查未关闭 |
 | [ ] | 最新源码完整 CI | 最终源码的具体运行成功，并核对测试、类型、构建和分发结果 |
 | [ ] | 最新完整独立安装验收 | 使用最终分发包，证明不依赖源码运行时；此前包证据不能覆盖所有后续修复 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
@@ -51,7 +51,7 @@
 | --- | --- | --- |
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
-| 测试差异审查 | 80/177文件；剩余97个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 测试差异审查 | 88/177文件；剩余89个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
 | 独立分发包 | 622d224包烟雾检查及59项回归通过（15.078秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-622d224.json) |
@@ -76,7 +76,7 @@
 
 只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加80/177审查计数；不替代跨卷或真实进程崩溃验收。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加88/177审查计数；不替代跨卷或真实进程崩溃验收。
 
 录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
@@ -139,3 +139,17 @@ Studio分层保存测试完整审查，4项通过（2.500秒）：缺If-Match写
 验证语义覆盖缺口已补齐：新增有效提交事件下畸形验证记录回归，先确认记录读取有效，再断言Passing validation语义拒绝且无批准；2项通过（0.279秒）。未修改运行时行为。
 
 保留策略测试完整审查，5项通过（0.833秒）：明确期限默认、非法策略拒绝、策略变化阻断旧计划、CLI/HTTP只读一致。[证据](evidence/ADR-002-test-retention-policy-review.json)。未执行实际永久清理。
+
+导出服务失败清理回归完整审查，1项通过（0.508秒）：健康失败返回前实际监听不可连接且线程已停止。[证据](evidence/ADR-002-test-server-cleanup-review.json)。
+
+PNG完整性回归完整审查，2项通过（0.003秒）：截断/像素块损坏在两种host工具路径均拒绝，合法RGB/alpha保留。[证据](evidence/ADR-002-test-png-integrity-review.json)。
+
+独立封面合同测试完整审查，3项通过（0.292秒）：缺封面/尺寸不匹配拒绝，匹配封面本地通过。[证据](evidence/ADR-002-test-poster-contract-review.json)。视频probe为mock，时间点/依赖和ASC封面故障仍需独立验收。
+
+封面生产/本机层请求/覆盖坐标三个测试完整审查，7项通过（1.377秒）：时间点及视频哈希绑定、失败取消部分素材保留、ETag执行前拒绝及滤镜坐标注入拒绝。[证据](evidence/ADR-002-test-poster-production-review.json)。抽帧为mock，不关闭实际封面/ASC验收。
+
+发布目标/资产消费测试完整审查，3项通过（2.210秒）：保存记录篡改拒绝，有效提交下错误资产仍由归档语义比较拒绝，无交接目录。[证据](evidence/ADR-002-test-publication-consumption-review.json)。新提交非法目标及批准后变化仍需独立覆盖。
+
+发布目标语义缺口补齐：有效提交且可正常读取的非法平台/app/version记录，仍由目标语义门禁拒绝批准和交接，原批准字节不变；4项通过（2.460秒）。未修改运行行为。
+
+Studio发布HTTP/CLI测试完整审查，2项通过（2.485秒）：只读查询记录不变，UPLOAD批准和EXPORT交接保持独立，未声称实际上传/远端验证。[证据](evidence/ADR-002-test-studio-publication-review.json)。重启与实际浏览器为独立范围。
