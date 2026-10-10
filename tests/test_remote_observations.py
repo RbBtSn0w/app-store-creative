@@ -859,7 +859,8 @@ class RemoteObservationTests(unittest.TestCase):
         import signal
         import subprocess
         import sys
-        import time
+        from datetime import timedelta
+        from unittest.mock import patch
         from pathlib import Path
         plan = self.plan()
         facts = {'processing_state': 'COMPLETE'}
@@ -912,10 +913,12 @@ core.retain_observation_evidence(observation, canonical({'processing_state':'COM
                         if self.store._read('artifacts', json.loads(p.read_text())['artifact_id'])['attempt_id'] == attempt['id'])
                     with self.assertRaisesRegex(ValueError, 'producer is incomplete'):
                         self.store.persist_observation_evidence(bound['id'], 'team', self.root / 'crash-backend')
-                with self.assertRaisesRegex(ValueError, 'still active'):
-                    self.store.recover_attempt(attempt['id'], 'recovery-owner', 'crash verified')
-                time.sleep(1.1)
-                recovered = self.store.recover_attempt(attempt['id'], 'recovery-owner', 'crash verified')
+                expires = datetime.fromisoformat(self.store._lease(attempt['id'])['expires_at'])
+                with patch('lease_lifecycle.utcnow', return_value=expires - timedelta(microseconds=1)):
+                    with self.assertRaisesRegex(ValueError, 'still active'):
+                        self.store.recover_attempt(attempt['id'], 'recovery-owner', 'crash verified')
+                with patch('lease_lifecycle.utcnow', return_value=expires):
+                    recovered = self.store.recover_attempt(attempt['id'], 'recovery-owner', 'crash verified')
                 self.assertEqual(recovered['retry_of'], attempt['id'])
                 self.assertNotEqual(recovered['work_path'], attempt['work_path'])
                 self.assertEqual(self.store._read('attempts', attempt['id'], 'outcome')['status'], 'interrupted')

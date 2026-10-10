@@ -1,0 +1,25 @@
+{
+  "scope": "Complete four modified test diffs against origin/main",
+  "files": {
+    "tests/test_inventory_lifecycle.py": {
+      "sha256": "6459c9782f3933a44f55d3bcedde869988377f1e6069a6496c17c3ba8aeaacad",
+      "assessment": "Modified deletion receipt byte total must fail inventory binding; cannot conceal missing object."
+    },
+    "tests/test_relocation_recovery.py": {
+      "sha256": "5d99fec08ea7aa451ea71faf3a5536f50acca56d47a147d008f9fcd24f25b076",
+      "assessment": "Same-byte replacement staging identity, including replacement after cancel intent, must be refused without changing replacement data or recording cancellation; API and CLI covered."
+    },
+    "tests/test_relocation_resume.py": {
+      "sha256": "1446504988369117ed575acb2f326655b4916dcc710575459f0a9bd2a89962c0",
+      "assessment": "Completed resume rechecks target control evidence; changed activation binding stays unchanged and fails API/CLI without repair."
+    },
+    "tests/test_retention_lifecycle.py": {
+      "sha256": "8c991ab45638ae785c1109506225c3120700046bec17e999918e81903cfb4927",
+      "assessment": "Whitespace/nontext audit input rejected before mutation; completed deletion reappeared data preserved; receipt/intent/plan changes rejected; missing checkpoint and same-byte replacement cannot create purge completion."
+    }
+  },
+  "finding": "All changes add failure-preservation assertions; no existing safety assertions removed or new skips found",
+  "limitations": [
+    "Tests operate disposable local fixtures; not two real-product or cross-filesystem acceptance"
+  ]
+}

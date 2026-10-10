@@ -286,7 +286,8 @@
       "file": "tests/test_chrome_renderer.py",
       "change": "M",
       "sha256": "a2d372ec65f77ae9b8e2eee80c8ae7a245b368f90e9eddd591ab80e009312a54",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json"
     },
     {
       "file": "tests/test_commit_abandonment.py",
@@ -541,7 +542,8 @@
       "file": "tests/test_inventory_lifecycle.py",
       "change": "M",
       "sha256": "6459c9782f3933a44f55d3bcedde869988377f1e6069a6496c17c3ba8aeaacad",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
     },
     {
       "file": "tests/test_inventory_observation_failures.py",
@@ -836,7 +838,8 @@
       "file": "tests/test_relocation_recovery.py",
       "change": "M",
       "sha256": "5d99fec08ea7aa451ea71faf3a5536f50acca56d47a147d008f9fcd24f25b076",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
     },
     {
       "file": "tests/test_relocation_recovery_lock.py",
@@ -848,7 +851,8 @@
       "file": "tests/test_relocation_resume.py",
       "change": "M",
       "sha256": "1446504988369117ed575acb2f326655b4916dcc710575459f0a9bd2a89962c0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
     },
     {
       "file": "tests/test_relocation_retention_plan.py",
@@ -883,8 +887,9 @@
     {
       "file": "tests/test_remote_observations.py",
       "change": "M",
-      "sha256": "e781c29b407d92d7fda39ad12f705f64fd12147552da64f0794aa948db7f3306",
-      "review_status": "pending_full_diff_review"
+      "sha256": "bc401cf22d9b995b6a7310435e5fa6ff4de0b860cb17b956029f3cb2569a6cec",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remote-observations-review.json"
     },
     {
       "file": "tests/test_repeated_relocation.py",
@@ -902,7 +907,8 @@
       "file": "tests/test_retention_lifecycle.py",
       "change": "M",
       "sha256": "8c991ab45638ae785c1109506225c3120700046bec17e999918e81903cfb4927",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
     },
     {
       "file": "tests/test_retrieval_process_budget.py",
@@ -1071,7 +1077,8 @@
       "file": "tests/test_v2_workflow.py",
       "change": "M",
       "sha256": "2638baac51f43e7a06ddaee7e7bb42f05270feeae8b645a570f1454c944259e4",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json"
     },
     {
       "file": "tests/test_validation_policy_binding.py",
