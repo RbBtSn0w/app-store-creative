@@ -378,7 +378,7 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
 
     def start_attempt(self, run_id, stage, owner, retry_of=None, lease_seconds=3600):
         duration(lease_seconds)
-        if not stage or not owner:
+        if any(not isinstance(value, str) or not value.strip() for value in (stage, owner)):
             raise ValueError('Stage and owner are required')
         with self.transaction():
             self._run(run_id)
@@ -466,7 +466,7 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
     def finish_attempt(self, identity, status, reason=None, lease_token=None):
         if status not in ('succeeded', 'failed', 'cancelled', 'interrupted'):
             raise ValueError('Invalid attempt outcome')
-        if status != 'succeeded' and not reason:
+        if status != 'succeeded' and (not isinstance(reason, str) or not reason.strip()):
             raise ValueError('Unsuccessful attempts require a reason')
         with self.transaction():
             data = self._active_attempt(identity, lease_token)
