@@ -1,0 +1,27 @@
+{
+  "source_commit": "052eeb58d6648493aebf2b91b78efe324cde69d4",
+  "root": "/private/tmp/creative-052eeb5-installed-_q8hfyk8",
+  "source_runtime_used": false,
+  "package_sha256": "7aeeeba0d1f1ce0e2eb0e36a1f98e1d548d1e58ad4c001993ba6acac2d000b0c",
+  "returncode": 0,
+  "log_sha256": "26deeec4b7ee2234c7fd811f4c5c8c41f83a8666bdc8a82487261684471f3bc1",
+  "modules": [
+    "test_validator_png_integrity",
+    "test_export_server_cleanup",
+    "test_v2_workflow",
+    "test_poster_validation",
+    "test_production_lifecycle",
+    "test_studio_release",
+    "test_studio_atomic_json",
+    "test_safe_staging",
+    "test_preview_production"
+  ],
+  "tests": 50,
+  "seconds": 12.773,
+  "result": "PASS",
+  "scope": "Independent extracted package regression, not complete real product acceptance",
+  "limitations": [
+    "No real product candidate approval or ASC upload",
+    "Full final acceptance checklist remains open"
+  ]
+}
