@@ -1,0 +1,17 @@
+{
+  "scope": "Actual browser keyboard activation save and refresh after pointer interaction produced no visible state change",
+  "source_commit": "e12bde5",
+  "observations": [
+    "New tab loads original saved custom directory configuration",
+    "Keyboard Enter on Save project produces Ready to export and Project saved",
+    "Reloaded Headline value is Browser recovery verified",
+    "Saved configuration independently contains revised headline"
+  ],
+  "configuration_sha256": "bf827fb135c80fe038379dc5a90406e9c353fa90ea99f80acab35921787ce58d",
+  "screenshot_sha256": "45fedb1c2b9e686efe39eded4271aae213beb9b5ed9308ba7a6f5e030484538b",
+  "limitations": [
+    "Pointer clicks lacked visible effect; no definitive underlying cause established",
+    "Old tab CDP timed out; this does not establish a Studio save defect",
+    "Synthetic project; no actual installed runtime or real-product export"
+  ]
+}

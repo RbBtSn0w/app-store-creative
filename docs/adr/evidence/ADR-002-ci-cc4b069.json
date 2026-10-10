@@ -1,0 +1,25 @@
+{
+  "scope": "Completed exact-commit CI with inspected complete log",
+  "source_commit": "cc4b069cd12cb1e3a4675e0415c755c9d49851b2",
+  "run_id": 38051343029,
+  "job_id": 114210923664,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38051343029",
+  "result": "success",
+  "python": {
+    "run": 1045,
+    "skipped": 33,
+    "seconds": 289.222
+  },
+  "frontend": {
+    "tests_passed": 98,
+    "files_passed": 33,
+    "type_check": "passed",
+    "build": "passed"
+  },
+  "complete_distribution_smoke": "passed",
+  "log_sha256": "6f1772b56d4fef53422c4f75de6afb638ad32f1ecef07b7c2aef87d860321303",
+  "limitations": [
+    "Later documentation commits not covered by this exact CI",
+    "Cross-volume skipped cases and real-product/ASC/installed plugin acceptance remain open"
+  ]
+}

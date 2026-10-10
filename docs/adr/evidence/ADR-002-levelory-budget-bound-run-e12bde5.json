@@ -1,0 +1,37 @@
+{
+  "scope": "Fresh budget-corrected real-input screenshot production; not complete product acceptance",
+  "source_commit": "e12bde5",
+  "run_id": "cac53501dec547448bc995c6b8812d3a",
+  "attempt_id": "504feb64294148adbb8cadf21eec0770",
+  "candidate_id": "9a37adf941974609be47f95483b2674d",
+  "run_record_sha256": "b3eaec18f1265df6380a87cf29cd9cd5d9008725b3624825d58902263828dfe5",
+  "screenshots": 10,
+  "validation_status": "PASS",
+  "history_status": "PASS",
+  "budget": {
+    "candidate_id": "9a37adf941974609be47f95483b2674d",
+    "candidate_payload_bytes": 23602078,
+    "configured_limit_bytes": 1073741824,
+    "current_payload_bytes": 0,
+    "forecast_payload_bytes": 23602078,
+    "git_history_bytes": null,
+    "observed_payload_bytes": 0,
+    "remote_storage_bytes": null,
+    "schema_version": 1,
+    "scope": "Logical artifact payload copies in registered retained local revisions; excludes metadata and unobserved Git/remote history",
+    "status": "WITHIN_BUDGET",
+    "unverified_deliveries": [],
+    "writes_performed": false
+  },
+  "approval_id": null,
+  "delivery_id": null,
+  "observations": [
+    "Fresh run snapshot contains artifactPolicy and mediaBudgetBytes after correcting configuration; no old record changed",
+    "Exact new candidate budget reports WITHIN_BUDGET at 23602078 bytes under 1073741824 byte limit"
+  ],
+  "limitations": [
+    "Reuse of earlier actual UI captures; Chinese UI English remnants remain",
+    "Provisional LFS declaration, no durable remote media persistence",
+    "Screenshot-only with video disabled; no seal, human approval, video/poster or ASC verification"
+  ]
+}

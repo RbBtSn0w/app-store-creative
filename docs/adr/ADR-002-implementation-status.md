@@ -237,3 +237,17 @@ Python门禁、分发包及配置临时文件三个测试完整审查，5项通�
 最后六个测试文件完整审查，40项断言通过（42.456秒）；来源读取测试出现3个未关闭HTTPError资源警告，已修复清理并重跑3项无警告通过（1.622秒）。[证据](evidence/ADR-002-test-final-location-studio-review.json)。177/177测试文件审查及当前哈希核对完成，不关闭完整敏感证据审查、跨卷、浏览器或真实产品验收。
 
 cc4b069完整分发包打包烟雾通过，独立解压环境120项回归通过（28.782秒）；sys.path及运行时模块路径断言排除源码运行时。[证据](evidence/ADR-002-independent-package-cc4b069.json)。503个变更UTF-8文件凭据模式筛查无命中。[证据](evidence/ADR-002-sensitive-screen-cc4b069.json)。实际adg安装、人工敏感信息审查与真实产品门禁仍未关闭。
+
+e12bde5实际IAB浏览器完成四类自定义目录预览、保存及刷新保持，保存期间编辑/导出控件禁用；独立核对磁盘配置与页面一致。[证据](evidence/ADR-002-browser-custom-root-save-e12bde5.json)。空白隔离项目与源码运行时不替代两产品生产/恢复矩阵或实际adg安装。
+
+实际浏览器在CLI创建运行后拒绝普通保存更换活动归档根；完整项目文件哈希快照不变，新目标目录未创建。[证据](evidence/ADR-002-browser-active-root-refusal-e12bde5.json)。重新加载按钮超时，未记为刷新通过；真实产品搬迁仍待验收。
+
+cc4b069完整CI已成功，日志核对1045项Python运行/33项跳过（289.222秒）、98项前端/33文件、类型检查、构建及完整分发烟雾均通过。[证据](evidence/ADR-002-ci-cc4b069.json)。后续文档提交与最终发行仍独立核对。浏览器新页签可加载正确保存目录，但编辑后的保存动作未观察到状态转换；未据此声明恢复完成，需继续诊断。
+
+浏览器保存复核：同一浏览器新页签以键盘Enter激活Save project后显示Project saved，刷新保留新标题；磁盘配置一致。[证据](evidence/ADR-002-browser-save-recovery-e12bde5.json)。此前鼠标操作无可观察效果，原因未确定；未认定运行时缺陷、未修改运行时代码。
+
+Levelory新隔离工作区重新导入10张真实原始截图，在显式临时LFS策略下创建新截图候选252428f54ab04c61a4bfd35bd78f37ad，技术验证及操作历史PASS。[证据](evidence/ADR-002-levelory-fresh-screenshot-run-e12bde5.json)。复用旧真实输入，中文界面Search Clips/Copy Result仍英文；视频/封面未纳入本次候选，未批准或封存，不关闭完整Levelory验收。
+
+预算复核发现新工作区误用了retentionPolicy字段，252428f候选未绑定有效预算；已纠正证据与配置为artifactPolicy，不回填原运行，必须重新生产。
+
+修正预算后另起新运行cac53501dec547448bc995c6b8812d3a，10张截图候选9a37adf941974609be47f95483b2674d技术及历史PASS；运行快照包含artifactPolicy预算声明，精确候选预算WITHIN_BUDGET：23,602,078/1,073,741,824 bytes。[证据](evidence/ADR-002-levelory-budget-bound-run-e12bde5.json)。中文原始UI、视频/封面、批准/封存与长期后端仍未完成。
