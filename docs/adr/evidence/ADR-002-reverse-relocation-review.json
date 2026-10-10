@@ -1,0 +1,31 @@
+{
+  "scope": "Full reverse_relocation.py review",
+  "runtime_sha256": "efcb6f2cd5223c641c6a67f6f14b36ba1eba3f970e18f90c5a6ffbc18d76d2b0",
+  "reviewed": [
+    "Root inode exchange journal and staged/backup bytes",
+    "Configuration authority, installed identity and source backup hashes",
+    "Storage activation, binding and fence release hashes",
+    "Durable intent before directory exchange",
+    "Explicit-source resume and interrupted rollback",
+    "Repeated cycles preserve prior controls and unknown backup bytes"
+  ],
+  "new_defects": [],
+  "verification": {
+    "tests": 49,
+    "seconds": 118.124,
+    "result": "PASS",
+    "modules": [
+      "test_reverse_relocation_cycles",
+      "test_reverse_relocation_rollback",
+      "test_reverse_relocation_switch",
+      "test_reverse_configuration_installation",
+      "test_reverse_configuration_rollback",
+      "test_configuration_local_reverse_execution",
+      "test_studio_reverse_recovery"
+    ]
+  },
+  "limitations": [
+    "Isolated fixture matrix, not two real products",
+    "Complete relocation core remains separately under review"
+  ]
+}

@@ -288,8 +288,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py",
       "sha256": "efcb6f2cd5223c641c6a67f6f14b36ba1eba3f970e18f90c5a6ffbc18d76d2b0",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-reverse-relocation-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py",
