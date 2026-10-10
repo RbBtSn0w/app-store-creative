@@ -1,5 +1,7 @@
 """Exact, reviewable relocation plans before copying or changing bindings."""
 from pathlib import Path
+from contextlib import contextmanager
+import stat
 import hashlib
 import shutil
 import os
@@ -1038,12 +1040,7 @@ class RelocationOperations:
         import tempfile
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Relocation rollback requires actor and reason')
-        self._assert_paths()
-        lock = self.paths.workspace / 'write.lock'
-        if lock.is_symlink():
-            raise ValueError('Symlinked relocation recovery lock')
-        with lock.open('a+b') as stream:
-            fcntl.flock(stream, fcntl.LOCK_EX)
+        with recovery_lock(self):
             plan = self._read('relocations', plan_id)
             if plan.get('operation') != 'relocation-plan':
                 raise ValueError('Use rollback-reverse-relocate for reverse plans')
@@ -1141,12 +1138,7 @@ class RelocationOperations:
         import tempfile
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Relocation resume requires actor and reason')
-        self._assert_paths()
-        lock = self.paths.workspace / 'write.lock'
-        if lock.is_symlink():
-            raise ValueError('Symlinked recovery lock')
-        with lock.open('a+b') as stream:
-            fcntl.flock(stream, fcntl.LOCK_EX)
+        with recovery_lock(self):
             plan = self._read('relocations', plan_id)
             if plan.get('operation') != 'relocation-plan':
                 raise ValueError('Use resume-reverse-relocate for reverse plans')
@@ -1316,6 +1308,33 @@ class RelocationOperations:
             if target_records != source_records and not self._path('relocations', plan_id, 'switched').exists():
                 self._record('relocations', receipt, 'switched')
             return receipt
+
+
+@contextmanager
+def recovery_lock(core):
+    """Lock the existing recovery authority without creating or following replacements."""
+    import fcntl
+    core._assert_paths()
+    path = core.paths.workspace / 'write.lock'
+    if path.resolve() != path or path.is_symlink():
+        raise ValueError('Unsafe recovery lock')
+    before = path.lstat()
+    if not stat.S_ISREG(before.st_mode):
+        raise ValueError('Recovery lock must be a regular file')
+    descriptor = os.open(path, os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, 'r+b') as stream:
+        opened = os.fstat(stream.fileno())
+        if (not stat.S_ISREG(opened.st_mode)
+                or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino)):
+            raise ValueError('Recovery lock identity changed')
+        fcntl.flock(stream, fcntl.LOCK_EX)
+        try:
+            current = path.lstat()
+            if (current.st_dev, current.st_ino) != (opened.st_dev, opened.st_ino):
+                raise ValueError('Recovery lock identity changed')
+            yield
+        finally:
+            fcntl.flock(stream, fcntl.LOCK_UN)
 
 
 def recovery_source(root, config_path, workspace, plan_id):

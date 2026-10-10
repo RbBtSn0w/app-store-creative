@@ -245,9 +245,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py",
-      "sha256": "37142a9730d247e8eddb6b55e31dbff7573efaa1f39ecfe242da64bffbfbb455",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "c916400c450562f570c92b3211a910338f03e443d466265251de066a20e33399",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-relocation-core-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_object_observations.py",
@@ -287,9 +287,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py",
-      "sha256": "efcb6f2cd5223c641c6a67f6f14b36ba1eba3f970e18f90c5a6ffbc18d76d2b0",
+      "sha256": "70ef87b75034a78cc445ca0de108ec6f7b3218a0bed540a7383b25fdb1191cfe",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
-      "evidence": "ADR-002-reverse-relocation-review.json"
+      "evidence": "ADR-002-relocation-core-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py",

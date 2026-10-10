@@ -369,12 +369,8 @@ def switch(core, plan_id, actor, reason):
 def resume(core, plan_id, actor, reason):
     if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
         raise ValueError('Reverse recovery requires actor and reason')
-    core._assert_paths()
-    lock = core.paths.workspace / 'write.lock'
-    if lock.resolve() != lock:
-        raise ValueError('Reverse recovery lock changed')
-    with lock.open('a+b') as stream:
-        fcntl.flock(stream, fcntl.LOCK_EX)
+    from relocation_lifecycle import recovery_lock
+    with recovery_lock(core):
         plan = core._read('relocations', plan_id)
         if plan.get('operation') != 'reverse-relocation-plan' or plan['from'] != core.paths.binding():
             raise ValueError('Reverse recovery source scope changed')
@@ -449,12 +445,8 @@ def rollback(core, plan_id, actor, reason):
     import delivery_lifecycle
     if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
         raise ValueError('Reverse rollback requires actor and reason')
-    core._assert_paths()
-    lock = core.paths.workspace / 'write.lock'
-    if lock.resolve() != lock:
-        raise ValueError('Reverse rollback lock changed')
-    with lock.open('a+b') as stream:
-        fcntl.flock(stream, fcntl.LOCK_EX)
+    from relocation_lifecycle import recovery_lock
+    with recovery_lock(core):
         plan = core._read('relocations', plan_id)
         if plan.get('operation') != 'reverse-relocation-plan' or plan['from'] != core.paths.binding():
             raise ValueError('Reverse rollback source scope changed')
