@@ -1,3 +1,4 @@
+import { maintenanceRequest } from './maintenanceRequest';
 import { useState } from 'react';
 import { parsePurgePlan, type PurgePlan } from './relocationPurgeState';
 import { RelocationPurgeReview } from './RelocationPurgeReview';
@@ -17,9 +18,7 @@ export function RelocationMaintenanceHistory() {
     setSelected(''); setReviewed(false); setConfirmation('');
     setBusy(true); setRows([]); setErrors([]); setMessage('Checking retained preparation records…');
     try {
-      const response = await fetch('/api/relocation-maintenance', { cache: 'no-store' });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Maintenance observations failed');
+      const value = await maintenanceRequest('/api/relocation-maintenance') as {cleanup_executed: boolean; operations: Observation[]; unverified_operations: {id:string; reason:string}[]};
       if (value.cleanup_executed !== false || !Array.isArray(value.operations) || !Array.isArray(value.unverified_operations)) throw new Error('Invalid maintenance observations');
       const ids = new Set<string>();
       for (const row of value.operations) {
@@ -46,9 +45,7 @@ export function RelocationMaintenanceHistory() {
     const operationId = current.id;
     setBusy(true); setRows([]); setSelected(''); setReviewed(false); setConfirmation('');
     try {
-      const response = await fetch('/api/relocation-maintenance/' + action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: operationId, actor: actor.trim(), reason: reason.trim(), confirm: action.toUpperCase() }) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Copy maintenance failed');
+      await maintenanceRequest('/api/relocation-maintenance/' + action, { id: operationId, actor: actor.trim(), reason: reason.trim(), confirm: action.toUpperCase() });
       setMessage('Operation recorded. Reload saved observations before continuing.');
     } catch (failure) { setMessage(String(failure) + '. The request may have completed. Reload saved observations before retrying.'); }
     finally { setBusy(false); }

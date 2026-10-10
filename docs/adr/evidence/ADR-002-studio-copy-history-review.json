@@ -1,0 +1,30 @@
+{
+  "scope": "Full static review of copy maintenance, saved disposition history, purge review and copy-plan helper; bounded maintenance transport shared across their HTTP requests",
+  "files": {
+    "plugins/app-store-creative/studio/src/RelocationMaintenanceHistory.tsx": "dca10a8717359a1f034ca312bfd839c14381c9415feeee96d7e5532651988b51",
+    "plugins/app-store-creative/studio/src/relocationMaintenanceState.ts": "3a733bdfbf8fe6d7653278f02c83c2a934bf9afd6067e6328492e563705adfac",
+    "plugins/app-store-creative/studio/src/RelocationMaintenance.tsx": "2fa8f02a277b99fd494a06190c82af2bd5591a36c3c13c4ba80fd414eb804b86",
+    "plugins/app-store-creative/studio/src/RelocationPurgeReview.tsx": "b45fb64f44c19d9b1509e83b0979cdc39b31c193d04915d80dada6164753dafe"
+  },
+  "findings": [
+    "Unbounded history fetches now reuse maintenanceRequest, whose stalled-request regression was proven RED/GREEN in prior fix."
+  ],
+  "notes": [
+    "Saved original operation identity remains authority; phase/status allowlists control resume/cancel/commit/restore.",
+    "Reload clears selection/review; mutations clear old rows before dispatch and require fresh saved observation afterward.",
+    "PURGING reuses bound saved purge plan; PURGED does not offer resume; permanent deletion remains separately reviewed.",
+    "Purge planning and deletion execution preserve separate review; timeout never creates authorization or automatic retry. No deletion executed."
+  ],
+  "verification": {
+    "tests": 97,
+    "files": 32,
+    "types": "PASS",
+    "build": "PASS",
+    "runtime": "Node25.8.2"
+  },
+  "remaining": [
+    "Actual browser matrix",
+    "Complete real product recovery acceptance",
+    "Final CI"
+  ]
+}

@@ -1,3 +1,4 @@
+import { maintenanceRequest } from './maintenanceRequest';
 import { useState } from 'react';
 import { readArtifactPolicy } from './artifactPolicy';
 import { maintenanceAllowed } from './maintenanceState';
@@ -21,9 +22,7 @@ export function RelocationMaintenance() {
     setReviewed(false); setConfirmation('');
     setBusy(true); setFiles([]); setId(''); setMessage('Checking retained copies…');
     try {
-      const response = await fetch('/api/relocation-maintenance/plan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ retention_days: Number(days) }) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Copy retention planning failed');
+      const value = await maintenanceRequest('/api/relocation-maintenance/plan', { retention_days: Number(days) });
       const saved = parseCopyPlan(value);
       setId(saved.id); setFiles(saved.files); setMessage('Plan saved. No copies were removed.');
     } catch (failure) { setMessage(String(failure)); }
@@ -34,9 +33,7 @@ export function RelocationMaintenance() {
     const planId = id;
     setBusy(true); setReviewed(false); setConfirmation(''); setId('');
     try {
-      const response = await fetch('/api/relocation-maintenance/prepare', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: planId, actor: actor.trim(), reason: reason.trim(), confirm: 'PREPARE' }) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Copy quarantine preparation failed');
+      const value = await maintenanceRequest('/api/relocation-maintenance/prepare', { id: planId, actor: actor.trim(), reason: reason.trim(), confirm: 'PREPARE' }) as {id?:string};
       if (typeof value.id !== 'string' || !/^[a-z0-9]+$/.test(value.id)) throw new Error('Invalid preparation identity');
       setMessage('Preparation saved: ' + value.id + '. Original copies remain until a separately reviewed commit. Check saved inventory before continuing.');
     } catch (failure) {

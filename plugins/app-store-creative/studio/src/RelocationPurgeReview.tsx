@@ -1,3 +1,4 @@
+import { maintenanceRequest } from './maintenanceRequest';
 import { useState } from 'react';
 import { readArtifactPolicy } from './artifactPolicy';
 import { purgeAllowed } from './maintenanceState';
@@ -21,9 +22,7 @@ export function RelocationPurgeReview({ operationId, savedPlan, onExecuted }: { 
   async function create() {
     setBusy(true); setPlan(null); setReviewed(false); setConfirmation('');
     try {
-      const response = await fetch('/api/relocation-maintenance/plan-purge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: operationId, quarantine_days: Number(days) }) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Purge planning failed');
+      const value = await maintenanceRequest('/api/relocation-maintenance/plan-purge', { id: operationId, quarantine_days: Number(days) });
       const saved = parsePurgePlan(value, operationId);
       setPlan(saved); setMessage('Plan saved. No files deleted.');
     } catch (failure) { setMessage(String(failure)); }
@@ -33,9 +32,7 @@ export function RelocationPurgeReview({ operationId, savedPlan, onExecuted }: { 
     if (!plan || !purgeAllowed(busy, false, reviewed, actor, reason, confirmation)) return;
     const id = plan.id; setBusy(true); setPlan(null); setReviewed(false); setConfirmation('');
     try {
-      const response = await fetch('/api/relocation-maintenance/purge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, actor: actor.trim(), reason: reason.trim(), confirm: 'PURGE' }) });
-      const value = await response.json();
-      if (!response.ok) throw new Error(value.error || 'Permanent deletion failed');
+      await maintenanceRequest('/api/relocation-maintenance/purge', { id, actor: actor.trim(), reason: reason.trim(), confirm: 'PURGE' });
       setMessage('Purge recorded. Reload saved observations.'); onExecuted();
     } catch (failure) { setMessage(String(failure) + '. Check saved observations before retrying; writes are not automatically retried.'); onExecuted(); }
     finally { setBusy(false); }
