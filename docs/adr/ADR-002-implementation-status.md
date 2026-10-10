@@ -110,3 +110,5 @@ Studio服务端完成全路由静态审查，修复省略If-Match仍覆盖配置
 打包程序、插件负载验证器和CI工作流完成完整静态审查，未发现新缺陷；0.3.0插件结构验证通过。[范围证据](evidence/ADR-002-packaging-review.json)。最新CI、技能/schema及剩余前端差异仍需关闭。
 
 六个技能入口完成完整静态审查，清除设计技能旧v2.1流程标签。[范围证据](evidence/ADR-002-skill-entrypoints-review.json)。引用合同、schema和实际安装执行另行验收，未以入口审查替代。
+
+逐命令复核修正Publisher证据导出示例：publication export使用布尔--confirm，不接受EXPORT参数；当前CLI帮助输出已核验。此前入口静态审查未发现此错误，审查证据已更新，详细合同审查仍未完成。

@@ -51,7 +51,7 @@ After registering an observation, use the returned observation ID to retain the 
 ```sh
 python3 <runtime-root>/scripts/app_store_creative.py publication retain-evidence --repo <repo> --observation-id <observation-id> --evidence <original-receipt> --actor <executor-id>
 python3 <runtime-root>/scripts/app_store_creative.py publication persist-evidence --repo <repo> --evidence-id <returned-evidence-id> --backend <configured-backend-name>
-python3 <runtime-root>/scripts/app_store_creative.py publication export --repo <repo> --id <publication-id> --confirm EXPORT
+python3 <runtime-root>/scripts/app_store_creative.py publication export --repo <repo> --id <publication-id> --confirm
 ```
 
 Keep receipt bytes and backend access paths private. Exported evidence locators contain immutable version identities, hashes and observation scope; they do not contain original response bodies. Git actions require existing user authorization. Obtain a trusted locator hash from the reviewed exact Git commit, then verify independent retrieval in a clean directory:
