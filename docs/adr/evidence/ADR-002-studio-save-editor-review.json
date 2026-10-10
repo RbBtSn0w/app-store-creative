@@ -1,0 +1,18 @@
+{
+  "scope": "App.tsx save lifecycle and editor availability review; not complete frontend review",
+  "source_sha256": "e0e24968558130eb279e24668f143a8833f7f99c07687081c8a542e86ce4b60c",
+  "change": "Lock creation fields, target/style selectors, card editor, capture imports, export buttons, drag/drop and rendering policy while saving",
+  "verification": {
+    "frontend_tests": 93,
+    "test_files": 31,
+    "result": "PASS",
+    "node": "25.8.2",
+    "final_typecheck": "PASS",
+    "final_build": "PASS"
+  },
+  "limitations": [
+    "93 tests passed before final rendering-policy disabled attribute; final typecheck/build covered it",
+    "No actual browser save-in-flight interaction verified yet",
+    "Local Node20 unavailable; CI Node20 remains separate"
+  ]
+}
