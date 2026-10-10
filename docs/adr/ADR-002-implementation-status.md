@@ -118,3 +118,7 @@ Studio服务端完成全路由静态审查，修复省略If-Match仍覆盖配置
 配置schema的四类目录、归档策略和保留/预算策略部分已对照运行时审查，相关17项测试通过（3.304秒）。[范围证据](evidence/ADR-002-storage-policy-schema-review.json)。其余schema部分未完成完整审查，形式封存的显式声明仍由运行时门禁执行。
 
 creative.config schema其余部分完成静态审查；修正连接背景跨卡范围及封面时间码用途两处描述，JSON解析通过。全部字段的渲染一致性和真实产品矩阵仍独立待验收，未把schema静态审查记为运行验收。
+
+生产专员、agent交接和迭代三个合同完成完整静态审查，未发现新缺陷；技能范围21个相对文件引用均存在（未验证锚点）。[范围证据](evidence/ADR-002-specialist-contract-review.json)。主生命周期合同仍仅部分审查，自动依赖失效和真实journey验收仍未关闭。
+
+主生命周期合同审查推进至第185行；修正配置分层标题尚未启用的矛盾描述，保留真实验收缺口。[范围证据](evidence/ADR-002-main-contract-review.json)。其余部分继续审查。

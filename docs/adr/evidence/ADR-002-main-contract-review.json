@@ -1,0 +1,24 @@
+{
+  "scope": "Partial main lifecycle contract static review through line185, plus specialist contracts reviewed separately; remaining sections not yet fully reviewed",
+  "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+  "sha256": "c77d1f4399b89adbf32202731c7e591fb2ac48ac2128eb95c17c43e1dde985ad",
+  "reviewed_ranges": [
+    [
+      1,
+      185
+    ]
+  ],
+  "findings": [
+    {
+      "resolution": "Removed contradictory not-yet-active configuration-layer heading; existing text correctly states CLI/Studio and relocation adoption."
+    }
+  ],
+  "remaining": [
+    "Main contract after line185",
+    "Product-level maintenance and relocation acceptance",
+    "Full real backend and ASC acceptance"
+  ],
+  "notes": [
+    "Current static review does not establish full filesystem race or real product safety; documented acceptance gaps retained."
+  ]
+}
