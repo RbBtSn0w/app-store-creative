@@ -1,0 +1,20 @@
+{
+  "scope": "Full static review of package construction, plugin payload checks and CI workflow; not final CI or installed real product acceptance",
+  "source_commit": "7037630",
+  "files": {
+    ".github/package_plugin.py": "b2cace4101c56c3789259f6736d78b75b2ac11a9d1ecf2dc1b142cff8a0b1ad8",
+    ".github/validate_plugin.py": "ef3addaff1e9fcccd2a196e1b338b532e21d1d4b201cb9d1b8e87ec76190ae2a",
+    ".github/workflows/ci.yml": "eb8e0a009feec3471edff332cce8bc85f80ecb9cf7a2ac8f5b52fd68dd61472f"
+  },
+  "findings": [],
+  "review_notes": [
+    "Package copies canonical plugin payload, excludes build dependencies and caches, extracts the archive before CLI probes, and removes inherited PYTHONPATH.",
+    "Independent policy and budget observations assert no project state creation and preserve UNKNOWN values before storage initialization.",
+    "Manifest and marketplace identity, version 0.3.0, canonical runtime owner dependencies and retired workflow absence are checked.",
+    "CI includes media tools, Python suite, Node20 frontend tests/types/build and isolated package smoke test; local Node25 results do not substitute CI."
+  ],
+  "verification": [
+    "validate_plugin.py passed at version 0.3.0",
+    "package_plugin.py passed for 7037630; isolated 59-test evidence recorded separately"
+  ]
+}

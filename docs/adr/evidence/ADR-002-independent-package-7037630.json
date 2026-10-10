@@ -1,0 +1,29 @@
+{
+  "source_commit": "70376309939a47b2f0427de4704adb1b24dbd6da",
+  "root": "/private/tmp/creative-7037630-installed-ogqnlm19",
+  "source_runtime_used": false,
+  "package_sha256": "c046d7df068cf29eab507294b798f27608a595625d1654a3fa2a732054b62cb5",
+  "returncode": 0,
+  "log_sha256": "7f6c428d79c00ff018c5bfce69c9a8d06a7b2c6748f9c68cf668fd94031999c3",
+  "modules": [
+    "test_validator_png_integrity",
+    "test_export_server_cleanup",
+    "test_v2_workflow",
+    "test_poster_validation",
+    "test_production_lifecycle",
+    "test_studio_release",
+    "test_studio_atomic_json",
+    "test_safe_staging",
+    "test_preview_production",
+    "test_relocation_recovery_lock",
+    "test_attempt_audit_contract",
+    "test_configuration_studio_save"
+  ],
+  "scope": "Current complete distribution smoke test and isolated runtime regression; not full two-product or real ASC acceptance",
+  "tests": {
+    "executed": 59,
+    "result": "PASS",
+    "seconds": 15.205
+  },
+  "log_path": "/tmp/creative-7037630-installed.log"
+}
