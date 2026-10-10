@@ -112,3 +112,7 @@ Studio服务端完成全路由静态审查，修复省略If-Match仍覆盖配置
 六个技能入口完成完整静态审查，清除设计技能旧v2.1流程标签。[范围证据](evidence/ADR-002-skill-entrypoints-review.json)。引用合同、schema和实际安装执行另行验收，未以入口审查替代。
 
 逐命令复核修正Publisher证据导出示例：publication export使用布尔--confirm，不接受EXPORT参数；当前CLI帮助输出已核验。此前入口静态审查未发现此错误，审查证据已更新，详细合同审查仍未完成。
+
+系统性参数检查：技能及引用文档中33条完整单行managed CLI示例均通过当前解析器；占位符替换后仅解析、不执行。可选括号及多行片段未纳入，不能据此宣布详细合同全部审查完成。[范围证据](evidence/ADR-002-documented-cli-parsing.json)。
+
+配置schema的四类目录、归档策略和保留/预算策略部分已对照运行时审查，相关17项测试通过（3.304秒）。[范围证据](evidence/ADR-002-storage-policy-schema-review.json)。其余schema部分未完成完整审查，形式封存的显式声明仍由运行时门禁执行。

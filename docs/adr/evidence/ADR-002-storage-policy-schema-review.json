@@ -1,0 +1,21 @@
+{
+  "scope": "Static review of storage, archivePolicy and artifactPolicy schema sections against runtime contracts; other schema sections are not yet fully reviewed",
+  "schema_sha256": "c0f78303d9be341cc9675680972c475330ff02eb3a1742200b163e8f2905286c",
+  "findings": [],
+  "review_notes": [
+    "Four root names match the runtime: workspaceRoot, objectRoot, releaseRoot and publicationRoot. Relative placement is project-root based; external placement requires absolute paths.",
+    "Archive mode enum, named external backend requirement and Git/LFS backend prohibition match archive_policy.resolve.",
+    "Budget and retention fields are nonnegative integers; formal delivery additionally requires explicit budget and archive policy in its original run snapshot.",
+    "Runtime exact Python integer checks remain authoritative for rejecting boolean or floating-point representations; JSON Schema alone does not prove record or lifecycle validity."
+  ],
+  "verification": {
+    "tests": [
+      "test_artifact_policy",
+      "test_archive_policy_configuration",
+      "test_storage_configuration_preview"
+    ],
+    "count": 17,
+    "seconds": 3.304,
+    "result": "PASS"
+  }
+}
