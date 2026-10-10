@@ -15,9 +15,9 @@ When the task uses Figma, use the official Figma plugin as the editable design s
 
 Read the [managed specialist contract](../app-store-creative/references/specialist-lifecycle.md) and apply it to new work. Use leased attempts and registered input/output artifacts; preserve partial failures and their reasons. A producer receipt or file does not grant approval, seal a delivery, or prove remote readiness. Standalone capture/encoding executors still require this explicit registration adapter.
 
-## Agent-Native Design Workflow (v2.1)
+## Configuration-Driven Design Workflow
 
-In v2.1, screenshot creative composition is declared directly in `creative.config.json` and previewed live in Localhost Studio (`localhost:3100`).
+Screenshot creative composition is declared directly in `creative.config.json` and previewed live in Localhost Studio (`localhost:3100`).
 
 ### 1. The 5-Slide Role Arc
 
