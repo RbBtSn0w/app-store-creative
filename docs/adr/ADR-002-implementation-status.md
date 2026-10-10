@@ -176,3 +176,5 @@ creative.config schema其余部分完成静态审查；修正连接背景跨卡�
 App完整319行编排静态审查完成，配置版本、脏状态、保存去重、生产绑定、候选身份及搬迁后旧标签页门禁未发现新增执行缺陷。[范围证据](evidence/ADR-002-studio-app-orchestration-review.json)。接口响应信任本机已校验服务端，浏览器保存/导出竞态及完整测试/敏感证据审查仍独立待验收；清理解析2项测试通过，未执行不存在的types.test.ts。
 
 前端覆盖清单已生成：46个运行源文件均有与当前SHA-256匹配的静态审查证据，另1个仅测试引用的目录夹具已单独标记。[清单](evidence/ADR-002-frontend-review-inventory.json)。不以哈希匹配代替实际浏览器、完整测试差异或真实产品验收；最新553acc6运行38026618093仍在执行。
+
+98个变更ADR文档/证据完成凭据模式与链接域名筛查，未发现私钥、Bearer/JWT或签名查询参数，链接仅GitHub及本机地址。[筛查证据](evidence/ADR-002-sensitive-evidence-screening.json)。该筛查不替代完整人工敏感信息审查；测试差异已建立逐文件待审清单。[清单](evidence/ADR-002-test-diff-review-inventory.json)。
