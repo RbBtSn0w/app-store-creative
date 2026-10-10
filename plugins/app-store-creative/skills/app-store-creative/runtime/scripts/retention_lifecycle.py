@@ -202,7 +202,7 @@ class RetentionOperations:
 
     def quarantine_cleanup(self, plan_id, actor, reason):
         from artifact_lifecycle import digest, identifier
-        if not actor or not reason:
+        if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Maintenance requires actor and reason')
         with self.transaction():
             plan = self._read('maintenance', plan_id)

@@ -14,6 +14,16 @@ class RetentionTests(unittest.TestCase):
             self.store.finish_attempt(attempt['id'], status, reason='Rejected example' if status != 'succeeded' else None)
         return run, data
 
+    def test_quarantine_requires_identified_actor_and_reason_before_mutation(self):
+        _, data = self.artifact()
+        plan = self.store.plan_cleanup(retention_days=0)
+        for actor, reason in [(' ', 'Cleanup'), ('owner', '\t'), (42, 'Cleanup'), ('owner', ['Cleanup'])]:
+            with self.subTest(actor=actor, reason=reason):
+                with self.assertRaisesRegex(ValueError, 'actor and reason'):
+                    self.store.quarantine_cleanup(plan['id'], actor=actor, reason=reason)
+                self.store.verify_artifact(data['id'])
+                self.assertEqual(len(list((self.store.paths.workspace / 'records/maintenance').glob('*.json'))), 1)
+
     def test_quarantine_and_restore_preserve_metadata(self):
         _, data = self.artifact()
         plan = self.store.plan_cleanup(retention_days=0)

@@ -281,9 +281,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/retention_lifecycle.py",
-      "sha256": "2a4b08f40f08aa9c1b77d4f8e230a0cac546eb3ce39d43a0219a73db1b06292c",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "c531d02bcdb9100b0ebdce9b69cfd391fde570667717de8bd60adabf18b5876c",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-retention-module-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py",
