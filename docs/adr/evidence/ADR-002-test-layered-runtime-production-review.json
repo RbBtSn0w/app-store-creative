@@ -1,0 +1,36 @@
+{
+  "scope": "Full current layered runtime, production and command dispatcher test review",
+  "files": [
+    {
+      "file": "tests/test_configuration_runtime.py",
+      "sha256": "7ec427bbb43f18180f83b4b78537367af10c1d9063b4c1eaae9c9ff1739f1875"
+    },
+    {
+      "file": "tests/test_configuration_production.py",
+      "sha256": "cfcce0c4f8f28088634c5bfc7ea21332a0f98e176da8d9110bac8866307c085b"
+    },
+    {
+      "file": "tests/test_configuration_cli.py",
+      "sha256": "151d63f7ad1daacb6433e2c7ca0a49d095eb4c700500b05b44aaeaf0d4dbc6f1"
+    }
+  ],
+  "assessment": [
+    "Runtime persists separate shared recipe and effective local storage provenance without rewriting either document",
+    "Stale documents, same-byte inode substitution, new local layer, removed Git protection and mutated cached snapshot refuse new writes",
+    "Existing current-format run keeps original storage binding after selecting another root; no legacy-format reader or backfill",
+    "Production, latest and actual Studio HTTP status/export share local root and revision; mid-render local changes refuse candidate registration",
+    "Imported local capture retains original artifact dependency",
+    "Command dispatcher uses local roots and rejects unprotected Git override before workspace creation"
+  ],
+  "verification": {
+    "tests": 14,
+    "seconds": 4.772,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_configuration_runtime test_configuration_production test_configuration_cli -q"
+  },
+  "limitations": [
+    "Screenshot renderer mocked; actual capture and browser acceptance separate",
+    "CLI module tests dispatcher directly rather than launching entrypoint subprocess",
+    "Disposable local fixtures rather than real product and cross-volume matrix"
+  ]
+}

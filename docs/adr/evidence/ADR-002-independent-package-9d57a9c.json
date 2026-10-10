@@ -1,0 +1,37 @@
+{
+  "source_commit": "9d57a9cd61d678f2e4ded7bb7a75e34eb637097b",
+  "source_runtime_used": false,
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "returncode": 0,
+  "log_sha256": "21fa818986539b9f7b1a7545e1006d10eeaefa1fb885db602b316028f3cb91e0",
+  "modules": [
+    "test_validator_png_integrity",
+    "test_export_server_cleanup",
+    "test_v2_workflow",
+    "test_poster_validation",
+    "test_production_lifecycle",
+    "test_studio_release",
+    "test_studio_atomic_json",
+    "test_safe_staging",
+    "test_preview_production",
+    "test_relocation_recovery_lock",
+    "test_attempt_audit_contract",
+    "test_configuration_studio_save",
+    "test_configuration_runtime",
+    "test_configuration_preparation",
+    "test_configuration_layer_changes",
+    "test_configuration_installation_recovery",
+    "test_configuration_local_installation",
+    "test_configuration_owning_document",
+    "test_retrieval_process_budget"
+  ],
+  "scope": "Independent extracted complete plugin runtime; only tests copied from source, runtime loading paths asserted inside extracted package",
+  "tests": 103,
+  "seconds": 28.097,
+  "result": "passed",
+  "limitations": [
+    "Selected regression scope rather than full suite",
+    "Copied tests include current reviewed changes; package runtime matches stated commit",
+    "Not actual adg installation, browser or real product acceptance"
+  ]
+}

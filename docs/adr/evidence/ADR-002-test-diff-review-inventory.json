@@ -306,19 +306,22 @@
       "file": "tests/test_configuration_cli.py",
       "change": "A",
       "sha256": "151d63f7ad1daacb6433e2c7ca0a49d095eb4c700500b05b44aaeaf0d4dbc6f1",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json"
     },
     {
       "file": "tests/test_configuration_installation_recovery.py",
       "change": "A",
       "sha256": "e1ca2b4d16ba53c363ba47cc16f47062e56d5acb466fbdb752a8a4ab3c5f71f8",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json"
     },
     {
       "file": "tests/test_configuration_layer_changes.py",
       "change": "A",
       "sha256": "915f51c211ba188c141d7cdc8fe4d62ad9b71131bc9741fd0899d013c4a04772",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json"
     },
     {
       "file": "tests/test_configuration_layers.py",
@@ -331,13 +334,15 @@
       "file": "tests/test_configuration_local_forward_execution.py",
       "change": "A",
       "sha256": "c029ffe76a7834652bdc994e8849a698bfe37563137cc25f47b8004b6924a7d9",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-local-switch-execution-review.json"
     },
     {
       "file": "tests/test_configuration_local_installation.py",
       "change": "A",
       "sha256": "ad5e1b3e461ac791a666a4922ff7801980907ef9a8c7057b589b6ffe299671a0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json"
     },
     {
       "file": "tests/test_configuration_local_relocation_plan.py",
@@ -349,31 +354,36 @@
       "file": "tests/test_configuration_local_reverse_execution.py",
       "change": "A",
       "sha256": "e9b6b1c9b00565b9063f636d3c22d3985e4ac4306168822aad866a752968e867",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-local-switch-execution-review.json"
     },
     {
       "file": "tests/test_configuration_owning_document.py",
       "change": "A",
       "sha256": "ae8ea1ffa11ad7c56f95f15985b4576a4a689a8435e198dba6575ee90089a491",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json"
     },
     {
       "file": "tests/test_configuration_preparation.py",
       "change": "A",
       "sha256": "45c817d5b1746b7d0a1b2533d16ab9c3616c51d4be6361c006d1ef436ca80b38",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json"
     },
     {
       "file": "tests/test_configuration_production.py",
       "change": "A",
       "sha256": "cfcce0c4f8f28088634c5bfc7ea21332a0f98e176da8d9110bac8866307c085b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json"
     },
     {
       "file": "tests/test_configuration_recovery_source.py",
       "change": "A",
       "sha256": "7305eb2604bbe7b39a8858c3c6091f604745b53367fd338ecd81c54c92d7e548",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json"
     },
     {
       "file": "tests/test_configuration_rollback_identity.py",
@@ -386,7 +396,8 @@
       "file": "tests/test_configuration_runtime.py",
       "change": "A",
       "sha256": "7ec427bbb43f18180f83b4b78537367af10c1d9063b4c1eaae9c9ff1739f1875",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json"
     },
     {
       "file": "tests/test_configuration_studio_inputs.py",

@@ -1,0 +1,10 @@
+{
+  "source_commit": "9d57a9cd61d678f2e4ded7bb7a75e34eb637097b",
+  "scope": "Complete plugin package and isolated smoke; uncommitted documentation does not modify payload",
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "command": "python3 .github/package_plugin.py --output /tmp/creative-9d57a9c-package.zip",
+  "result": "passed",
+  "limitations": [
+    "Not actual adg update or real product acceptance"
+  ]
+}

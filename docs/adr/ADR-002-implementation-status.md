@@ -6,10 +6,10 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；已推送提交 `1caf481f95f4a6e8c0b187fcb81b0c40cf86ea5d`；后续6份专项审查证据及本清单更新尚未提交。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `9d57a9cd61d678f2e4ded7bb7a75e34eb637097b`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 当前提交完整 CI：[run 38048749906](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38048749906)，本次查询 in_progress；上一提交afe98d42的run 38028580826已成功。
+- 最近推送提交CI：[run 38049241718](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38049241718)，本次查询 in_progress；上一提交1caf481的run 38048749906已成功。
 - 已保存的详细CI证据绑定3c200dc；最新远端成功状态与最终发行门禁分别核对，不能提前关闭最终发行门禁。
 
 ## 能力实现 checklist
@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
-| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异94/177，完整人工敏感信息审查未关闭 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异105/177，完整人工敏感信息审查未关闭 |
 | [ ] | 最新源码完整 CI | 最终源码的具体运行成功，并核对测试、类型、构建和分发结果 |
 | [ ] | 最新完整独立安装验收 | 使用最终分发包，证明不依赖源码运行时；此前包证据不能覆盖所有后续修复 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
@@ -51,10 +51,10 @@
 | --- | --- | --- |
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
-| 测试差异审查 | 94/177文件；剩余83个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 测试差异审查 | 105/177文件；剩余72个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
-| 独立分发包 | 622d224包烟雾检查及59项回归通过（15.078秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-622d224.json) |
+| 独立分发包 | 9d57a9c包烟雾检查及103项回归通过（28.097秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-9d57a9c.json) |
 | 最新专项测试 | 发布顺序7项通过；真实SIGKILL租约确定时钟边界单项通过 | [发布](evidence/ADR-002-test-delivery-publication-review.json)、[租约](evidence/ADR-002-test-remote-observations-review.json) |
 
 测试通过、模块审查和哈希匹配各自证明其明确范围，不能替代真实产品、浏览器、长期后端或ASC验收。既有测试修改与删除、全部前端测试差异均已审查；新增运行时测试仍需继续审查。旧测试退休不允许丢失租约所有权、源完整性、批准分离和不覆盖用户文件等现行约束。
@@ -76,7 +76,7 @@
 
 只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加94/177审查计数；不替代跨卷或真实进程崩溃验收。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加105/177审查计数；不替代跨卷或真实进程崩溃验收。
 
 录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
@@ -165,3 +165,13 @@ Studio发布HTTP/CLI测试完整审查，2项通过（2.485秒）：只读查询
 正向搬迁配置层测试完整审查，8项通过（0.762秒）：源文档绑定、层出现/同字节文件替换写前拒绝、准备保留配置、缺共享authority不创建计划。[证据](evidence/ADR-002-test-relocation-layer-review.json)。完成切换更新owning层另行验证。
 
 反向搬迁配置层测试完整审查，8项通过（8.118秒）：配置替换/本机层漂移阻断交换与恢复，恢复审阅层状态后可续执行，目录身份不被误改。[证据](evidence/ADR-002-test-reverse-layer-review.json)。完成本机层切换字节与返回后新运行为独立范围。
+
+本机配置层正向及反向切换执行测试完整审查，9项以ResourceWarning错误模式通过（42.769秒）。完成切换后原素材可校验、可创建新运行，共享配方保持原字节；实际CLI三次往返及注入中断恢复有断言。[证据](evidence/ADR-002-test-local-switch-execution-review.json)。仍不替代真实产品与跨卷验收。
+
+配置写入归属、本机层安装与中断恢复三个测试完整审查，10项以ResourceWarning错误模式通过（4.805秒）：精确文档/权限/字节与inode绑定、缺失证明拒绝及恢复替换前同步均有断言。[证据](evidence/ADR-002-test-configuration-installation-review.json)。单元夹具内部日志与注入中断不替代真实产品、跨卷或断电验收。
+
+分层运行时、截图生产及命令分派三个测试完整审查，14项以ResourceWarning错误模式通过（4.772秒）：配置来源/快照绑定、运行前拒绝陈旧配置、生产期间变更拒绝及Studio HTTP一致性有断言。[证据](evidence/ADR-002-test-layered-runtime-production-review.json)。渲染mock与命令分派直接调用不冒充真实浏览器、完整CLI或产品验收。
+
+配置准备、恢复来源与分层变更三个测试完整审查，26项以ResourceWarning错误模式通过（6.339秒）：暂存所有权/完整计划绑定、部分文件保留、无旧格式回退及权限/身份变更拒绝有断言。[证据](evidence/ADR-002-test-configuration-preparation-authority-review.json)。内部日志夹具与注入中断不替代真实产品或跨卷验收。
+
+9d57a9c完整分发包烟雾及独立解压运行时103项回归通过（28.097秒）；只复制测试，运行时加载路径断言排除源码目录。[证据](evidence/ADR-002-independent-package-9d57a9c.json)。不替代实际adg安装、真实浏览器或产品验收。
