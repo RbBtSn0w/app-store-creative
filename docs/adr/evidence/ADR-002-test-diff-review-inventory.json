@@ -324,7 +324,8 @@
       "file": "tests/test_configuration_layers.py",
       "change": "A",
       "sha256": "1232ecc2d6bf9bd5903659aaf4f92476f2ed59512ec2eb9d491f6f6293cb6d5f",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-layers-review.json"
     },
     {
       "file": "tests/test_configuration_local_forward_execution.py",
@@ -607,7 +608,8 @@
       "file": "tests/test_managed_preview.py",
       "change": "A",
       "sha256": "676ae090f0516214486ad78760994c7eeaa5a09853f848d43a7d935e2afa6525",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-managed-preview-review.json"
     },
     {
       "file": "tests/test_managed_recording.py",
@@ -725,7 +727,8 @@
       "file": "tests/test_publication_retrieval_proof.py",
       "change": "A",
       "sha256": "83e49188c11b27cb03164ba6c46036be9179bbd63b65dc18a9e4bc420e45471f",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-retrieval-review.json"
     },
     {
       "file": "tests/test_publication_target_consumption.py",
@@ -815,7 +818,8 @@
       "file": "tests/test_relocation_configuration_layers.py",
       "change": "A",
       "sha256": "edbeea5608bd99e5f36aa62e139edfb3537e0d43300e5282b9579384b2162fa0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-layer-review.json"
     },
     {
       "file": "tests/test_relocation_configuration_preparation.py",
@@ -950,7 +954,7 @@
     {
       "file": "tests/test_retrieval_process_budget.py",
       "change": "A",
-      "sha256": "1306e830491814f799a7942e49073262304a9927f43facf8fcd414debedcfaeb",
+      "sha256": "9b81ad109754ecb125343049ad2eb816587051b58f9a217b1ba9da696ab5988f",
       "review_status": "reviewed_current_diff",
       "evidence": "docs/adr/evidence/ADR-002-test-retrieval-deadline-review.json"
     },
@@ -964,7 +968,8 @@
       "file": "tests/test_reverse_configuration_layers.py",
       "change": "A",
       "sha256": "61d97062ef023029848fd03dd1cb69992e75172a9ef4008d2894b0420a87f203",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-layer-review.json"
     },
     {
       "file": "tests/test_reverse_configuration_rollback.py",
@@ -1040,7 +1045,8 @@
       "file": "tests/test_storage_configuration_preview.py",
       "change": "A",
       "sha256": "982f77f6293db7e089622cba3aa921aae589d1a85a96ad5d2267f73f9dde1251",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-preview-review.json"
     },
     {
       "file": "tests/test_storage_control_projection.py",

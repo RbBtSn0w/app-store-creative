@@ -1,21 +1,22 @@
 {
   "scope": "Full current retrieval process deadline tests",
   "file": "tests/test_retrieval_process_budget.py",
-  "sha256": "1306e830491814f799a7942e49073262304a9927f43facf8fcd414debedcfaeb",
+  "sha256": "9b81ad109754ecb125343049ad2eb816587051b58f9a217b1ba9da696ab5988f",
   "assessment": [
     "Real owned process group timeout stops descendant ignoring SIGTERM",
     "Exited leader cannot leave pipe-owning child running after timeout",
     "Keyboard cancellation stops owned process and propagates interruption",
-    "Multiple commands share total budget rather than reset deadline per command"
+    "Controlled monotonic clock proves decreasing shared command budget and refusal before launching after exhaustion"
   ],
   "verification": {
     "tests": 4,
-    "seconds": 1.65,
+    "seconds": 0.86,
     "result": "passed",
-    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_retrieval_process_budget -q"
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_retrieval_process_budget -q"
   },
   "limitations": [
-    "Heartbeat timing uses actual .4-second timeout; slow process startup can fail fixture readiness assertion",
+    "Readiness waits up to 10 seconds before exercising real process-group timeout cleanup",
+    "Shared deadline arithmetic uses a controlled clock and mocked process; cleanup tests use real processes",
     "No actual remote network or automatic retry policy acceptance"
   ]
 }

@@ -6,11 +6,11 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；已推送提交 `622d224967d86a7dc4debf1ae27470f5a33f7bec`。
+- 分支：`feat/unified-artifact-lifecycle-v2`；已推送提交 `1caf481f95f4a6e8c0b187fcb81b0c40cf86ea5d`；后续6份专项审查证据及本清单更新尚未提交。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 当前提交完整 CI：[run 38028111897](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38028111897)，本次查询 in_progress；上一提交e9ac77b的run 38027634068已成功。
-- CI证据绑定3c200dc；后续修改仍需按最终提交复核，不能以本次成功提前关闭最终发行门禁。
+- 当前提交完整 CI：[run 38048749906](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38048749906)，本次查询 in_progress；上一提交afe98d42的run 38028580826已成功。
+- 已保存的详细CI证据绑定3c200dc；最新远端成功状态与最终发行门禁分别核对，不能提前关闭最终发行门禁。
 
 ## 能力实现 checklist
 
@@ -32,7 +32,7 @@
 | --- | --- | --- |
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
-| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异88/177，完整人工敏感信息审查未关闭 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异94/177，完整人工敏感信息审查未关闭 |
 | [ ] | 最新源码完整 CI | 最终源码的具体运行成功，并核对测试、类型、构建和分发结果 |
 | [ ] | 最新完整独立安装验收 | 使用最终分发包，证明不依赖源码运行时；此前包证据不能覆盖所有后续修复 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
@@ -51,7 +51,7 @@
 | --- | --- | --- |
 | Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
-| 测试差异审查 | 88/177文件；剩余89个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 测试差异审查 | 94/177文件；剩余83个新增测试文件 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | 历史98个变更ADR文档/证据已筛查；不是完整人工审查，也不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-evidence-screening.json) |
 | 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
 | 独立分发包 | 622d224包烟雾检查及59项回归通过（15.078秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-622d224.json) |
@@ -76,7 +76,7 @@
 
 只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加88/177审查计数；不替代跨卷或真实进程崩溃验收。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加94/177审查计数；不替代跨卷或真实进程崩溃验收。
 
 录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
@@ -122,7 +122,7 @@ Git独立取回测试完整审查，2项通过（0.532秒）：移除工作树�
 
 库存观察失败与预算测试完整审查，修复HTTP错误响应未关闭导致的资源警告；10项以ResourceWarning错误模式通过（1.406秒）。未知容量不冒充零，观察不完整阻断维护，损坏归档预算UNKNOWN。[证据](evidence/ADR-002-test-inventory-budget-review.json)。
 
-取回进程期限测试完整审查，4项真实子进程验证通过（1.650秒）：忽略终止的子进程、退出leader留下的pipe子进程和取消均收敛，同组命令共享总预算。[证据](evidence/ADR-002-test-retrieval-deadline-review.json)。短启动期限仍有慢调度夹具风险，未当作远端网络验收。
+取回进程期限测试完整审查，4项真实子进程验证通过（1.650秒）：忽略终止的子进程、退出leader留下的pipe子进程和取消均收敛，同组命令共享总预算。[证据](evidence/ADR-002-test-retrieval-deadline-review.json)。后续修复将子进程就绪等待与清理超时分离，并用受控时钟验证总预算；4项以ResourceWarning错误模式通过（0.860秒）。未当作远端网络验收。
 
 生命周期记录schema测试完整审查，8项通过（0.137秒）：版本/对象/身份及符号链接边界严格拒绝，全部业务类别不回填无效记录。[证据](evidence/ADR-002-test-record-schema-review.json)。不代表所有业务字段语义已验收。
 
@@ -153,3 +153,15 @@ PNG完整性回归完整审查，2项通过（0.003秒）：截断/像素块损�
 发布目标语义缺口补齐：有效提交且可正常读取的非法平台/app/version记录，仍由目标语义门禁拒绝批准和交接，原批准字节不变；4项通过（2.460秒）。未修改运行行为。
 
 Studio发布HTTP/CLI测试完整审查，2项通过（2.485秒）：只读查询记录不变，UPLOAD批准和EXPORT交接保持独立，未声称实际上传/远端验证。[证据](evidence/ADR-002-test-studio-publication-review.json)。重启与实际浏览器为独立范围。
+
+发布取回证明测试完整审查，7项通过（2.916秒）：实际clone身份绑定、clone失败无计划、有效提交下非法证明拒绝及归档模式不能重声明。[证据](evidence/ADR-002-test-publication-retrieval-review.json)。
+
+托管Preview测试完整审查，7项通过（0.727秒）：输入目录失败终态、部分输出保留、便携证据与来源链、不合格输入执行前拒绝、复用输入媒体身份保留。[证据](evidence/ADR-002-test-managed-preview-review.json)。executor为mock，不代表实际编码或执行中输入变化验收。
+
+存储配置预览测试完整审查，8项通过（2.433秒）：默认/派生/本机来源、搬迁要求、归属冲突及CLI/重启HTTP一致，完整磁盘快照不变。[证据](evidence/ADR-002-test-storage-preview-review.json)。只读预览不替代实际保存与搬迁矩阵。
+
+配置分层核心测试完整审查，13项通过（0.510秒）：本机优先与配方身份分离、实际Git忽略且未跟踪、重复键/符号链接/解析中变更拒绝及命名后端访问保持本机。[证据](evidence/ADR-002-test-configuration-layers-review.json)。
+
+正向搬迁配置层测试完整审查，8项通过（0.762秒）：源文档绑定、层出现/同字节文件替换写前拒绝、准备保留配置、缺共享authority不创建计划。[证据](evidence/ADR-002-test-relocation-layer-review.json)。完成切换更新owning层另行验证。
+
+反向搬迁配置层测试完整审查，8项通过（8.118秒）：配置替换/本机层漂移阻断交换与恢复，恢复审阅层状态后可续执行，目录身份不被误改。[证据](evidence/ADR-002-test-reverse-layer-review.json)。完成本机层切换字节与返回后新运行为独立范围。
