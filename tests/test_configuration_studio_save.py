@@ -19,6 +19,16 @@ class LayeredStudioSaveTests(unittest.TestCase):
         path.write_text(json.dumps({'schema_version':1, 'project_id':'demo', 'storage':{'workspaceRoot':workspace}}))
         return path
 
+    def test_save_requires_reviewed_revision_before_any_write(self):
+        before = self.cfg.read_bytes()
+        with export_engine.LocalServerContext(self.root, self.cfg) as ctx:
+            with self.assertRaises(urllib.error.HTTPError) as failure:
+                self.request(ctx, '/api/config', {**self.config, 'connectedTrack': True})
+            self.assertEqual(failure.exception.code, 428)
+            failure.exception.close()
+        self.assertEqual(self.cfg.read_bytes(), before)
+        self.assertFalse((self.root / '.creative').exists())
+
     def test_local_edit_invalidates_shared_editor_revision(self):
         local = self.local()
         with export_engine.LocalServerContext(self.root, self.cfg) as ctx:

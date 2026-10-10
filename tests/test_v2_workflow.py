@@ -188,6 +188,7 @@ class TestV2Workflow(unittest.TestCase):
                 self.assertEqual(resp.status, 200)
                 data = json.loads(resp.read().decode())
                 self.assertIn("cards", data)
+                revision = resp.headers['ETag']
 
             # 2. Update config via POST /api/config
             data["cards"][0]["headline"] = "Updated Headline From Test"
@@ -195,7 +196,7 @@ class TestV2Workflow(unittest.TestCase):
             post_req = urllib.request.Request(
                 f"http://127.0.0.1:{ctx.port}/api/config",
                 data=post_bytes,
-                headers={"Content-Type": "application/json"},
+                headers={"Content-Type": "application/json", "If-Match": revision},
                 method="POST",
             )
             with urllib.request.urlopen(post_req) as resp:

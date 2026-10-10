@@ -615,7 +615,10 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     layers = load(self.repo_root, self.config_path) if self.config_path.exists() else None
                     current_revision = '"' + layers.revision + '"' if layers else '"missing"'
                     expected = self.headers.get('If-Match')
-                    if expected and expected != current_revision:
+                    if not expected:
+                        self._json({'ok': False, 'error': 'Reload the project before saving; a reviewed revision is required'}, 428)
+                        return
+                    if expected != current_revision:
                         self._json({"ok": False, "error": "Project or host-local configuration changed. Reload or keep your draft."}, 409)
                         return
                     from artifact_lifecycle import Lifecycle

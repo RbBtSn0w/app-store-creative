@@ -335,9 +335,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py",
-      "sha256": "618fdc7aa87d64b1247e181575b2c3e12490fdf32e2356858f2e7938767b6cab",
-      "review_status": "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED",
-      "evidence": null
+      "sha256": "23694fe841dc9525641c211cef73822f0f973eb34a1bdc73edb4017f4485514e",
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-studio-server-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/validator.py",
