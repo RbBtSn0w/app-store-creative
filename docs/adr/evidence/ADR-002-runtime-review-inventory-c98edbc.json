@@ -66,8 +66,8 @@
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/export_engine.py",
       "sha256": "d5fb65f5f01b44b70c2c29a509f5f9acbf10a75694857824a816916ca562277e",
-      "review_status": "CURRENT_PARTIAL_FUNCTION_REVIEW",
-      "evidence": "ADR-002-export-server-cleanup.json"
+      "review_status": "CURRENT_FULL_MODULE_REVIEW",
+      "evidence": "ADR-002-export-module-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_delivery_archive.py",
