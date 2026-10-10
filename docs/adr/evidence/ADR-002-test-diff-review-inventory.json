@@ -230,13 +230,15 @@
       "file": "tests/test_artifact_handoff.py",
       "change": "M",
       "sha256": "2fc0ab2efc01a082108c2d9a3bb21a0e07eb50a6aff5e574e2e6089c1ba60da8",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json"
     },
     {
       "file": "tests/test_artifact_lifecycle.py",
       "change": "M",
       "sha256": "967d6083c04a0aca22cd4527dd62d055360b327b91419a3750c7b2b4ae228ee0",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
     },
     {
       "file": "tests/test_artifact_policy.py",
@@ -416,7 +418,8 @@
       "file": "tests/test_delivery_lifecycle.py",
       "change": "M",
       "sha256": "3aa3108313c340f2231aebdb3bd1faf7bbd88dddfebc77578839625fa9306218",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-delivery-publication-review.json"
     },
     {
       "file": "tests/test_delivery_status.py",
@@ -524,13 +527,15 @@
       "file": "tests/test_incident_lifecycle.py",
       "change": "M",
       "sha256": "bd47140051ed5273d4d503978628a83882dba27f8be3835494ea44417f88f734",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
     },
     {
       "file": "tests/test_input_lifecycle.py",
       "change": "M",
       "sha256": "54a4719a619d86da0a0eada9c9f36daff5e5939085c1df5983fc29943467718b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json"
     },
     {
       "file": "tests/test_inventory_lifecycle.py",
@@ -674,7 +679,8 @@
       "file": "tests/test_production_lifecycle.py",
       "change": "M",
       "sha256": "b56cc854724b9cb27cd827a5162878ec7dafd04d4df4ffd6e928576b9e1e0964",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
     },
     {
       "file": "tests/test_project_identity.py",
@@ -956,7 +962,8 @@
       "file": "tests/test_runtime_distribution.py",
       "change": "M",
       "sha256": "f642ca32b767d5f536b9dc88c46d4ccf5896b06ae324ee339872e7b4646352d4",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json"
     },
     {
       "file": "tests/test_runtime_identity.py",

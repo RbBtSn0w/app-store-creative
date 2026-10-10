@@ -1,0 +1,25 @@
+{
+  "scope": "Complete three modification diffs against origin/main",
+  "files": {
+    "tests/test_artifact_lifecycle.py": {
+      "sha256": "967d6083c04a0aca22cd4527dd62d055360b327b91419a3750c7b2b4ae228ee0",
+      "assessment": "Additions cover corrupt history observation without rewriting, partial/failed/unfinished eligibility, recursive source failures, immutable candidate selection, stable pagination and literal custom LFS directories."
+    },
+    "tests/test_production_lifecycle.py": {
+      "sha256": "b56cc854724b9cb27cd827a5162878ec7dafd04d4df4ffd6e928576b9e1e0964",
+      "assessment": "Injected input/output directory permission failures retain exactly one terminal failed outcome and partial diagnostic artifact."
+    },
+    "tests/test_incident_lifecycle.py": {
+      "sha256": "bd47140051ed5273d4d503978628a83882dba27f8be3835494ea44417f88f734",
+      "assessment": "Candidate fixture now uses successful producer for selection; incident protection assertions remain. Failed trials remain default."
+    }
+  },
+  "findings": [
+    "No safety assertion weakening or new skips found",
+    "Source-closure regression explicitly corrupts retained input object and blocks output selection without rewriting candidate history"
+  ],
+  "limitations": [
+    "Permission injection is not actual OS permission acceptance",
+    "Immutable object corruption tests do not by themselves prove all recording dependency cases"
+  ]
+}
