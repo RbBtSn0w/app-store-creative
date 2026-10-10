@@ -817,13 +817,15 @@
       "file": "tests/test_relocation_backup_inventory.py",
       "change": "A",
       "sha256": "f614bcfe3eaa5d33e569d849b9f0ac4ae328163038aad7e5a0b0537ba78b5baa",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-staging-backup-review.json"
     },
     {
       "file": "tests/test_relocation_config_durability.py",
       "change": "A",
       "sha256": "283444143bd8dbf7f6c09c99629618c9e36e69eb5218a4b37d0f4085eae97187",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recovery-lock-durability-review.json"
     },
     {
       "file": "tests/test_relocation_configuration_layers.py",
@@ -848,13 +850,15 @@
       "file": "tests/test_relocation_preparation_process_crash.py",
       "change": "A",
       "sha256": "34c79b10706dccc1e30d1b6cfa86d617e2a8b74be1d2c49faac764c78f8b8db1",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-process-crash-review.json"
     },
     {
       "file": "tests/test_relocation_process_crash.py",
       "change": "A",
       "sha256": "981ab158ef00c74b3ae6b24c616949149501b77405c094cda471ee9724b651d3",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-process-crash-review.json"
     },
     {
       "file": "tests/test_relocation_purge_execution.py",
@@ -872,19 +876,22 @@
       "file": "tests/test_relocation_quarantine_commit.py",
       "change": "A",
       "sha256": "4094488c6a360cdc4fe1fc307fc3892d937e5b2785f1dec1595613d3cf2974e5",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json"
     },
     {
       "file": "tests/test_relocation_quarantine_inventory.py",
       "change": "A",
       "sha256": "e31a49a3c199635ce968b3e1b7d33369855f091005ad2609335f73372f1f7cd1",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json"
     },
     {
       "file": "tests/test_relocation_quarantine_preparation.py",
       "change": "A",
       "sha256": "974e3afae4cdc33e7fa236989340fc5199f8196d13b82ded9c89a269a5c941f2",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json"
     },
     {
       "file": "tests/test_relocation_recovery.py",
@@ -897,7 +904,8 @@
       "file": "tests/test_relocation_recovery_lock.py",
       "change": "A",
       "sha256": "aabca2225e1baca504c546eb5af21afb8de34f4d845566c17da2f9817711d1a7",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recovery-lock-durability-review.json"
     },
     {
       "file": "tests/test_relocation_resume.py",
@@ -910,25 +918,29 @@
       "file": "tests/test_relocation_retention_plan.py",
       "change": "A",
       "sha256": "fdf4dc0d60e7c112c4c37b965a0ddb6f4c88fa724cdbf66ac3887f71524f587b",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json"
     },
     {
       "file": "tests/test_relocation_retention_verification.py",
       "change": "A",
       "sha256": "eaaa156b1f7792f216c64dade7b4a17263694b6e1a05eaf6d7327948a592de6d",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json"
     },
     {
       "file": "tests/test_relocation_source_dispositions.py",
       "change": "A",
       "sha256": "50f900e53972ffaf7e753e66f7ad12ca5071c3d34b6d9a3933ce1a59cc6ecf27",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json"
     },
     {
       "file": "tests/test_relocation_staging_inventory.py",
       "change": "A",
       "sha256": "28584efe2e6ed9a9db0ee20c757d2da72ba877ebab3dcc52c604452b6a21ba90",
-      "review_status": "pending_full_diff_review"
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-staging-backup-review.json"
     },
     {
       "file": "tests/test_relocation_status.py",

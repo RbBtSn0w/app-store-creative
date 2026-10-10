@@ -1,0 +1,31 @@
+{
+  "scope": "Full current recovery lock and relocation configuration durability tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_recovery_lock.py",
+      "sha256": "aabca2225e1baca504c546eb5af21afb8de34f4d845566c17da2f9817711d1a7"
+    },
+    {
+      "file": "tests/test_relocation_config_durability.py",
+      "sha256": "283444143bd8dbf7f6c09c99629618c9e36e69eb5218a4b37d0f4085eae97187"
+    }
+  ],
+  "assessment": [
+    "All four forward/reverse recovery entrypoints refuse substituted lock before missing-plan access, preserving new owner bytes",
+    "Missing recovery lock not recreated; FIFO rejected without acquiring authority",
+    "Real fsync instrumentation observes configuration parent sync after replacement and before binding commit",
+    "Repeated directory-sync failure keeps target inactive and source fenced; successful recovery reenables artifact verification and new run",
+    "Rollback retries sync before releasing source fence and preserves original configuration bytes"
+  ],
+  "verification": {
+    "tests": 6,
+    "seconds": 2.757,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_recovery_lock test_relocation_config_durability -q"
+  },
+  "limitations": [
+    "flock replacement and sync failures injected; no real competing process lock contention",
+    "Single-filesystem disposable fixtures; no actual power loss or cross-volume proof",
+    "Real product and browser maintenance acceptance separate"
+  ]
+}

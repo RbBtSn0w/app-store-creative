@@ -1,0 +1,35 @@
+{
+  "scope": "Full current relocation retention planning, revalidation and source disposition tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_retention_plan.py",
+      "sha256": "fdf4dc0d60e7c112c4c37b965a0ddb6f4c88fa724cdbf66ac3887f71524f587b"
+    },
+    {
+      "file": "tests/test_relocation_retention_verification.py",
+      "sha256": "eaaa156b1f7792f216c64dade7b4a17263694b6e1a05eaf6d7327948a592de6d"
+    },
+    {
+      "file": "tests/test_relocation_source_dispositions.py",
+      "sha256": "50f900e53972ffaf7e753e66f7ad12ca5071c3d34b6d9a3933ce1a59cc6ecf27"
+    }
+  ],
+  "assessment": [
+    "Only expired registered objects with verified independent copies eligible; configured sources, evidence, missing/corrupt copies, hardlinks and pending migrations protected",
+    "Changed source/recovery inode, bytes, configuration references, new runs or root aliases invalidate plan",
+    "Quarantine and restore have verified inventory disposition; foreign notes, corrupt retained media and edited receipt remain visible",
+    "Interrupted quarantine receipt exposes COMMIT_STARTED and allows completion; already quarantined sources excluded from second cleanup",
+    "Actual CLI and Studio HTTP inventory observations agree; reverse backup quarantine and restore verified"
+  ],
+  "verification": {
+    "tests": 30,
+    "seconds": 26.702,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_retention_plan test_relocation_retention_verification test_relocation_source_dispositions -q"
+  },
+  "limitations": [
+    "No permanent purge performed; planning and quarantine do not imply purge approval",
+    "Read-only retention verification compares path list rather than all bytes; broader no-write proof separate",
+    "Disposable single-filesystem fixtures and injected receipt interruption; real product, browser and cross-volume acceptance remain open"
+  ]
+}
