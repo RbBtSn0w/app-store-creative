@@ -19,7 +19,7 @@ Create a new run when the recipe or source snapshot changes. Retry failed produc
 | Copy, background, framing, or other non-product design | Only affected Figma frames, then their exports and validation | Raw captures and preview takes |
 | One screenshot's product state, locale, appearance, seed data, or geometry | That checkpoint's deterministic journey, then every Figma frame using its hash | Unaffected checkpoints and frames |
 | App build, navigation, login, permission, or fixture change | Every dependent journey; inspect the source map rather than guessing the scope | Independent scenes with proven independence |
-| Preview story, interaction, pacing, or locale | Only affected real-UI segments, then encode, probe, acceptance snapshot, and validation | Unaffected source takes |
+| Preview story, interaction, pacing, or locale | Only affected real-UI segments, then encode, probe, full preview playback and selected-poster review, and validation | Unaffected source takes |
 | Device target, App Store requirement, or recipe policy | All artifacts selected by that requirement, then full candidate validation | Nothing merely because the visual layout is unchanged |
 
 For a broken deterministic journey, reproduce the individual checkpoint first.
