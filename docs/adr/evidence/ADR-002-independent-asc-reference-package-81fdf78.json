@@ -1,0 +1,11 @@
+{
+  "scope": "Independent unpacked package ASC adapter regression; not ADG install or ASC media acceptance",
+  "source_commit": "81fdf780ef5e58873ae719ec39496e8201be8afb",
+  "package_sha256": "491a8d6f2fa07a6bad5e5dd394515f939722a7f569cde86c9f81fc330d60c033",
+  "matched_payload_files": 245,
+  "tests": 11,
+  "returncode": 0,
+  "remote_writes_performed": false,
+  "isolation": "Tests copied into independent tree; CLI plugin alias resolves only to unpacked payload; imports explicitly checked inside independent tree.",
+  "initial_run_limitation": "Initial run imported runtime from unpacked payload but source-located CLI tests invoked checkout CLI; superseded by isolated copied-test rerun."
+}

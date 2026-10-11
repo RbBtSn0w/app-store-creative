@@ -256,9 +256,9 @@
     {
       "file": "tests/test_asc_observation_adapter.py",
       "change": "A",
-      "sha256": "f6d15c00db240b5dbecfb8e978a65cbf23a801f56bb4a2bdb91e6e5480382a64",
+      "sha256": "fba5d237b305e380aabbbb263d072a6a7e6e23c204056a3045c6b4b3de2bc80b",
       "review_status": "reviewed_current_diff",
-      "evidence": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json"
+      "evidence": "docs/adr/evidence/ADR-002-asc-adapter-reference-normalization-review.json"
     },
     {
       "file": "tests/test_asc_observation_cli.py",

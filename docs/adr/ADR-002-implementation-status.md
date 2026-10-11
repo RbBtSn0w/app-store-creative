@@ -6,7 +6,7 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `6fe9b30be3be174c0e6edf69816f0ee634ee9e11`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `81fdf780ef5e58873ae719ec39496e8201be8afb`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
 - fd86067远端完整CI已成功：[run 38098578994](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994)，Python运行1045项（33项跳过）、Studio98项通过，类型检查、构建与完整分发检查通过。[证据](evidence/ADR-002-ci-fd86067.json)。后续提交与最终发行仍需重新核对。
@@ -33,7 +33,7 @@
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
 | [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异179/179，完整人工敏感信息审查未关闭；209份当前变更证据内容已审查并绑定哈希，其他范围敏感审查仍待核对 |
-| [x] | 当前运行源码完整 CI | 6fe9b30 的[run 38151690549](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38151690549)成功；Python 1050项（34项跳过）、Studio 98项、类型检查、构建与分发通过；后续源码变更和最终发行仍需重新绑定 |
+| [ ] | 当前运行源码完整 CI | 81fdf78 的 run 38152928618 当前运行中；上一源码 6fe9b30 的[run 38151690549](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38151690549)成功；Python 1050项（34项跳过）、Studio 98项、类型检查、构建与分发通过；后续源码变更和最终发行仍需重新绑定 |
 | [ ] | 最新完整独立安装验收 | b911bd2完整包检查通过；独立包已验证Levelory完整候选，实际ADG安装仍未完成 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
 | [ ] | Levelory 全链路 | 新候选 b4a4a8b0c1364591a39e4b000f541bc4 的双语10张截图、真实操作20秒视频和封面验证PASS；播放节奏验收、精确批准、封存、提交绑定、干净取回未完成 |
@@ -304,3 +304,5 @@ fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github
 真实Fubiao搬迁后Git边界补验：归档根及发布记录根的.relocation-owner.json本地标记未被建议规则保护，实际Git检查RED。当前规则只增加两个根下的精确文件忽略项，不忽略正式记录和媒体；45项相关回归及1项正式媒体跟踪复验通过，完整包通过。独立Fubiao分支应用建议后实际待提交列表不再包含标记，无产品提交或上传。本修复晚于0e29a77完整CI，提交后需核对新CI。[证据](evidence/ADR-002-relocation-owner-git-policy-review.json)。
 
 6fe9b30完整CI成功，完整日志已取回。当前独立包245份载荷与源码一致，45项相关回归通过；包内CLI为真实Fubiao生成精确所有权标记规则。CI、打包脚本及Git取回、维护、运营说明已完成明确范围的人工隐私审查；维护和运营文档保留全部命令块，把历史试验状态集中到本清单，不关闭其余完整审查或真实交付门禁。[证据](evidence/ADR-002-independent-git-policy-and-packaging-review-6fe9b30.json)。
+
+ASC适配器引用校验统一：混合大小写HTTP/HTTPS/FILE引用在入口拒绝，先失败后修复，24项专项通过。[证据](evidence/ADR-002-asc-adapter-reference-normalization-review.json)。81fdf78完整打包与独立解压CLI/适配器11项验证通过；首次测试CLI路径不完全隔离，已复制测试并指向独立包后重跑通过。[证据](evidence/ADR-002-independent-asc-reference-package-81fdf78.json)。不替代ADG安装或ASC媒体验收。

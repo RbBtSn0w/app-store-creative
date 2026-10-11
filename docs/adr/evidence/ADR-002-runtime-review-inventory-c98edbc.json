@@ -29,9 +29,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py",
-      "sha256": "08e9db0993efc0dd7e22fa14d40bc7c6f2b56e9d0fbd924c377540a09b8971ae",
+      "sha256": "2a44ed58ef16c0a7087de09c7b438e781f394b831241549c86160cc7734ac783",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
-      "evidence": "ADR-002-publication-review-c98edbc.json"
+      "evidence": "ADR-002-asc-adapter-reference-normalization-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/chrome_renderer.py",
