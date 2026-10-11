@@ -1,0 +1,42 @@
+{
+  "scope": "Full content review of seven browser/product/distribution evidence summaries",
+  "reviewed_files": [
+    {
+      "path": "ADR-002-browser-custom-root-save-e12bde5.json",
+      "sha256": "27667c721ce301ee2f6e20a49979cdfc8ee174729b7900b8ffe7fcd106a228bc"
+    },
+    {
+      "path": "ADR-002-browser-save-recovery-e12bde5.json",
+      "sha256": "130698125ae73c188c3d1dca639dce0ed9b453228c86503865302c3f9499befe"
+    },
+    {
+      "path": "ADR-002-browser-active-root-refusal-e12bde5.json",
+      "sha256": "6540a8927bb01408b8de0c0c5fd08c6fa413bbf8ecec484bcec4c40e734369bb"
+    },
+    {
+      "path": "ADR-002-browser-directory-preview.json",
+      "sha256": "d54c4c2e1b1d311f49cac09c2aaede5de1beeb8ba84e27f943a0d2ce38a096ee"
+    },
+    {
+      "path": "ADR-002-levelory-fresh-screenshot-run-e12bde5.json",
+      "sha256": "112edb1cf9ddc12e496e81a1a4464391a2c5e2fb99094e55557116e1313d9b22"
+    },
+    {
+      "path": "ADR-002-levelory-budget-bound-run-e12bde5.json",
+      "sha256": "e614aefda98dba63486822b2446f7c690f5fe5ca19de28100083aaf94f113ea8"
+    },
+    {
+      "path": "ADR-002-independent-package-cc4b069.json",
+      "sha256": "480a1f5702ba3bf352e1d8cf65fbc7ddcf719e87e2d3af63456d5633471591fb"
+    }
+  ],
+  "findings": [
+    "Historical directory-preview paths refer solely to named disposable synthetic fixtures and loopback listener, not host user directories or credentials",
+    "No credentials, signed remote URLs, private capture contents or personal metadata observed",
+    "Corrected historical screenshot scope: explicit archive policy existed but effective media budget was absent; failed declaration is preserved, not backfilled"
+  ],
+  "limitations": [
+    "Seven summaries only; repository-wide manual sensitive evidence review remains open",
+    "Private originals, complete images and videos not included in this review"
+  ]
+}

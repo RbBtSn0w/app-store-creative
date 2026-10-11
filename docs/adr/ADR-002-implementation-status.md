@@ -6,10 +6,10 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `275a5d18a6cfa6f24e42ac2763f18aaa5f0e6c92`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `3097992dcebf073dc9ce219e8eb393d810b83e46`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 最近核对的275a5d1远端CI已成功；最终发行提交仍需重新核对。
+- 275a5d1远端CI已成功；3097992的[run 38098238603](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098238603)当前执行单元测试。最终发行提交仍需重新核对。
 - 已保存完整日志的CI证据绑定cc4b069：[run 38051343029](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38051343029)，Python运行1045项（33项跳过），Studio98项通过，类型检查、构建和分发通过。
 
 ## 能力实现 checklist
@@ -264,3 +264,11 @@ Levelory新隔离工作区重新导入10张真实原始截图，在显式临时L
 中文素材只读诊断：当前String Catalog的`Search Clips`与`filter.action.copyResult`已有简体中文翻译；`Agent Relay`及`mainWindow.sidebar.agentRelay`条目不存在，侧栏源码使用直接英文Label。因此不能统一归因于翻译缺失；需核对捕获构建与语言生效，并分别处理缺失条目。未修改Levelory用户已有工作。
 
 中文英文残留进一步定位：搜索框英文String直接传入AppKit `placeholderString`，主窗口`FilterOutputActionPresentation.title`直接返回英文；捕获Dev构建的简体中文编译资源经原生plutil查询包含“搜索剪贴内容”。这两处存在绕过本地化调用的源码路径。[诊断](evidence/ADR-002-levelory-localization-diagnosis.json)。需修正产品调用后重新捕获，不以素材后期修图代替；本轮仅只读诊断，未改产品源代码。
+
+Levelory真实输入临时工作区执行零天保留清理计划，完整候选的44个依赖/32个独立对象均受保护、没有进入可清理范围。3个符合清理条件的对象实际隔离后立即恢复，返回完整候选验证PASS。[证据](evidence/ADR-002-levelory-cleanup-reference-protection-3097992.json)。未执行永久删除；不关闭跨卷、故障注入、浏览器维护或持久归档验收。
+
+七份浏览器、真实产品及分发包证据摘要完成全文内容审查并绑定哈希；历史目录路径仅为一次性合成夹具与loopback监听。修正旧截图记录scope与有效预算缺失的矛盾，不回填旧记录。[审查](evidence/ADR-002-evidence-content-review-browser-product.json)。仓库级人工敏感审查仍未关闭。
+
+八份录屏、远端、存储与回归摘要完成敏感内容全文审查并绑定哈希，未见实际ASC签名URL、授权秘密或私人正文。[审查](evidence/ADR-002-evidence-content-review-recording-storage.json)。早期cda553c/24634da有独立挂载APFS卷夹具证据；不替代当前真实素材跨卷验收，仓库级人工审查仍未完成。
+
+当前Levelory完整候选已完成独立挂载APFS文件系统的四根正向搬迁与反向返回，两侧候选验证PASS，返回历史PASS，原根绑定恢复、卷已卸载且不再挂载。[证据](evidence/ADR-002-levelory-real-crossfs-3097992.json)。此项关闭Levelory实际跨文件系统正反搬迁这一子项；两个产品完整矩阵、故障注入、浏览器维护、持久归档及ASC仍待验收。
