@@ -39,9 +39,9 @@
 
 当前身份/快照包独立复验73项通过（128.482秒，`/tmp/creative-installed-run-identity-regression-proof.json`）；236个载荷文件一致，包SHA-256 `f5b8c5de0ce457ee18b054dc379c27c7ba2bf520613fb18812745954dd159f9d`。含统一项目身份及运行快照合同、证据/恢复矩阵；当前源树全量仍等待终态。录制前置最新只读预检退出0、窗口列表为空：CGPreflight屏幕权限已通过，未请求新权限、未启动或录制应用；`/tmp/creative-native-permission-latest-proof.json`。旧权限缺失证据已过时，真实捕获现需可用Levelory Dev窗口及确定性场景，不能把空窗口列表当录制成功。
 
-## 当前任务 Checklist
+## 历史任务 Checklist
 
-状态以当前证据为准。已勾选只代表该条明确范围；六组完整能力均尚未整体关闭，不据测试数量计算完成百分比。
+以下为历史审计时点的清单，不维护当前进度；当前状态统一读取[实施状态](ADR-002-implementation-status.md)。已勾选只代表当时记录的明确范围，不据测试数量计算完成百分比。
 
 ### 已完成并有对应验证
 

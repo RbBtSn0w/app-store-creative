@@ -1,0 +1,13 @@
+{
+  "source_commit": "82f5c827bdd17b894e3a92399bc0dc33a68a89f1",
+  "scope": "Complete package construction, independent extraction and installed managed CLI smoke probes performed by package_plugin.py",
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "package_bytes": 785798,
+  "result": "PASS",
+  "exit_code": 0,
+  "limitations": [
+    "Working tree contained only delivery closure documentation edit outside plugin payload",
+    "No actual ADG global installation or real product workflow acceptance",
+    "No claim of independent 120-test regression for this package"
+  ]
+}

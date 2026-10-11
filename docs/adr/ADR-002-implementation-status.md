@@ -278,3 +278,5 @@ Levelory真实输入临时工作区执行零天保留清理计划，完整候选
 fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994)，Python运行1045项、跳过33项（483.169秒），Studio98项/33文件通过，类型检查、构建及完整分发检查通过。[证据](evidence/ADR-002-ci-fd86067.json)。后续提交及最终发行门禁仍需核对；不替代真实产品批准、持久取回、实际ASC或安装后验收。
 
 当前变更ADR证据内容审查已汇总：209份文件当前哈希一致，历史权威声明和失效相对链接已修正。[审查报告](evidence/ADR-002-evidence-content-review-consolidated.json)。仅覆盖证据内容，不关闭其他文档、技能、源码及测试的仓库级敏感审查，也不代替真实产品验收。
+
+82f5c82完整包独立解压入口检查通过；与此前cc4b069独立120项回归包的245份文件载荷全部相同，无新增、删除或内容变化。[打包](evidence/ADR-002-package-smoke-82f5c82.json)、[载荷比较](evidence/ADR-002-package-payload-comparison-82f5c82.json)。本轮未重复执行120项测试；实际ADG安装和真实产品复验仍独立验收。
