@@ -44,7 +44,7 @@ python3 <runtime-root>/scripts/app_store_creative.py preview produce --repo <rep
 3. Keep cursor, taps, notifications, permission prompts, and sensitive data out unless the storyboard requires them.
 4. Use `produce_app_preview.py` with segment `start` and `duration` to select intervals from real takes. It resolves paths relative to the contract and emits a receipt and contact sheet. Edit with `ffmpeg` or the repository-declared tool. Preserve action continuity and truthful feature behavior.
 5. Encode to the plan's dimensions, orientation, frame rate, duration, codec, audio, and color constraints.
-6. Export the final preview plus an acceptance snapshot containing representative frames and timing notes.
+6. Export the final preview plus an acceptance snapshot containing representative frames and timing notes. Review complete playback and the selected poster; representative frames alone do not establish continuity or pacing.
 7. Record source takes, commands, hashes, media probe output, and acceptance-snapshot path in a registered evidence artifact; terminate the attempt.
 
 ```sh
