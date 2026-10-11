@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "source_commit": "d3a6d25a5d3e212f5210a618da701d7411e54a3a",
+  "native_signal_regression": {
+    "red": "FAIL: start signal absent from stderr",
+    "green": "PASS: start arrives while recorder running; final stdout JSON parses",
+    "related_tests": 15,
+    "opt_in": true
+  },
+  "ci": {
+    "run_id": 38136152561,
+    "status": "SUCCESS",
+    "python_tests": 1048,
+    "python_skipped": 34,
+    "studio_tests": 98,
+    "package": "PASS"
+  },
+  "candidate": {
+    "id": "b4a4a8b0c1364591a39e4b000f541bc4",
+    "run_id": "e3dc04e3585c403cbfc7676128a86d3c",
+    "validation": "PASS",
+    "history_status": "PASS",
+    "history_record_count": 538,
+    "assets": 12,
+    "human_approved": false,
+    "sealed": false,
+    "uploaded": false
+  },
+  "video": {
+    "duration_seconds": 20,
+    "full_decode": "PASS",
+    "playback_review": "NOT_COMPLETED: native player UI connection timeout"
+  },
+  "private_log_sha256": {
+    "creative-native-signal-red.log": "56fe3d36fa93e77818525d4b5c15163aa27e84d8fb246d675bfb2fe2f243d922",
+    "creative-native-signal-green.log": "0055f933f5ae8872f72ba0c6d61e622a19e084e7c69edd432f5e61601da050d5",
+    "creative-native-signal-regression.log": "c43f38b5ee5108c84d7b5f5bdbaec4bed8bcb5c42505f7a9906113ab71c49d30",
+    "creative-ci-d3a6d25.log": "02cb9c9960e831ee979c2d1396bd000e75ada96920d6e5f79c12707846bda007"
+  },
+  "reviewed_files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.swift": "da90b0cef8a99609770f1d79159ed76a9619121a79b9d389b8091863d31b8156",
+    "tests/test_native_recording_signals.py": "ed2854aa852ab2bbbebd197915574436926712a158179d0b96e08d536d2d7cf1"
+  },
+  "review_scope": "Full current native driver and opt-in regression read; not complete repository sensitive review."
+}
