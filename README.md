@@ -8,11 +8,11 @@ The unified redesign is under development on `feat/unified-artifact-lifecycle-v2
 
 The complete installed payload lives at `<plugin-root>/skills/app-store-creative/runtime`, including scripts, schemas, templates, and the bundled Studio. Specialist installs require the main skill so the runtime remains available. Source-tree links are development conveniences; consumers use the installed payload.
 
-Use a current Python interpreter, a supported Chrome-family browser for screenshot rendering, and FFmpeg/ffprobe for video production and validation. The shell launcher prefers Homebrew Python on macOS; `APP_STORE_CREATIVE_PYTHON` selects an explicit interpreter. Figma is an optional design executor. ASC is required for remote operations.
+Use Python 3.11 or newer, a supported Chrome-family browser for screenshot rendering, and FFmpeg/ffprobe for video production and validation. The shell launcher prefers Homebrew Python on macOS; `APP_STORE_CREATIVE_PYTHON` selects an explicit interpreter. Figma is an optional design executor. ASC is required for remote operations.
 
 ## Consuming project
 
-Copy `runtime/assets/templates/creative.config.json` into the product repository and set its stable project identity, localized cards, real UI captures, target devices, and storage roots. The effective storage order is defaults, shared project configuration, then the adjacent protected `creative.config.local.json`. Local overrides only select storage roots and must be untracked and ignored by actual Git policy.
+Copy `runtime/assets/templates/creative.config.json` into the product repository and set its stable project identity, localized cards, real UI captures, target devices, and storage roots. The effective storage order is defaults, shared project configuration, then the adjacent protected `creative.config.local.json`. Local configuration selects storage roots and named host-local filesystem media backends; it cannot override shared archive or artifact policies and must be untracked and ignored by actual Git policy.
 
 ```sh
 CREATIVE_RUNTIME=/absolute/path/to/plugin/skills/app-store-creative/runtime
