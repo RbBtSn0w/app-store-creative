@@ -25,7 +25,7 @@ Missing, stale, or contradictory remote evidence remains unproven. The official 
 
 ## Review
 
-Read [validation.md](references/validation.md). Compare the candidate's selected artifacts with its declared media matrix, current inputs, hashes, dimensions, locale, order, and provenance. Inspect screenshots and preview acceptance frames for product authenticity and visual defects. Use the official ASC plugin for fresh remote reads. Return defects to their producing attempts and record a new candidate after repairs; validation never edits existing media or grants approval.
+Read [validation.md](references/validation.md). Compare the candidate's selected artifacts with its declared media matrix, current inputs, hashes, dimensions, locale, order, and provenance. Inspect every screenshot, play each selected preview in full, and inspect its selected poster for product authenticity and visual defects. Acceptance frames or contact sheets alone do not prove timing, transitions, or complete playback. Use the official ASC plugin for fresh remote reads. Return defects to their producing attempts and record a new candidate after repairs; validation never edits existing media or grants approval.
 
 Poster media validation honors `previewVideo.posterRequired`. A present poster
 must match the dimensions of a locally validated preview. Managed candidate
