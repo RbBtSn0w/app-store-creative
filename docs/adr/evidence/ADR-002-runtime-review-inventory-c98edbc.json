@@ -275,7 +275,7 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py",
-      "sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4",
+      "sha256": "ba59402eac4bcc4afde4ae8520e7c1edb67d0b23ec7355fa334091cdb14c7dd1",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
       "evidence": "ADR-002-remote-observations-review.json"
     },

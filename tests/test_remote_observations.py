@@ -48,6 +48,14 @@ class RemoteObservationTests(unittest.TestCase):
             self.store.record_observation(plan['id'], observation, b'')
         self.assertEqual(list((self.store.paths.workspace / 'records/remote-observations').glob('*.json')), [])
 
+    def test_observation_references_reject_url_schemes_case_insensitively(self):
+        plan = self.plan()
+        for field in ('remote_id', 'evidence_reference'):
+            for value in ('HTTP://example.invalid/private', 'hTtPs://example.invalid/private', 'FiLe:private'):
+                with self.subTest(field=field, value=value), self.assertRaisesRegex(ValueError, 'sanitized'):
+                    self.observe(plan, 'processing', {'processing_state': 'COMPLETE'}, **{field: value})
+        self.assertEqual(list((self.store.paths.workspace / 'records/remote-observations').glob('*.json')), [])
+
     def test_missing_saved_evidence_hash_is_not_accepted_as_history(self):
         import json
         plan = self.plan()

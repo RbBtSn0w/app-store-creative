@@ -1,0 +1,74 @@
+{
+  "creative_head": "8fb5476b5359845179290d3d712d6ff6dbdc1b14",
+  "product": "fubiao",
+  "product_revision": "9a3a3f7336588ca14bb8f34897d7b3a5b7787b2d",
+  "candidate_id": "9f9dd6c889d541159da82b7b5b3ba9c5",
+  "run_id": "1ae481f61e14473e9b430381002359f0",
+  "captures": "Reused authentic captures; all three source hashes match historical capture receipts; historical approvals not imported",
+  "history": {
+    "status": "PASS",
+    "record_count": 43,
+    "duplicates": [],
+    "untracked": []
+  },
+  "budget": {
+    "candidate_id": "9f9dd6c889d541159da82b7b5b3ba9c5",
+    "candidate_payload_bytes": 8584778,
+    "configured_limit_bytes": 1073741824,
+    "current_payload_bytes": 0,
+    "forecast_payload_bytes": 8584778,
+    "git_history_bytes": null,
+    "observed_payload_bytes": 0,
+    "remote_storage_bytes": null,
+    "schema_version": 1,
+    "scope": "Logical artifact payload copies in registered retained local revisions; excludes metadata and unobserved Git/remote history",
+    "status": "WITHIN_BUDGET",
+    "unverified_deliveries": [],
+    "writes_performed": false
+  },
+  "visual_review": {
+    "status": "CHANGES_REQUIRED",
+    "issues": [
+      "MCP capture contains an English instruction in Chinese UI",
+      "MCP original capture contains clipped bottom prompt",
+      "Capture includes test placeholder credential; not a real credential, but fresh marketing capture should avoid displaying authorization fields"
+    ]
+  },
+  "remote_write": false,
+  "design_approval": false,
+  "sealed": false,
+  "limitations": [
+    "No fresh source capture in this candidate",
+    "No human design approval, sealing, LFS remote retrieval or ASC write",
+    "Earlier sandbox-denied rendering attempt retained separately; successful retry was a new run"
+  ],
+  "subsequent_candidate": {
+    "candidate_id": "3097c2a9970b4ad5a2eaa129616f86c2",
+    "run_id": "fefd7738836342758efa038fac72f565",
+    "screenshots": 2,
+    "technical_validation": "PASS",
+    "design_approval": false,
+    "sealed": false,
+    "excluded_card": "03-mcp-configuration",
+    "reason": "English instruction, clipped content and test-only authorization text; excluded from archive acceptance candidate",
+    "purpose": "Lifecycle archive/retrieval acceptance; not ASC upload"
+  },
+  "four_root_roundtrip": {
+    "forward_id": "5805047e58d54f16b6cceddcbd8c0491",
+    "reverse_id": "1ba19b9348644ff18b5de20aaa2114cc",
+    "candidate_status": "PASS",
+    "history_status": "PASS",
+    "history_record_count": 58,
+    "permanent_delete": false,
+    "limitations": [
+      "Same filesystem only",
+      "No human-approved delivery or publication in this matrix yet"
+    ],
+    "returned_configuration": {
+      "workspaceRoot": ".creative/workspace",
+      "objectRoot": ".creative/objects",
+      "releaseRoot": "Marketing/Creative/releases",
+      "publicationRoot": ".creative/publications"
+    }
+  }
+}

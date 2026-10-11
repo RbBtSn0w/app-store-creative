@@ -1,0 +1,51 @@
+{
+  "scope": "Case-insensitive rejection of URL/file schemes in portable executor references; full 409-line observation module reviewed for evidence privacy",
+  "source_sha256": "ba59402eac4bcc4afde4ae8520e7c1edb67d0b23ec7355fa334091cdb14c7dd1",
+  "test_sha256": "06b2bf3daef92fd099e69b6210d22e5ef6dec6ff2d8a0e8571772efd231ac2ef",
+  "red": {
+    "tests": 1,
+    "failed_subcases": 6,
+    "unwanted_records": 6,
+    "result": "FAIL_FOR_EXPECTED_REASON"
+  },
+  "green": {
+    "tests": 4,
+    "seconds": 2.627,
+    "result": "PASS",
+    "covered": [
+      "Mixed-case protocol rejection before record creation",
+      "Private raw receipt excluded from Git summary",
+      "Sanitized immutable observation export",
+      "Separate remote gates remain usable"
+    ]
+  },
+  "findings": [
+    {
+      "issue": "Mixed-case HTTP/HTTPS/file schemes bypassed sanitized-reference boundary",
+      "status": "FIXED",
+      "change": "Normalize only for protocol rejection; preserve accepted executor identity bytes"
+    }
+  ],
+  "limitations": [
+    "No actual ASC call or sensitive payload used",
+    "Does not close remaining repository-sensitive review or two-product publishing acceptance"
+  ],
+  "related_regression": {
+    "tests": 73,
+    "seconds": 117.015,
+    "result": "PASS",
+    "modules": [
+      "test_remote_observations",
+      "test_asc_observation_cli",
+      "test_external_reference_contract",
+      "test_observation_evidence_retrieval"
+    ]
+  },
+  "package": {
+    "result": "PASS",
+    "sha256": "4f2e0bfa749e7271f426004c29836d2f8d089c7d56095f074412d5e6a6b900c8",
+    "independent_fubiao_validation": "PASS",
+    "candidate_id": "3097c2a9970b4ad5a2eaa129616f86c2",
+    "actual_adg_install": false
+  }
+}

@@ -991,7 +991,7 @@
     {
       "file": "tests/test_remote_observations.py",
       "change": "M",
-      "sha256": "bc401cf22d9b995b6a7310435e5fa6ff4de0b860cb17b956029f3cb2569a6cec",
+      "sha256": "06b2bf3daef92fd099e69b6210d22e5ef6dec6ff2d8a0e8571772efd231ac2ef",
       "review_status": "reviewed_current_diff",
       "evidence": "docs/adr/evidence/ADR-002-test-remote-observations-review.json"
     },

@@ -1,6 +1,6 @@
 {
   "scope": "Full remote_observations.py review",
-  "runtime_sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4",
+  "runtime_sha256": "ba59402eac4bcc4afde4ae8520e7c1edb67d0b23ec7355fa334091cdb14c7dd1",
   "reviewed": [
     "Gate-specific fact and source allowlists",
     "Upload checksum, independent playback and exact poster time/dimension checks",
@@ -11,7 +11,13 @@
     "Derived publication status versus evidence custody diagnostics",
     "Append-only observation/approval export without raw evidence"
   ],
-  "new_defects": [],
+  "new_defects": [
+    {
+      "status": "FIXED",
+      "evidence": "ADR-002-observation-reference-privacy.json",
+      "issue": "Mixed-case URL/file schemes were accepted as sanitized references"
+    }
+  ],
   "verification": [
     {
       "tests": 65,
@@ -30,6 +36,12 @@
       "modules": [
         "test_observation_evidence_retrieval"
       ]
+    },
+    {
+      "tests": 4,
+      "seconds": 2.627,
+      "result": "PASS",
+      "evidence": "ADR-002-observation-reference-privacy.json"
     }
   ],
   "limitations": [

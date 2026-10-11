@@ -144,7 +144,7 @@ class ObservationOperations:
                 raise ValueError('Observation artifact, gate or source is outside scope')
             for key in ('remote_id', 'evidence_reference'):
                 value = observation[key]
-                if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9_.:/-]{1,256}', value) or value.startswith(('/', 'file:', 'http:', 'https:')):
+                if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9_.:/-]{1,256}', value) or value.lower().startswith(('/', 'file:', 'http:', 'https:')):
                     raise ValueError('Observation references must be sanitized executor identities')
             validate_observation_facts(gate, facts)
             observed = datetime.fromisoformat(observation['observed_at'])

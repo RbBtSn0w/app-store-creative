@@ -438,8 +438,8 @@
     },
     {
       "path": "docs/adr/evidence/ADR-002-remote-observations-review.json",
-      "sha256": "b496b83df7ea136859f91bf5f7a810279eed8cbc179a1ed8bb807240f1d9b0ea",
-      "assessment": "Prior full content review verified against current hash.",
+      "sha256": "2dc475cd2de8a05fc5d348a359b2a471afa9afde2ec8c9140789003fc00a251d",
+      "assessment": "Existing reviewed content retained; current hash update and scoped mixed-case reference regression supplement reviewed. No actual credentials or private user content.",
       "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
     },
     {
@@ -459,8 +459,8 @@
     },
     {
       "path": "docs/adr/evidence/ADR-002-runtime-review-inventory-c98edbc.json",
-      "sha256": "1eb508b5767cddefc803ad6bfb5215f355ffcefdc2a16fb6f5c7b9b84021e921",
-      "assessment": "Structured full string coverage: every unique JSON key and nonhash string read, all SHA256 values classified by strict hexadecimal format. Only repository paths, scoped review labels and evidence filenames observed; no credentials, signed URLs or private user content. Does not independently redo referenced source review."
+      "sha256": "3b8befbcd58409dd2455ca7b82b9c5b23c4d04c3ee3501389a2e1d2cab2bdaf4",
+      "assessment": "Existing reviewed content retained; current hash update and scoped mixed-case reference regression supplement reviewed. No actual credentials or private user content."
     },
     {
       "path": "docs/adr/evidence/ADR-002-sensitive-evidence-screening.json",
@@ -694,8 +694,8 @@
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-diff-review-inventory.json",
-      "sha256": "c15314abe744ec97aa95a5ebf3d80e3d5a0b13eef4bb83b9ffefec614b249037",
-      "assessment": "Prior full content review plus complete current e7c3472 diff review; only test hash, generic branch assessment and scoped test result changed. No private content observed."
+      "sha256": "0ac512c5dc692d969205c5cb55082cbceb5cfa0399140fed7d888ecd0f24944d",
+      "assessment": "Existing reviewed content retained; current hash update and scoped mixed-case reference regression supplement reviewed. No actual credentials or private user content."
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json",
@@ -959,8 +959,8 @@
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-remote-observations-review.json",
-      "sha256": "679469bc24d3f7ce7649fb47a704c03b7720e24728fb8185fdfc1bca4a675ea7",
-      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content; corrected contradictory stale remaining-range limitation after verifying current file contains 993 lines"
+      "sha256": "1f1195ca430661ec6f3911b29ba361fd864a340bb3aa0401b367a38aec66e11f",
+      "assessment": "Existing reviewed content retained; current hash update and scoped mixed-case reference regression supplement reviewed. No actual credentials or private user content."
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json",
