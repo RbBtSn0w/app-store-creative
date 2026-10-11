@@ -1229,9 +1229,9 @@
     {
       "file": "tests/test_video_execution_contract.py",
       "change": "A",
-      "sha256": "93c2f3564a4e3b841e0c7f5ae5e1fe23d59bc0d5bce5b2f5fc4bd2ba3a6f497e",
+      "sha256": "0669b219e3ad4965fe4202871cd48d41ddbbb745064d2e9a135785830ea4b371",
       "review_status": "reviewed_current_diff",
-      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
+      "evidence": "docs/adr/evidence/ADR-002-video-json-and-levelory-visual-review.json"
     },
     {
       "file": "tests/test_workflow.py",
@@ -1239,6 +1239,13 @@
       "sha256": null,
       "review_status": "reviewed_current_diff",
       "evidence": "docs/adr/evidence/ADR-002-test-deleted-workflow-review.json"
+    },
+    {
+      "file": "tests/test_native_recording_signals.py",
+      "change": "A",
+      "sha256": "ed2854aa852ab2bbbebd197915574436926712a158179d0b96e08d536d2d7cf1",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-native-capture-and-ci-d3a6d25.json"
     }
   ]
 }

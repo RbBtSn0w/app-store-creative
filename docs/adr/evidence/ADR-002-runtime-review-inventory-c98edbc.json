@@ -347,9 +347,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py",
-      "sha256": "cc271e65271240350c58e4c7bb5338f3f2b07eb32992e675f6bd36d470eb4598",
+      "sha256": "b10c0bf3b319c00ff81b87ae2c06a875f8c1a0ae3cfafb8dd155ade684973aa4",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
-      "evidence": "ADR-002-storage-video-review.json"
+      "evidence": "ADR-002-video-json-and-levelory-visual-review.json"
     }
   ],
   "counts": {
