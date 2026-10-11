@@ -280,3 +280,5 @@ fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github
 当前变更ADR证据内容审查已汇总：209份文件当前哈希一致，历史权威声明和失效相对链接已修正。[审查报告](evidence/ADR-002-evidence-content-review-consolidated.json)。仅覆盖证据内容，不关闭其他文档、技能、源码及测试的仓库级敏感审查，也不代替真实产品验收。
 
 82f5c82完整包独立解压入口检查通过；与此前cc4b069独立120项回归包的245份文件载荷全部相同，无新增、删除或内容变化。[打包](evidence/ADR-002-package-smoke-82f5c82.json)、[载荷比较](evidence/ADR-002-package-payload-comparison-82f5c82.json)。本轮未重复执行120项测试；实际ADG安装和真实产品复验仍独立验收。
+
+最新独立解压包实际复核Levelory完整候选，12项媒体技术验证PASS并生成新不可变验证e3aa6f311926418194983dc39a0d8057；无批准、封存或远端写入。[证据](evidence/ADR-002-independent-levelory-review-82f5c82.json)。此命令会保存验证记录，不记为只读；未重新捕获中文UI，实际ADG安装和完整产品验收仍未完成。
