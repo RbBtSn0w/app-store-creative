@@ -308,3 +308,5 @@ fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github
 ASC适配器引用校验统一：混合大小写HTTP/HTTPS/FILE引用在入口拒绝，先失败后修复，24项专项通过。[证据](evidence/ADR-002-asc-adapter-reference-normalization-review.json)。81fdf78完整打包与独立解压CLI/适配器11项验证通过；首次测试CLI路径不完全隔离，已复制测试并指向独立包后重跑通过。[证据](evidence/ADR-002-independent-asc-reference-package-81fdf78.json)。不替代ADG安装或ASC媒体验收。
 
 Studio分发资源已按锁定依赖重新构建：JS内容逐字节一致，CSS移除未使用主题声明及旋转动画，HTML更新资源引用；98项前端测试、类型检查、构建与差异格式检查通过。完整独立包和本轮提交的远端CI仍须重新绑定。
+
+真实 Levelory 当前候选四根往返复现首次历史查询缺口：准备阶段原先遗漏目标锁文件，正反向激活后首次查询失败。新增两项失败测试后修复为准备阶段创建独立空锁并登记其字节；库存和取消操作按同一准备证明识别锁，异常字节保留。最新3项专项、55项扩大崩溃/恢复回归及21项独立包验证通过；真实候选四根往返时内核、CLI、HTTP首次查询均PASS，42个对象、候选和配置字节保持一致。[证据](evidence/ADR-002-relocation-first-history-readiness.json)。仅同文件系统；尚未批准、封存、远端取回或上传。本修复后的完整远端CI仍待核对。

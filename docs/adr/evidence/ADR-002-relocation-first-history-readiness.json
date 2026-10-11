@@ -1,0 +1,84 @@
+{
+  "base_head": "dc0e167770dffa10b0d9f044d42af5fcbfa7bc40",
+  "finding": "Actual current Levelory native candidate relocation leaves new target without write.lock; first read-only history query fails",
+  "red": {
+    "tests": 2,
+    "failures": 2,
+    "reason": "Missing target write.lock on forward and reverse first history reads"
+  },
+  "green": {
+    "tests": 24,
+    "seconds": 27.662,
+    "result": "PASS"
+  },
+  "fix": "Prepare a fresh target workspace lock and bind it in staged-file integrity; do not create lock in read-only history query",
+  "files": {
+    "tests/test_relocation_history_readiness.py": "0b677792438548370f5428f136f79aec3e36c8195fa244df2f9bbfea4f66c022",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py": "8c35d8cbda96f679f40f5e797c44dfc9f8b64edb6d2470f1acc9e053e296a19b",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py": "5eaeeb2d9239f1b8cbedc48baae3c7843954159aeb815273e81781a3cff951bd"
+  },
+  "real_product_recovery": "Original Levelory roots restored; candidate PASS and history PASS after explicit lock initialization",
+  "broader_regression": {
+    "tests": 55,
+    "seconds": 72.905,
+    "result": "PASS",
+    "log_sha256": "f254b761aaf9957bdb1e018786ff230fc99fe13a241f32f77d4a45093a4654fc",
+    "scope": "Public process-death recovery, staging inventory, repeated reverse cycles, rollback and cancellation fixtures"
+  },
+  "remote_write": false,
+  "first_surrounding": {
+    "tests": 55,
+    "seconds": 73.089,
+    "failures": 2,
+    "reason": "New prepared lock absent from staging inventory and cancellation expected-file manifests"
+  },
+  "consumer_fix": {
+    "tests": 20,
+    "seconds": 7.269,
+    "result": "PASS",
+    "scope": "First history reads, staging inventory and cancellation"
+  },
+  "real_candidate_green": {
+    "candidate_id": "b4a4a8b0c1364591a39e4b000f541bc4",
+    "forward_id": "5f223ee571074c62b748bae27e2d10ab",
+    "reverse_id": "81b7aa51b0064e8590ef7d09c7602854",
+    "checks": [
+      {
+        "phase": "forward-before-first-target-mutation",
+        "core_cli_http_history": "PASS",
+        "record_bytes_unchanged": true,
+        "candidate_status": "PASS"
+      },
+      {
+        "phase": "reverse-before-first-returned-mutation",
+        "core_cli_http_history": "PASS",
+        "record_bytes_unchanged": true,
+        "candidate_status": "PASS"
+      }
+    ],
+    "objects_verified": 42,
+    "configuration_bytes_restored": true,
+    "binding_restored": true,
+    "duration_seconds": 22.495,
+    "remote_write": false,
+    "approval_created": false,
+    "permanent_delete": false,
+    "scope": "Actual current native bilingual Levelory candidate, same-filesystem custom four-root roundtrip with first core/CLI/HTTP history reads; not archive sealing or remote retrieval"
+  },
+  "isolated_package": {
+    "package_sha256": "f1bdcc9a58cf59f6a8b3acb7b1d33bb3c40768839e3a39ebdd3c23e10dd47f6e",
+    "exit_code": 0,
+    "elapsed_seconds": 7.58,
+    "source_runtime_used": false,
+    "log_sha256": "7a79dfa3f9c4291c3c01a7a4a2860c32f54a728fdc6ec90e25ef77a2a83d308a",
+    "scope": "Independent full package runtime; tests copied, runtime exclusively from extraction; not ADG install",
+    "tests": 21,
+    "test_seconds": 7.452
+  },
+  "sensitive_review": "Complete new test plus complete two-module diff reviewed; generic temporary fixture data and runtime operator fields only, no embedded secrets or private captures",
+  "limitations": [
+    "Same-filesystem Levelory roundtrip only; no current cross-volume acceptance",
+    "No human candidate/upload approval, real durable LFS retrieval or ASC write",
+    "Prior dc0e167 CI does not cover this fix; new commit requires CI"
+  ]
+}

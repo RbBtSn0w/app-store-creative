@@ -41,6 +41,12 @@ def inspect(core, plan):
         final = changed[item['root']] / item['path']
         key = next(key for key, root in groups.items() if final.is_relative_to(root))
         manifests[key].append({**item, 'path': final.relative_to(groups[key]).as_posix()})
+    if prepared is not None:
+        lock = core._prepared_relocation_lock(plan, prepared)
+        if lock is not None:
+            path = Path(lock['path'])
+            key = next(key for key, root in staging.items() if path.is_relative_to(Path(root)))
+            manifests[key].append({**lock, 'path': path.relative_to(Path(staging[key])).as_posix()})
     locations = {key: Path(path) for key, path in staging.items()}
     backups = {}
     if switch is not None:

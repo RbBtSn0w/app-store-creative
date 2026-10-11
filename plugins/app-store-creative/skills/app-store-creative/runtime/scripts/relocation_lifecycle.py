@@ -620,6 +620,18 @@ class RelocationOperations:
         staging = {key: str(value.parent / ('.creative-relocate-' + plan['id'] + '-' + key)) for key, value in groups.items()}
         return changed, groups, staging
 
+    def _prepared_relocation_lock(self, plan, prepared):
+        changed, groups, staging = self._relocation_layout(plan)
+        if 'workspace' not in changed:
+            return None
+        workspace = changed['workspace']
+        group = next(key for key, root in groups.items() if workspace.is_relative_to(root))
+        path = Path(staging[group]) / workspace.relative_to(groups[group]) / 'write.lock'
+        expected = {'path': str(path), 'size_bytes': 0, 'sha256': hashlib.sha256(b'').hexdigest()}
+        if prepared['staged_files'].count(expected) != 1:
+            raise ValueError('Prepared relocation coordination lock evidence differs')
+        return expected
+
     def relocation_git_policy(self, plan_id):
         from storage_git_policy import staging_policy
         plan = self._read('relocations', plan_id)
@@ -712,6 +724,18 @@ class RelocationOperations:
                     if destination.resolve() != destination or not destination.is_file() or destination.stat().st_size != item['size_bytes'] or digest(destination) != item['sha256']:
                         raise ValueError('Relocation copied bytes failed verification')
                     staged_files.append({'path': str(destination), 'size_bytes': item['size_bytes'], 'sha256': item['sha256']})
+                if 'workspace' in changed:
+                    final_workspace = changed['workspace']
+                    group = next(key for key, root in groups.items() if final_workspace.is_relative_to(root))
+                    workspace = Path(staging[group]) / final_workspace.relative_to(groups[group])
+                    workspace.mkdir(parents=True, exist_ok=True)
+                    lock = workspace / 'write.lock'
+                    # Locks are host-local coordination, never copied from the source.
+                    # Prepare one before activation so the first query stays read-only.
+                    with lock.open('xb') as stream:
+                        stream.flush()
+                        os.fsync(stream.fileno())
+                    staged_files.append({'path': str(lock), 'size_bytes': 0, 'sha256': digest(lock)})
                 self._verify_relocation_locked(plan_id)
                 prepared = {'id': plan_id, 'status': 'PREPARED', 'actor': actor, 'reason': reason,
                     'staging': staging, 'staged_files': staged_files, 'relocation_executed': False,
@@ -828,6 +852,11 @@ class RelocationOperations:
                 if path.name == '.relocation-owner.json':
                     raise ValueError('Relocation payload conflicts with ownership marker')
                 expected_files.append((path, item))
+            prepared_path = self._path('relocations', plan_id, 'prepared')
+            if prepared_path.exists():
+                lock = self._prepared_relocation_lock(plan, self._read('relocations', plan_id, 'prepared'))
+                if lock is not None:
+                    expected_files.append((Path(lock['path']), lock))
             if not self._path('relocations', plan_id, 'cancel-intent').exists():
                 self._record('relocations', {'id': plan_id, 'actor': actor, 'reason': reason,
                     'staging': staging}, 'cancel-intent')
