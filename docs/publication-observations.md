@@ -56,7 +56,7 @@ evidence_reference使用可追溯的执行记录身份，不能填本机绝对�
 
 publication export将计划、独立观察和脱敏上传审批摘要追加到配置的publicationRoot。文件以不可变ID命名，重复导出不覆盖已有证据；授权来源只导出哈希，不导出原始授权文本。工作区仍是运行事实源，导出目录用于版本管理和复查。
 
-当前尚未提供独立导出目录重建运行记录的完整恢复入口、Studio观察编辑界面、ASC回执自动适配或实际远端全链路验收；这些仍属于统一整改的未完成要求。
+当前提供`publication normalize-asc-preview`适配官方ASC Preview响应；这不代表所有ASC回执均有适配器。独立导出目录重建运行记录的完整恢复入口、Studio观察编辑界面及实际远端全链路验收仍未完成。
 
 公开`publication observe`的观察JSON及证据文件必须为普通文件，读取期间身份及内容变化拒绝，单文件上限30MiB；原始视频不作为此入口的证据文件，应由媒体探测执行方提供绑定媒体身份与验证结果的证据回执。文件输入核验在创建登记事务前完成，非普通文件拒绝不生成工作区。此约束不提供原始证据长期存放能力。
 
@@ -94,7 +94,7 @@ python3 app_store_creative.py archive retrieve-evidence --repo /path/to/clean-co
 
 临时Git合同验收已实际提交locator、从完整提交Git对象取得可信定位哈希，并通过禁用本地共享的独立克隆检出准确SHA；公开CLI无需配置/运行数据库即可恢复原始字节。该测试证明临时本机Git与文件系统后端的组合链路，不证明托管PR审查、远端持久性或真实执行者来源认证。
 
-Studio本地HTTP `POST /api/publications/retain-evidence`接入同一核心：exact字段`observation_id`、`actor`、`confirm: RETAIN`及`evidence_base64`；保留既有同源、Host及30MiB请求限制，不接受客户端本机文件路径。证据字节仍须匹配原观察。当前只是HTTP用例接通，文件选择界面、持久化界面及真实浏览器运营验收尚未完成。
+Studio本地HTTP `POST /api/publications/retain-evidence`接入同一核心：exact字段`observation_id`、`actor`、`confirm: RETAIN`及`evidence_base64`；保留既有同源、Host及30MiB请求限制，不接受客户端本机文件路径。证据字节仍须匹配原观察。文件选择与持久化界面已接通，合成夹具的浏览器专项证据保留在ADR历史记录中；真实产品的完整浏览器运营验收仍未完成。
 
 
 ## Studio 私有后端持久化
