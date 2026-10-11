@@ -229,7 +229,7 @@ ASC本机准备结果保存为不可变publication-preparations记录，包含�
 
 Studio HTTP已接入上传批准和交接导出，分别为POST /api/publications/approve-upload与POST /api/publications/export。批准必须提供publication_id、actor、authorization_reference及confirm=UPLOAD；导出提供publication_id及confirm=EXPORT。额外字段或查询覆盖拒绝。内核核对原归档和独立取回证据，批准绑定具体计划哈希和远端目标。
 
-导出仅写本地不可变交接材料，明确uploaded=false、remote_write=false。没有批准时交接仍标记pending，不能据文件存在授权上传。ASC插件负责实际远端执行和复查。2项HTTP回归通过，包含错误批准确认拒绝及批准/导出后远端仍未验证；前端协调表单及真实ASC验收尚待完成。
+导出仅写本地不可变交接材料，明确uploaded=false、remote_write=false。没有批准时交接仍标记pending，不能据文件存在授权上传。ASC插件负责实际远端执行和复查。2项HTTP回归通过，包含错误批准确认拒绝及批准/导出后远端仍未验证；前端协调表单已接入，下文记录模拟项目浏览器验收；真实产品批准及ASC远端验收尚待完成。
 
 发布状态面板选择计划后，可用Load bound upload plan加载经过归档复查的具体目标、计划哈希和完整资产列表。填写真实批准人与授权引用、勾选审查后才可批准上传；导出另需审查确认。执行后清除旧预览并要求重新加载，失败不会自动重试。前端选择其他计划时重建表单，不沿用旧批准勾选。表单已接入；真实浏览器及远端执行验收仍待完成。
 
