@@ -242,9 +242,9 @@
     {
       "file": "tests/test_artifact_lifecycle.py",
       "change": "M",
-      "sha256": "23c3c55508eb014b38cd8924777379f1dbee843d9600df01514dfdc983ccb4e9",
+      "sha256": "55e8040475becdd9a86009a5c46de4d9d722d12e6d298772750bec25e731e32c",
       "review_status": "reviewed_current_diff",
-      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
+      "evidence": "docs/adr/evidence/ADR-002-relocation-owner-git-policy-review.json"
     },
     {
       "file": "tests/test_artifact_policy.py",

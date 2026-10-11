@@ -100,6 +100,24 @@ class ArtifactLifecycleTests(unittest.TestCase):
         self.assertEqual((self.root / '.gitignore').read_text(), 'user-cache/\n')
         self.assertFalse((self.root / '.gitattributes').exists())
 
+    def test_git_policy_ignores_local_move_markers_but_keeps_formal_records(self):
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        policy = self.store.git_policy('lfs')
+        self.assertFalse((self.root / '.gitignore').exists())
+        (self.root / '.gitignore').write_text('user-cache/\n' + '\n'.join(policy['gitignore']) + '\n')
+        for directory in (self.store.paths.releases, self.store.paths.publications):
+            directory.mkdir(parents=True)
+            marker = directory / '.relocation-owner.json'
+            marker.write_text('{"group":"fixture"}')
+            result = subprocess.run(['git', '-C', str(self.root), 'check-ignore', '--quiet', '--', str(marker)])
+            self.assertEqual(result.returncode, 0, 'Local relocation marker must be ignored')
+            for name in ('revision/manifest.json', 'revision/media/card.png'):
+                formal = directory / name
+                formal.parent.mkdir(parents=True, exist_ok=True)
+                formal.write_bytes(b'git-policy fixture')
+                result = subprocess.run(['git', '-C', str(self.root), 'check-ignore', '--quiet', '--', str(formal)])
+                self.assertEqual(result.returncode, 1, 'Formal record and media must remain trackable')
+
     def test_object_storage_cannot_be_shared_without_reference_protection(self):
         run = self.store.start_run({})
         attempt = self.store.start_attempt(run['id'], 'capture', 'agent')

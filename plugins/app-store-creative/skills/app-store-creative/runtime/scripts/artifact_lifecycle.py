@@ -649,6 +649,10 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
             name = relative(path)
             if name:
                 ignores.append('/' + escape_pattern(name) + '/')
+        for path in (self.paths.releases, self.paths.publications):
+            name = relative(path / '.relocation-owner.json')
+            if name:
+                ignores.append('/' + escape_pattern(name))
         attributes = []
         releases = relative(self.paths.releases)
         if media_mode in ('git', 'lfs') and releases is None:
