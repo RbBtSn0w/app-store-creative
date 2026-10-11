@@ -1,12 +1,12 @@
 # ADR-002 实施状态
 
-更新日期：2026-10-11。**核心能力已实现；完整审查、真实产品验收与发行未完成。**
+更新日期：2026-10-12。**核心能力已实现；完整审查、真实产品验收与发行未完成。**
 
 本文件是当前进度的唯一权威；需求以 [ADR-002](ADR-002-artifact-lifecycle-and-release-archive.md) 为准。实现、专项验证、完整产品验收分别记录，不按测试数或模块数计算整体完成率。采用完整重新设计，不提供历史兼容、旧格式读取或自动回填。
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `81fdf780ef5e58873ae719ec39496e8201be8afb`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `d12156b0cd3a31fbaedd31e0435a68614930bcfc`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
 - fd86067远端完整CI已成功：[run 38098578994](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994)，Python运行1045项（33项跳过）、Studio98项通过，类型检查、构建与完整分发检查通过。[证据](evidence/ADR-002-ci-fd86067.json)。后续提交与最终发行仍需重新核对。
@@ -33,7 +33,7 @@
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
 | [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异179/179，完整人工敏感信息审查未关闭；209份当前变更证据内容已审查并绑定哈希，其他范围敏感审查仍待核对 |
-| [x] | 当前运行源码完整 CI | 81fdf78 的[run 38152928618](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38152928618)成功，完整日志已取回；Python 1051项（34项跳过）、Studio 98项、类型检查、构建与分发通过；后续源码变更和最终发行仍需重新绑定。[证据](evidence/ADR-002-ci-81fdf78.json) |
+| [x] | 当前运行源码完整 CI | d12156b 的[run 38153843083](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38153843083)成功，完整日志已取回；Python 1053项（34项跳过）、Studio 98项、类型检查、构建与分发通过；后续变更和最终发行仍需重新绑定。[证据](evidence/ADR-002-ci-d12156b.json) |
 | [ ] | 最新完整独立安装验收 | b911bd2完整包检查通过；独立包已验证Levelory完整候选，实际ADG安装仍未完成 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
 | [ ] | Levelory 全链路 | 新候选 b4a4a8b0c1364591a39e4b000f541bc4 的双语10张截图、真实操作20秒视频和封面验证PASS；播放节奏验收、精确批准、封存、提交绑定、干净取回未完成 |

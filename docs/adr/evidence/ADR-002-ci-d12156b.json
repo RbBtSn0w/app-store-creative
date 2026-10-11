@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scope": "Complete CI of exact d12156b commit; does not establish human approval, installed ADG workflow, durable media retrieval or ASC poster acceptance",
+  "source_commit": "d12156b0cd3a31fbaedd31e0435a68614930bcfc",
+  "run_id": 38153843083,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38153843083",
+  "conclusion": "SUCCESS",
+  "python": {
+    "tests_run": 1053,
+    "skipped": 34,
+    "duration_seconds": 476.708
+  },
+  "studio": {
+    "tests": 98,
+    "files": 33
+  },
+  "typecheck": "PASS",
+  "studio_build": "PASS",
+  "complete_distribution": "PASS",
+  "private_log_sha256": "79d92512b22fd28bba15b22c07b735f85b54900204561bd5fb8bb9f90589253b"
+}
