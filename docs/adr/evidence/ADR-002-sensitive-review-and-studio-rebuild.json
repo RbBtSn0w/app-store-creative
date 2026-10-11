@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "source_head": "78a4df88286ab050993b0ca2cf6ed5f2dfe71e77",
+  "scope": "Current changed source, tests, documents and evidence content review; generated Studio files validated separately through locked-dependency build",
+  "content_reviewed_files": 546,
+  "uncovered_files": [],
+  "hash_mismatches": [],
+  "private_ledger_sha256": "2f157dffaffc9abb8e294a22691700c9f53dddac80374955767957c4a0082383",
+  "generated_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/index.html",
+      "sha256": "8f45369c5cee0933ff751f9b18c1dbbf02db2e39b3f20b0b574fd985be43e0df",
+      "method": "Build-derived provenance, not manual full-content review"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/assets/index-DTGtIqnN.css",
+      "sha256": "2e371ea5adf4a6ff2eef6f0ab5098803661951a1b76c5fc6c985ddb9232680d0",
+      "method": "Build-derived provenance, not manual full-content review"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/assets/index-Cid7N-gP.js",
+      "sha256": "e456c7d1530a2e321950282e6f80ad0df15e9d5536b72884d1f8e9271efda448",
+      "method": "Build-derived provenance, not manual full-content review"
+    }
+  ],
+  "studio": {
+    "studio_tests": 98,
+    "studio_test_files": 33,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "diff_check": "PASS"
+  },
+  "generated_difference": {
+    "javascript_bytes_identical": true,
+    "css": "Rebuild removes unused theme declarations and spin keyframes; HTML asset references regenerated"
+  },
+  "limitations": [
+    "Generated JS/CSS use build provenance, not full manual minified content review",
+    "No human candidate or upload approval",
+    "No durable product retrieval, ASC acceptance, main merge or ADG installation claim"
+  ],
+  "package": {
+    "result": "PASS",
+    "sha256": "268564a06d31a3599aaf55a4223ad43dfcae43f7422a4e9f9f11f98c574637f1",
+    "scope": "Complete package construction, independent extraction and managed CLI smoke by package_plugin.py; not ADG installation"
+  }
+}
