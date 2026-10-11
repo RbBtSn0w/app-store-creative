@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "scope": "CLI video export stdout regression and real Levelory candidate visual review",
+  "regression": {
+    "red": "JSONDecodeError at stdout line 1 because producer progress preceded the JSON result",
+    "green": {
+      "tests_run": 26,
+      "status": "PASS",
+      "modules": [
+        "test_video_execution_contract",
+        "test_v2_workflow",
+        "test_artifact_handoff",
+        "test_preview_production"
+      ]
+    },
+    "fix": "Write video progress to stderr; preserve JSON stdout",
+    "files": {
+      "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py": "b10c0bf3b319c00ff81b87ae2c06a875f8c1a0ae3cfafb8dd155ade684973aa4",
+      "tests/test_video_execution_contract.py": "0669b219e3ad4965fe4202871cd48d41ddbbb745064d2e9a135785830ea4b371"
+    },
+    "package": {
+      "status": "PASS",
+      "sha256": "7e56af6bd7cacd582f3431a2c6eb21c4d571c1b3326751986c0758f5b79c363d"
+    }
+  },
+  "product_review": {
+    "candidate_id": "3b3567cd864445d0826b6d1ba2f16341",
+    "technical_assets": 12,
+    "technical_validation": "PASS",
+    "video_full_decode": "PASS",
+    "agent_visual_review": "CHANGES_REQUIRED",
+    "inspected": "10 screenshots, poster and producer representative frame sheet",
+    "findings": [
+      "Chinese Quick Paste capture is visually dim",
+      "Video-derived screenshot inputs have opaque black window corners",
+      "Collection sidebar name is truncated",
+      "Representative video frames do not demonstrate the intended transformation; re-record before approval"
+    ],
+    "native_png_probe": {
+      "has_alpha": true,
+      "scope": "isolated development settings window only"
+    },
+    "human_approved": false,
+    "sealed": false,
+    "remote_write": false
+  },
+  "remaining": [
+    "Correct screenshot capture and visual presentation",
+    "Re-record and review the full interaction video",
+    "Complete repository sensitive review",
+    "Real Git LFS remote retrieval and ASC acceptance",
+    "Merge and installed plugin verification"
+  ]
+}

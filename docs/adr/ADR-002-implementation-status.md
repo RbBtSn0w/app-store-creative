@@ -284,3 +284,5 @@ fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github
 最新独立解压包实际复核Levelory完整候选，12项媒体技术验证PASS并生成新不可变验证e3aa6f311926418194983dc39a0d8057；无批准、封存或远端写入。[证据](evidence/ADR-002-independent-levelory-review-82f5c82.json)。此命令会保存验证记录，不记为只读；未重新捕获中文UI，实际ADG安装和完整产品验收仍未完成。
 
 本轮敏感证据审查复现混合大小写URL/file协议绕过脱敏引用检查；最小修复后六种输入均在写入前拒绝，73项相关回归、完整分发检查及独立Fubiao候选验证通过。[证据](evidence/ADR-002-observation-reference-privacy.json)。剩余仓库级审查与真实发行门禁未据此关闭。
+
+最新中文五场景已重新捕获并组成12项完整候选`3b3567cd864445d0826b6d1ba2f16341`，技术验证及视频完整解码通过；逐图检查10张截图、封面和代表帧后记为`CHANGES_REQUIRED`：快捷窗口偏暗、录像抽帧黑色圆角、合集侧栏截断，视频代表帧未展示预期转换。原生窗口PNG已验证保留alpha，后续改用原生截图并重录交互视频。另修复视频进度污染CLI JSON stdout的实际缺陷，RED复现、26项相关测试及完整分发检查PASS。[证据](evidence/ADR-002-video-json-and-levelory-visual-review.json)。未批准、封存或上传，不关闭完整产品验收及发行门禁。

@@ -1,5 +1,7 @@
 """Config-driven video production uses the same evidenced preview executor."""
 import json
+import io
+from contextlib import redirect_stdout, redirect_stderr
 from pathlib import Path
 import tempfile
 import unittest
@@ -59,11 +61,16 @@ class VideoExecutionContractTests(unittest.TestCase):
                 output.write_bytes(b'fixture poster')
                 return {'tools': {'fixture': 'test-only'}, 'width': 1920, 'height': 1080}
             # Media validation is outside this dependency-registration contract.
-            with mock.patch('export_engine.run_export', side_effect=render), \
+            stdout, stderr = io.StringIO(), io.StringIO()
+            with redirect_stdout(stdout), redirect_stderr(stderr), \
+                 mock.patch('export_engine.run_export', side_effect=render), \
                  mock.patch('produce_app_preview.execute', side_effect=encode), \
                  mock.patch('managed_poster.extract', side_effect=extract), \
                  mock.patch.object(Lifecycle, 'validate_candidate', return_value={'status': 'PASS'}):
                 result = production_lifecycle.produce(root, cfg, with_video=True)
+                print(json.dumps(result))
+            self.assertEqual(json.loads(stdout.getvalue()), result)
+            self.assertIn('Producing App Preview video', stderr.getvalue())
             core = Lifecycle.from_configuration(root, cfg)
             candidate = core._read('candidates', result['candidate_id'])
             artifacts = [core.verify_artifact(identity) for identity in candidate['artifacts']]

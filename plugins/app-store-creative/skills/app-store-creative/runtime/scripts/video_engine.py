@@ -2,6 +2,7 @@
 """App Preview video generation engine for App Store Creative v2.0."""
 
 import json
+import sys
 import produce_app_preview
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -63,7 +64,7 @@ def produce_preview_from_config(
         ],
     }
 
-    print(f"🎬 Producing App Preview video ({width}x{height} @ {fps}fps, {duration}s)...")
+    print(f"🎬 Producing App Preview video ({width}x{height} @ {fps}fps, {duration}s)...", file=sys.stderr)
     receipt = target_out.with_suffix('.receipt.json')
     frames = target_out.with_suffix('.frames.png')
     result = produce_app_preview.execute(contract, target_out, receipt, frames)
