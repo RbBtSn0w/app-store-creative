@@ -1,0 +1,1077 @@
+{
+  "scope": "Manual content review of current changed ADR evidence files only; not repository-wide sensitive review or product acceptance",
+  "source_head": "fd860679d7590ce272b585d607ce2872f1a3979e",
+  "files": [
+    {
+      "path": "docs/adr/evidence/ADR-002-archive-policy-contract.json",
+      "sha256": "0f6255330d106f95d5a7fe45b15c84e36f3762d764a4e22041e39ce690c0891e",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-artifact-core-review.json",
+      "sha256": "2b14ee16a7dbb3d18e2d345c57bbe416ed403009d76664b0d21db0db2cade6d2",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-browser-active-root-refusal-e12bde5.json",
+      "sha256": "6540a8927bb01408b8de0c0c5fd08c6fa413bbf8ecec484bcec4c40e734369bb",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-browser-custom-root-save-e12bde5.json",
+      "sha256": "27667c721ce301ee2f6e20a49979cdfc8ee174729b7900b8ffe7fcd106a228bc",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-browser-directory-preview.json",
+      "sha256": "d54c4c2e1b1d311f49cac09c2aaede5de1beeb8ba84e27f943a0d2ce38a096ee",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-browser-save-recovery-e12bde5.json",
+      "sha256": "130698125ae73c188c3d1dca639dce0ed9b453228c86503865302c3f9499befe",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-budget-declaration-review.json",
+      "sha256": "b5998892b26546d0e758ac20bdb275e742047c812d2fedd23c47a0c3e15c51bf",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-candidate-approval-review-c98edbc.json",
+      "sha256": "e19a0dc202794ee084a1c27dd0af205bda0f141de11de127bd993984d83e6949",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-chrome-renderer-review.json",
+      "sha256": "6677067d78ceb6514ad01fb349e88357a3687eedbf1de625dd837d21120e1d61",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-3c200dc.json",
+      "sha256": "03a730f3d157cbb2b8d175c8ddca53d841de9c527fe361a850679ff2be330f36",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-5bcf5e2.json",
+      "sha256": "443cbe115c7662dbd588a3e83d7387936e238d8230f84ca84ee002daff3d38b7",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-6faa6b5.json",
+      "sha256": "31b24e5db5e81b834f6ec6d81cbebc0ae089e77106f35370851ab9c763fee6d9",
+      "assessment": "Full JSON content read; code identifiers, source-relative paths, public GitHub CI links and hashes only; no actual secret, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-9d57a9c.json",
+      "sha256": "6a812af2251fd5bb6b6159bc78c0c877b9257541d30b5c5aafa52fb5462ab27f",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-a28e698.json",
+      "sha256": "df191c0df95bfa49b5868f17c2442b7f6a9e633ac4b02233ad4b58e3278fa0f3",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-b2477be.json",
+      "sha256": "2000d7eb8452dd33d56cfe0c52aeccbbdcd71242a506bf61d877de94a3cadf39",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-c98edbc.json",
+      "sha256": "e14cdf64d8a0510847c3a7018fa6f6850bf1717ee4c8db20fb0154d93cf82bf4",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-cc4b069.json",
+      "sha256": "775d07dfed5bdbb71e1e112df522204e90fcb50b64192d7c9505662dab213622",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-ci-fd86067.json",
+      "sha256": "9d4d33abe91d0cc3e5723a811180a653b487bbb583be13b9c3ebb78aa43374a1",
+      "assessment": "Full CI summary content read; public GitHub run, source and log hashes, counts and explicit gate limitations only."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-cli-entry-review.json",
+      "sha256": "7b888a31b8a78ed2558b44611a6f844cc0a8a61048b28f155ca8665755467ebf",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-configuration-review-a28e698.json",
+      "sha256": "ccd29fd25453c1beb58cdb78e10a2deb6d9a966fe4ea97aa43a910b843b0def1",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-control-projection-review.json",
+      "sha256": "451c1b332ac03ea4d70030a2fde4d8f9c682d109ea35046a6e73d2ac495e641f",
+      "assessment": "Full JSON read; public CI links, hashes, relative code identifiers and bounded probes only; no actual credential, signed remote URL or private content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-crossfs-24634da.json",
+      "sha256": "b530629f0f1c004ff52ad2566be8a89554eccc76c799a46ce25642920a079072",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-delivery-module-review-c98edbc.json",
+      "sha256": "77bea6949e6dc7820ac941e3ca4ab0744b47db82647cd61b66b3fe57ea8ccbbf",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-documented-cli-parsing.json",
+      "sha256": "674e2773a50ea3d95177887fddc1cd68d1fd4eea6c7bed63998960fd436911a3",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json",
+      "sha256": "3f47382cf467c7572d0be29c444f9b39dca75d46a68f29494162055936bd7a2e",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json",
+      "sha256": "64490b4ccf87c7df8673aec45e7d61a935423515c78474c6e8d52ea2f8a77414",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-export-module-review.json",
+      "sha256": "0acfcf37043bae6a14720a6ba73751eca764e2bc6c607d855c855c6a4b1824a6",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-export-server-cleanup.json",
+      "sha256": "616c9af3f476db433ef1b586743ee9e136d0a71bbd4df443b7d1e9e4f7d259cb",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-external-parent-replacement.json",
+      "sha256": "46557740b4c4467e7a9ffa28e274d9100b4803e39e1224007c3123f112193589",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-external-storage-review-c98edbc.json",
+      "sha256": "71285d96a3ba58853aa14fad38fb1274738b00a5afec9ff183a8544f92e09faf",
+      "assessment": "Entire JSON read; relative code/evidence filenames and historical fixture observations only; no actual credential, signed URL, private raw response or user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-forward-source-review.json",
+      "sha256": "168558fc2eafd4bee94057d26e7093733f207cf2cec23798d7714e6e371b825b",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-frontend-review-inventory.json",
+      "sha256": "ab820ff555c4b483b180a9ac3a79aa746b084b89c02c4a4da1d6ab84083e0401",
+      "assessment": "Structured full string coverage: every unique JSON key and nonhash string read, all SHA256 values classified by strict hexadecimal format. Only repository paths, scoped review labels and evidence filenames observed; no credentials, signed URLs or private user content. Does not independently redo referenced source review."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-git-staging-review-6faa6b5.json",
+      "sha256": "ef04443e22da8a1595571f4f175a5d50a0438f6f096f3ecab71e9cca122cb039",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-history-review-c98edbc.json",
+      "sha256": "c278cad081d52688abb5794cc9ad2162c31812d755d01ef3b398f4d6681d93d4",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-identity-incident-review-c98edbc.json",
+      "sha256": "79b8c571fbddaa1a9f2f81966ca2a197ab065b0258e2084a9997d0fd8a51fc05",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-implementation-history-2026-10-09.md",
+      "sha256": "0599d86fb016665315825dbe6d3f4ebb92322fd7e7c24a8f25468867ad6666e2",
+      "assessment": "Entire historical Markdown read in three bounded ranges; deterministic fixture/product identifiers, private tmp proof filenames and public loopback references only. No credentials, signed URL or captured user text. Fixed relative closure audit link; original failures, waits and historical acceptance scope retained."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-independent-package-052eeb5.json",
+      "sha256": "a648d6c5fae154388147409a50c671a3616f847a95a967674356a16c7794b67d",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-independent-package-622d224.json",
+      "sha256": "87badf02292c65ce66e5e774868100d847d2387a395369c63993898f40b1614a",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-independent-package-7037630.json",
+      "sha256": "5201efd31ccf2852810c21a65e948308e09fe48e4c221e2f28188eab96dc37f7",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-independent-package-9d57a9c.json",
+      "sha256": "e26eff736397f06d3eb273fb22ed6bcd83df07911af8a3bbd5b6f95b8313506c",
+      "assessment": "Full JSON read; source identities, hashes and owned temporary package/log paths only. Temporary paths identify disposable fixtures, not host user directories; no actual credentials, signed URLs or private capture content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-independent-package-cc4b069.json",
+      "sha256": "480a1f5702ba3bf352e1d8cf65fbc7ddcf719e87e2d3af63456d5633471591fb",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-independent-package-ec69c26.json",
+      "sha256": "d6230c5ee7c325a940ac921eebbeeb538c8640499e0ea92d27dc7c120c3e59a8",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-input-configuration-review.json",
+      "sha256": "55b40a259918b84e151d80a03e9506cc09a15eba65a4c30fc6338fb67f39af65",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-installed-24634da.json",
+      "sha256": "379f3fb3051fb6e18b9a88b5b8180d068d1d42c1e455351e46e40977c76ffc44",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-inventory-purge-proof-review.json",
+      "sha256": "4e1f2739ea2d9ab881bef14f844937412ab2e5b8d05b4045b9ad87a378a718ee",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-inventory-review-ffa1460.json",
+      "sha256": "19f22c7ffe2b042eeb7e285c50c350b70b31a6433a73cf2d371ecbfcffe19e4d",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-lease-review-c98edbc.json",
+      "sha256": "50764ad4f88cc4cbc8e3b16ac64372d7c1e80c0de3daae71a8b87a8a7423f09c",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-budget-bound-run-e12bde5.json",
+      "sha256": "e614aefda98dba63486822b2446f7c690f5fe5ca19de28100083aaf94f113ea8",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-cleanup-reference-protection-3097992.json",
+      "sha256": "1c9b2a173549467dfcc7d1500f67f9afde290481808a23063f3922a3945159ac",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-complete-candidate-275a5d1.json",
+      "sha256": "1483717531b91f9553438f24a531d8026d5cdc52915256b701f6a2843f8062fc",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-evidence-content-review-275a5d1.json",
+      "sha256": "6d85f0af5c877dd01567149957f92f1fb4035113149c6c9538778e79211fe94a",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-fresh-screenshot-run-e12bde5.json",
+      "sha256": "112edb1cf9ddc12e496e81a1a4464391a2c5e2fb99094e55557116e1313d9b22",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-browser-product.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-localization-diagnosis.json",
+      "sha256": "145f4b49e30b663787b03c653275f3195b5db4856e8df782eab0c7d5f03382f6",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-new-preview-poster-275a5d1.json",
+      "sha256": "3dc666285a8a8af101e73703271f866faf57070c8ad5d831a3049fdf1b507763",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-real-crossfs-3097992.json",
+      "sha256": "eaffe2792a317a6cce0efcfdb01fd7d5f51a40df9ebc69e9dba20281b8ea641c",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-real-input-relocation-275a5d1.json",
+      "sha256": "41fc66176b9d1169c211916ad1588ac2fa26c6795f1d62b3fbb9a97e6fdbaad5",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-levelory-recording-input-closure-275a5d1.json",
+      "sha256": "11ca6e68464da38ce78e6fc77712522258dbccaf5ed5dbff215c667fb5c51946",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-lfs-custom-paths.json",
+      "sha256": "cf710de12aaf16c8b1b908c568c7399425b7e43aa4ef44f6e925c89c451ee827",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-lifecycle-commands-review.json",
+      "sha256": "abecfd1f5ad905ebedc300af93600b91a5f799ad9b5d8f74eb49de5ed1348cca",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-local-verification.json",
+      "sha256": "835c91092121e8fb6fa9df687031f52b6d3efe1cd08c3215b8f3e17e9fc9905a",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-lock-replacement-review.json",
+      "sha256": "bbb5880f035f176df60ab879fe2a57d60fd039b71ddabc08c202c885601b44b7",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-main-contract-review.json",
+      "sha256": "a30af5a8ca0eddd9205e0646d6dcc34f5af37f740bb222e8c4696fd5393d4289",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-maintenance-boundaries-5bcf5e2.json",
+      "sha256": "fde4c5380b8400c9a343da7d5e26242b9a2b396c1909dd51dc1198cc701a5ad6",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-maintenance-observation-review.json",
+      "sha256": "c6aac9f7045bc36ac51580724cf0158a55fd01cf3d44252c24b9f9a838bc6e11",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-managed-recording-review-3580e3a.json",
+      "sha256": "5378937038f2c0e6622b4831caa609e5a3140f1fe66bcf737636218639bd0987",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-package-smoke-622d224.json",
+      "sha256": "bcbe471e48ca1ed42a9807e1dfcea6b8ce5d84e11f37ff6d90478a8ae281d754",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-package-smoke-9d57a9c.json",
+      "sha256": "19bd68938b117bcb62f78d287f262260f3be1a29221e6bd2875bad0e062f8050",
+      "assessment": "Complete JSON content read; source-relative files, owned temporary package paths, product IDs/media hashes and scoped fixture descriptions only; no actual secrets, signed URLs or private captured content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-packaging-review.json",
+      "sha256": "879badaaf54c8d1277357ed2f30cdd48534d3182088039373e55670d073e3957",
+      "assessment": "Full JSON content reviewed: code paths, hashes, historical scoped verification and synthetic temporary package location; no credentials, signed URLs or private user content observed. Historical limitations preserved."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-policy-identity-review-e70e281.json",
+      "sha256": "89cb7f66cd050402a73bace492afaf7db46eccadf2940225e73aaed884a5ee6a",
+      "assessment": "Full JSON content reviewed: code paths, hashes, historical scoped verification and synthetic temporary package location; no credentials, signed URLs or private user content observed. Historical limitations preserved."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-preview-poster-review.json",
+      "sha256": "d89aafe77159f6d3f3a4075ac72f27649a2b6aa90abec761aa3455ebcc21173b",
+      "assessment": "Full JSON content reviewed: code paths, hashes, historical scoped verification and synthetic temporary package location; no credentials, signed URLs or private user content observed. Historical limitations preserved."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-preview-publication-review.json",
+      "sha256": "655c1618029b0d3ed19a1a068b6f693ce8dc7c6a3c51d9f3954cc20223de0673",
+      "assessment": "Full JSON content reviewed: code paths, hashes, historical scoped verification and synthetic temporary package location; no credentials, signed URLs or private user content observed. Historical limitations preserved."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-private-evidence-review-a28e698.json",
+      "sha256": "30a8ba487557bcb59538ebf6af651d488bc4357d8f8e019b75e4c865842a3c4a",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-production-preparation-review.json",
+      "sha256": "b5552739319d97d483e4327f2e5f92e67121ee7a4ce0726095fa21374c9b93bf",
+      "assessment": "Full JSON content reviewed: code paths, hashes, historical scoped verification and synthetic temporary package location; no credentials, signed URLs or private user content observed. Historical limitations preserved."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-progress-history-through-17f4477.md",
+      "sha256": "602d47b23021378b52a58a79ee0dcd5533f279a865d1ab867551f902b2daac91",
+      "assessment": "Entire historical Markdown read; only technical scopes, repository/temporary fixture references and public GitHub links observed, no credentials, signed URL or private user content. Corrected obsolete authority declaration and relative ADR link; historical results unchanged."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-progress-history-through-3c200dc.md",
+      "sha256": "9ca724b850b0a8e03d3c6faa45695ee38ae8814a8c099809763dd3a73243c860",
+      "assessment": "Entire historical Markdown read in two bounded character ranges. Technical statements, temporary fixture and public GitHub links only; no credentials, signed URLs or private user content. Fixed archived authority and all evidence-relative links after checking targets; historical results unchanged."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-publication-review-c98edbc.json",
+      "sha256": "99cb7c27927f7a792663b5c513b11baba7578b896d255268c168ba92b021174d",
+      "assessment": "Full JSON content reviewed: scoped technical findings, source paths, hashes and historical verification; no credentials, signed URLs, host identity or private user content observed. Fixture approval hashes do not establish human authorization."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-purge-review.json",
+      "sha256": "d2e4a1878106e316fc0b164cc82ac8468373aa89228abce2b34f60c8d4c4b6ea",
+      "assessment": "Full JSON content reviewed: scoped technical findings, source paths, hashes and historical verification; no credentials, signed URLs, host identity or private user content observed. Fixture approval hashes do not establish human authorization."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-quarantine-review.json",
+      "sha256": "10d1292b85fa9c582cc2c6c1ce51c5079b72ca8022ada5bf517d483e84500570",
+      "assessment": "Full JSON content reviewed: scoped technical findings, source paths, hashes and historical verification; no credentials, signed URLs, host identity or private user content observed. Fixture approval hashes do not establish human authorization."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-recipe-approval-binding-gap.json",
+      "sha256": "dcf88d5710524f3aa8132852f1450ceb47042174c87fd8c83ecbd74a2272913d",
+      "assessment": "Full JSON content reviewed: scoped technical findings, source paths, hashes and historical verification; no credentials, signed URLs, host identity or private user content observed. Fixture approval hashes do not establish human authorization."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-recorder-receipt-review.json",
+      "sha256": "5bfb1da6aa1d25a34fb69b18c866312e75b2681fa1bce9ce394424d1456a8f48",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-recording-contract-review-e70e281.json",
+      "sha256": "fe7066bf0c58516257f2b799e1a9d3058f6a30b4e2ce49e7e608a816d586fdca",
+      "assessment": "Full JSON content reviewed: scoped technical findings, source paths, hashes and historical verification; no credentials, signed URLs, host identity or private user content observed. Fixture approval hashes do not establish human authorization."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-relocation-core-review.json",
+      "sha256": "c159b4389cfdc664b9f7d7e169e28a9c12e45f291d4658f045f5fc0e70502b0e",
+      "assessment": "Entire JSON reviewed; technical paths, hashes, scoped historical defects and verification only. No secrets, signed URLs or private user text observed. Fixture and overlapping test scope limitations explicit."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-relocation-inventory-review.json",
+      "sha256": "68b1b00ae8688a624a0c18ec04cc85b7e5ab98d378c1297b636041a9bc70ac3a",
+      "assessment": "Entire JSON reviewed; technical paths, hashes, scoped historical defects and verification only. No secrets, signed URLs or private user text observed. Fixture and overlapping test scope limitations explicit."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-relocation-retention-review.json",
+      "sha256": "b5337910e927c6c95a4fd3ce68028bcfe75c5a85911e62d9c7336ea92a2a6073",
+      "assessment": "Entire JSON reviewed; technical paths, hashes, scoped historical defects and verification only. No secrets, signed URLs or private user text observed. Fixture and overlapping test scope limitations explicit."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-remote-observations-review.json",
+      "sha256": "b496b83df7ea136859f91bf5f7a810279eed8cbc179a1ed8bb807240f1d9b0ea",
+      "assessment": "Prior full content review verified against current hash.",
+      "evidence": "docs/adr/evidence/ADR-002-evidence-content-review-recording-storage.json"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-retention-module-review.json",
+      "sha256": "c1b08b1fbd027a38f28673b6857d7b04ee0d6ea719c7d0b1fd485b516eec9f24",
+      "assessment": "Entire JSON reviewed; technical paths, hashes, scoped historical defects and verification only. No secrets, signed URLs or private user text observed. Fixture and overlapping test scope limitations explicit."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-reverse-relocation-review.json",
+      "sha256": "91ddca4e0f4b66f47de406bbd35c149ca9ed4cc8a2ca5ae200847ae502e5ed3c",
+      "assessment": "Entire JSON reviewed; technical paths, hashes, scoped historical defects and verification only. No secrets, signed URLs or private user text observed. Fixture and overlapping test scope limitations explicit."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-review-coverage-f89d644.json",
+      "sha256": "9aaab80140dd9b07d2af72620471be72672e039dc1e5770d0d2c4cba4e9ba693",
+      "assessment": "Full JSON content reviewed: historical scoped review findings, source paths and test hashes/output; no credential, signed URL or private user content observed. Partial review and pending acceptance labels retained as historical scope."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-runtime-review-inventory-c98edbc.json",
+      "sha256": "1eb508b5767cddefc803ad6bfb5215f355ffcefdc2a16fb6f5c7b9b84021e921",
+      "assessment": "Structured full string coverage: every unique JSON key and nonhash string read, all SHA256 values classified by strict hexadecimal format. Only repository paths, scoped review labels and evidence filenames observed; no credentials, signed URLs or private user content. Does not independently redo referenced source review."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-sensitive-evidence-screening.json",
+      "sha256": "5dd26e043e0589f86306221f92f209ab20f7e1653a33a27733cb9824ec4fbf03",
+      "assessment": "Full JSON including all 98 file entries read; only repository paths, hashes and public GitHub/loopback host counts observed. Screening limitations explicit; no manual approval inferred."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-sensitive-screen-cc4b069.json",
+      "sha256": "09d8c02ef06f6b42abd52f281b9a98424e30a17c79128ea3f431148b6861bbdc",
+      "assessment": "All 503 repository filenames read in two bounded batches; every file entry constrained to file/sha256 and hash validated as hexadecimal64. Report metadata, rules and limitations read separately. No secret/private filename observed. This reviews report content only, not all listed source bytes."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-shared-staging.json",
+      "sha256": "4038624fbaf3c640841861e4466a885afde59d0f54ce92513bf1c6a7c9821fac",
+      "assessment": "Full JSON content reviewed: historical scoped review findings, source paths and test hashes/output; no credential, signed URL or private user content observed. Partial review and pending acceptance labels retained as historical scope."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-skill-entrypoints-review.json",
+      "sha256": "589108dd4e89015fb8ccf63facb25aaa709e497e5645dbaf72d585f96d1d02cc",
+      "assessment": "Full JSON content reviewed: historical scoped review findings, source paths and test hashes/output; no credential, signed URL or private user content observed. Partial review and pending acceptance labels retained as historical scope."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-specialist-contract-review.json",
+      "sha256": "24df48df3cd0b8f4d8f1eac37e10d21aa44f04ab87b465f321548c621d1ec4db",
+      "assessment": "Full JSON content reviewed: historical scoped review findings, source paths and test hashes/output; no credential, signed URL or private user content observed. Partial review and pending acceptance labels retained as historical scope."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-staging-object-review.json",
+      "sha256": "7f190c549be9a7c9bf378a1adf6dc5edd02dadbb22901fd6d33cd7e44da68be5",
+      "assessment": "Full JSON content reviewed: historical scoped review findings, source paths and test hashes/output; no credential, signed URL or private user content observed. Partial review and pending acceptance labels retained as historical scope."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-staging-review-c98edbc.json",
+      "sha256": "41284822597a4929870ee3ce26e55ac20bbedad842bccee26942ca845000eec6",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-storage-policy-schema-review.json",
+      "sha256": "456419da7be5c2dac7b7e217c9b736e6390b1d194c8a958a814303b204dfbd57",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-storage-video-review.json",
+      "sha256": "45db4b1ac3723b094fe1c50956815d1d9d990ca75f6639debe975719c28bd182",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-app-orchestration-review.json",
+      "sha256": "2f156708a15c7c2335a0589ba9583de53e042ab0f47d9135b9b9e32c7acdbe7f",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-archive-policy.json",
+      "sha256": "3286cf148b71cc46835679956520338307d69c67309ded2ea0fbd2c8909f28cf",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-card-rendering-review.json",
+      "sha256": "d14a7ffb1a405826f952e8ca46148397e90756daa095f2a58db18c7a145b213f",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-contract-review.json",
+      "sha256": "0182a8b1dd76e08fe1f8fe57e3673a982b7a7bafcb61c0c348fd0e0fff5a7eaa",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-copy-history-review.json",
+      "sha256": "4fac0a6d93f191e6064c0da96706ea7b4c370989933e118a1422eb8d4cd3c95f",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-directory-review.json",
+      "sha256": "e56bdc11e6616297b59a934ecd8dc34cb1dfa573ff5783fc54677b31efed5470",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-entry-download-review.json",
+      "sha256": "6ae8931270bbcf4918ae0842503a2da17b03001831dd138c5783a5d0aea03fba",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-export-readiness-review.json",
+      "sha256": "144278d1ffb4d68402e4febe2f0103e4e82b24a4426933c4951a586a9398562a",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-history-review.json",
+      "sha256": "85e43bf00445fe0996ed8d101094c735c276491e025979ac607e14ed67f3c2d6",
+      "assessment": "Full JSON reviewed: technical schema/Studio/staging findings, hashes and scoped historical tests. No credentials, signed URLs or private user content observed; actual browser/product limitations remain separate."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-inventory-review.json",
+      "sha256": "410c481c7c4a98fe188e9e3d257f5718b5254068b0496737a13e3e784a5b77cf",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-maintenance-review.json",
+      "sha256": "ae9d8e60f865ab727e4a073878c5efa1f9f9376e5dd8ef576848b7b2913235bf",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-obsolete-toolbar-review.json",
+      "sha256": "80678254b23563725ad80dc902bdda2469637b21e891958b1ed26bb358bf30fb",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-policy-browser-a28e698.json",
+      "sha256": "a34584139e0d607affdcf5a482c1600509abf7c32253353fcc8d7a17f01dbb9d",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-policy-budget-review.json",
+      "sha256": "51b017a7fb71adb05736c2447d1630d8084316aefeae2de539fa12fe9e18122d",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-release-panels-review.json",
+      "sha256": "7ab738800b87e7ea104e9ef956df1b359028e6e18ea54a4efb5109bda8016cea",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-relocation-actions-review.json",
+      "sha256": "6b0464ae3c653ab64426d2f97621d2462b30589208e65a498eb74ad5d548aad4",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-run-history-review.json",
+      "sha256": "7acc6fbd38c7c736ca5174a191e7cdccab52612e15f4ec683b464067f4a44b19",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-save-editor-review.json",
+      "sha256": "3a09077d044e1f0a9ce4a0884eda2731dd56b0a3bcb17b035e2a294c2fb7073f",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-server-review.json",
+      "sha256": "4051ed8b70ef5a9a4e4cfd5af3c88b60b30d604faf9cceb16d1d6f1226fed54f",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-studio-types-purge-review.json",
+      "sha256": "acb1630ab90e8aa273ebcd15ea5f1c525e4abf80c382702912bf486b1fd1c063",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json",
+      "sha256": "c2de62a3e5018bf3e9beb6d8317d28a69bec696abbae9d78c5bc0d0297af98ce",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-archive-contract-review.json",
+      "sha256": "71034fab1aa437b402b75a79c4a582c7619f16419dbcb85596febf912a4c17dd",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-archive-location-review.json",
+      "sha256": "88c54d191d483be28665c87d05ac4ecb43f04762657922c5cc2bcf5511a99815",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-archive-policy-review.json",
+      "sha256": "e9e397f438ead9520069febe8c9eaa23b93e95944a8f0dc2de3b7f7705eb9d14",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json",
+      "sha256": "c1e7edaa602fb1e76eb443553cad38f5c816a2855d585ce4c488ce4554e6d84d",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json",
+      "sha256": "0fc48847aab52e71b70b95333709e28270d1f49dd42b50f4754c439c9a6c4b9e",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-attempt-audit-review.json",
+      "sha256": "6821628ef1d010f321a38ee9e0dd4af5b9279725042f6b8ea7a73ce88e701268",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json",
+      "sha256": "4b8a91afb8bf34f6e4180790968778500f60f75db435a73ad4ed3164cd7ce011",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-capture-dependency-review.json",
+      "sha256": "45bdbf19ca47e5a7020f3148ed56d75704bbbaf55e94e74e965e95c117cd0e5c",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-configuration-identity-review.json",
+      "sha256": "30efd11c4ccfeb6437503ffe30681595c5a8081f111a0f6e82249373f88f2a8b",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json",
+      "sha256": "130a3eca17705ca19e565b1432fab32574947fec0ede2331d4192aa20124f7b4",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-configuration-layers-review.json",
+      "sha256": "546d448afd342ed742b8bba177d8de88ca5028abc50d7d2f698bc568ad2d8d6b",
+      "assessment": "Full content read: source-relative identifiers, commands and fixture assessments only; no actual credential, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json",
+      "sha256": "84be322c2d15d791c5c70852e249d2143232edc84f786969f16a94ec9b8fc3fe",
+      "assessment": "Full content read; source-relative names, hashes and fixture/regression descriptions only; no actual secret, signed URL or private user content observed. Historical open-followup fields are observations at that review time, not current completion authority."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json",
+      "sha256": "bca359db799ede218498d17e3a1a30ee7f2f84f0d9f82976559a56e25c2039bd",
+      "assessment": "Full content read; source-relative names, hashes and fixture/regression descriptions only; no actual secret, signed URL or private user content observed. Historical open-followup fields are observations at that review time, not current completion authority."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-deleted-workflow-review.json",
+      "sha256": "5edc1789196fe250604ecb2701f95f04d638c4e3f0396b2a8a1b58b4ebda9684",
+      "assessment": "Full content read; source-relative names, hashes and fixture/regression descriptions only; no actual secret, signed URL or private user content observed. Historical open-followup fields are observations at that review time, not current completion authority."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-delivery-observation-review.json",
+      "sha256": "7805c946536c3725e5cf27a33605eefc09f017f40ad3dab9b98866004b54e26c",
+      "assessment": "Full content read; source-relative names, hashes and fixture/regression descriptions only; no actual secret, signed URL or private user content observed. Historical open-followup fields are observations at that review time, not current completion authority."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-delivery-publication-review.json",
+      "sha256": "d937ef4bfedfdec4b45be53729076b2677fac618872eecccfe0f2ae99412b2d9",
+      "assessment": "Full content read; source-relative names, hashes and fixture/regression descriptions only; no actual secret, signed URL or private user content observed. Historical open-followup fields are observations at that review time, not current completion authority."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-diff-review-inventory.json",
+      "sha256": "d0fd557322f06e5b8c8d127763f793cc7eda5f07664dfd45b3fc291dfe843101",
+      "assessment": "Complete parsed field coverage: manually read all 177 source filenames, all 87 evidence reference names and every other unique text value; validated all SHA256 values as lowercase hex64. No private host location, credential, signed URL or personal content observed. Did not treat the earlier truncated output as complete."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json",
+      "sha256": "fc3a437466bda41d2282dee55b589fada0fad8bef3bffd49792757159d82455c",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-external-archive-review.json",
+      "sha256": "ffeeffa8b138b7c8555e4b5b3d772035096821c0551cbd02065866c7039d75ba",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-external-identity-review.json",
+      "sha256": "3066e50928fdc2abef1ce675f3804866789442f23eb027292054f62aa7d71372",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-external-publication-purge-retrieval-review.json",
+      "sha256": "faafdb694cea32d52cc173e51299011a39ad06487b6820f85b83bc8771106c8b",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-external-store-review.json",
+      "sha256": "50ead010905fa651722f2b13c283df2b7f5915dfc330dccb571ce6c362787527",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json",
+      "sha256": "0b2210adf10133422a0e8634db42ac0de5f79e4f6ac851ba0fa32e9e3ba3fd50",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-forward-inventory-dependency-review.json",
+      "sha256": "f434885812f252d8f72c9c869a83e7861ad82e7badb8f74459aabd62110e9566",
+      "assessment": "Entire JSON content read; fixture and regression facts only, no actual credential, signed URL, host private path or personal capture content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-git-remote-lfs-review.json",
+      "sha256": "ae50b6af5458c38f7747d8e795e85716ee43f29369c54ac5968aed65393288a5",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-git-retrieval-review.json",
+      "sha256": "d0b34f1e9e1b685fab22a8a6e02feef8575c1215b38755a56f4e824ef4fd66e7",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-history-timeout-review.json",
+      "sha256": "dadd2a9af65c482db5a9a63c6509bcf500907cd20af86863cf0caf283ad9adc7",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-input-status-review.json",
+      "sha256": "624d606829a0f4d37c3822d5f4f01f67615078038e7db49e2eb0f1791561aed8",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-inventory-budget-review.json",
+      "sha256": "584634bc55d3404331e284c89fbdef2adbd6872a2eef67fe004b576a7d6ad836",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-layered-portability-review.json",
+      "sha256": "1b32a5752e615339c1a4a12f33be20cd8f17f5f4e5ec6e4a196ffbbf536201da",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json",
+      "sha256": "bebdf9ae97089cf9534433ea40872d8361f1eb8a1b002bd585a112fbfd332878",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-layered-save-review.json",
+      "sha256": "45b8c37e93e4a6bc29fcf4ceb915ce926df81ee3f894a1ea46dfc847f6ae4419",
+      "assessment": "Entire JSON content read: source-relative names, regression commands and fixture limitations; no actual secret, signed URL, host user path or private user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-lease-contract-review.json",
+      "sha256": "4e6114f3e00fba00fe7c5255e7ef88cd4e9b4c135acb3c3bf621be4646a23d5d",
+      "assessment": "Full JSON read; regression/source/fixture fields only, no actual credential, signed URL, private path or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-local-switch-execution-review.json",
+      "sha256": "c70f844986cd9db1953732838f44f8c39725c1a4f45fba59820a98334f570892",
+      "assessment": "Full JSON read; regression/source/fixture fields only, no actual credential, signed URL, private path or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json",
+      "sha256": "93f02486a41d037f9ddd593cfcbb9733efaaf06ae3f49e96bec79fe49edee7e2",
+      "assessment": "Full JSON read; regression/source/fixture fields only, no actual credential, signed URL, private path or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-maintenance-relocation-coordination-review.json",
+      "sha256": "fbafd444f6355093ca463ef6a2f4c63df738c1cbfd89549461e1f15e7f7f917d",
+      "assessment": "Full JSON read; regression/source/fixture fields only, no actual credential, signed URL, private path or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json",
+      "sha256": "43477da6baa0bc275071c8985d7de4c01451436d352d097cef0b6ecd94a5582a",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-managed-preview-review.json",
+      "sha256": "896d117d526fe54c2b5a94d1eb7b87b2e6af03f0f475bb425aacd4d3c76ae60f",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-native-preview-archive-review.json",
+      "sha256": "7d21e7fd8cfcbd88a66c3996b59428e4a76c2962f92a988664c32efea78f0f3d",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json",
+      "sha256": "f22e026d105c786b29935493f2536b4a8c9ff4e2966d33c82b43b9c4cb944f7c",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json",
+      "sha256": "c1b8be41515bf8f996d3cc62bdad2ae01b81546633b0e081e78ff247080f97d4",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-png-integrity-review.json",
+      "sha256": "2f563c362235fa8fb3707ffa0c8883ef3d35a6afc401a2ddc96136f4264f97b8",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-policy-state-review.json",
+      "sha256": "c2932652dd799e557791889b6b5cc425d6bcb1d089e9ea532fdc105edda551e7",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-portable-identity-review.json",
+      "sha256": "3ad19c89a67d033724534ea6ff8fc5f2d780b591805e853b554ad81940311200",
+      "assessment": "Full JSON content read; source-relative filenames, hashes, test commands and bounded fixture descriptions only; no actual credential, signed remote URL, private host user path or personal media content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-post-merge-binding-review.json",
+      "sha256": "aa9aac3e019148264f9f00ca8a3234cf5edaca8dba98450de00edb40a246e8e9",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-poster-contract-review.json",
+      "sha256": "aa68684b989a753f07053c8c89e864df9bbbd47bb6aaa39f44043dd17732ba55",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-poster-production-review.json",
+      "sha256": "ba52758f0f90be25b1f65b2a09fed909d580080c8d54a9df6e1386f3e173be34",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-private-evidence-diagnostics-review.json",
+      "sha256": "c057a2dc33d9871ff6ff8ae7286536265881f66195d47ae1f2418b1d61d48152",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json",
+      "sha256": "47ee94d31825b05099147a5726078242890b112f9da551a5b72ce6c360679600",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-production-source-review.json",
+      "sha256": "b1809070d7650392427f23c1126d3dad8e82b6e2f3ddaa1867316248e9a42a53",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-publication-consumption-review.json",
+      "sha256": "e3cbf47859c6e6fb18ce9886402e388b5338fc22f6b60658daa81d758c6ef4ef",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-publication-retrieval-review.json",
+      "sha256": "1642859f5459c36a666ed6e1c3ef0dd7ae785880fb2f0400101f0b4b7accd233",
+      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-publication-review.json",
+      "sha256": "21d6d5e578723d2b954e2281e841d0a54f3f5d47e625fd092c6b52cb97eb11ae",
+      "assessment": "Full JSON read; source-relative fixture/regression descriptions and hashes only; no actual credential, signed URL or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-purge-process-crash-review.json",
+      "sha256": "3822bfb1d2361ae92258895dded0dc384da480aa01e0c832b949ea8a8aec0712",
+      "assessment": "Full JSON read; source-relative fixture/regression descriptions and hashes only; no actual credential, signed URL or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-quarantine-crash-status-review.json",
+      "sha256": "09a9177653cc0fae5f5380ee62db74fba2695eb73ad394a93e431b194ee602df",
+      "assessment": "Full JSON read; source-relative fixture/regression descriptions and hashes only; no actual credential, signed URL or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-record-integrity-review.json",
+      "sha256": "40d682f3c12db43978b86b085c3fc0702e9272fdb8732b4348c7a54c8e33bf3f",
+      "assessment": "Full JSON read; source-relative fixture/regression descriptions and hashes only; no actual credential, signed URL or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-record-schema-review.json",
+      "sha256": "bf024171c656334b240365784b427e982234673480fe9f962e6654f8c03a6f70",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-recording-executor-review.json",
+      "sha256": "ebd7fc32b206243dd2dbcc19695491cff5f4c1f85cbbdc1763d1fdd960355c66",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-recording-media-review.json",
+      "sha256": "e5fe455a464f30fc04fe1aaf283359781297e65d7c217cb6561362efcfcfa2cc",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-recovery-lock-durability-review.json",
+      "sha256": "d6abc203f5b1f6f549c4fc156314bbf3c5874a087f5330c3de543d913b819a6a",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-config-evidence-review.json",
+      "sha256": "5da81b3ebca9f2bc82d08e532acefc62229cf4a7ae92ba150f6e4ab7dd98ef07",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-layer-review.json",
+      "sha256": "c691ad12420cbd830e391d20a2ffc4f832ad50799c4ec8b3992e1bc05552b484",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-process-crash-review.json",
+      "sha256": "9ec7c8cdc57b0192a4115e6d7abbc826ba23ca18ff46f4629c5903189daac53b",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-purge-review.json",
+      "sha256": "b61849b9e437bc021ee5eefd75456e737c30c41e5cce3073097dfc26d61bfa56",
+      "assessment": "Full JSON read; source-relative recording/recovery regression summaries and hashes only; no actual secrets, signed URLs or private user content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json",
+      "sha256": "4aaf1e1a4e285fe1f4527cc8b943ffe764bc30fc0448cff227ad4d70bcfb1711",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json",
+      "sha256": "e422fd6ffc572fb92aac175f5fd60c92a2e6bdcd75177e362a559254cda4dbee",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-staging-backup-review.json",
+      "sha256": "94f800af94ff4d36edb75e193b1aa31ffe09b0ee6c4e91d4628b7e60d9ed49bb",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-relocation-status-review.json",
+      "sha256": "8a80a2f6c0fa4798b412a5d5144989905f09c7cb480d199459ad9f63016d7258",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json",
+      "sha256": "0cc777c2eef55696c6dc17a500a91a3e7b95a2eb2156829f7f87ae9cd3aeac49",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-remote-observations-review.json",
+      "sha256": "679469bc24d3f7ce7649fb47a704c03b7720e24728fb8185fdfc1bca4a675ea7",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content; corrected contradictory stale remaining-range limitation after verifying current file contains 993 lines"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json",
+      "sha256": "247c83bd969644372ac0a9e27b24a35a8cccc18fe3de4230b28a6579d3050063",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-repeated-relocation-review.json",
+      "sha256": "fa423546ff1d99abcca806ac9471b6c27ecfed146f4a731c9f6e8969f4dcb538",
+      "assessment": "Full JSON read; relative test/module names, hash bindings and synthetic evidence descriptions only; no actual signed URL, secret, private host path or personal media content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-restore-intent-review.json",
+      "sha256": "a8c59e7aa9838f84661349f0450d565a11adee428aefaa1db5a827bf8ddc1607",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-retention-policy-review.json",
+      "sha256": "765d42bb99e5a1d59ae83763f696892b45baf80ff51ae2f91748a87bb6081876",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-retrieval-deadline-review.json",
+      "sha256": "94a4a8882a45f91a84a77ba1de4e2ee439a65a6001acf5d097477165f2a61a65",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-retrieval-policy-review.json",
+      "sha256": "38dd3a94776007e61480b15fbe18aca49ecd4a7dff490c4863d26f1f71a50c90",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-reverse-layer-review.json",
+      "sha256": "ab6ee09589e2ed266d693f5c6f4a40333e8d1fbdc0954aca58dcef15d08d33e4",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-reverse-plan-config-rollback-review.json",
+      "sha256": "a4f936aa6dc8ec57bbd46043007b05657df5764eab210f92e77978ccc253ccf3",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-reverse-switch-rollback-review.json",
+      "sha256": "9bccfe69992d9d2099007adf8b1fc0cd3b11fa98d0e832385a1064a6dc7d1757",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json",
+      "sha256": "5bb2d6cf7a9f8cdfb610fe062450d1eebca8ca401c3359b976843f0ad752fa53",
+      "assessment": "Full JSON read; source-relative fixture, command and hash fields only; no actual credential, signed URL or private content observed"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-server-cleanup-review.json",
+      "sha256": "8b69ba16edba3294db2a2eba3f713ca51e5e09b2fdbc9b044d8f6c0b90f67f1d",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-staging-proof-review.json",
+      "sha256": "e319864e949a669b0e33d5efc050ff58fe8b41634d924427609f955f6ce90300",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-storage-panels-review.json",
+      "sha256": "dd5b357a9ad001b15ac84a3887e5a9d8b76fdc4ee9e5632d86b1530ce690e7c3",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-storage-preview-review.json",
+      "sha256": "c5b662a967020a7e9263eaa358a990264dae4c8bde5787eb0e86aed04faac36b",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-studio-maintenance-recovery-review.json",
+      "sha256": "3a001420d3a9a06f4ce0fb55af25bd2943adcbddce71af4034d0bdfca5b3dc9c",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-studio-publication-review.json",
+      "sha256": "76ea6e3baecbb4001558858308dc4739cb39a2a01f16c2ad89ca69fd91dd2f4f",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-studio-release-review.json",
+      "sha256": "6e21ea761cf38286b708881e782e43c51bce8a7ec2ef603622fab88b07a90d26",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-test-validation-policy-review.json",
+      "sha256": "cf10e897bf880db86d73d81dc2f2383e4b654ca5a5da882058c4866e5b475e01",
+      "assessment": "Full JSON read; relative source paths and bounded fixture/test observations, no actual secrets, signed URLs or captured personal content"
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-validator-module-review.json",
+      "sha256": "0b44866429fc390d9aa9fe281baf1453260aaaaa1ce13e66f6b1893510653d5f",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    },
+    {
+      "path": "docs/adr/evidence/ADR-002-validator-png-integrity.json",
+      "sha256": "9576046d3605dfd5c6457bc2be772fc97eab846b76e302ed33ae55665a6e3794",
+      "assessment": "Full JSON content reviewed; code paths, source hashes, test results and historical scoped findings only. No credentials, signed URLs or private user content observed. Fixture authorization and technical validation do not substitute real product/ASC gates."
+    }
+  ],
+  "reviewed_file_count": 209,
+  "findings": [
+    "Archived status declarations and relative links corrected; historical results preserved",
+    "No credentials, signed URLs or private user content observed within reviewed evidence content"
+  ],
+  "limitations": [
+    "Source, tests, other documents and skills require separate sensitive-content coverage reconciliation",
+    "Private originals and media content excluded",
+    "Structured inventory reviews read all unique textual values and validate hash formats rather than printing repeated raw records",
+    "Report does not self-attest its own review"
+  ]
+}

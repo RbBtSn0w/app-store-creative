@@ -2,7 +2,7 @@
 
 更新日期：2026-10-09。整体状态：**核心实现及后续修复已提交；09d9a08完整CI通过，之后的删除观察修复仍在验证；完整审查、真实产品验收与发行未完成**。
 
-本文件是当前进度的唯一权威。完整需求见 [ADR-002](ADR-002-artifact-lifecycle-and-release-archive.md)。历史结果保留在 `evidence/`，每份证据仅覆盖其明确提交和范围；不以测试通过比例计算整体完成度。
+本文件是历史快照，不是当前进度权威。当前状态见 [实施状态](../ADR-002-implementation-status.md)，完整需求见 [ADR-002](../ADR-002-artifact-lifecycle-and-release-archive.md)。历史结果保留在 `evidence/`，每份证据仅覆盖其明确提交和范围；不以测试通过比例计算整体完成度。
 
 ## 工作区与交付
 

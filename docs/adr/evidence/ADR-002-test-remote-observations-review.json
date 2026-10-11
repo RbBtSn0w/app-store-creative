@@ -23,7 +23,7 @@
     "Custody diagnostics exclude private paths, retain corrupted records unchanged and do not claim remote verification"
   ],
   "limitations": [
-    "Remaining file ranges and complete modification diff not reviewed",
+    "Full 993-line file and modification diff reviewed; imported helper tests require their own scoped evidence",
     "Synthetic evidence does not establish actual ASC acceptance"
   ],
   "diff_check": "Only three removed lines replace old evidence-free fixtures/CLI import with required raw evidence hash and bytes; no existing assertions removed.",
