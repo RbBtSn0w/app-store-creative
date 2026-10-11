@@ -42,6 +42,22 @@ class AscObservationAdapterTests(unittest.TestCase):
 
 class BoundAscAdapterTests(unittest.TestCase):
     response = AscObservationAdapterTests.response
+    def test_machine_and_url_references_are_rejected_case_insensitively(self):
+        from asc_observation_adapter import preview_observations
+        plan = {'target': {'app_id': 'app'},
+                'assets': [{'artifact_id': 'artifact', 'role': 'preview'}]}
+        scope = {'target': plan['target'], 'artifact_id': 'artifact',
+                 'localization_id': 'localization', 'remote_id': 'preview',
+                 'observed_at': '2026-10-07T01:00:00+00:00',
+                 'evidence_reference': 'asc:read:fixture'}
+        for key in ('localization_id', 'remote_id', 'evidence_reference'):
+            for value in ('HTTP://example.invalid/private',
+                          'hTtPs://example.invalid/private', 'FILE:/private/fixture'):
+                with self.subTest(field=key, value=value):
+                    with self.assertRaisesRegex(ValueError, 'sanitized'):
+                        preview_observations(plan, json.dumps(self.response()).encode(),
+                                             {**scope, key: value})
+
     def test_bound_observations_match_plan_without_playback(self):
         from asc_observation_adapter import preview_observations
         plan = {'target': {'app_id': 'app', 'version_id': 'version', 'platform': 'MAC_OS'},

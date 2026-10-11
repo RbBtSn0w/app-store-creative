@@ -84,7 +84,7 @@ def preview_observations(plan, response, scope):
     for key in ('localization_id', 'remote_id', 'evidence_reference'):
         value = scope[key]
         if (not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9_.:/-]{1,256}', value)
-                or value.startswith(('/', 'file:', 'http:', 'https:'))):
+                or value.lower().startswith(('/', 'file:', 'http:', 'https:'))):
             raise ValueError('ASC executor references must be sanitized identities')
     observed = datetime.fromisoformat(scope['observed_at'])
     if observed.tzinfo is None or observed > datetime.now(timezone.utc) + timedelta(minutes=5):
