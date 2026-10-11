@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "scope": "Native test readiness deadline; no product recording performed",
+  "finding": "Blocking readline before communicate allowed opt-in native capture test to wait indefinitely",
+  "red": {
+    "test": "ReadinessDeadlineTests.test_partial_signal_without_newline_times_out",
+    "result": "FAIL: TimeoutError not raised",
+    "duration_seconds": 1.043
+  },
+  "green": {
+    "tests_run": 13,
+    "skipped": 1,
+    "duration_seconds": 0.841,
+    "resource_warnings": "errors",
+    "result": "PASS"
+  },
+  "coverage": [
+    "partial line is bounded",
+    "complete start line preserves later completion line",
+    "native normalization and managed recording surrounding regressions"
+  ],
+  "limitations": [
+    "Actual authorized seeded-window capture was not rerun",
+    "Initial surrounding command referenced nonexistent test_record_app_window; corrected suite rerun passed"
+  ],
+  "files": {
+    "tests/test_native_recording_signals.py": "3384de8377bc918630ec084e743deb96a4abacc3bfb5c9da111ac870c0415d4f"
+  }
+}

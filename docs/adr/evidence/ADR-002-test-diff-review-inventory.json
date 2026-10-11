@@ -1243,9 +1243,9 @@
     {
       "file": "tests/test_native_recording_signals.py",
       "change": "A",
-      "sha256": "ed2854aa852ab2bbbebd197915574436926712a158179d0b96e08d536d2d7cf1",
+      "sha256": "3384de8377bc918630ec084e743deb96a4abacc3bfb5c9da111ac870c0415d4f",
       "review_status": "reviewed_current_diff",
-      "evidence": "docs/adr/evidence/ADR-002-native-capture-and-ci-d3a6d25.json"
+      "evidence": "docs/adr/evidence/ADR-002-native-readiness-deadline-review.json"
     },
     {
       "file": "tests/test_portable_probe_privacy.py",
