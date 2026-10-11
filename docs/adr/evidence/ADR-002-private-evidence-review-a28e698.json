@@ -1,0 +1,31 @@
+{
+  "head": "a28e698765e2ebed6638233a07cc9ea2afbd7ed1",
+  "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py",
+  "sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4",
+  "reviewed_functions": [
+    "observation_summary",
+    "retrieve_observation_evidence",
+    "record_observation",
+    "retain_observation_evidence",
+    "_verify_observation_summary",
+    "persist_observation_evidence",
+    "requirements",
+    "gate_result",
+    "_publication_state",
+    "_evidence_custody",
+    "_observation_evidence_exports",
+    "_export_observation_records"
+  ],
+  "findings": [],
+  "scope_notes": "Strict fact and identity fields; summary and raw hash bindings; producer eligibility; configured backend references; read-only evidence custody; independent upload/media verification, freshness and conflict resolution; authorization reference exported as hash. No claim of all remaining runtime or frontend review.",
+  "test_terminal_verified": true,
+  "overall_review_complete": false,
+  "tests": {
+    "executed": 79,
+    "passed": 79,
+    "skipped": 0,
+    "seconds": 122.874,
+    "exit_code": 0,
+    "log_sha256": "92859bb3e6dbcb10350f12c4935c4af6b42a2261f7971a9c6b4552a2e24905f7"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "head": "a28e698765e2ebed6638233a07cc9ea2afbd7ed1",
+  "reviewed_files": {
+    "configuration_layers.py": "b3413f081be26ba2fe0af9d73506a3746dc37d18f7a91b9b4ce5e7bc8f6c93c7",
+    "archive_policy.py": "f421c8e91cd09dd2d4197c95897ad1f6e5cc6310bbeb686ace99d91af0e0b063"
+  },
+  "additional_review_scope": "artifact_lifecycle.py StoragePaths.resolve and binding only",
+  "review_notes": [
+    "Local fields are restricted to identity, storage and named access backends; shared archive and operational policy overrides rejected before writes.",
+    "Documents reject duplicate keys and symlinks and bind content plus observed file identities and local absence.",
+    "Storage changes preserve recipe identity and owning-layer authority; root resolver checks explicit external paths, overlap and repository metadata boundaries."
+  ],
+  "local_policy_override_probe": [
+    {
+      "field": "archivePolicy",
+      "rejected": true,
+      "reason": "Invalid host-local configuration schema"
+    },
+    {
+      "field": "artifactPolicy",
+      "rejected": true,
+      "reason": "Invalid host-local configuration schema"
+    }
+  ],
+  "tests": {
+    "executed": 53,
+    "passed": 53,
+    "skipped": 0,
+    "seconds": 3.04,
+    "log_sha256": "35fccc6480e33ba8d25b88fc3e39b7562e44b8daaf3cdf7cfebfb29f273f1a6d"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

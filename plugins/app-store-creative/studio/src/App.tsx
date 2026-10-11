@@ -1,11 +1,27 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CardView } from './components/CardView';
 import { CreativeConfig, TargetDevice, TARGET_DIMENSIONS, CardConfig } from './types';
-import { localizedFields, resolveCard, updateVariant } from './project';
+import { defaultCardLayout, localizedFields, resolveCard, updateVariant } from './project';
 import { releaseState } from './releaseState';
 import { ExportView } from './ExportView';
 import { STYLE_PRESETS } from './stylePresets';
 import { downloadDraft } from './downloadDraft';
+import { RunHistory } from './RunHistory';
+import { DeliveryHistory } from './DeliveryHistory';
+import { InventoryView } from './InventoryView';
+import { MediaBudgetPanel } from './MediaBudgetPanel';
+import { OperationHistory } from './OperationHistory';
+import { PublicationHistory } from './PublicationHistory';
+import { ObservationEvidence } from './ObservationEvidence';
+import { MaintenancePanel } from './MaintenancePanel';
+import { RelocationMaintenance } from './RelocationMaintenance';
+import { RelocationStatusPanel } from './RelocationStatusPanel';
+import { RelocationActions } from './RelocationActions';
+import { RelocationRecovery } from './RelocationRecovery';
+import { CandidateApproval } from './CandidateApproval';
+import { StorageSettings } from './StorageSettings';
+import { ArchivePolicySettings } from './ArchivePolicySettings';
+import { loadStoragePreview, storageSaveConflict, type StoragePreview } from './storagePreview';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -39,6 +55,10 @@ export const App: React.FC = () => {
   const [selected, setSelected] = useState('');
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [storagePreview, setStoragePreview] = useState<StoragePreview | null>(null);
+  const [storageError, setStorageError] = useState('');
+  const [checkingStorage, setCheckingStorage] = useState(false);
+  const storageCheckGeneration = useRef(0);
   const [busy, setBusy] = useState(false);
   const [operation, setOperation] = useState<'import' | 'export'>('import');
   const [layoutFindings, setLayoutFindings] = useState<Record<string, string>>({});
@@ -51,6 +71,7 @@ export const App: React.FC = () => {
   const version = useRef(0);
   const draftDirty = useRef(dirty); draftDirty.current = dirty;
   const saveJob = useRef<Promise<string | undefined> | null>(null);
+  const storageChanged = useRef(false);
   const params = new URLSearchParams(window.location.search);
   const exporting = params.get('export') === 'true';
   const refreshStatus = useCallback(async () => {
@@ -92,13 +113,32 @@ export const App: React.FC = () => {
     if (!state.current) return;
     const next = typeof change === 'function' ? change(state.current) : change;
     state.current = next; setConfig(next); version.current++; setDirty(true); setStatus({}); setNotice('');
+    storageCheckGeneration.current++; setStoragePreview(null); setStorageError(''); setCheckingStorage(false);
+  };
+  const previewDirectories = async (snapshot = state.current): Promise<StoragePreview> => {
+    if (!snapshot) throw new Error('Create a project first');
+    const generation = ++storageCheckGeneration.current, startedAt = version.current;
+    setStoragePreview(null); setStorageError(''); setCheckingStorage(true);
+    try {
+      const report = await loadStoragePreview(snapshot);
+      if (generation === storageCheckGeneration.current && startedAt === version.current) setStoragePreview(report);
+      return report;
+    } catch (reason) {
+      if (generation === storageCheckGeneration.current && startedAt === version.current) setStorageError((reason as Error).message);
+      throw reason;
+    } finally { if (generation === storageCheckGeneration.current) setCheckingStorage(false); }
   };
   const save = (): Promise<string | undefined> => {
+    if (storageChanged.current) return Promise.reject(new Error('Storage switching was requested. Reload the project after checking relocation status.'));
     if (saveJob.current) return saveJob.current;
     if (!state.current) return Promise.reject(new Error('Create a project first'));
     const snapshot = state.current, startedAt = version.current;
     setSaving(true); setError('');
-    const job = request('/api/config', snapshot, revision.current).then(({ revision: next }) => {
+    const job = previewDirectories(snapshot).then(report => {
+      const conflict = storageSaveConflict(report);
+      if (conflict) throw new Error(conflict);
+      return request('/api/config', snapshot, revision.current);
+    }).then(({ revision: next }) => {
       revision.current = next;
       if (version.current === startedAt) setDirty(false);
       setStatus({}); void refreshStatus(); setNotice(version.current === startedAt ? 'Project saved' : 'Earlier edits saved. Newer changes still need saving.'); return next;
@@ -157,10 +197,10 @@ export const App: React.FC = () => {
   const layoutErrors = config.cards.some(card => !!layoutFindings[`${target}/${locale}/${card.id}`]);
   const checked = !layoutErrors && !dirty && !busy && !error && status.configRevision === revision.current && status.validation?.status === 'PASS';
   const verified = checked && config.studio?.requireExportEvidence === true;
-  const legacyChecked = checked && !config.studio?.requireExportEvidence;
+  const policyChecked = checked && !config.studio?.requireExportEvidence;
   const total = config.cards.length * config.targets.length * (config.project.locales?.length || 1);
   const stateLabel = releaseState({ hasCards: !!config.cards.length, dirty, saving, busy,
-    exporting: operation === 'export', verified, legacyChecked, error: !!error, inputsChecked: status.inputErrors !== undefined,
+    exporting: operation === 'export', verified, policyChecked, error: !!error, inputsChecked: status.inputErrors !== undefined,
     inputsMissing: !!status.inputErrors?.length, layoutErrors }) +
     (busy && status.total ? ` · ${status.completed || 0}/${status.total}` : '');
   const mutate = (change: Parameters<typeof updateVariant>[4]) => { if (active) edit(current => updateVariant(current, active.id, target, locale, change)); };
@@ -172,17 +212,28 @@ export const App: React.FC = () => {
         <p role="status" className={verified ? 'text-emerald-300 text-sm' : 'text-white/60 text-sm'}>{stateLabel}</p></div>
       {!creating && <div className="flex flex-wrap gap-2">
         <button disabled={busy || saving} onClick={() => save().catch(reason => setError(reason.message))}>{saving ? 'Saving…' : 'Save project'}</button>
-        <button disabled={busy || !config.cards.length} onClick={() => exportProject('selected')}>Export selected set</button>
-        <button className="primary" disabled={busy || !config.cards.length} onClick={() => exportProject('all')}>Export full matrix</button>
+        <button disabled={busy || saving || !config.cards.length} onClick={() => exportProject('selected')}>Export selected set</button>
+        <button className="primary" disabled={busy || saving || !config.cards.length} onClick={() => exportProject('all')}>Export full matrix</button>
       </div>}
     </header>
     {error && <section role="alert" className="mx-6 mt-4 p-4 bg-red-950/40 border border-red-400/30 rounded-xl whitespace-pre-wrap">
       {error}<div className="flex gap-3 mt-2"><button onClick={recoverDraft}>Download current draft</button>
         <button onClick={() => { if (!dirty || confirm('Reload the project? Download your draft first to preserve unsaved changes.')) location.reload(); }}>Reload project</button></div></section>}
     {notice && <p role="status" className="mx-6 mt-4 text-indigo-200">{notice}</p>}
+    <ArchivePolicySettings policy={config.archivePolicy} budget={config.artifactPolicy?.mediaBudgetBytes} disabled={busy || saving}
+      onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))}
+      onBudgetChange={budget => edit(current => {
+        const policy = { ...current.artifactPolicy, schema_version: 1 as const };
+        if (budget === undefined) delete policy.mediaBudgetBytes;
+        else policy.mediaBudgetBytes = budget;
+        return { ...current, artifactPolicy: policy };
+      })} />
+    <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
+      checking={checkingStorage} disabled={busy || saving}
+      onCheck={() => { void previewDirectories().catch(() => {}); }} />
     {creating ? <form className="max-w-xl mx-auto p-8 space-y-5" onSubmit={async event => {
       event.preventDefault(); try { await save(); setTarget(state.current!.targets[0]); setLocale(state.current!.project.defaultLocale || 'en-US'); setCreating(false); } catch (reason) { setError((reason as Error).message); }
-    }}><h2 className="text-2xl font-semibold">Start with your real app</h2>
+    }}><fieldset disabled={saving} className="space-y-5"><h2 className="text-2xl font-semibold">Start with your real app</h2>
       <p className="text-white/60">Choose where your screenshots will appear, then bring your real captures. Everything stays in this project.</p>
       <label>Project ID<input required pattern="[A-Za-z0-9][A-Za-z0-9_-]*" value={config.project.id} onChange={event => edit(current => ({ ...current, project: { ...current.project, id: event.target.value } }))} /></label>
       <label>App name<input required value={config.project.name} onChange={event => edit(current => ({ ...current, project: { ...current.project, name: event.target.value } }))} /></label>
@@ -190,9 +241,9 @@ export const App: React.FC = () => {
       <label>Languages (comma separated)<input required defaultValue={(config.project.locales || [defaultLocale]).join(', ')} onChange={event => { const locales = [...new Set(event.target.value.split(',').map(value => value.trim()).filter(Boolean))]; edit(current => ({ ...current, project: { ...current.project, locales, defaultLocale: locales[0] || 'en-US' } })); }} /></label>
       <fieldset><legend>Targets</legend><div className="grid grid-cols-2 gap-2 mt-2">{Object.entries(TARGET_DIMENSIONS).map(([id, dimensions]) => <label className="flex gap-2 items-center" key={id}>
         <input type="checkbox" checked={config.targets.includes(id as TargetDevice)} onChange={event => edit(current => ({ ...current, targets: event.target.checked ? [...current.targets, id as TargetDevice] : current.targets.filter(value => value !== id) }))} />{dimensions.displayName}</label>)}</div></fieldset>
-      <button disabled={saving || !config.targets.length} className="primary" type="submit">Create project</button>
+      <button disabled={saving || !config.targets.length} className="primary" type="submit">Create project</button></fieldset>
     </form> : <>
-      <fieldset disabled={busy} className="flex flex-wrap gap-4 px-6 py-4 border-b border-white/10">
+      <fieldset disabled={busy || saving} className="flex flex-wrap gap-4 px-6 py-4 border-b border-white/10">
         <label>Target<select value={target} onChange={event => setTarget(event.target.value as TargetDevice)}>{config.targets.map(id => <option key={id} value={id}>{TARGET_DIMENSIONS[id]?.displayName || id}</option>)}</select></label>
         <label>Language<select value={locale} onChange={event => setLocale(event.target.value)}>{(config.project.locales || ['en-US']).map(value => <option key={value}>{value}</option>)}</select></label>
         <label>Visual style<select value={config.theme.stylePreset || ''} onChange={event => edit(current => ({ ...current, theme: { ...current.theme, stylePreset: event.target.value } }))}>
@@ -202,15 +253,15 @@ export const App: React.FC = () => {
       <div className="grid lg:grid-cols-[260px_minmax(0,1fr)_320px] gap-0">
         <aside className="p-5 space-y-3 border-r border-white/10">
           <h2 className="font-semibold">Screenshots · {config.cards.length}</h2>
-          <label className="upload">Add real captures<input type="file" accept="image/png,image/jpeg" multiple disabled={busy} onChange={event => { if (event.target.files) void importFiles(event.target.files); event.target.value = ''; }} /></label>
-          <button disabled={busy} onClick={() => { const id = `card-${crypto.randomUUID().slice(0, 8)}`; edit(current => ({ ...current, cards: [...current.cards, { id, headline: 'Your headline', layout: 'pure_text' }] })); setSelected(id); }}>Add text card</button>
+          <label className="upload">Add real captures<input type="file" accept="image/png,image/jpeg" multiple disabled={busy || saving} onChange={event => { if (event.target.files) void importFiles(event.target.files); event.target.value = ''; }} /></label>
+          <button disabled={busy || saving} onClick={() => { const id = `card-${crypto.randomUUID().slice(0, 8)}`; edit(current => ({ ...current, cards: [...current.cards, { id, headline: 'Your headline', layout: 'pure_text' }] })); setSelected(id); }}>Add text card</button>
           <ol className="space-y-2">{config.cards.map((card, index) => <li key={card.id}>
             <button className={`w-full text-left ${selected === card.id ? 'border-indigo-400 bg-indigo-500/15' : ''}`} onClick={() => setSelected(card.id)}>{index + 1}. {resolveCard(config, card, target, locale).headline || 'Untitled'}</button>
           </li>)}</ol>
           <p className="text-xs text-white/50">{total} outputs declared. Each language and target needs reviewed copy and real source captures.</p>
         </aside>
         <section className="overflow-auto p-8 min-h-[500px]" aria-label="Screenshot previews"
-          onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); if (!busy) void importFiles(event.dataTransfer.files); }}>
+          onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); if (!busy && !saving) void importFiles(event.dataTransfer.files); }}>
           {!config.cards.length ? <div className="p-12 text-center border border-dashed border-white/20 rounded-2xl">
             <h2 className="text-xl mb-3">Bring your real app screens</h2><p className="text-white/60">Drop PNG or JPEG captures here. Select the intended target and language before importing.</p>
           </div> : <div className="flex gap-6 items-start">{config.cards.map((card, index) => <div key={card.id} className="shrink-0 cursor-pointer" onClick={() => setSelected(card.id)}>
@@ -220,13 +271,13 @@ export const App: React.FC = () => {
                 setLayoutFindings(current => current[key] === value ? current : { ...current, [key]: value }); }} />
           </div>)}</div>}
         </section>
-        <aside className="p-5 border-l border-white/10">{active && resolved ? <fieldset disabled={busy} className="space-y-4">
+        <aside className="p-5 border-l border-white/10">{active && resolved ? <fieldset disabled={busy || saving} className="space-y-4">
           <h2 className="font-semibold">Edit selected screenshot</h2><p className="text-sm text-white/50">{TARGET_DIMENSIONS[target]?.displayName} · {locale}</p>
           {inherited && <div className="p-3 bg-amber-950/40 border border-amber-300/20 rounded-xl text-sm">Copy or capture inherits the default language.
             <label className="flex gap-2 mt-2"><input type="checkbox" checked={!!fields.inheritDefault} onChange={event => mutate({ inheritDefault: event.target.checked })} />I reviewed the inherited content</label></div>}
           <label>Headline<textarea value={resolved.headline} onChange={event => mutate({ headline: event.target.value })} /></label>
           <label>Subheadline<textarea value={resolved.subheadline || ''} onChange={event => mutate({ subheadline: event.target.value })} /></label>
-          <label>Composition<select value={resolved.layout || 'phone_bottom'} onChange={event => mutate({ layout: event.target.value as CardConfig['layout'] })}>{layouts.map(value => <option key={value} value={value}>{layoutName(value)}</option>)}</select></label>
+          <label>Composition<select value={resolved.layout || defaultCardLayout(target)} onChange={event => mutate({ layout: event.target.value as CardConfig['layout'] })}>{layouts.map(value => <option key={value} value={value}>{layoutName(value)}</option>)}</select></label>
           {resolved.screenshot ? <img className="max-h-32 mx-auto rounded object-contain" src={resolved.screenshot} alt="Assigned real capture" /> : <p className="text-amber-200 text-sm">{resolved.layout === 'pure_text' ? 'Text-only composition. No capture is needed.' : 'No capture assigned to this composition.'}</p>}
           <label className="upload">Replace capture for {locale}<input type="file" accept="image/png,image/jpeg" onChange={event => { if (event.target.files) void importFiles(event.target.files, true); event.target.value = ''; }} /></label>
           <div className="flex gap-2"><button disabled={config.cards[0]?.id === active.id} onClick={() => edit(current => { const cards = [...current.cards]; const index = cards.findIndex(card => card.id === active.id); [cards[index - 1], cards[index]] = [cards[index], cards[index - 1]]; return { ...current, cards }; })}>Move earlier</button>
@@ -235,12 +286,12 @@ export const App: React.FC = () => {
         </fieldset> : <p className="text-white/50">Select a screenshot to adjust its copy and assignments.</p>}</aside>
       </div>
       <section className="m-6 p-5 border border-white/10 rounded-xl">
-        <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy} onClick={refreshStatus}>Check current files</button></div>
-        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : legacyChecked ? 'These files passed legacy checks. Enable reviewed rendering before treating them as a verified release.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
-        {!config.studio?.requireExportEvidence && <button onClick={() => {
+        <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy || saving} onClick={refreshStatus}>Check current files</button></div>
+        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
+        {!config.studio?.requireExportEvidence && <button disabled={busy || saving} onClick={() => {
           edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
           if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
-        }}>Enable reviewed rendering</button>}
+        }}>Require rendering evidence</button>}
         {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto">{errors.map((finding, index) => <li key={index}>{finding}</li>)}</ul>}
         {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
           <ul className="grid gap-2 my-3 text-sm">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
@@ -250,6 +301,19 @@ export const App: React.FC = () => {
           })))}</ul>}
         {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
       </section>
+      {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
+      <RunHistory />
+      <DeliveryHistory />
+      <PublicationHistory />
+      <ObservationEvidence />
+      <InventoryView />
+      <MediaBudgetPanel />
+      <MaintenancePanel />
+      <RelocationMaintenance />
+          <RelocationActions onStorageChange={() => { storageChanged.current = true; setError('Storage switching was requested. Check relocation status, then reload before saving or exporting.'); }} />
+      <RelocationStatusPanel />
+      <RelocationRecovery onStorageChange={() => { storageChanged.current = true; setError('Recovery was requested. Check operation status, then reload before saving or exporting.'); }} />
+      <OperationHistory />
     </>}
   </main>;
 };

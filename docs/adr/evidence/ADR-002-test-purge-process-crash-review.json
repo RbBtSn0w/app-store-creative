@@ -1,0 +1,30 @@
+{
+  "scope": "Full current fixture-only ordinary and relocation purge process crash tests",
+  "files": [
+    {
+      "file": "tests/test_purge_process_crash.py",
+      "sha256": "b7789f521aa0617d96c6dfbebcaf5bd5211f1232fd80d1f9cf32e2a77d4e265a"
+    },
+    {
+      "file": "tests/test_object_purge_process_crash.py",
+      "sha256": "a7d493afaef5415f4a567775c5c615ebe64f29ae555324e19c94b6fad6ee848c"
+    }
+  ],
+  "assessment": [
+    "Actual owned SIGKILL at purge intent, file checkpoint/deletion and terminal receipt boundaries",
+    "Public CLI resumes original ordinary and relocation purge plans after child process death",
+    "Relocation inventory retains exact original plan and full expected file list while PURGING; active independent recovery remains valid",
+    "Ordinary maintenance reports INCOMPLETE then PASS, removes quarantined fixture object while retaining artifact metadata"
+  ],
+  "verification": {
+    "tests": 6,
+    "seconds": 4.12,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_purge_process_crash test_object_purge_process_crash -q"
+  },
+  "limitations": [
+    "Only disposable test media deleted; no real product purge authorization implied",
+    "Instrumentation selects kill boundaries; not power loss or every syscall interruption",
+    "Single-filesystem fixtures rather than real products, cross-volume or browser acceptance"
+  ]
+}

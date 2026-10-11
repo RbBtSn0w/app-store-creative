@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { defaultCardLayout } from '../project';
 import { reviewCard } from '../layoutReview';
 import { requireConfiguredFont } from '../fontReview';
 import { CardConfig, TargetDevice, ThemeConfig, getTargetScalingInfo, LocalizedCard } from '../types';
@@ -50,7 +51,7 @@ export const CardView: React.FC<CardViewProps> = ({
   }, [card, theme, target, localizedText, isExport]);
   const headline = localizedText?.headline ?? card.headline;
   const subheadline = localizedText?.subheadline ?? card.subheadline;
-  const layout = card.layout || 'phone_bottom';
+  const layout = card.layout || defaultCardLayout(target);
   const isNativeMac = target.startsWith('mac_') && layout.startsWith('mac_native_');
   const isNativeSide = isNativeMac && layout !== 'mac_native_hero';
 

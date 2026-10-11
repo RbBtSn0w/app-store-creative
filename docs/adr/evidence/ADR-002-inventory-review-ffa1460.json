@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "head": "ffa14602ff02200995f8b7eef410002112015f50",
+  "reviewed_file": "inventory_lifecycle.py",
+  "file_sha256": "696e7b3be0c522a53b80e26f9874e826561727fbff06550494b63885e37c2efe",
+  "reviewed_functions": [
+    "files_without_links",
+    "observe_directory",
+    "InventoryOperations._object_inventory"
+  ],
+  "additional_scope": "artifact_lifecycle.py inventory only; relocation/quarantine support modules not fully reviewed",
+  "findings": [],
+  "notes": [
+    "Strict scans report errors without substituting zero capacity or missing object claims.",
+    "Symlink and nonregular entries are reported or refused; unknown owner files are retained.",
+    "Registered, corrupt, missing, quarantine and purged identity sets are separate; capacity reports distinguish logical bytes and inode estimates.",
+    "Read-only inventory is not cleanup authorization."
+  ],
+  "tests": {
+    "executed": 37,
+    "passed": 37,
+    "skipped": 0,
+    "seconds": 14.068,
+    "log_sha256": "97e6f70939751103a214735bb8c939b740de59f42530e1b1d9d15fc744b6571c"
+  },
+  "overall_review_complete": false
+}

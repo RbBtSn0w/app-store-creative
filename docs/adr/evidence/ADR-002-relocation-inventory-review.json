@@ -1,0 +1,22 @@
+{
+  "base_head": "9f2431a",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py",
+  "sha256": "7e2df2338826648d639227ee573699287f51ede6ea93d829b7a7cf21712c8584",
+  "scope": "Entire relocation_inventory module; underlying forward/reverse mutation executors remain separate scope",
+  "checks": [
+    "Strict relative manifests reject duplicate, traversal and invalid hash/size scope",
+    "Plan/prepared/switch/layout proofs bind reverse backup roots before inspecting paths",
+    "Unsafe, missing, inode conflict and active overlap distinguish observed availability",
+    "Verified disposition maps retained/purged files without hiding unknown files",
+    "Added controls require exact expected bytes; unverified operation/disposition errors remain visible",
+    "Capacity distinguishes unknown copies, logical bytes and unique inode block estimates"
+  ],
+  "validation": {
+    "tests": 24,
+    "seconds": 28.152,
+    "result": "PASS",
+    "log_sha256": "dc3d9a5940c3d5359d8a87c778c62b6aa389a7440fe3addac28e9039078631e0"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

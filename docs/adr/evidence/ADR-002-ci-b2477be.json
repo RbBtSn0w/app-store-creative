@@ -1,0 +1,22 @@
+{
+  "source_commit": "b2477beeb1eb41a23b904860edb2a3043ed01d9c",
+  "run_id": 38008494830,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38008494830",
+  "conclusion": "success",
+  "python": {
+    "executed": 1042,
+    "skipped": 33,
+    "passed": 1009,
+    "seconds": 483.709
+  },
+  "frontend": {
+    "tests": 93,
+    "files": 31,
+    "node": 20,
+    "types": "PASS",
+    "build": "PASS"
+  },
+  "package_smoke": "PASS",
+  "log_sha256": "0d2ef619da076a1e24ca4af0d191bf619ac207780bbd9f6edb6c9368bde5a0c5",
+  "scope": "Full CI for b2477be; later skill/schema/documentation changes require final head CI; real products and ASC acceptance excluded"
+}

@@ -44,7 +44,7 @@ class TestV2Workflow(unittest.TestCase):
         self.root = Path(self.temp_dir.name)
         self.template_config = self.root / "creative.config.json"
         self.template_config.write_text(json.dumps({
-            "project": {"locales": ["en-US"]}, "targets": ["iphone_6_9"],
+            "project": {"id": "workflow-fixture", "locales": ["en-US"]}, "targets": ["iphone_6_9"],
             "cards": [{"id": "01-hero"}]}))
 
     def tearDown(self):
@@ -75,18 +75,13 @@ class TestV2Workflow(unittest.TestCase):
             repo_root=self.root,
             config_path=self.template_config,
             artifacts_dir=artifacts,
-            write_lockfile=True,
         )
         self.assertEqual(res["status"], "PASS")
         self.assertEqual(len(res["errors"]), 0)
         self.assertEqual(res["assets_count"], 1)
 
-        # Check that .creative/release-lock.json was written
-        lock_file = self.root / ".creative/release-lock.json"
-        self.assertTrue(lock_file.exists())
-        lock_data = json.loads(lock_file.read_text())
-        self.assertEqual(lock_data["status"], "PASS")
-        self.assertIn("en-US/iphone_6_9/01-hero.png", lock_data["assets"])
+        self.assertFalse((self.root / ".creative").exists())
+        self.assertIn("en-US/iphone_6_9/01-hero.png", res["assets"])
 
         # Now introduce an invalid asset (wrong dimension)
         invalid_dim_png = artifacts / "en-US/iphone_6_9/02-bad.png"
@@ -96,7 +91,6 @@ class TestV2Workflow(unittest.TestCase):
             repo_root=self.root,
             config_path=self.template_config,
             artifacts_dir=artifacts,
-            write_lockfile=False,
         )
         self.assertEqual(res_bad["status"], "FAIL")
         self.assertTrue(any("Dimension mismatch" in err for err in res_bad["errors"]))
@@ -114,7 +108,6 @@ class TestV2Workflow(unittest.TestCase):
             repo_root=self.root,
             config_path=self.template_config,
             artifacts_dir=artifacts,
-            write_lockfile=False,
         )
         self.assertEqual(res["status"], "PASS")
         self.assertEqual(len(res["errors"]), 0)
@@ -139,48 +132,15 @@ class TestV2Workflow(unittest.TestCase):
         self.assertGreaterEqual(port, 3100)
         self.assertLess(port, 3150)
 
-    def test_publish_dry_run_and_gate(self):
-        # 1. Publish without release lock fails
-        parser = cli.build_parser()
-        args = parser.parse_args(["publish", "--repo", str(self.root)])
-        with self.assertRaises(Exception):
-            cli.run(args)
-
-        # Bind actual files to a fresh release lock.
-        create_mock_png(self.root / "artifacts/en-US/iphone_6_9/01-hero.png")
-        validator.run_validation(self.root)
-        res_dry = cli.run(args)
-        self.assertEqual(res_dry["mode"], "dry-run")
-        self.assertFalse(res_dry["uploaded"])
-        self.assertEqual(res_dry["status"], "awaiting_asc")
-        self.assertEqual(res_dry["assets_count"], 1)
-
-    def test_verify_cli_returns_error_code_on_failure(self):
-        artifacts = self.root / "artifacts"
-        bad_png = artifacts / "en-US/iphone_6_9/bad.png"
-        create_mock_png(bad_png, width=100, height=200)
-
-        cfg_file = self.root / "creative.config.json"
-        cfg_file.write_text(self.template_config.read_text())
-
-        exit_code = cli.main(["verify", "--repo", str(self.root), "--output-dir", str(artifacts)])
-        self.assertEqual(exit_code, 2)
-
     def test_trns_alpha_detection_in_fallback_reader(self):
-        # Create a PNG with a tRNS chunk
         png_path = self.root / "trns_sample.png"
-        raw_data = b"\x89PNG\r\n\x1a\n" + b"\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\x00\x00\n\x08\x03\x00\x00\x00" + b"\x00\x00\x00\x06tRNS\x00\x01\x02\x03\x04\x05"
-        png_path.write_bytes(raw_data)
-
-        # Force pure python path by temporarily disabling sips check
-        import shutil
-        original_which = shutil.which
-        shutil.which = lambda cmd: None if cmd == "sips" else original_which(cmd)
-        try:
-            _, _, has_alpha = validator.read_image_meta(png_path)
-            self.assertTrue(has_alpha)
-        finally:
-            shutil.which = original_which
+        create_mock_png(png_path, 10, 10)
+        data = png_path.read_bytes()
+        payload = struct.pack(">HHH", 255, 255, 255)
+        transparency = (struct.pack(">I", len(payload)) + b"tRNS" + payload
+                        + struct.pack(">I", zlib.crc32(b"tRNS" + payload) & 0xFFFFFFFF))
+        png_path.write_bytes(data[:33] + transparency + data[33:])
+        self.assertEqual(validator.read_image_meta(png_path), (10, 10, True))
 
     def test_google_play_target_specs(self):
         gp_keys = ["google_play_phone", "google_play_tablet_7", "google_play_tablet_10", "google_play_feature_graphic"]
@@ -211,7 +171,6 @@ class TestV2Workflow(unittest.TestCase):
             repo_root=self.root,
             config_path=self.template_config,
             artifacts_dir=artifacts,
-            write_lockfile=True,
         )
         self.assertEqual(res["status"], "PASS")
         self.assertEqual(len(res["errors"]), 0)
@@ -229,6 +188,7 @@ class TestV2Workflow(unittest.TestCase):
                 self.assertEqual(resp.status, 200)
                 data = json.loads(resp.read().decode())
                 self.assertIn("cards", data)
+                revision = resp.headers['ETag']
 
             # 2. Update config via POST /api/config
             data["cards"][0]["headline"] = "Updated Headline From Test"
@@ -236,7 +196,7 @@ class TestV2Workflow(unittest.TestCase):
             post_req = urllib.request.Request(
                 f"http://127.0.0.1:{ctx.port}/api/config",
                 data=post_bytes,
-                headers={"Content-Type": "application/json"},
+                headers={"Content-Type": "application/json", "If-Match": revision},
                 method="POST",
             )
             with urllib.request.urlopen(post_req) as resp:
@@ -283,7 +243,6 @@ class TestV2Workflow(unittest.TestCase):
             repo_root=self.root,
             config_path=self.template_config,
             artifacts_dir=artifacts,
-            write_lockfile=False,
         )
         self.assertEqual(res["status"], "FAIL")
         self.assertGreaterEqual(len(res["errors"]), 2)
@@ -322,42 +281,30 @@ class TestV2Workflow(unittest.TestCase):
         dummy_mov = self.root / "dummy.mov"
         dummy_mov.write_bytes(b"dummy")
 
-        def fake_run(cmd, *args, **kwargs):
-            # Touch target output file so .stat() succeeds
-            out_file = self.root / "artifacts/preview/app_preview.mp4"
-            out_file.parent.mkdir(parents=True, exist_ok=True)
-            out_file.write_bytes(b"mock_mp4")
-            return unittest.mock.MagicMock()
-
-        # Test contract construction via mocking subprocess and produce_app_preview
-        with unittest.mock.patch("video_engine.build_command") as mock_build, \
-             unittest.mock.patch("video_engine.validate_output") as mock_validate, \
-             unittest.mock.patch("subprocess.run", side_effect=fake_run), \
-             unittest.mock.patch("shutil.which", return_value="/usr/bin/ffmpeg"):
-
-            mock_validate.return_value = {"streams": []}
+        with unittest.mock.patch("produce_app_preview.execute") as executor:
+            executor.return_value = {"output": {"probe": {"streams": []}}}
 
             # 1. iPhone Portrait
             video_engine.produce_preview_from_config(self.root, config_path=cfg_iphone_portrait)
-            contract_iphone_p = mock_build.call_args[0][0]
+            contract_iphone_p = executor.call_args[0][0]
             self.assertEqual(contract_iphone_p["width"], 886)
             self.assertEqual(contract_iphone_p["height"], 1920)
 
             # 2. iPhone Landscape
             video_engine.produce_preview_from_config(self.root, config_path=cfg_iphone_landscape)
-            contract_iphone_l = mock_build.call_args[0][0]
+            contract_iphone_l = executor.call_args[0][0]
             self.assertEqual(contract_iphone_l["width"], 1920)
             self.assertEqual(contract_iphone_l["height"], 886)
 
             # 3. Mac Landscape -> Strict 16:9 (1920x1080)
             video_engine.produce_preview_from_config(self.root, config_path=cfg_mac_default)
-            contract_mac = mock_build.call_args[0][0]
+            contract_mac = executor.call_args[0][0]
             self.assertEqual(contract_mac["width"], 1920)
             self.assertEqual(contract_mac["height"], 1080)
 
             # 4. Custom dimensions override
             video_engine.produce_preview_from_config(self.root, config_path=cfg_custom)
-            contract_custom = mock_build.call_args[0][0]
+            contract_custom = executor.call_args[0][0]
             self.assertEqual(contract_custom["width"], 1080)
             self.assertEqual(contract_custom["height"], 1920)
 

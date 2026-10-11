@@ -1,0 +1,33 @@
+{
+  "scope": "Full current named test-file review",
+  "files": [
+    {
+      "file": "tests/test_cross_filesystem_observation_evidence.py",
+      "sha256": "4f41ddf317a262e404756580037ccab17e2337af81a1e38016d0568982779a3b"
+    },
+    {
+      "file": "tests/test_cross_filesystem_process_crash.py",
+      "sha256": "63c7ced6e70e5b02a132931737951e829d9e4cdcda9824379b039912830df4dd"
+    },
+    {
+      "file": "tests/test_filesystem_permission_acceptance.py",
+      "sha256": "08e9d4dda2015f28acaa7579ae0783ad84c86a1a289207e91ee77f2227d6073a"
+    }
+  ],
+  "assessment": [
+    "Cross-filesystem wrappers require explicit independent mounted volume and verify distinct device before owned temporary destination creation",
+    "Actual OS permission denial executes four tests: unknown inventory blocks cleanup and relocation, denied staging writes record failed preparation, restored permissions retry in new batch",
+    "Denied configuration parent writes leave source active; changed permission identity requires cancel and fresh batch"
+  ],
+  "verification": {
+    "tests_discovered": 37,
+    "tests_passed": 4,
+    "tests_skipped": 33,
+    "seconds": 1.88,
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_cross_filesystem_observation_evidence test_cross_filesystem_process_crash test_filesystem_permission_acceptance"
+  },
+  "limitations": [
+    "33 cross-filesystem tests skipped because no explicit independent test volume configured; cross-volume crash gate remains open",
+    "Four executed permission tests use disposable synthetic artifacts; not real product acceptance"
+  ]
+}

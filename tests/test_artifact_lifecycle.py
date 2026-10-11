@@ -140,5 +140,139 @@ class ArtifactLifecycleTests(unittest.TestCase):
         self.assertIn(str(unknown), result['unregistered_files'])
         self.assertTrue(unknown.exists())
 
+
+    def test_run_status_reports_corrupt_artifact_without_erasing_history(self):
+        run = self.store.start_run({})
+        attempt = self.store.start_attempt(run['id'], 'capture', 'agent')
+        path = self.root / 'capture.png'; path.write_bytes(b'fixture capture')
+        artifact = self.store.register(attempt['id'], path, 'capture')
+        self.store.finish_attempt(attempt['id'], 'succeeded')
+        status = self.store.status(run['id'])
+        self.assertEqual(status['artifacts'][0]['object_integrity'], 'PASS')
+        self.store.object_path(artifact['sha256']).write_bytes(b'corrupt')
+        status = self.store.status(run['id'])
+        self.assertEqual(status['artifacts'][0]['object_integrity'], 'FAIL')
+        self.assertEqual(status['artifacts'][0]['sha256'], artifact['sha256'])
+        self.assertEqual(status['attempts'][0]['outcome']['status'], 'succeeded')
+
+
+    def test_intact_partial_and_unfinished_artifacts_are_not_candidate_eligible(self):
+        for state in ('partial', 'unfinished', 'failed', 'succeeded'):
+            with self.subTest(state=state):
+                run = self.store.start_run({})
+                attempt = self.store.start_attempt(run['id'], 'capture', 'agent')
+                path = self.root / 'capture.png'; path.write_bytes(b'capture fixture')
+                self.store.register(attempt['id'], path, 'capture', partial=state == 'partial')
+                if state != 'unfinished':
+                    self.store.finish_attempt(attempt['id'], 'failed' if state == 'failed' else 'succeeded',
+                                              'Fixture failure' if state == 'failed' else None)
+                artifact = self.store.status(run['id'])['artifacts'][0]
+                self.assertEqual(artifact['object_integrity'], 'PASS')
+                self.assertEqual(artifact['candidate_eligible'], state == 'succeeded')
+                self.assertEqual(bool(artifact['eligibility_errors']), state != 'succeeded')
+
+
+    def test_failed_or_corrupt_source_prevents_output_selection(self):
+        for state in ('failed', 'corrupt'):
+            with self.subTest(state=state):
+                run = self.store.start_run({})
+                capture_attempt = self.store.start_attempt(run['id'], 'capture', 'agent')
+                path = self.root / 'source.png'; path.write_bytes(b'capture fixture')
+                source = self.store.register(capture_attempt['id'], path, 'capture')
+                self.store.finish_attempt(capture_attempt['id'], 'failed' if state == 'failed' else 'succeeded',
+                                          'Capture failed' if state == 'failed' else None)
+                render_attempt = self.store.start_attempt(run['id'], 'render', 'agent')
+                output_path = self.root / 'output.png'; output_path.write_bytes(b'rendered fixture')
+                output = self.store.register(render_attempt['id'], output_path, 'screenshot', inputs=[source['id']])
+                self.store.finish_attempt(render_attempt['id'], 'succeeded')
+                if state == 'corrupt':
+                    self.store.object_path(source['sha256']).write_bytes(b'corrupt source')
+                status = self.store.status(run['id'])
+                displayed = next(item for item in status['artifacts'] if item['id'] == output['id'])
+                self.assertEqual(displayed['object_integrity'], 'PASS')
+                self.assertFalse(displayed['candidate_eligible'])
+                with self.assertRaisesRegex(ValueError, 'source|Source'):
+                    self.store.select(run['id'], [output['id']])
+
+
+    def test_run_status_rechecks_candidate_sources_without_rewriting_selection(self):
+        run = self.store.start_run({})
+        attempt = self.store.start_attempt(run['id'], 'render', 'agent')
+        source_path = self.root / 'source'; source_path.write_bytes(b'source fixture')
+        source = self.store.register(attempt['id'], source_path, 'source')
+        output_path = self.root / 'output'; output_path.write_bytes(b'output fixture')
+        output = self.store.register(attempt['id'], output_path, 'screenshot', inputs=[source['id']])
+        self.store.finish_attempt(attempt['id'], 'succeeded')
+        candidate = self.store.select(run['id'], [output['id']])
+        original = self.store._path('candidates', candidate['id']).read_bytes()
+        status = self.store.status(run['id'])
+        self.assertEqual(status['candidates'][0]['source_status'], 'PASS')
+        self.store.object_path(source['sha256']).write_bytes(b'corrupt')
+        status = self.store.status(run['id'])
+        self.assertEqual(status['candidates'][0]['source_status'], 'FAIL')
+        self.assertTrue(status['candidates'][0]['source_errors'])
+        self.assertEqual(self.store._path('candidates', candidate['id']).read_bytes(), original)
+
+
+    def test_corrupt_source_invalidates_only_its_dependency_branch(self):
+        run = self.store.start_run({})
+        branches = {}
+        for label in ('a', 'b'):
+            attempt = self.store.start_attempt(run['id'], 'render', 'agent')
+            source_path = self.root / (label + '-source')
+            source_path.write_bytes((label + ' source').encode())
+            source = self.store.register(attempt['id'], source_path, 'source')
+            output_path = self.root / (label + '-output')
+            output_path.write_bytes((label + ' output').encode())
+            output = self.store.register(attempt['id'], output_path, 'screenshot', inputs=[source['id']])
+            self.store.finish_attempt(attempt['id'], 'succeeded')
+            candidate = self.store.select(run['id'], [output['id']])
+            branches[label] = (source, output, candidate)
+        original = {label: self.store._path('candidates', branch[2]['id']).read_bytes()
+                    for label, branch in branches.items()}
+        self.store.object_path(branches['a'][0]['sha256']).write_bytes(b'corrupt a')
+        status = self.store.status(run['id'])
+        candidates = {item['id']: item for item in status['candidates']}
+        self.assertEqual(candidates[branches['a'][2]['id']]['source_status'], 'FAIL')
+        self.assertEqual(candidates[branches['b'][2]['id']]['source_status'], 'PASS')
+        with self.assertRaisesRegex(ValueError, 'source|Source'):
+            self.store.select(run['id'], [branches['a'][1]['id']])
+        selected = self.store.select(run['id'], [branches['b'][1]['id']])
+        self.assertEqual(selected['artifacts'], [branches['b'][1]['id']])
+        for label, branch in branches.items():
+            self.assertEqual(self.store._path('candidates', branch[2]['id']).read_bytes(), original[label])
+
+    def test_run_list_pagination_is_stable_when_new_runs_arrive(self):
+        runs = [self.store.start_run({'version':str(index)}) for index in range(3)]
+        first = self.store.list_runs(limit=2)
+        self.assertEqual([item['id'] for item in first['runs']], [runs[2]['id'], runs[1]['id']])
+        self.store.start_run({'version':'new'})
+        second = self.store.list_runs(limit=2, cursor=first['next_cursor'])
+        self.assertEqual([item['id'] for item in second['runs']], [runs[0]['id']])
+        self.assertIsNone(second['next_cursor'])
+        for limit in (0, 101, True):
+            with self.assertRaises(ValueError):
+                self.store.list_runs(limit=limit)
+        with self.assertRaises(ValueError):
+            self.store.list_runs(cursor='missing')
+
+    def test_lfs_policy_matches_literal_custom_release_directory(self):
+        subprocess.run(['git', '-C', str(self.root), 'init', '-q'], check=True)
+        for name in ('媒体 assets', 'archive [set]', 'archive *', 'archive "one"'):
+            with self.subTest(name=name):
+                cfg = {**self.cfg, 'storage': {**self.cfg['storage'], 'releaseRoot': name}}
+                core = lifecycle.Lifecycle(self.root, cfg)
+                policy = core.git_policy('lfs')
+                (self.root/'.gitattributes').write_text('\n'.join(policy['gitattributes'])+'\n')
+                media = name+'/revision/media/shot.png'
+                response = subprocess.run(['git', '-C', str(self.root), 'check-attr', '-z',
+                    'filter', '--', media], check=True, capture_output=True)
+                self.assertEqual(response.stdout.split(b'\0')[2], b'lfs')
+                other = name.replace('[set]', 's').replace('*', 'other')
+                if other != name:
+                    response = subprocess.run(['git', '-C', str(self.root), 'check-attr', '-z',
+                        'filter', '--', other+'/revision/media/shot.png'], check=True, capture_output=True)
+                    self.assertEqual(response.stdout.split(b'\0')[2], b'unspecified')
+
 if __name__ == '__main__':
     unittest.main()

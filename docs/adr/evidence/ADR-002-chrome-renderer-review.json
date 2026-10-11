@@ -1,0 +1,21 @@
+{
+  "base_head": "1503925",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/chrome_renderer.py",
+  "sha256": "ec1d41cc13a0926480d05518f8143ce151921c5b9d24b94359338dcbcb234026",
+  "scope": "Entire chrome_renderer module; export_engine ownership cleanup inspected as caller boundary, not complete export engine review",
+  "checks": [
+    "Loopback-only DevTools handshake, masked requests, bounded frames and deadline",
+    "Command ids distinguish asynchronous events; fragmented text supports ping",
+    "Owned browser version evidence excludes private fields",
+    "Readiness marker precedes geometry and screenshot acquisition",
+    "Caller unique profile cleanup excludes unrelated browser profiles"
+  ],
+  "validation": {
+    "tests": 7,
+    "result": "PASS",
+    "log_sha256": "fe836cbecd3b6b4f70bec51b58d30c3e45ad72ae7fb3cb63421a0f7337e651ae",
+    "scope": "Transport and browser identity unit tests; no new actual-browser acceptance claimed"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

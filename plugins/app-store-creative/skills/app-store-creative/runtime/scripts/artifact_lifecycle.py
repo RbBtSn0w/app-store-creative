@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 import re
 import shutil
-import tempfile
+import stat
 import uuid
 from delivery_lifecycle import DeliveryOperations, relative_name, verify_archive, restore_archive
 from publication_lifecycle import PublicationOperations
@@ -54,8 +54,39 @@ def safe_id(value):
     return value
 
 
+def require_human_authorization(actor, authorization_reference):
+    if any(not isinstance(value, str) or not value.strip()
+           for value in (actor, authorization_reference)):
+        raise ValueError('Explicit human actor and authorization reference are required')
+
+
+def dependency_closure(identities, load):
+    """Traverse dependencies without consuming the interpreter call stack."""
+    results = {}; pending = {}; active = set()
+    stack = [(identity, False) for identity in reversed(list(identities))]
+    while stack:
+        identity, exiting = stack.pop()
+        if exiting:
+            active.remove(identity)
+            results[identity] = pending.pop(identity)
+            continue
+        if identity in results:
+            continue
+        if identity in active:
+            raise ValueError('Artifact dependency cycle')
+        record = load(identity)
+        active.add(identity); pending[identity] = record
+        stack.append((identity, True))
+        stack.extend((parent, False) for parent in reversed(record['inputs']))
+    return results
+
+
 def overlaps(a, b):
     return a == b or a.is_relative_to(b) or b.is_relative_to(a)
+
+
+STORAGE_DEFAULTS = {'workspaceRoot': '.creative', 'objectRoot': '.creative/objects',
+                    'releaseRoot': 'creative-releases', 'publicationRoot': 'creative-publications'}
 
 
 @dataclass(frozen=True)
@@ -72,8 +103,7 @@ class StoragePaths:
         raw = config.get('storage', {})
         if not isinstance(raw, dict):
             raise ValueError('storage must be an object')
-        defaults = {'workspaceRoot': '.creative', 'objectRoot': '.creative/objects',
-                    'releaseRoot': 'creative-releases', 'publicationRoot': 'creative-publications'}
+        defaults = STORAGE_DEFAULTS
         unknown = set(raw) - set(defaults)
         if unknown:
             raise ValueError(f'Unknown storage fields: {sorted(unknown)}')
@@ -106,11 +136,30 @@ class StoragePaths:
 
 class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, IncidentOperations, LeaseOperations, ObservationOperations, InputOperations, InventoryOperations, RelocationOperations):
     def __init__(self, root, config, config_path=None):
+        from project_identity import require_project_identity
+        require_project_identity(config)
+        from artifact_policy import resolve
+        self.artifact_policy = resolve(config)
+        from archive_policy import resolve as resolve_archive_policy
+        self.archive_policy = resolve_archive_policy(config)
         self.paths = StoragePaths.resolve(root, config)
         self.config = json.loads(canonical(config))
         self.config_path = Path(config_path).resolve() if config_path is not None else self.paths.project / 'creative.config.json'
         self._explicit_config_path = config_path is not None
         self._owned_leases = {}
+        self._execution_id = identifier()
+        from runtime_identity import snapshot
+        self._implementation_identity = snapshot()
+
+    @classmethod
+    def from_configuration(cls, root, config_path=None):
+        from configuration_layers import load, observation
+        root = Path(root).resolve()
+        layers = load(root, config_path if config_path is not None else root / 'creative.config.json')
+        core = cls(root, layers.config, layers.project_path)
+        core._configuration_layers = layers
+        core._configuration_observation = canonical(observation(layers))
+        return core
 
     def _assert_paths(self):
         for path in (self.paths.workspace, self.paths.objects, self.paths.releases, self.paths.publications):
@@ -129,20 +178,32 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         lock = self.paths.workspace / 'write.lock'
         if lock.is_symlink() or owner.is_symlink() or authority.is_symlink():
             raise ValueError('Symlinked workspace metadata')
-        with lock.open('a+b') as stream:
+        before = lock.lstat() if lock.exists() else None
+        if before is not None and not stat.S_ISREG(before.st_mode):
+            raise ValueError('Workspace lock must be a regular file')
+        descriptor = os.open(lock, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
+        with os.fdopen(descriptor, 'a+b') as stream:
+            opened = os.fstat(stream.fileno())
+            if (not stat.S_ISREG(opened.st_mode) or (before is not None
+                    and (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino))):
+                raise ValueError('Workspace lock must remain the same regular file')
             fcntl.flock(stream, fcntl.LOCK_EX)
+            current = lock.lstat()
+            if (current.st_dev, current.st_ino) != (opened.st_dev, opened.st_ino):
+                raise ValueError('Workspace lock identity changed')
             self._check_storage_write_fence()
             self._check_storage_activation()
             self._live_configuration()
+            from configuration_layers import _read_regular
             identity = {'project': str(self.paths.project), 'project_id': self.config.get('project', {}).get('id')}
             if owner.exists():
-                if json.loads(owner.read_text()) != identity:
+                if json.loads(_read_regular(owner)) != identity:
                     raise ValueError('Workspace is owned by another project')
             else:
                 self._write_path(owner, identity)
             configuration = {'config_path': str(self.config_path)}
             if authority.exists():
-                if json.loads(authority.read_text()) != configuration:
+                if json.loads(_read_regular(authority)) != configuration:
                     raise ValueError('Workspace belongs to another configuration authority')
             else:
                 self._write_path(authority, configuration)
@@ -163,41 +224,151 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
 
     def _read(self, category, identity, suffix=None):
         path = self._path(category, identity, suffix)
-        if path.is_symlink():
+        if path.is_symlink() or path.resolve() != path:
             raise ValueError('Symlinked record')
-        data = json.loads(path.read_text())
-        if data.get('schema_version') != 1:
+        from configuration_layers import _read_regular
+        data = json.loads(_read_regular(path))
+        if (not isinstance(data, dict) or type(data.get('schema_version')) is not int
+                or data['schema_version'] != 1):
             raise ValueError('Unsupported record schema')
+        if data.get('id') != identity:
+            raise ValueError('Record identity differs from requested identity')
+        if category == 'remote-observations':
+            evidence_hash = data.get('evidence_sha256')
+            if not isinstance(evidence_hash, str) or not re.fullmatch('[0-9a-f]{64}', evidence_hash):
+                raise ValueError('Missing or invalid observation evidence SHA-256')
+        from operation_history import CATEGORIES
+        if category in CATEGORIES:
+            binding = data.get('_commit_event_id')
+            if not isinstance(binding, str) or not re.fullmatch(r'[0-9a-f]{32}', binding):
+                raise ValueError('Missing or invalid record commit event binding')
+            if category != 'runs':
+                entity = {'approvals': 'Approval', 'remote-observations': 'Observation',
+                          'observation-evidence': 'Observation evidence', 'attempts': 'Attempt',
+                          'artifacts': 'Artifact integrity failure'}.get(category, category)
+                try:
+                    event = self._read('events', binding)
+                except FileNotFoundError as error:
+                    raise ValueError(entity + ' commit event is missing') from error
+                expected = {'category': category, 'id': identity, 'suffix': suffix,
+                            'sha256': hashlib.sha256(canonical(data)).hexdigest()}
+                if (event.get('kind') != 'record-commit-intent' or event.get('record') != expected
+                        or event.get('project_id') != self.config.get('project', {}).get('id')):
+                    raise ValueError(entity + ' commit event binding differs from record bytes')
         return data
 
     def _write_path(self, path, data):
         path.parent.mkdir(parents=True, exist_ok=True)
         if path.exists() or path.is_symlink():
             raise ValueError('Immutable record already exists')
-        fd, tmp = tempfile.mkstemp(dir=path.parent)
-        try:
-            with os.fdopen(fd, 'wb') as stream:
-                stream.write(canonical(data)); stream.flush(); os.fsync(stream.fileno())
-            os.link(tmp, path)
-        finally:
-            Path(tmp).unlink(missing_ok=True)
+        from safe_staging import staged_file
+        with staged_file(path.parent) as staged:
+            staged.stream.write(canonical(data))
+            staged.sync()
+            staged.publish(path)
 
-    def _record(self, category, data, suffix=None):
+    def _record(self, category, data, suffix=None, precommit=None):
+        if not isinstance(data, dict):
+            raise ValueError('Unsupported record schema')
+        version = data.get('schema_version', 1)
+        if type(version) is not int or version != 1:
+            raise ValueError('Unsupported record schema')
         data = {'schema_version': 1, 'created_at': now(), **data}
-        self._write_path(self._path(category, data['id'], suffix), data)
+        from operation_history import CATEGORIES, before_commit, sync_directory
+        path = self._path(category, data['id'], suffix)
+        if path.exists() or path.is_symlink():
+            raise ValueError('Immutable record already exists')
+        if category in CATEGORIES:
+            decisions = self.paths.workspace / 'records/commit-abandonments'
+            if decisions.resolve() != decisions or decisions.is_symlink():
+                raise ValueError('Unsafe commit abandonment records')
+            for decision_path in decisions.glob('*.json'):
+                decision = self._read('commit-abandonments', decision_path.stem)
+                abandoned = decision.get('record', {})
+                if (abandoned.get('category') == category and abandoned.get('id') == data['id']
+                        and abandoned.get('suffix') == suffix):
+                    raise ValueError('Commit target was explicitly abandoned; use a new identity')
+            data['_commit_event_id'] = identifier()
+        before_commit(self, category, data, suffix)
+        if precommit is not None:
+            precommit()
+        self._write_path(path, data)
+        if category in CATEGORIES:
+            sync_directory(path.parent)
+            sync_directory(path.parent.parent)
         return data
+
+    def export_external_delivery(self, delivery_id, backend, root):
+        from external_delivery_archive import export_managed
+        return export_managed(self, delivery_id, backend, root)
+
+    def persist_external_media(self, artifact_id, backend, root):
+        from external_media_store import persist_managed
+        return persist_managed(self, artifact_id, backend, root)
+
+    def restore_external_media(self, reference_id, backend, root):
+        from external_media_store import restore_managed
+        return restore_managed(self, reference_id, backend, root)
+
+    def abandon_commit(self, event_id, actor, reason):
+        from operation_history import abandon
+        return abandon(self, event_id, actor, reason)
+
+    def media_budget(self, candidate_id=None):
+        from media_budget import inspect
+        return inspect(self, candidate_id)
+
+    def inspect_artifact_policy(self):
+        from artifact_policy import inspect
+        return inspect(self)
+
+    def operation_journals(self):
+        from operation_history import journals
+        return journals(self)
+
+    def verify_history(self):
+        from operation_history import verify
+        return verify(self)
 
     def _run(self, identity):
         run = self._read('runs', identity)
+        workflow = run.get('workflow')
+        if (not isinstance(workflow, dict) or set(workflow) != {'name', 'version', 'implementation'}
+                or workflow['name'] != 'app-store-creative' or type(workflow['version']) is not int
+                or workflow['version'] != 1):
+            raise ValueError('Missing or unsupported run workflow snapshot')
+        from runtime_identity import validate
+        validate(workflow['implementation'])
+        if (not isinstance(run.get('config'), dict)
+                or hashlib.sha256(canonical(run['config'])).hexdigest() != run.get('config_snapshot_sha256')
+                or configuration_identity(run['config']) != run.get('config_sha256')):
+            raise ValueError('Run configuration snapshot integrity failure')
+        try:
+            event = self._read('events', run['_commit_event_id'])
+        except FileNotFoundError as error:
+            raise ValueError('Run commit event is missing') from error
+        expected = {'category': 'runs', 'id': identity, 'suffix': None,
+                    'sha256': hashlib.sha256(canonical(run)).hexdigest()}
+        if (event.get('kind') != 'record-commit-intent' or event.get('record') != expected
+                or event.get('project_id') != self.config['project']['id']):
+            raise ValueError('Run commit event binding differs from record bytes')
         self.resolve_storage_binding(run['storage'])
         return run
 
     def start_run(self, target, source_hashes=None):
         with self.transaction():
+            layer_evidence = {}
+            if hasattr(self, '_configuration_layers'):
+                from configuration_layers import observation
+                self._live_configuration()
+                layer_evidence = {'configuration_layers':observation(self._configuration_layers),
+                                  'project_config_snapshot':json.loads(canonical(self._configuration_layers.project_config))}
             return self._record('runs', {'id': identifier(), 'config': self.config,
+                                         'workflow': {'name': 'app-store-creative', 'version': 1,
+                                                      'implementation': dict(self._implementation_identity)},
                                          'config_sha256': configuration_identity(self.config),
                                          'config_snapshot_sha256': hashlib.sha256(canonical(self.config)).hexdigest(),
-                                         'target': target, 'storage': self.paths.binding(), 'source_hashes': source_hashes or {}})
+                                         'target': target, 'storage': self.paths.binding(), 'source_hashes': source_hashes or {}, **layer_evidence})
 
     def work_path(self, attempt_id):
         path = self.paths.workspace / 'work' / safe_id(attempt_id)
@@ -207,7 +378,7 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
 
     def start_attempt(self, run_id, stage, owner, retry_of=None, lease_seconds=3600):
         duration(lease_seconds)
-        if not stage or not owner:
+        if any(not isinstance(value, str) or not value.strip() for value in (stage, owner)):
             raise ValueError('Stage and owner are required')
         with self.transaction():
             self._run(run_id)
@@ -264,26 +435,26 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                 self.verify_artifact(identity)
             # Hash the staged bytes, not a mutable producer file.
             self._claim_objects()
-            fd, tmp = tempfile.mkstemp(dir=self.paths.objects)
-            try:
-                with os.fdopen(fd, 'wb') as stream, source.open('rb') as original:
-                    shutil.copyfileobj(original, stream); stream.flush(); os.fsync(stream.fileno())
-                staged = Path(tmp); sha = digest(staged); destination = self.object_path(sha)
+            from safe_staging import staged_file
+            with staged_file(self.paths.objects) as staged:
+                with source.open('rb') as original:
+                    shutil.copyfileobj(original, staged.stream)
+                sha, size = staged.inspect()
+                destination = self.object_path(sha)
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 try:
-                    os.link(staged, destination)
+                    staged.publish(destination)
                 except FileExistsError:
                     if digest(destination) != sha:
                         raise ValueError('Object integrity failure')
                 self._check_lease(attempt_id, lease_token)
                 return self._record('artifacts', {'id': identifier(), 'run_id': attempt['run_id'],
-                    'attempt_id': attempt_id, 'sha256': sha, 'size_bytes': staged.stat().st_size,
+                    'attempt_id': attempt_id, 'sha256': sha, 'size_bytes': size,
                     'role': role, 'media_type': media_type or mimetypes.guess_type(source.name)[0] or 'application/octet-stream',
                     'workspace_path': source.resolve().relative_to(self.paths.workspace).as_posix()
                         if source.resolve().is_relative_to(self.paths.workspace / 'work') else None,
-                    'name': source.name, 'partial': bool(partial), 'inputs': inputs or [], 'logical_path': logical_path})
-            finally:
-                Path(tmp).unlink(missing_ok=True)
+                    'name': source.name, 'partial': bool(partial), 'inputs': inputs or [], 'logical_path': logical_path},
+                    precommit=lambda: self._check_lease(attempt_id, lease_token))
 
     def verify_artifact(self, identity):
         data = self._read('artifacts', identity)
@@ -295,12 +466,25 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
     def finish_attempt(self, identity, status, reason=None, lease_token=None):
         if status not in ('succeeded', 'failed', 'cancelled', 'interrupted'):
             raise ValueError('Invalid attempt outcome')
-        if status != 'succeeded' and not reason:
+        if status != 'succeeded' and (not isinstance(reason, str) or not reason.strip()):
             raise ValueError('Unsuccessful attempts require a reason')
         with self.transaction():
             data = self._active_attempt(identity, lease_token)
             return self._record('attempts', {'id': identity, 'run_id': data['run_id'],
-                'status': status, 'reason': reason}, 'outcome')
+                'status': status, 'reason': reason}, 'outcome',
+                precommit=lambda: self._check_lease(identity, lease_token))
+
+    def source_eligibility_errors(self, identity):
+        try:
+            closure = self._closure([identity])
+            for record in closure.values():
+                outcome_path = self._path('attempts', record['attempt_id'], 'outcome')
+                if (record['partial'] or not outcome_path.exists()
+                        or self._read('attempts', record['attempt_id'], 'outcome')['status'] != 'succeeded'):
+                    return ['Source dependency is partial or its producer has not succeeded: ' + record['id']]
+        except (ValueError, OSError) as error:
+            return ['Source dependency verification failed: ' + str(error)]
+        return []
 
     def select(self, run_id, artifacts):
         if not artifacts or len(set(artifacts)) != len(artifacts):
@@ -314,20 +498,114 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                 outcome = self._path('attempts', data['attempt_id'], 'outcome')
                 if not outcome.exists() or self._read('attempts', data['attempt_id'], 'outcome')['status'] != 'succeeded':
                     raise ValueError('Artifact producer must have succeeded')
+            for identity in artifacts:
+                errors = self.source_eligibility_errors(identity)
+                if errors:
+                    raise ValueError('; '.join(errors))
             return self._record('candidates', {'id': identifier(), 'run_id': run_id, 'artifacts': artifacts})
+
+    def _record_page(self, category, limit=20, cursor=None, suffix=None):
+        if type(limit) is not int or not 1 <= limit <= 100:
+            raise ValueError('Record list limit must be an integer between 1 and 100')
+        records = [self._read(category, path.parent.name if suffix else path.stem, suffix)
+                   for path in (self.paths.workspace / 'records' / category).glob(
+                       '*/' + suffix + '.json' if suffix else '*.json')]
+        records.sort(key=lambda record: (record['created_at'], record['id']), reverse=True)
+        if cursor is not None:
+            cursor = safe_id(cursor)
+            positions = [index for index, record in enumerate(records) if record['id'] == cursor]
+            if not positions:
+                raise ValueError('Record list cursor is not a known identity')
+            records = records[positions[0] + 1:]
+        selected = records[:limit]
+        return selected, selected[-1]['id'] if len(records) > limit else None
+
+    def list_runs(self, limit=20, cursor=None):
+        selected, cursor = self._record_page('runs', limit, cursor)
+        return {'runs': [{key: record[key] for key in ('id', 'created_at', 'target', 'config_sha256')}
+                         for record in selected], 'next_cursor': cursor}
+
+    def _approval_status_records(self):
+        """Expose damaged records for diagnosis without treating them as authority."""
+        from configuration_layers import _read_regular, _document
+        result = []
+        for path in sorted((self.paths.workspace / 'records/approvals').glob('*.json')):
+            try:
+                result.append((self._read('approvals', path.stem), []))
+            except (ValueError, OSError) as error:
+                try:
+                    record = _document(_read_regular(path))
+                    if record.get('id') != path.stem or type(record.get('schema_version')) is not int or record['schema_version'] != 1:
+                        record = {'id': path.stem}
+                except (ValueError, OSError):
+                    record = {'id': path.stem}
+                result.append((record, [str(error)]))
+        return result
 
     def status(self, run_id):
         run = self._run(run_id)
         attempts = []
         for path in sorted((self.paths.workspace / 'records' / 'attempts').glob('*/started.json')):
-            data = json.loads(path.read_text())
+            data = self._read('attempts', path.parent.name, 'started')
             if data['run_id'] == run_id:
                 outcome = path.with_name('outcome.json')
                 lease = self._lease(data['id'])
                 attempts.append({**data, 'lease': {key: lease[key] for key in ('owner', 'generation', 'expires_at')},
-                                 'outcome': json.loads(outcome.read_text()) if outcome.exists() else None})
+                                 'outcome': self._read('attempts', data['id'], 'outcome')
+                                 if outcome.exists() or outcome.is_symlink() else None})
         attempts.sort(key=lambda data: data['created_at'])
-        return {'run': run, 'attempts': attempts, 'remote_verified': False}
+        outcomes = {attempt['id']: attempt['outcome'] for attempt in attempts}
+        artifacts = []
+        for path in sorted((self.paths.workspace / 'records/artifacts').glob('*.json')):
+            record = self._read('artifacts', path.stem)
+            if record['run_id'] != run_id:
+                continue
+            try:
+                self.verify_artifact(record['id'])
+                integrity = 'PASS'
+            except (ValueError, OSError):
+                integrity = 'FAIL'
+            errors = []
+            if integrity != 'PASS':
+                errors.append('Artifact object is missing or corrupt')
+            if record['partial']:
+                errors.append('Partial artifacts cannot be selected')
+            outcome = outcomes.get(record['attempt_id'])
+            if not outcome or outcome['status'] != 'succeeded':
+                errors.append('Artifact producer has not succeeded')
+            errors.extend(self.source_eligibility_errors(record['id']))
+            artifacts.append({**record, 'object_integrity': integrity,
+                              'candidate_eligible': not errors, 'eligibility_errors': errors})
+        candidates = []
+        for path in sorted((self.paths.workspace / 'records/candidates').glob('*.json')):
+            candidate = self._read('candidates', path.stem)
+            if candidate['run_id'] != run_id:
+                continue
+            errors = []
+            try:
+                self._candidate(candidate['id'], allow_discarded=True)
+            except (ValueError, OSError) as error:
+                errors.append(str(error))
+            disposition_path = self._path('candidate-dispositions', candidate['id'])
+            disposition = self._read('candidate-dispositions', candidate['id']) if disposition_path.exists() else None
+            approvals = []
+            for approval, integrity_errors in self._approval_status_records():
+                if approval.get('stage') != 'design' or approval.get('candidate_id') != candidate['id']:
+                    continue
+                binding_errors = list(integrity_errors)
+                try:
+                    if integrity_errors:
+                        raise ValueError('Damaged approval cannot authorize this candidate')
+                    _, approved_run, validation = self._validated(candidate['id'], approval.get('validation_id'))
+                    self._check_design_approval(candidate['id'], approved_run, validation, approval)
+                except (ValueError, OSError) as error:
+                    binding_errors.append(str(error))
+                approvals.append({**approval, 'binding_status': 'STALE' if binding_errors else 'PASS',
+                                  'binding_errors': binding_errors})
+            candidates.append({**candidate, 'source_status': 'FAIL' if errors else 'PASS',
+                               'source_errors': errors, 'disposition': disposition, 'design_approvals': approvals})
+        return {'run': run, 'attempts': attempts, 'artifacts': artifacts,
+                'candidates': candidates, 'remote_verified': False}
 
     def inventory(self):
         work = self.paths.workspace / 'work'
@@ -338,7 +616,9 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                 name = relative_name(artifact['workspace_path'])
                 bindings.setdefault(str(self.paths.workspace / name), set()).add(artifact['sha256'])
         registered, changed, unknown = [], [], []
-        files, links = files_without_links(work)
+        from inventory_lifecycle import observe_directory
+        work_observation = observe_directory(work)
+        files, links, _ = work_observation
         for path in files + links:
             name = str(path)
             if name not in bindings:
@@ -347,7 +627,11 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                 changed.append(name)
             else:
                 registered.append(name)
-        return {**self._object_inventory(), 'registered_files': sorted(registered), 'changed_files': sorted(changed),
+        from relocation_inventory import inventory as relocation_inventory
+        from quarantine_inventory import inventory as quarantine_inventory
+        return {**self._object_inventory(work_observation), 'relocation_backups': relocation_inventory(self),
+                'quarantine_preparations': quarantine_inventory(self),
+                'registered_files': sorted(registered), 'changed_files': sorted(changed),
                 'unregistered_files': sorted(unknown), 'cleanup_executed': False}
 
     def git_policy(self, media_mode='git'):
@@ -371,8 +655,8 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
             raise ValueError('Git media archive must be inside project')
         if media_mode == 'lfs':
             pattern = escape_pattern(releases) + '/**/media/**'
-            if ' ' in releases:
-                pattern = json.dumps(releases + '/**/media/**')
+            if any(char.isspace() or char == '"' for char in releases):
+                pattern = json.dumps(pattern, ensure_ascii=False)
             attributes.append(pattern + ' filter=lfs diff=lfs merge=lfs -text')
         return {'gitignore': ignores, 'gitattributes': attributes,
                 'tracked_roots': [relative(p) for p in (self.paths.releases, self.paths.publications) if relative(p)],

@@ -1,0 +1,31 @@
+{
+  "base_head": "09d9a088a8e6cd520b4584e81d14bc01b48e204a",
+  "scope": "Entire maintenance_fences, maintenance_observations and source_dispositions modules; destructive executors and relocation callers remain separate review scopes",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_fences.py": "ba67fcfeee5d066b7b2451c50818d2e825ee4ad3639386257ae3e6078a7f3bae",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_observations.py": "29451dd39c4264549c7da743420b80f3e155d5335926060efd381821eddb090c",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/source_dispositions.py": "cfe17519dfefb968925b9a200aeac8bacddefecda38ae49f49ba9329bd1f55e8"
+  },
+  "checks": [
+    "Unfinished maintenance blocks relocation; terminal evidence binds relocation quarantine and purge authorities",
+    "Read-only maintenance observations verify bytes, intent hashes, purge checkpoints and object reappearance",
+    "Disposition views verify retained bytes and authority, preserve unknown files, expose interrupted commits and corrupt evidence"
+  ],
+  "validation": [
+    {
+      "tests": 19,
+      "seconds": 11.525,
+      "result": "PASS",
+      "log_sha256": "6ac7189a5001efb64b38ea899fc4d8212da077ef318200694d8cd81853302c27"
+    },
+    {
+      "tests": 9,
+      "seconds": 10.136,
+      "result": "PASS",
+      "log_sha256": "9e976d5f5dc9dc9b79501596563c931ef190fd11df94deada1c83589d23e75af"
+    }
+  ],
+  "new_findings": [],
+  "overall_review_complete": false,
+  "real_product_acceptance": false
+}

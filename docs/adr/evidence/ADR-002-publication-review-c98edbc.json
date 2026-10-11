@@ -1,0 +1,43 @@
+{
+  "head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/publication_lifecycle.py",
+      "sha256": "48866f30557b4a166d1e4c9e25ee87fc6eeadc8a95a28ccc4f2592eab3a5b29d",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py",
+      "sha256": "08e9db0993efc0dd7e22fa14d40bc7c6f2b56e9d0fbd924c377540a09b8971ae",
+      "scope": "Entire module"
+    }
+  ],
+  "checks": [
+    "Full commit identity and sealed manifest/media checks",
+    "Archive mode and retrieval proof scope match sealed delivery",
+    "Upload authorization binds exact plan hash and target",
+    "External preparation requires approval and independently retrieves bytes",
+    "Prepared media checksum and file identity checks",
+    "No ASC remote write performed by lifecycle or observation normalization",
+    "Processing and poster dimensions do not assert playback or image loading"
+  ],
+  "validation": [
+    {
+      "scope": "publication lifecycle and Git/external consumers",
+      "tests": 25,
+      "seconds": 20.549,
+      "result": "PASS",
+      "log_sha256": "19c2e3c47cea2acb25c92d26ef62a5bf47398c5fbf063c231a49e32a32547fcf"
+    },
+    {
+      "scope": "ASC adapter and public normalization CLI",
+      "tests": 10,
+      "seconds": 0.482,
+      "result": "PASS",
+      "log_sha256": "35ac33d5947f43eb82bcb32d65db7ca1032f8590fcf64c9fe5d1779831c0b2d3"
+    }
+  ],
+  "new_findings": [],
+  "overall_review_complete": false,
+  "actual_asc_acceptance_complete": false
+}

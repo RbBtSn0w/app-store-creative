@@ -1,0 +1,23 @@
+{
+  "scope": "Full current ordinary restore intent test file",
+  "file": "tests/test_ordinary_restore_intent.py",
+  "sha256": "4720909b10a1fac61a1505a6fa245f43b6c9312e83d5ea0145a1a686aeacdf7e",
+  "assessment": [
+    "Intent precedes object changes and remains byte-identical across resume by another actor",
+    "Pending restore blocks new and preexisting purge plans",
+    "Corrupt intent or completion binding refused; missing historical intent never backfilled",
+    "Real owned child SIGKILL after object link resumes original intent and verifies artifact",
+    "Intent write/sync failures preserve quarantined bytes; conflicting active bytes preserved",
+    "Missing retained copy invalidates completed recovery"
+  ],
+  "verification": {
+    "tests": 12,
+    "seconds": 0.634,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_ordinary_restore_intent -q"
+  },
+  "limitations": [
+    "Local disposable fixture and real child process used; not cross-filesystem or two-product acceptance",
+    "No external production data or actual permanent deletion executed"
+  ]
+}

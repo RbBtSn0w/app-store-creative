@@ -1,0 +1,21 @@
+{
+  "scope": "Full static review of inventory view and presentation parser; not actual OS permission or real maintenance acceptance",
+  "files": {
+    "plugins/app-store-creative/studio/src/InventoryView.tsx": "8cd202dbf0a3aea9017f5ed4067104776e59a2d5a884dae7cdd5d4647a0269b1",
+    "plugins/app-store-creative/studio/src/inventoryPresentation.ts": "cf229d3d061c891c14136cc31e7744bd88d4eeb6322f27bb7fdd6314a00afe38"
+  },
+  "findings": [],
+  "notes": [
+    "Missing required response categories refuse parsing; observation failures are not empty healthy inventory.",
+    "Unknown sizes remain Not measured; object count and isolation/deletion presence remain explicitly unobserved when appropriate.",
+    "Recorded phases and observed file state are shown independently, with anomalies and unverified operations visible.",
+    "Reload clears prior report and timestamp; late or unmounted request results are generation-bound.",
+    "Local logical bytes do not promise recoverable blocks or remote capacity."
+  ],
+  "verification": {
+    "tests": 8,
+    "files": 2,
+    "result": "PASS",
+    "runtime": "Node25.8.2"
+  }
+}

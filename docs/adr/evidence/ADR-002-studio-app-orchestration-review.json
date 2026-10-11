@@ -1,0 +1,17 @@
+{
+  "scope": "Full static review of App orchestration, lines 1-319",
+  "sha256": "e0e24968558130eb279e24668f143a8833f7f99c07687081c8a542e86ce4b60c",
+  "findings": [
+    "No new execution defect identified in this static scope",
+    "Saved configuration revision, dirty flag, layout findings and verification policy distinguish locally verified from candidate checks",
+    "Save deduplicates in-flight job, previews exact snapshot and requires ETag; storage switch/recovery marks tab authority stale before requests",
+    "Export saves snapshot and checks draft generation; capture import binds target/locale before async work; controls prevent edits while busy/saving",
+    "Candidate approval uses candidate identity key; technical review and publication approval remain separate",
+    "Draft downloads and browser reload warning preserve unsaved changes; upload is delegated to separately approved official ASC workflow"
+  ],
+  "limitations": [
+    "API config/status/export responses are trusted from local validated server; malformed transport envelopes are not exhaustively tested at App boundary",
+    "React StrictMode initial effects and actual browser save/export races require browser acceptance",
+    "Complete test-diff and sensitive-evidence review remain open"
+  ]
+}

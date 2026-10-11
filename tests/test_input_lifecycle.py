@@ -24,6 +24,8 @@ class InputTests(unittest.TestCase):
         self.assertEqual(core.plan_cleanup(retention_days=0)['objects'], [])
 
     def test_external_objects_remain_resolvable_and_package_portable(self):
+        self.config['archivePolicy'] = {'schema_version': 1, 'mediaMode': 'git'}
+        self.config['artifactPolicy'] = {'schema_version': 1, 'mediaBudgetBytes': 1073741824}
         self.config['storage'] = {'workspaceRoot': str(self.root.parent / (self.root.name + '-external'))}
         self.cfg.write_text(json.dumps(self.config))
         self.addCleanup(__import__('shutil').rmtree, Path(self.config['storage']['workspaceRoot']), True)
@@ -156,3 +158,16 @@ class InputTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(result.stdout)['reason'], 'Unused import')
         self.assertEqual(core.resolve_import(imported['path'])[1].read_bytes(), (self.root / 'capture.png').read_bytes())
+
+
+    def test_configuration_backup_failure_records_terminal_attempt(self):
+        core = lifecycle.Lifecycle(self.root, self.config)
+        with mock.patch.object(core, 'register', side_effect=OSError('fixture registration failure')):
+            with self.assertRaisesRegex(OSError, 'fixture registration failure'):
+                core.backup_configuration(b'configuration bytes', actor='owner')
+        # Attempt records use the run status API as the authoritative observation.
+        runs = list((core.paths.workspace / 'records/runs').glob('*.json'))
+        self.assertEqual(len(runs), 1)
+        attempt = core.status(runs[0].stem)['attempts'][0]
+        self.assertEqual(attempt['outcome']['status'], 'failed')
+        self.assertIn('fixture registration failure', attempt['outcome']['reason'])

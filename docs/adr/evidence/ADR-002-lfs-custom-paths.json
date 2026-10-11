@@ -1,0 +1,22 @@
+{
+  "base_head": "d7096b80e09103eb5833b45ac224a02e87df5b47",
+  "red": "Real git check-attr returned unspecified for Unicode+space and literal-bracket release roots.",
+  "change": "Quote the already escaped pattern with ensure_ascii=False; do not discard literal glob escapes.",
+  "green": {
+    "tests": 34,
+    "elapsed_seconds": 9.486,
+    "modules": [
+      "test_artifact_lifecycle",
+      "test_relocation_git_policy",
+      "test_git_lfs_retrieval"
+    ]
+  },
+  "directory_cases": [
+    "媒体 assets",
+    "archive [set]",
+    "archive *",
+    "archive \"one\""
+  ],
+  "similar_glob_directory_unmatched": true,
+  "scope": "Owned temporary Git/LFS repositories; no project rules changed."
+}

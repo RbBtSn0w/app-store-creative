@@ -1,0 +1,30 @@
+{
+  "scope": "Full current observation evidence retrieval and diagnostic retention tests",
+  "files": [
+    {
+      "file": "tests/test_observation_evidence_retrieval.py",
+      "sha256": "69459b5f6543fbea2762f2e73713dfe68cba74ac304ce8b66b43aaf05c12d519"
+    },
+    {
+      "file": "tests/test_diagnostic_retention.py",
+      "sha256": "71e98dc45f90510054c7f965cc0031ca5d4cd4759f3e9d5dbeb9530a1323532d"
+    }
+  ],
+  "assessment": [
+    "Trusted locator and summary hashes plus exact scope required; unknown schema, private fields and sensitive values refused before output",
+    "Corrupt/missing backend version cannot restore output; existing destination user bytes preserved",
+    "Diagnostic expiry cannot override active attempt, selected output dependency or recent trial sharing bytes",
+    "Plan cutoff uses explicit observation time; quarantine/restore and fixture-only purge retain metadata and enforce original policy"
+  ],
+  "verification": {
+    "tests": 12,
+    "seconds": 0.344,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_observation_evidence_retrieval test_diagnostic_retention -q"
+  },
+  "limitations": [
+    "Evidence retrieval file primarily negative cases, not positive clean external retrieval after producer deletion",
+    "Does not directly prove raw private responses excluded from every public archive",
+    "Disposable backend and fixture-only deletion; real persistent backend, products and browser separate"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "scope": "Actual IAB Studio custom-root preview, save and reload in disposable empty project",
+  "source_commit": "e12bde5",
+  "project_id": "browser-acceptance",
+  "configured_roots": {
+    "workspaceRoot": "custom working",
+    "objectRoot": "custom media",
+    "releaseRoot": "custom releases",
+    "publicationRoot": "custom publications"
+  },
+  "configuration_sha256": "97e172db345211b82e4967a2071c356981f50db9752cae33d422615d89bdc876",
+  "observations": [
+    "Draft preview resolves all four roots relative to project",
+    "Save temporarily disables recipe and export controls",
+    "Save completed; browser reload retains all four custom values",
+    "Saved configuration bytes independently inspected and match displayed values"
+  ],
+  "screenshot_sha256": "b24873560be74572e78d55c01c2a45dee0ec56fb8750bb89d68eb7908492a76e",
+  "limitations": [
+    "Synthetic empty project; no real capture/export/seal/ASC acceptance",
+    "Runtime served from development source, not actual adg installed plugin",
+    "No in-flight producer, relocation or recovery tested in this browser drill"
+  ]
+}

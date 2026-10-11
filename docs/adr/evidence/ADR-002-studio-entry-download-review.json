@@ -1,0 +1,13 @@
+{
+  "scope": "Full static review of draft download, React entry point and global stylesheet",
+  "files": {
+    "downloadDraft.ts": "853baf09e2e3c690e1f19743f7b368190b22ba842c22fc97bd64478108606233",
+    "main.tsx": "79faf095f462c11b5dc445dac9043c06809247d25c47f6693fccd656d1a1d35a",
+    "index.css": "d8b49d172c924fbc3a933f0089d728d4c1b48fe704b0b39893aafca0b7dfb592"
+  },
+  "finding": "No new defect identified; draft download is a draft, not delivery sealing or archive verification.",
+  "limitations": [
+    "Download dispatch cleanup has an existing unit regression; actual browser download not re-executed in this review",
+    "Visual contrast and browser layout are not proven by stylesheet static inspection"
+  ]
+}

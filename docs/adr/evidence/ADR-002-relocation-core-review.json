@@ -1,0 +1,52 @@
+{
+  "scope": "Full relocation_lifecycle.py review; reverse_relocation.py recovery lock patch reviewed against prior full review",
+  "runtime_hashes": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py": "c916400c450562f570c92b3211a910338f03e443d466265251de066a20e33399",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py": "70ef87b75034a78cc445ca0de108ec6f7b3218a0bed540a7383b25fdb1191cfe"
+  },
+  "reviewed": [
+    "Activation and write fences with verified control release",
+    "Historical storage binding chain and cycle rejection",
+    "Root overlap, source identity, active producer exclusion and complete snapshots",
+    "Forward/reverse plan scope and configuration layer authority",
+    "Exclusive staging creation, root identity proofs and complete file verification",
+    "Recovery uses new attempt identity; cancellation preserves unknown and modified bytes",
+    "Switch intent/fence, target activation, configuration installation and published bytes",
+    "Interrupted resume/rollback and explicit source authority",
+    "Recovery lock regular-file/inode checks shared across four entrypoints"
+  ],
+  "defect": "Recovery entrypoints could continue after lock pathname replacement while holding old inode",
+  "red": "Four replaced-lock cases reached plan access and raised missing-plan FileNotFoundError instead of rejecting lock identity",
+  "verification": [
+    {
+      "tests": 41,
+      "seconds": 40.856,
+      "result": "PASS",
+      "modules": [
+        "test_relocation_recovery_lock",
+        "test_relocation_switch",
+        "test_relocation_recovery",
+        "test_relocation_recovery_cli",
+        "test_reverse_relocation_rollback",
+        "test_reverse_relocation_switch"
+      ]
+    },
+    {
+      "tests": 26,
+      "seconds": 7.576,
+      "result": "PASS",
+      "modules": [
+        "test_relocation_recovery_lock",
+        "test_relocation_lifecycle",
+        "test_staging_proof_binding",
+        "test_relocation_preparation_process_crash",
+        "test_relocation_configuration_resume"
+      ]
+    }
+  ],
+  "limitations": [
+    "Two suites overlap; 67 test executions are not 67 unique tests",
+    "New source requires full CI and package verification",
+    "Two real product and actual cross-volume maintenance gates remain open"
+  ]
+}

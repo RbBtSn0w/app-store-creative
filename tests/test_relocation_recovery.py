@@ -100,3 +100,54 @@ class RelocationRecoveryTests(unittest.TestCase):
                 self.store.prepare_relocation(plan['id'], actor='owner', reason='Move')
         self.assertEqual(raced[0].read_bytes(), b'concurrent evidence')
         self.assertEqual(self.store._read('relocations', plan['id'], 'prepare-outcome')['status'], 'PREPARATION_FAILED')
+
+    def test_cancel_refuses_same_byte_replaced_staging_directory(self):
+        import shutil
+        import json
+        self.store.config_path.write_text(json.dumps(self.cfg))
+        self.source(); plan = self.store.plan_relocation(self.targets())
+        self.store.prepare_relocation(plan['id'], 'owner', 'Move')
+        prepared = self.store._read('relocations', plan['id'], 'prepared')
+        root = Path(prepared['staging']['objects'])
+        retained = root.with_name(root.name + '-retained')
+        root.rename(retained); shutil.copytree(retained, root)
+        before = {str(path): path.read_bytes() for directory in (root, retained)
+                  for path in directory.rglob('*') if path.is_file()}
+        with self.assertRaisesRegex(ValueError, 'identity|ownership'):
+            self.store.cancel_relocation(plan['id'], 'owner', 'Preserve replaced directory')
+        self.assertEqual(before, {str(path): path.read_bytes() for directory in (root, retained)
+                                 for path in directory.rglob('*') if path.is_file()})
+        import subprocess
+        import sys
+        cli = Path(__file__).parents[1] / 'plugins/app-store-creative/scripts/app_store_creative.py'
+        result = subprocess.run([sys.executable, str(cli), 'storage', 'cancel-relocate',
+            '--repo', str(self.root), '--id', plan['id'], '--actor', 'owner',
+            '--reason', 'Preserve replaced directory', '--confirm', 'CANCEL'],
+            capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('directory identity changed', result.stderr)
+        self.assertEqual(before, {str(path): path.read_bytes() for directory in (root, retained)
+                                 for path in directory.rglob('*') if path.is_file()})
+
+    def test_cancel_refuses_root_replacement_after_intent_commit(self):
+        import shutil
+        self.source(); plan = self.store.plan_relocation(self.targets())
+        prepared = self.store.prepare_relocation(plan['id'], 'owner', 'Move')
+        root = Path(prepared['staging']['objects'])
+        retained = root.with_name(root.name + '-retained')
+        recorded = self.store._record
+        before = {}
+        def replace_after_intent(category, data, suffix=None):
+            result = recorded(category, data, suffix)
+            if category == 'relocations' and suffix == 'cancel-intent':
+                root.rename(retained); shutil.copytree(retained, root)
+                before.update({str(path): path.read_bytes() for directory in (root, retained)
+                               for path in directory.rglob('*') if path.is_file()})
+            return result
+        with patch.object(self.store, '_record', side_effect=replace_after_intent):
+            with self.assertRaisesRegex(ValueError, 'identity|ownership'):
+                self.store.cancel_relocation(plan['id'], 'owner', 'Preserve replaced staging')
+        self.assertTrue(before)
+        self.assertEqual(before, {str(path): path.read_bytes() for directory in (root, retained)
+                                 for path in directory.rglob('*') if path.is_file()})
+        self.assertFalse(self.store._path('relocations', plan['id'], 'cancelled').exists())

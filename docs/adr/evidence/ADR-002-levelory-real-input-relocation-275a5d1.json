@@ -1,0 +1,16 @@
+{
+  "scope": "Actual reversible custom-root relocation of complete real-input Levelory candidate on same filesystem",
+  "source_commit": "275a5d1",
+  "candidate_id": "64f81025ad3d40f8b7c26a96a73d446d",
+  "forward_plan_id": "66c98619b5ce4c5ebb2bd46f2ffb6ad5",
+  "reverse_plan_id": "eef159e0850c40a7bbcba95ac0447a6a",
+  "forward_validation_status": "PASS",
+  "returned_validation_status": "PASS",
+  "returned_history_status": "PASS",
+  "returned_original_binding": true,
+  "limitations": [
+    "Temporary real-input workspace, not durable product archive",
+    "Same filesystem; no cross-volume, injected crash, quarantine or purge in this drill",
+    "No browser relocation controls, delivery seal, human approval or ASC upload"
+  ]
+}

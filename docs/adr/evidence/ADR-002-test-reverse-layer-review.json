@@ -1,0 +1,23 @@
+{
+  "scope": "Full current reverse relocation layered configuration tests",
+  "file": "tests/test_reverse_configuration_layers.py",
+  "sha256": "61d97062ef023029848fd03dd1cb69992e75172a9ef4008d2894b0420a87f203",
+  "assessment": [
+    "Return plan pins current source and original target bindings",
+    "Local layer appearance blocks verification/preparation before record change",
+    "Same-byte config replacement refuses root exchange and preserves directory identities",
+    "Existing local layer selected as owning target without rewriting shared bytes at planning",
+    "Tampered layer target refused",
+    "Local drift after interrupted forward/reverse exchange blocks resume/rollback without config/root mutation; restoring reviewed layer absence permits resume"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 8.118,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_reverse_configuration_layers -q"
+  },
+  "limitations": [
+    "Final existing-local-layer switch bytes and post-return new-run reading not asserted in this file",
+    "Isolated local fixture; real cross-volume and products remain separate"
+  ]
+}

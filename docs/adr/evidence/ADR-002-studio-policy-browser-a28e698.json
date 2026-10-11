@@ -1,0 +1,13 @@
+{
+  "commit": "a28e698765e2ebed6638233a07cc9ea2afbd7ed1",
+  "scope": "Owned synthetic Studio browser fixture, no real product or permanent backend selected",
+  "external_empty_backend_save_rejected": true,
+  "external_named_backend_save_and_reload_verified": true,
+  "git_switch_removes_backend_verified": true,
+  "saved_policy": {
+    "schema_version": 1,
+    "mediaMode": "git"
+  },
+  "config_sha256": "bb82687f90f16b2f1f2bdadeb9a2b4c19fc0b1715fc616d05ad2fb315be3c37f",
+  "screenshot_sha256": "6424511f90d8fd461301c045253c51377a1498f3bc7ac553c0be5ab1649dbb0a"
+}

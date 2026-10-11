@@ -1,0 +1,21 @@
+{
+  "base_head": "0e0b79f",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app_store_creative.py",
+  "sha256": "76555d98930e3ba1cf980f744ed19f1eef3748f31bb62147fb9bc76d11efa04b",
+  "scope": "Entire top-level CLI parser/dispatch/output module; lifecycle_commands and Studio executors require separate review",
+  "checks": [
+    "Python minimum version explicit",
+    "Managed groups delegate to shared lifecycle commands",
+    "Project-relative configuration resolves against repo rather than caller cwd",
+    "Export rejects unmanaged output override and delegates target/locale/video selection",
+    "FAIL results and caught errors return nonzero with structured output"
+  ],
+  "validation": {
+    "tests": 15,
+    "seconds": 3.353,
+    "result": "PASS",
+    "log_sha256": "dd80e3a8a2359933224b7cc1b24c437942f5b9c53716502451b1b0c677117cbb"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

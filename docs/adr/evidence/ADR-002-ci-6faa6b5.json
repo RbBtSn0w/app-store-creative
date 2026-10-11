@@ -1,0 +1,20 @@
+{
+  "head": "6faa6b5eceade889d89e8d4709c7d036e2f3fd58",
+  "run": 37933219877,
+  "conclusion": "success",
+  "python": {
+    "executed": 1019,
+    "passed": 986,
+    "skipped": 33,
+    "seconds": 305.575
+  },
+  "studio": {
+    "files": 31,
+    "passed": 93
+  },
+  "typecheck": "PASS",
+  "build": "PASS",
+  "distribution": "PASS",
+  "log_sha256": "e6f4eedbfaa0af98d5cc9251f979e225e9deaa5b1d0befee9aecff751a14384f",
+  "scope": "Does not cover subsequent uncommitted recipe approval binding fix"
+}

@@ -1,0 +1,47 @@
+{
+  "scope": "Full content sensitive-information review of eight recording/remote/storage/regression summaries",
+  "files": [
+    {
+      "path": "ADR-002-local-verification.json",
+      "sha256": "835c91092121e8fb6fa9df687031f52b6d3efe1cd08c3215b8f3e17e9fc9905a"
+    },
+    {
+      "path": "ADR-002-installed-24634da.json",
+      "sha256": "379f3fb3051fb6e18b9a88b5b8180d068d1d42c1e455351e46e40977c76ffc44"
+    },
+    {
+      "path": "ADR-002-crossfs-24634da.json",
+      "sha256": "b530629f0f1c004ff52ad2566be8a89554eccc76c799a46ce25642920a079072"
+    },
+    {
+      "path": "ADR-002-lfs-custom-paths.json",
+      "sha256": "cf710de12aaf16c8b1b908c568c7399425b7e43aa4ef44f6e925c89c451ee827"
+    },
+    {
+      "path": "ADR-002-private-evidence-review-a28e698.json",
+      "sha256": "30a8ba487557bcb59538ebf6af651d488bc4357d8f8e019b75e4c865842a3c4a"
+    },
+    {
+      "path": "ADR-002-recorder-receipt-review.json",
+      "sha256": "5bfb1da6aa1d25a34fb69b18c866312e75b2681fa1bce9ce394424d1456a8f48"
+    },
+    {
+      "path": "ADR-002-managed-recording-review-3580e3a.json",
+      "sha256": "5378937038f2c0e6622b4831caa609e5a3140f1fe66bcf737636218639bd0987"
+    },
+    {
+      "path": "ADR-002-remote-observations-review.json",
+      "sha256": "b496b83df7ea136859f91bf5f7a810279eed8cbc179a1ed8bb807240f1d9b0ea"
+    }
+  ],
+  "findings": [],
+  "observations": [
+    "Only source-relative paths, synthetic directory cases, source/media/log hashes and bounded test summaries appear",
+    "No actual ASC signed URLs, authorization secrets, original raw recording receipts or private user content appear",
+    "Earlier independently mounted APFS fixture evidence exists at cda553c and 24634da; this does not prove latest real-input cross-filesystem acceptance"
+  ],
+  "limitations": [
+    "Eight evidence summaries only; repository-wide review remains open",
+    "Content review does not rerun historical checks"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "Full current external publication and post-relocation purge retrieval test review",
+  "files": [
+    {
+      "file": "tests/test_external_publication.py",
+      "sha256": "f69f3782613a0e065b915e64a81c5e8040e41e8dac1ffe3585f515a491a801b5"
+    },
+    {
+      "file": "tests/test_post_purge_retrieval.py",
+      "sha256": "23a8ec9f2dbe4def28d0f9b0f5a599a8c9f98dcf6c5a94872cb843b78171d290"
+    }
+  ],
+  "assessment": [
+    "External publication binds exact committed descriptor and retrieval proof; approval required before preparing checksum-verified ASC paths",
+    "Actual local bare remote retrieval succeeds after original delivery, metadata, working bundle and lifecycle objects are removed",
+    "Protected named backend keeps local root out of portable plan; preparation status detects changed bytes after runtime restart without rewriting record",
+    "Disposable relocation, quarantine and purge remove redundant files; public CLI restores verified delivery and refuses to overwrite owner destination"
+  ],
+  "verification": {
+    "tests": 9,
+    "seconds": 5.567,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_external_publication test_post_purge_retrieval"
+  },
+  "limitations": [
+    "Local disposable filesystem backend and bare remote do not establish durable hosted storage acceptance",
+    "Lifecycle metadata and backend remain available during external retrieval; not complete producer environment deletion",
+    "Post-purge test removes redundant relocation copies while active package and objects remain; not independent remote recovery after deleting all active storage",
+    "Fixture approvals are not real human approval; no ASC upload, real product, cross-filesystem or raw observation privacy assertion"
+  ]
+}

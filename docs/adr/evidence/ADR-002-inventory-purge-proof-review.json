@@ -1,0 +1,23 @@
+{
+  "base_head": "0d8a759",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/inventory_lifecycle.py",
+  "sha256": "de22fa31f82d3758c9326779b416a9369f6559f98f80a21772d5f3b569cc4397",
+  "scope": "Entire local inventory module; relocation inventory and retention executors separate scope",
+  "finding": {
+    "red": "Changed purge receipt byte count was accepted and missing objects classified as purged.",
+    "fix": "Verify purge completion receipt, intent, per-file checkpoints and absence before trusting purged classification."
+  },
+  "checks": [
+    "Unsafe links and unsupported/unreadable entries fail conservative observation",
+    "Unknown capacity remains None with scoped errors",
+    "Registered, corrupt, quarantined, orphan, unknown and missing objects distinguished",
+    "Logical bytes and unique inode/block estimates separately reported; remote capacity remains unobserved"
+  ],
+  "validation": {
+    "tests": 47,
+    "seconds": 3.743,
+    "result": "PASS",
+    "log_sha256": "c094c7c5124eef05568b56a87dad8bdf62a0c5a0920fce2848a7737586b430d9"
+  },
+  "overall_review_complete": false
+}

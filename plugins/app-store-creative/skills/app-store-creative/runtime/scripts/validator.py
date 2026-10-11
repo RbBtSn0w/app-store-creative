@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Zero-network release validator and release-lock generator for App Store Creative v2.0."""
+"""Read-only media probes for managed candidate validation."""
 
 import hashlib
 import studio_contract as contract
@@ -52,31 +52,8 @@ def get_git_commit(repo_root: Path) -> Optional[str]:
 
 
 def read_image_meta(path: Path) -> Tuple[int, int, bool]:
-    """Read image width, height, and check if alpha exists using sips or pure python PNG header parse."""
-    # Fast path: sips on macOS
-    if shutil.which("sips"):
-        try:
-            w_proc = subprocess.run(["sips", "-g", "pixelWidth", str(path)], capture_output=True, text=True, check=True)
-            h_proc = subprocess.run(["sips", "-g", "pixelHeight", str(path)], capture_output=True, text=True, check=True)
-            a_proc = subprocess.run(["sips", "-g", "hasAlpha", str(path)], capture_output=True, text=True, check=True)
-
-            w = int(w_proc.stdout.strip().split()[-1])
-            h = int(h_proc.stdout.strip().split()[-1])
-            has_alpha = a_proc.stdout.strip().split()[-1].lower() == "yes"
-            return w, h, has_alpha
-        except Exception:
-            pass
-
-    # Fallback pure python PNG header parsing
-    data = path.read_bytes()
-    if data[:8] != b"\x89PNG\r\n\x1a\n":
-        raise ValueError(f"Not a valid PNG file: {path}")
-    w = int.from_bytes(data[16:20], "big")
-    h = int.from_bytes(data[20:24], "big")
-    color_type = data[25]
-    # color_type 6 = RGBA, 4 = Gray+Alpha, or tRNS chunk in paletted/gray
-    has_alpha = color_type in (4, 6) or (b"tRNS" in data)
-    return w, h, has_alpha
+    """Validate PNG chunks and pixel data before returning image metadata."""
+    return contract.inspect_png(path.read_bytes())
 
 
 def match_target_spec(path_part: str) -> Optional[str]:
@@ -113,15 +90,14 @@ def run_validation(
     repo_root: Path,
     config_path: Optional[Path] = None,
     artifacts_dir: Optional[Path] = None,
-    write_lockfile: bool = True,
 ) -> Dict[str, Any]:
     # Studio saves and export publication share this lock; external writers are
     # also detected by the snapshot checks before verification is published.
     with contract.WRITE_LOCK:
-        return _run_validation(repo_root, config_path, artifacts_dir, write_lockfile)
+        return _run_validation(repo_root, config_path, artifacts_dir)
 
 
-def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
+def _run_validation(repo_root, config_path, artifacts_dir):
     """Validate all assets in artifacts against App Store rules, with zero network dependencies."""
     cfg_file = config_path or (repo_root / "creative.config.json")
     if not cfg_file.exists():
@@ -179,6 +155,8 @@ def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
             errors.append("Enabled previewVideo requires an existing real source recording")
         if not (art_dir / "preview/app_preview.mp4").is_file():
             errors.append("Missing declared App Preview: preview/app_preview.mp4")
+        if preview.get("posterRequired") and not (art_dir / "preview/poster.png").is_file():
+            errors.append("Missing declared poster: preview/poster.png")
 
     print("🔍 Running Zero-Network Apple Store Verification...")
 
@@ -256,7 +234,15 @@ def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
         except Exception as exc:
             errors.append(f"Failed to validate video {rel}: {exc}")
 
-    # Write release-lock.json
+    poster_record = asset_records.get("preview/poster.png")
+    if poster_record:
+        preview_record = asset_records.get("preview/app_preview.mp4")
+        if not preview_record or preview_record.get("type") != "video":
+            errors.append("Poster requires a validated App Preview")
+        elif (poster_record["width"], poster_record["height"]) != (preview_record["width"], preview_record["height"]):
+            errors.append("Poster dimensions must match the validated App Preview")
+
+    # Return probe facts; the lifecycle core owns immutable validation records.
     lock_data = {
         "schema_version": 2,
         "status": "PASS" if not errors else "FAIL",
@@ -289,20 +275,6 @@ def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
         errors.append('Configuration, sources, outputs or render evidence changed during validation; retry with stable inputs')
         lock_data['status'] = 'FAIL'
 
-    if write_lockfile:
-        lock_dir = repo_root / ".creative"
-        lock_dir.mkdir(parents=True, exist_ok=True)
-        lock_file = lock_dir / "release-lock.json"
-        with contract.WRITE_LOCK:
-            if lock_file.exists():
-                previous = lock_file.read_bytes()
-                history_file = lock_dir / 'release-history' / f'{contract.digest(previous)}.json'
-                if not history_file.exists():
-                    history_file.parent.mkdir(parents=True, exist_ok=True)
-                    history_file.write_bytes(previous)
-            contract.atomic_json(lock_file, lock_data)
-        print(f"🔒 Current release evidence written to: {lock_file}")
-
     if errors:
         print("❌ Verification FAILED with issues:")
         for err in errors:
@@ -311,7 +283,3 @@ def _run_validation(repo_root, config_path, artifacts_dir, write_lockfile):
         print(f"✅ Verification PASSED: {len(asset_records)} assets fully compliant with Apple specifications.")
 
     return lock_data
-
-
-if __name__ == "__main__":
-    run_validation(Path.cwd())

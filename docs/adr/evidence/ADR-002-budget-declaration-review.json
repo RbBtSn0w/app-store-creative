@@ -1,0 +1,40 @@
+{
+  "head": "ffa14602ff02200995f8b7eef410002112015f50",
+  "reviewed_files": [
+    "media_budget.py",
+    "artifact_policy.py"
+  ],
+  "test_log_sha256": "b2a22fe5d21217fce1f91e312e4631f5512a439f37f5bf4af62a1e4e0db52484",
+  "finding": "Formal sealing and archive verification require an explicit nonnegative integer media budget from the immutable recipe. Exploration may omit the budget; warnings remain advisory.",
+  "requirement": "ADR-002-artifact-lifecycle-and-release-archive.md:203",
+  "status": "IMPLEMENTED_SCOPED_VALIDATION_PASSED",
+  "overall_review_complete": false,
+  "validation": {
+    "seal_callers": {
+      "tests": 93,
+      "result": "PASS",
+      "log_sha256": "04ed966d45183f851db80e222c2747701c2d6200951688659f35a19542bdd006"
+    },
+    "studio": {
+      "tests": 93,
+      "files": 31,
+      "result": "PASS"
+    },
+    "browser": {
+      "fixture": "synthetic project only",
+      "valid_save_and_reload": "PASS",
+      "negative_and_fraction_rejected": "PASS",
+      "empty_exploration_save": "PASS",
+      "screenshot_sha256": "d9dadb7b5421bea47d8e890f85478a0c8ff52c83d44b9e898804143b5d37db21"
+    },
+    "distribution": {
+      "tests": 45,
+      "result": "PASS",
+      "seconds": 35.668,
+      "package_sha256": "1fb6a4dc7248807481163a8df9cf91fda1019b3921accd56a76585132c463aea",
+      "log_sha256": "5d43e8d48f1cc5181273f14d61d3740596a092a42489dfde8be42645dafb7bc8",
+      "source_runtime_used": false
+    },
+    "full_ci": "Current uncommitted patch not covered by ffa1460 CI"
+  }
+}

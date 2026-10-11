@@ -1,0 +1,18 @@
+{
+  "scope": "Full current single independent retrieval policy test",
+  "file": "tests/test_archive_policy_independent_retrieval.py",
+  "sha256": "2aedbbdb0ce788672983a25153c66316109160f47b1a0ed3b3bb892ee19d8861",
+  "assessment": [
+    "Independent Git retrieval rejects archive declaring LFS while committed media are ordinary Git bytes rather than LFS pointers"
+  ],
+  "verification": {
+    "tests": 1,
+    "seconds": 0.324,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_archive_policy_independent_retrieval -q"
+  },
+  "limitations": [
+    "Despite filename, this file does not prove positive LFS/external recovery or deletion of all producer configuration",
+    "Real LFS remote backend and fully isolated product recovery remain unaccepted"
+  ]
+}

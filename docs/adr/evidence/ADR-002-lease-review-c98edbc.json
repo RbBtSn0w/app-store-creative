@@ -1,0 +1,23 @@
+{
+  "runtime_head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py",
+  "sha256": "a2f97ceddcbd231b40db434e50c7c8c769ac14d80fd27028600e3aa5175d5a70",
+  "scope": "Entire lease module; artifact precommit lease consumers inspected, not full artifact_lifecycle review",
+  "checks": [
+    "Strict lease duration",
+    "Constant-time current token match and explicit expiration",
+    "Immutable generations rotate token",
+    "Recovery requires expired nonterminal execution and creates explicit interrupted outcome plus new attempt",
+    "Concurrent recovery serialized by core transaction",
+    "Producer heartbeat renews and stops on exit",
+    "Artifact and outcome precommit recheck current lease"
+  ],
+  "validation": {
+    "tests": 9,
+    "seconds": 0.909,
+    "result": "PASS",
+    "log_sha256": "769911ad0c1b3c09e95a1158a93513ab06c43183fe713ab51d36510afa940c67"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

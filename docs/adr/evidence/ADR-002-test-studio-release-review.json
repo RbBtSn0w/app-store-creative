@@ -1,0 +1,17 @@
+{
+  "scope": "Full current 369-line file and removed lines of modification diff against origin/main",
+  "file": "tests/test_studio_release.py",
+  "sha256": "e27715f7b7ed97603ca4fa315926350127ddd523d34781212fbe5447a6a4ce9c",
+  "assessment": [
+    "Stale ETag refuses overwrite; foreign origin/host rejected; invalid nested config remains client error",
+    "Imported duplicate names preserve distinct real bytes; corrupted capture refused; frozen export sources and mid-validation config/source/output/symlink mutation checked",
+    "Managed poster rejects stale revision before extraction; producing poster grants no approval; prior selected candidate separate from production job",
+    "Failed poster retry retains partial object, distinct attempt and retry_of binding",
+    "Restarted HTTP run listing/status equals public CLI; queries preserve records and exclude lease token",
+    "Retired mutable lock/history writes replaced by preservation of unmanaged evidence without writes"
+  ],
+  "limitations": [
+    "Poster extraction and renderer are mocked in these cases; actual media/browser acceptance separate",
+    "ETag omission regression belongs to configuration_studio_save tests, not assumed by stale-version test"
+  ]
+}

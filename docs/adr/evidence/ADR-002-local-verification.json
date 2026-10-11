@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "scope": "Local source and isolated package verification; not release approval",
+  "base_commit": "50a6414c7e83257bcc3ec691e9a604cc6605f5ef",
+  "source_regression": {
+    "executed": 999,
+    "passed": 966,
+    "skipped": 33,
+    "skip_scope": "Independent filesystem environment required",
+    "test_seconds": 662.765,
+    "source_files": 316,
+    "sources_unchanged": true,
+    "source_fingerprint_map_sha256": "570b8b0ea8e4ce2239ca904765b745239f8f3638b8b7825e843bfdbdc292260b",
+    "log_sha256": "d032ff081e86a6f5fed9488d41a405b4db9104ea249aee749c5ba769aa299c65"
+  },
+  "package": {
+    "version": "0.3.0",
+    "sha256": "8d2aefd40fad910e3cfd8c536bb5388014655e62c560205d59262fcb789c27c8",
+    "files": 238,
+    "all_files_equal_source": true,
+    "isolated_tests_passed": 41,
+    "isolated_test_seconds": 28.861
+  },
+  "release_complete": false,
+  "remote_ci_verified": false,
+  "production_storage_verified": false,
+  "two_real_products_verified": false,
+  "post_full_regression_format_changes": [
+    {
+      "path": "tests/test_producer_contracts.py",
+      "kind": "Trailing blank lines removed; executable content unchanged",
+      "before_sha256": "5685d5e674b2b848f72a1f5a773d30e13b3393cd752a8c6d38d3bf1d544ace65",
+      "after_sha256": "276f0d5758eebcd415ec5421f1af113f5043f0ea47f1f91109795b58d4b9b6a3"
+    },
+    {
+      "path": "tests/test_status_input_contract.py",
+      "kind": "Trailing blank lines removed; executable content unchanged",
+      "before_sha256": "94d8f559b48fcfefde46a4d487006c116eb718210d275c5fe82ab9ce405a65a5",
+      "after_sha256": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb"
+    }
+  ],
+  "independent_filesystem_regression": {
+    "head_commit": "cda553c5539824f3f118d2661951d437b9600b1a",
+    "passed": 33,
+    "exit_code": 0,
+    "elapsed_seconds": 75.01380179199623,
+    "independent_volume_detached": true,
+    "log_sha256": "8b88b53ae81a3c3610960cbbd2c4a868e822d6457fcd81a5b96a81d8d8bf66ae",
+    "scope": "Temporary independently mounted APFS volume; public relocation SIGKILL recovery matrix, not production media/backend acceptance"
+  },
+  "remote_ci_first_run": {
+    "run_id": 37899764484,
+    "head_commit": "cda553c5539824f3f118d2661951d437b9600b1a",
+    "conclusion": "failure",
+    "test_errors": 5,
+    "test_skipped": 36,
+    "cause": "FFmpeg unavailable on runner; normalization test setup failed",
+    "remediation": "Install ffmpeg and ffprobe before unit tests; no test gates removed"
+  }
+}

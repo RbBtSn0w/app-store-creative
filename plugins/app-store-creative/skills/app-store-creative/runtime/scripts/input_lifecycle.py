@@ -20,7 +20,32 @@ def write_snapshot_index(root, sources):
 
 
 class InputOperations:
+    def import_capture_artifact(self, artifact_id, actor, name=None):
+        artifact = self.verify_artifact(artifact_id)
+        if artifact['role'] != 'capture' or artifact.get('partial'):
+            raise ValueError('Input requires a complete capture artifact')
+        if not artifact.get('logical_path'):
+            raise ValueError('Capture import requires an archival logical path')
+        outcome = self._read('attempts', artifact['attempt_id'], 'outcome')
+        if outcome['status'] != 'succeeded':
+            raise ValueError('Capture acquisition did not succeed')
+        errors = self.source_eligibility_errors(artifact_id)
+        if errors:
+            raise ValueError('; '.join(errors))
+        if any(not record.get('logical_path') for record in self._closure([artifact_id]).values()):
+            raise ValueError('Capture dependencies require archival logical paths')
+        path = self.object_path(artifact['sha256'])
+        data = path.read_bytes()
+        import hashlib
+        if hashlib.sha256(data).hexdigest() != artifact['sha256']:
+            raise ValueError('Capture object changed before import')
+        return self._import_capture(data, name or artifact.get('logical_path') or artifact_id,
+                                    actor, [artifact_id])
+
     def import_capture(self, data, name, actor):
+        return self._import_capture(data, name, actor, [])
+
+    def _import_capture(self, data, name, actor, parents):
         import studio_contract
         if not isinstance(actor, str) or not actor.strip() or not isinstance(name, str) or not name.strip():
             raise ValueError('Import requires actor and source name')
@@ -31,7 +56,7 @@ class InputOperations:
         try:
             source = self.work_path(attempt['id']) / ('capture.' + extension)
             source.write_bytes(data)
-            artifact = self.register(attempt['id'], source, 'capture', logical_path=logical)
+            artifact = self.register(attempt['id'], source, 'capture', logical_path=logical, inputs=parents)
             with self.transaction():
                 self._active_attempt(attempt['id'])
                 imported = self._record('imports', {'id': attempt['id'], 'run_id': run['id'],
@@ -63,11 +88,16 @@ class InputOperations:
             raise ValueError('Configuration backup requires actor')
         run = self.start_run({'stage': 'configuration-backup'})
         attempt = self.start_attempt(run['id'], 'configuration-backup', actor)
-        source = self.work_path(attempt['id']) / 'creative.config.json'
-        source.write_bytes(data)
-        artifact = self.register(attempt['id'], source, 'configuration', logical_path='creative.config.json')
-        self.finish_attempt(attempt['id'], 'succeeded')
-        return artifact
+        try:
+            source = self.work_path(attempt['id']) / 'creative.config.json'
+            source.write_bytes(data)
+            artifact = self.register(attempt['id'], source, 'configuration', logical_path='creative.config.json')
+            self.finish_attempt(attempt['id'], 'succeeded')
+            return artifact
+        except BaseException as error:
+            if not self._path('attempts', attempt['id'], 'outcome').exists():
+                self.finish_attempt(attempt['id'], 'failed', reason=str(error) or type(error).__name__)
+            raise
 
     def discard_input(self, import_id, actor, reason):
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
@@ -85,7 +115,18 @@ class InputOperations:
 
     def _live_configuration(self):
         import json
-        from artifact_lifecycle import StoragePaths
+        from artifact_lifecycle import StoragePaths, canonical
+        if hasattr(self, '_configuration_layers'):
+            from configuration_layers import load, observation
+            layers = load(self.paths.project, self.config_path)
+            if canonical(observation(layers)) != self._configuration_observation:
+                raise ValueError('Configuration layers changed; reconstruct the runtime from current authority')
+            if canonical(self.config) != canonical(layers.config):
+                raise ValueError('Layered configuration snapshot changed')
+            if layers.paths.binding() != self.paths.binding():
+                raise ValueError('Layered runtime storage binding changed')
+            self._configuration_layers = layers
+            return layers.config
         if self.config_path.exists():
             config = json.loads(self.config_path.read_text())
         elif self._explicit_config_path:

@@ -139,7 +139,13 @@ export interface CardConfig {
   variants?: Partial<Record<TargetDevice, CardVariant>>;
 }
 
+export type ArchivePolicy =
+  | { schema_version: 1; mediaMode: 'git' | 'lfs'; backend?: never }
+  | { schema_version: 1; mediaMode: 'external'; backend: string };
+
 export interface CreativeConfig {
+  archivePolicy?: ArchivePolicy;
+  artifactPolicy?: { schema_version: 1; trialRetentionDays?: number; diagnosticRetentionDays?: number; quarantineDays?: number; mediaBudgetBytes?: number };
   storage?: { workspaceRoot?: string; objectRoot?: string; releaseRoot?: string; publicationRoot?: string };
   project: ProjectInfo;
   targets: TargetDevice[];

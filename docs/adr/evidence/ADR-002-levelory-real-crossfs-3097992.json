@@ -1,0 +1,18 @@
+{
+  "scope": "Actual complete real-input Levelory candidate forward and reverse relocation across independently mounted APFS filesystem",
+  "source_commit": "3097992",
+  "candidate_id": "64f81025ad3d40f8b7c26a96a73d446d",
+  "forward_plan_id": "5f59434a87384d6388747fcdc575c5a3",
+  "reverse_plan_id": "b8b7e84b2b064f788d1d52b4d0363efe",
+  "independent_filesystem_verified": true,
+  "forward_candidate_validation": "PASS",
+  "returned_candidate_validation": "PASS",
+  "original_binding_restored": true,
+  "owned_volume_detached": true,
+  "limitations": [
+    "Temporary real-input workspace; not durable backend",
+    "No injected crash, browser control, seal, approval or ASC upload"
+  ],
+  "returned_history_status": "PASS",
+  "mount_absent_after_detach": true
+}

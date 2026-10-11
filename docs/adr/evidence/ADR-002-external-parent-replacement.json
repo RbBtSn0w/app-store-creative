@@ -1,0 +1,25 @@
+{
+  "base_head": "d08a70d4b2ba98fdecf9f481103b14c23f7a9da6",
+  "red": "Failure cleanup removed an unregistered owner file after destination-parent symlink substitution.",
+  "green": {
+    "tests": 27,
+    "elapsed_seconds": 14.079,
+    "modules": [
+      "test_external_media_store",
+      "test_external_delivery_archive",
+      "test_external_publication",
+      "test_external_delivery_identity"
+    ]
+  },
+  "implementation": "Create, read, link and clean staged object through original directory descriptor; verify staged inode before cleanup and parent identity before publication.",
+  "scope": "Owned temporary directories; no production backend or media touched.",
+  "installed_package": {
+    "base_head": "d08a70d4b2ba98fdecf9f481103b14c23f7a9da6",
+    "package_sha256": "9af6e7fc334abc5a28789bb9e0b6cc4d826f421daabee868bb6896191020258f",
+    "source_equal_files": 238,
+    "mismatches": [],
+    "exit_code": 0,
+    "output": "...........................\n----------------------------------------------------------------------\nRan 27 tests in 13.410s\n\nOK\n",
+    "source_repo_in_pythonpath": false
+  }
+}

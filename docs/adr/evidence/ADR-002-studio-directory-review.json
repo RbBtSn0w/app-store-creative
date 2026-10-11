@@ -1,0 +1,25 @@
+{
+  "scope": "Full static review of directory settings and preview helpers, plus App edit/preview/save/export integration; not complete App or actual browser acceptance",
+  "files": {
+    "plugins/app-store-creative/studio/src/StorageSettings.tsx": "a0f7ba946b0b98eb4161df0162b57f698904730f37f4f4b8b58958fdf2c96a49",
+    "plugins/app-store-creative/studio/src/storagePreview.ts": "d36987670e13fa51da3455e5fecb4133c5e627d2af3940d1f494f544e2769573"
+  },
+  "integration_sha256": "e0e24968558130eb279e24668f143a8833f7f99c07687081c8a542e86ce4b60c",
+  "findings": [],
+  "review_notes": [
+    "Clearing a field removes its project override; protected local sources are explicitly labeled.",
+    "Preview validates complete absolute root bindings, provenance labels and read-only response status; timeout and failures remain errors.",
+    "App edits invalidate preview generations; late results cannot replace newer drafts. Saving previews the exact snapshot and applies conflict checks before conditional server save.",
+    "Export waits for saving and rejects recipe changes during save; directory preview does not move media."
+  ],
+  "verification": {
+    "tests": 9,
+    "files": 2,
+    "result": "PASS",
+    "runtime": "Node25.8.2"
+  },
+  "remaining": [
+    "Actual save-in-flight browser acceptance",
+    "Complete custom directory real product matrix"
+  ]
+}

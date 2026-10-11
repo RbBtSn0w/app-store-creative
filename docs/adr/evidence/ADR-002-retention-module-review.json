@@ -1,0 +1,32 @@
+{
+  "scope": "Full retention_lifecycle.py review with delegated maintenance modules reviewed separately",
+  "runtime_sha256": "c531d02bcdb9100b0ebdce9b69cfd391fde570667717de8bd60adabf18b5876c",
+  "reviewed": [
+    "Reference fingerprint and live configuration/import protection",
+    "Candidates, approval and delivery references with dependency closure",
+    "Trial versus diagnostic age cutoff and shared content-addressed object protection",
+    "Stale plan and storage/policy binding before quarantine",
+    "Interrupted restoration, purge intent exclusion and idempotent receipt checks",
+    "Purge eligibility, file checkpoints, reference recheck and completion proof",
+    "Read-only history reports recorded status without asserting verified execution"
+  ],
+  "defect": "quarantine_cleanup accepted whitespace/non-string audit identity and reason",
+  "red": "Whitespace actor was accepted and moved object; subsequent subcases became stale due to the first mutation",
+  "green": {
+    "tests": 38,
+    "seconds": 5.939,
+    "result": "PASS",
+    "modules": [
+      "test_retention_lifecycle",
+      "test_retention_dependency_contract",
+      "test_diagnostic_retention",
+      "test_object_purge_process_crash",
+      "test_post_purge_retrieval",
+      "test_studio_maintenance"
+    ]
+  },
+  "limitations": [
+    "Real product maintenance and action-specific permanent deletion authorization remain separate",
+    "New source requires complete CI and package verification"
+  ]
+}

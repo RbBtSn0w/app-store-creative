@@ -1,0 +1,34 @@
+{
+  "file": "tests/test_remote_observations.py",
+  "sha256": "bc401cf22d9b995b6a7310435e5fa6ff4de0b860cb17b956029f3cb2569a6cec",
+  "reviewed_ranges": [
+    [
+      1,
+      993
+    ]
+  ],
+  "complete": true,
+  "assessment": [
+    "Exact raw evidence bytes and hash mandatory; changed facts cannot mark remote success",
+    "Unapproved, stale, conflicting and foreign observations fail independent gates; preview needs decoded poster and playback",
+    "Retained private raw receipt stays outside Git summary and protected against cleanup; crossed summary identity rejected before backend creation",
+    "Crash helper verifies unchanged retained evidence after recovered relocation, but its imported process helper is not yet fully reviewed",
+    "Four-root forward/reverse and repeated relocations preserve original raw/summary artifact record bytes and cleanup protections",
+    "Disposable purge/cancel fixtures exclude referenced evidence; imported SIGKILL helper review remains separate",
+    "Independent backend readback and clean no-local Git clone retrieval compare raw bytes, exact trusted locator hash and commit; do not claim remote media verified",
+    "Version locator export excludes raw payload, actor and private evidence references; invalid locator mutations fail before publication files",
+    "Studio bad confirmation/path override/missing backend refuses requests without record mutation",
+    "Interrupted raw/summary retention preserves bytes and creates fresh retry identity; incomplete producer cannot persist/export",
+    "SIGKILL subprocess is explicitly owned and return signal checked; active lease recovery blocked, interrupted attempt retained",
+    "Custody diagnostics exclude private paths, retain corrupted records unchanged and do not claim remote verification"
+  ],
+  "limitations": [
+    "Full 993-line file and modification diff reviewed; imported helper tests require their own scoped evidence",
+    "Synthetic evidence does not establish actual ASC acceptance"
+  ],
+  "diff_check": "Only three removed lines replace old evidence-free fixtures/CLI import with required raw evidence hash and bytes; no existing assertions removed.",
+  "open_followups": [
+    "Imported crash helper test files still require full diff review"
+  ],
+  "lease_boundary_fix": "Real owned subprocess SIGKILL retained; parent recovery clock set to one microsecond before expiry (refused) and exact expiry (accepted); no wall-clock sleep. Focused test passed, 1.231s, two crash points."
+}

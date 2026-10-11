@@ -1,0 +1,35 @@
+{
+  "scope": "Full current owning-document and configuration installation recovery test review",
+  "files": [
+    {
+      "file": "tests/test_configuration_owning_document.py",
+      "sha256": "ae8ea1ffa11ad7c56f95f15985b4576a4a689a8435e198dba6575ee90089a491"
+    },
+    {
+      "file": "tests/test_configuration_local_installation.py",
+      "sha256": "ad5e1b3e461ac791a666a4922ff7801980907ef9a8c7057b589b6ffe299671a0"
+    },
+    {
+      "file": "tests/test_configuration_installation_recovery.py",
+      "sha256": "e1ca2b4d16ba53c363ba47cc16f47062e56d5acb466fbdb752a8a4ab3c5f71f8"
+    }
+  ],
+  "assessment": [
+    "Shared/local authority binds exact source identity, bytes, target and permissions; altered authority rejected without configuration writes",
+    "Local install and restore preserve shared bytes and private mode; tracked local target refused before staging",
+    "Same-byte replacement cannot satisfy installed inode proof",
+    "Interrupted installation resumes only with original proof; missing proof and replaced temporary inode refused",
+    "Proof directory synchronization precedes resumed replacement"
+  ],
+  "verification": {
+    "tests": 10,
+    "seconds": 4.805,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_configuration_owning_document test_configuration_local_installation test_configuration_installation_recovery -q"
+  },
+  "limitations": [
+    "Local installation unit fixture supplies internal journal records; full public lifecycle execution reviewed separately",
+    "Interruptions injected rather than actual process termination or power loss",
+    "Single-filesystem fixtures; real product, browser and cross-volume acceptance remain open"
+  ]
+}

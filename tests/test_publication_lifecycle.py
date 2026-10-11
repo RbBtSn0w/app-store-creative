@@ -38,6 +38,26 @@ class PublicationLifecycleTests(unittest.TestCase):
         self.assertEqual(approval['stage'], 'upload')
         self.assertEqual(approval['publication_id'], plan['id'])
 
+    def test_handoff_preserves_approved_asset_order_instead_of_filename_order(self):
+        from publication_lifecycle import publication_assets
+        assets = [
+            {'path': 'media/en-US/mac_16_10/z-first.png', 'artifact_id': 'first',
+             'role': 'screenshot', 'sha256': 'a' * 64},
+            {'path': 'media/en-US/mac_16_10/a-second.png', 'artifact_id': 'second',
+             'role': 'screenshot', 'sha256': 'b' * 64},
+        ]
+        for index, asset in enumerate(assets):
+            path = self.root / asset['path']
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(f'approved screenshot {index}'.encode())
+        result = publication_assets({'assets': assets}, self.config, self.root)
+        self.assertEqual([asset['artifact_id'] for asset in result], ['first', 'second'])
+        self.assertEqual([asset['path'] for asset in result], [asset['path'] for asset in assets])
+        for original, exported in zip(assets, result):
+            self.assertEqual(exported['source_checksum'],
+                             hashlib.md5((self.root / original['path']).read_bytes()).hexdigest())
+        self.assertEqual(assets[0]['path'], 'media/en-US/mac_16_10/z-first.png')
+
     def test_plan_cannot_use_uncommitted_archive(self):
         self.git('init', '--quiet')
         with self.assertRaisesRegex(ValueError, 'commit|archive'):

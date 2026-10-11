@@ -1,0 +1,385 @@
+{
+  "source_commit": "553acc6ba0e46bb79ea497567f95ef32e056d95a",
+  "scope": "Current frontend source static review evidence coverage; not runtime/browser acceptance or test-diff review",
+  "files": [
+    {
+      "file": "plugins/app-store-creative/studio/src/App.tsx",
+      "sha256": "e0e24968558130eb279e24668f143a8833f7f99c07687081c8a542e86ce4b60c",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-app-orchestration-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ArchivePolicySettings.tsx",
+      "sha256": "36578d7f91e040cca9b1391a23271d13d4351f1b3f32088a3ddc77d3194584b2",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-policy-budget-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/CandidateApproval.tsx",
+      "sha256": "310db55883bf124db3ce8944df11eb0008a880fb680a963487401c05670506af",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/DeliveryHistory.tsx",
+      "sha256": "0c5d75879956b50352eb100c1593100b6542117e3f4211b33c14009c67f93cec",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/EvidencePersistence.tsx",
+      "sha256": "be4bf31f04ff10655463638827a8e0ce1668566a7523d41939bed1d622b201ea",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ExportView.tsx",
+      "sha256": "04f0c6a032094745ede544d97b406a87643b2337b561a51dd439cbaa8bf2d152",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-export-readiness-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/InventoryView.tsx",
+      "sha256": "8cd202dbf0a3aea9017f5ed4067104776e59a2d5a884dae7cdd5d4647a0269b1",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-inventory-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/MaintenancePanel.tsx",
+      "sha256": "700af8974f30b906ad063d30c593363f599ea6b75745462e0b4d2da4ac419c1c",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-maintenance-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/MediaBudgetPanel.tsx",
+      "sha256": "b03110d4cc33ddb3fabbecfeb273e67f3dd88378c71a5940a0ad08ccada924a1",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-policy-budget-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ObservationEvidence.tsx",
+      "sha256": "071e7aefa71356eb484c9e682dd621d96239509a1def7a6a6c3b8913c97b5fce",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/OperationHistory.tsx",
+      "sha256": "4ff10c5582b16fa1e14048afbf87b9cfe630981b6913d540e03b1ce647f3baf3",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/PublicationHandoff.tsx",
+      "sha256": "f079538c58637c7ec0d791165528d45edd3be219c098ab1b15048a9770080eaf",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/PublicationHistory.tsx",
+      "sha256": "092f413e853fda85b4d5799b7cdd6e6080a70f342911c63e807e99405b4fa411",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationActions.tsx",
+      "sha256": "8bd369f12e1ea8a25eb9b1bbceeefefa8c1d468f2b510d60fa42a65ece5b9a29",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-relocation-actions-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationMaintenance.tsx",
+      "sha256": "2fa8f02a277b99fd494a06190c82af2bd5591a36c3c13c4ba80fd414eb804b86",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-copy-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationMaintenanceHistory.tsx",
+      "sha256": "dca10a8717359a1f034ca312bfd839c14381c9415feeee96d7e5532651988b51",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-copy-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationPurgeReview.tsx",
+      "sha256": "b45fb64f44c19d9b1509e83b0979cdc39b31c193d04915d80dada6164753dafe",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-copy-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationRecovery.tsx",
+      "sha256": "1368557bb601b3d7c4ef678f41acb83cf9936921ce3f107310c4d1f0d911b315",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-relocation-actions-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationStatusPanel.tsx",
+      "sha256": "824f6a5d726ede6ee5d10574d37de6ad85b0d34c2d13e77af6eef5d51a7b3277",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-relocation-actions-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RunHistory.tsx",
+      "sha256": "3beceb286471e34e6b449121660cf0f5a6fd7af33ae75d419e9fc29f3a86cba6",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-run-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/StorageSettings.tsx",
+      "sha256": "a0f7ba946b0b98eb4161df0162b57f698904730f37f4f4b8b58958fdf2c96a49",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-directory-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/artifactPolicy.ts",
+      "sha256": "d4d98d50c7770950a9a7f9d8d6a7b144119a83c0e3c08b64cc8421fe5ce9ae74",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-policy-budget-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/components/CardView.tsx",
+      "sha256": "c7e8724493c5c797b4998596a81fc199b45b7e3a7576f2a2f936b474e01e38fa",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-card-rendering-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/components/DeviceFrame.tsx",
+      "sha256": "885018ffbda161af56920df1f66fb513c567175810f01bf73555d06e756687fe",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-card-rendering-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/deliveryStatus.ts",
+      "sha256": "7aa9430efef8803ab62f01cda88ba7d1d5bf1c71c8ec25def06045465b4ff005",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-run-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/downloadDraft.ts",
+      "sha256": "853baf09e2e3c690e1f19743f7b368190b22ba842c22fc97bd64478108606233",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-entry-download-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/fontReview.ts",
+      "sha256": "60a5b799221ad65214f3107a5b91b0de923acec547374022a831c6959fad4b62",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-export-readiness-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/historyRequest.ts",
+      "sha256": "46ea4181a7ae41f87d46c0673fe76817f5a7f956c8e7bd90b3e78ef99f0a11a3",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/index.css",
+      "sha256": "d8b49d172c924fbc3a933f0089d728d4c1b48fe704b0b39893aafca0b7dfb592",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-entry-download-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/inventoryPresentation.ts",
+      "sha256": "cf229d3d061c891c14136cc31e7744bd88d4eeb6322f27bb7fdd6314a00afe38",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-inventory-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/layoutReview.ts",
+      "sha256": "579c1ca6a160f2402a83818dcb5b13e5b12623748a94ac76997edca3c21aa185",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-export-readiness-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/main.tsx",
+      "sha256": "79faf095f462c11b5dc445dac9043c06809247d25c47f6693fccd656d1a1d35a",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-entry-download-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceInspection.ts",
+      "sha256": "22a1574a43e3d58ba023a2aa3e73ea79a92c3bb36c44abd7fc1f7169e660714f",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-maintenance-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceRequest.ts",
+      "sha256": "9a3d631c721e2f1dad024a106bd1e92e8210ff2478ef588a1baa3065db1854bb",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-maintenance-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceState.ts",
+      "sha256": "191291b5e6d2150f351d1f970764be39154548b0506429842eb6b0c2f6af9133",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json",
+        "ADR-002-studio-maintenance-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/mediaBudget.ts",
+      "sha256": "75fd3a90418a396b835d46759f45e18a766092e020851191031bf08fda421b03",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-policy-budget-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/project.ts",
+      "sha256": "61db4420e59c4b00a5b45ad6acd47e0457b2d16105bac4796af22a3f77738fd7",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-card-rendering-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/publicationHandoffState.ts",
+      "sha256": "23d3470a8120d9aa8d0d4aee1502650987c50f5cd103affc3761907727f2417e",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-release-panels-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/releaseState.ts",
+      "sha256": "a795fa5be76c51c95520e48fee4c8af9325f02f0ffe8d9b0a27f6a970d2819cd",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-run-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocatedObjects.ts",
+      "sha256": "d170ec5b19751f149257d66a976dbb4d32c13945f8bf7aed73595f046e78b0a0",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-relocation-actions-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationMaintenanceState.ts",
+      "sha256": "3a733bdfbf8fe6d7653278f02c83c2a934bf9afd6067e6328492e563705adfac",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-copy-history-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationPurgeState.ts",
+      "sha256": "b7203db1bfdb033706bbcf51685ee30d52624ab694aa929c12453577106ee58a",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-types-purge-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationState.ts",
+      "sha256": "cfe414d6a5c2bff37d900239235b477db40fb398a236873409944c6a818ce1e6",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-relocation-actions-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/storagePreview.fixture.ts",
+      "sha256": "42f001b4cd372a152a46d27144e44c06ad19a1f5dfa4d811e3e9fd438302c471",
+      "status": "test_only_fixture",
+      "evidence": [],
+      "notes": "Read fully; referenced only by storagePreview.test.ts and StorageSettings.test.tsx. Excluded from production source coverage; test-diff review remains separate."
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/storagePreview.ts",
+      "sha256": "d36987670e13fa51da3455e5fecb4133c5e627d2af3940d1f494f544e2769573",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-directory-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/stylePresets.ts",
+      "sha256": "32f030de58270a7572e0f5bd12998e4b926e0559eea16365aa15121a1ffc0870",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-obsolete-toolbar-review.json"
+      ]
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/types.ts",
+      "sha256": "b29a8310f713f2be131b6b00b52d4aa1fefc25604171236eef4237bf9ff6156e",
+      "status": "reviewed_current_bytes",
+      "evidence": [
+        "ADR-002-studio-types-purge-review.json"
+      ]
+    }
+  ],
+  "production_source_count": 46,
+  "current_hash_matched_review_count": 46,
+  "test_only_fixture_count": 1
+}

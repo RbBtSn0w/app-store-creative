@@ -1,0 +1,50 @@
+{
+  "scope": "Latest independent extracted package candidate review against complete real-input Levelory workspace",
+  "package_source_commit": "82f5c827bdd17b894e3a92399bc0dc33a68a89f1",
+  "candidate_id": "64f81025ad3d40f8b7c26a96a73d446d",
+  "exit_code": 0,
+  "validation_id": "e3aa6f311926418194983dc39a0d8057",
+  "validation_status": "PASS",
+  "asset_count": 12,
+  "approval_id": null,
+  "delivery_id": null,
+  "remote_write": false,
+  "limitations": [
+    "Review creates a fresh immutable validation; not a read-only invocation",
+    "Reuses prior authentic capture inputs; no fresh UI capture",
+    "No actual global ADG update, approval, seal, durable retrieval or ASC acceptance",
+    "History PASS verifies record commits only; operation effects and remote readiness remain separate"
+  ],
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "review_output_sha256": "16789a998d2ecab8ca6e43480f4c746fe5f35c53a2d6bd9e4b049899be4c4852",
+  "history": {
+    "status": "PASS",
+    "record_count": 279,
+    "untracked_records": [],
+    "duplicate_references": [],
+    "scope": "Record commit evidence only; operation journals and remote readiness are separate gates"
+  },
+  "budget": {
+    "status": "WITHIN_BUDGET",
+    "candidate_payload_bytes": 28121410,
+    "configured_limit_bytes": 1073741824,
+    "remote_storage_bytes": null,
+    "git_history_bytes": null,
+    "writes_performed": false
+  },
+  "poster_visual_review": {
+    "artifact_id": "7d6a4a82c72e4639b62fe682d026e43e",
+    "sha256": "8ac141d56527eb5b2b95290c0d0aa4cb8915aba954acbe545ee0305c0ae07302",
+    "observed": "Real English UI shows Uppercase transformation before/after, complete window and Copy Result action; no blank panel or black right border observed in this selected poster",
+    "human_approval": false,
+    "scope": "Selected poster only; not continuous video playback or remote ASC poster"
+  },
+  "complete_media_decode": {
+    "artifact_id": "b8680b87c8a84a22912aa8b8d012def8",
+    "sha256": "8b65d967283b49e36184f5d8b799d71fb68c90e78782295f328366b891880612",
+    "video_and_audio_mapped": true,
+    "ffmpeg_error_mode": "error with xerror",
+    "exit_code": 0,
+    "scope": "Complete local video/audio decode to null sink; no continuous visual pacing or remote playback verdict"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "Full current actual process death and public relocation recovery tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_process_crash.py",
+      "sha256": "981ab158ef00c74b3ae6b24c616949149501b77405c094cda471ee9724b651d3"
+    },
+    {
+      "file": "tests/test_relocation_preparation_process_crash.py",
+      "sha256": "34c79b10706dccc1e30d1b6cfa86d617e2a8b74be1d2c49faac764c78f8b8db1"
+    }
+  ],
+  "assessment": [
+    "Owned subprocess exits by actual SIGKILL at intent, directory publication/exchange, configuration installation and switched receipt boundaries",
+    "Public CLI forward/reverse resume and rollback reach expected active binding, preserve artifacts and permit new runs; rollback restores original configuration bytes",
+    "Changed source after switch intent refuses fence reconstruction without configuration activation",
+    "Preparation SIGKILL at intent or first copy recovers into distinct retry plan, preserves every surviving original staging byte and completes public switch"
+  ],
+  "verification": {
+    "tests": 19,
+    "seconds": 25.054,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_process_crash test_relocation_preparation_process_crash -q"
+  },
+  "limitations": [
+    "Instrumentation chooses kill boundaries; actual process death rather than exception, but no power loss simulation",
+    "Disposable same-filesystem fixtures; no actual product, cross-volume or browser acceptance",
+    "Selected crash stages do not imply every syscall interruption covered"
+  ]
+}

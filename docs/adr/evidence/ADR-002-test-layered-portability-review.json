@@ -1,0 +1,21 @@
+{
+  "scope": "Full current layered archive portability tests",
+  "file": "tests/test_layered_archive_portability.py",
+  "sha256": "d7bbb58ac6de1a849a12a91bffd9db57d99ef6f64bd65c9d8a922a2cfbca28ba",
+  "assessment": [
+    "Local workspace/release override used during run while sealed recipe excludes storage and layer metadata",
+    "All archive JSON checked for configured host workspace, config path and configuration_layers absence",
+    "Restored separate package verifies recipe",
+    "Recomputed file hashes do not authorize inserted storage, local layer or project snapshot private metadata"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 1.227,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_layered_archive_portability -q"
+  },
+  "limitations": [
+    "Restored package verification only; no actual re-render from restored recipe",
+    "Source producer directory remains available; no complete isolated environment acceptance"
+  ]
+}

@@ -1,90 +1,284 @@
 # ADR-002 实施状态
 
-目标：完整实现统一产物管理，不以基础模块通过测试代替整体完成。
+更新日期：2026-10-11。**核心能力已实现；完整审查、真实产品验收与发行未完成。**
 
-分支：feat/unified-artifact-lifecycle；起点：4189708（origin/main）。
+本文件是当前进度的唯一权威；需求以 [ADR-002](ADR-002-artifact-lifecycle-and-release-archive.md) 为准。实现、专项验证、完整产品验收分别记录，不按测试数或模块数计算整体完成率。采用完整重新设计，不提供历史兼容、旧格式读取或自动回填。
 
-## 当前进展
+## 当前交付状态
 
-已建立统一目录及内容寻址存储骨架，并接入实际 CLI/Studio 截图生产：配置与输入快照、独立run/attempt、来源依赖、渲染证据、候选验收、只读状态和候选预览。源文件改变会使当前候选显示过期；失败渲染保留终止原因，不覆盖前次输出。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `b911bd27819b225c4b39af48cf7f261b00ddedcb`；本清单记录核对时点，当前HEAD以Git为准。
+- [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
+- 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
+- fd86067远端完整CI已成功：[run 38098578994](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994)，Python运行1045项（33项跳过）、Studio98项通过，类型检查、构建与完整分发检查通过。[证据](evidence/ADR-002-ci-fd86067.json)。后续提交与最终发行仍需重新核对。
+- 已保存完整日志的CI证据绑定cc4b069：[run 38051343029](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38051343029)，Python运行1045项（33项跳过），Studio98项通过，类型检查、构建和分发通过。
 
-新增交付操作：本地媒体矩阵验收、显式设计批准、不可变修订封存、独立配方及源输入归档、哈希校验和不覆盖的原子恢复。制作配方已通过实际输入解析，不能仅凭文件存在报恢复成功。
+## 能力实现 checklist
 
-新增本地ASC交接：绑定归档的真实Git提交、明确远端平台和资源目标、独立上传批准、可重复但不可覆盖的计划导出。没有远端观察时状态保持UNKNOWN；没有实际上传。
+这里的勾选仅表示实现与专项验证已有证据，不表示最终验收完成。
 
-以下仍不完整：PNG/JPEG捕获导入已统一，专用录制/剪辑入口尚未全部接入；租约已接入实际生产；事件及完整依赖失效尚未实现；LFS远端取回和external后端仍未实现；publication_status已派生独立观察门禁，真实ASC回执适配及全链路验收待完成；清理隔离已提供引用保护、过期计划拒绝和可恢复操作；授权purge已实现；位置搬迁和完整运营SOP尚未完成。不能把当前核心测试通过当作整体目标完成。
+- [x] 不可变记录、内容寻址对象、身份、运行、输入快照及提交意图。
+- [x] 四类存储根、自定义目录、本机覆盖和统一配置解析。
+- [x] 截图、录屏、视频、封面生产及依赖、失败和部分产物记录。
+- [x] 候选验证、精确批准、不可变封存和独立交付包。
+- [x] 显式 Git/LFS/external 策略、媒体预算、归档配方及独立取回校验。
+- [x] 私有原始证据、便携脱敏引用与命名存储后端。
+- [x] 官方 ASC 交接，以及上传、处理、播放、封面分别观察的门禁。
+- [x] 库存、保留、隔离、恢复、清理计划、永久删除及正反向搬迁。
+- [x] CLI、Studio、技能合同、使用说明与运营流程。
 
-## 完整要求跟踪
+## 完整验收与发行 checklist
 
-| ADR要求 | 状态 | 下一项实际工作 |
+| 状态 | 验收项 | 关闭条件 / 当前缺口 |
 | --- | --- | --- |
-| 自定义目录、存储及路径边界 | 部分 | 更完整的符号链接竞态、共享后端及位置搬迁；CLI/Studio一致 |
-| 不可变实体及对象库 | 部分 | 执行租约、续期令牌及过期接管已实现；事件、完整执行者身份和依赖失效待补齐 |
-| 阶段生产与登记 | 部分 | CLI/Studio截图导出已统一；捕获导入已统一；继续接入录制、剪辑、取消和恢复 |
-| 本地验收与候选 | 部分 | 媒体验证证据和策略绑定、矩阵与来源完整性 |
-| 审批及交付封存 | 部分 | 已实现设计/上传批准分离及不可变包；继续完善完整政策合同及来源证据 |
-| ASC交接与远端完成 | 部分 | 已绑定Git提交并导出本地计划；独立观察、冲突处理和门禁派生已实现；真实ASC回执适配及复查采集待完成 |
-| Git/LFS/external | 部分 | 实际规则检查、PR/提交绑定、持久存储与取回验证 |
-| 清理、隔离及恢复 | 部分 | 已实现引用保护、30日保留计划、过期拒绝、隔离和恢复；候选弃用及审批/交付保护已实现；授权purge及部分执行重试已实现；未结事故及来源依赖保护已实现；日志保留及更完整并发恢复待完成 |
-| 目录relocate | 部分 | 已实现精确计划、复查、暂存复制和逐项校验；位置切换、源位置封锁、切换失败恢复和回滚待完成 |
-| CLI/Studio/agent统一 | 部分 | 清除独立写路径，共用用例和展示状态 |
-| 文档、SOP、指标 | 未完成 | 使用说明、收尾、失败恢复和容量统计 |
-| 全链路完成门禁 | 未完成 | 两个项目、截图/视频/海报、失败/取消/重试/清理恢复矩阵 |
+| [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
+| [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
+| [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异177/177，完整人工敏感信息审查未关闭；209份当前变更证据内容已审查并绑定哈希，其他范围敏感审查仍待核对 |
+| [ ] | 当前HEAD完整 CI | b911bd2的[run 38111322381](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38111322381)正在运行；fd86067成功证据只覆盖该旧提交，不关闭当前HEAD门禁 |
+| [ ] | 最新完整独立安装验收 | b911bd2完整包检查通过；独立包已验证Levelory完整候选，实际ADG安装仍未完成 |
+| [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
+| [ ] | Levelory 全链路 | 新配置下重新生产；审核中文残留英文与截断；精确批准、封存、提交绑定、干净取回 |
+| [ ] | 第二个不同真实产品 | 确定产品后完成独立工作区完整生命周期；合成夹具不能替代 |
+| [ ] | 自定义目录端到端矩阵 | 两个真实产品中覆盖生产、封存、发布交接、维护、恢复及取回；CLI/Studio结果一致 |
+| [ ] | 真实维护与恢复演练 | 失败、取消、重试、隔离、恢复、正反向搬迁和跨文件系统；永久删除需当次授权 |
+| [ ] | 实际 ASC 闭环 | 精确上传计划批准后，经官方工具上传并验证处理、播放和封面；原0×0封面故障尚未关闭 |
+| [ ] | 真实归档提交/PR绑定 | 按最终归档提交绑定清单哈希，合并后重新核对身份 |
+| [x] | 独立分支及 Draft PR 保存 | 已提交并推送 PR #11；不代表发行完成 |
+| [ ] | 合并、安装与复验 | main合并/推送，`adg plugins update -g`，安装版本与真实工作流复验 |
 
-## 已执行验证
+## 当前证据与边界
 
-最新全仓200项Python回归通过；Studio38项测试、TypeScript检查、前端构建、隔离打包及git diff --check通过。CLI通过真实子进程、Studio通过真实HTTP测试。macOS与iPhone两个独立样例完成真实离线渲染和视觉检查（纯文案测试样例，不是两个真实产品的完整验收）。未改动任何远端ASC资源。
+| 范围 | 当前状态 | 权威证据 |
+| --- | --- | --- |
+| Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
+| 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
+| 测试差异审查 | 177/177文件；全部文件已审查并核对当前哈希 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
+| 凭据模式筛查 | cc4b069的503个变更UTF-8文件已筛查，无模式命中；不是完整人工审查，不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-screen-cc4b069.json) |
+| 完整前端验证 | 最近执行98项/33文件通过，类型检查和构建通过；本机Node25 | [旧入口退休证据](evidence/ADR-002-studio-obsolete-toolbar-review.json) |
+| 独立分发包 | cc4b069完整包烟雾检查及120项回归通过（28.782秒），加载路径来自独立解压目录；实际adg安装另行验收 | [证据](evidence/ADR-002-independent-package-cc4b069.json) |
+| 最新专项测试 | 发布顺序7项通过；真实SIGKILL租约确定时钟边界单项通过 | [发布](evidence/ADR-002-test-delivery-publication-review.json)、[租约](evidence/ADR-002-test-remote-observations-review.json) |
 
-本文件是进度视图，不作为审批或功能完成权威。整体目标保持进行中；代码未提交、未发布。
+测试通过、模块审查和哈希匹配各自证明其明确范围，不能替代真实产品、浏览器、长期后端或ASC验收。既有测试修改与删除、全部前端测试差异均已审查；新增运行时测试已完成差异审查；最终集成与真实产品门禁仍独立关闭。旧测试退休不允许丢失租约所有权、源完整性、批准分离和不覆盖用户文件等现行约束。
 
-追加验证：租约变更前60项生命周期测试通过；嵌套命令支持前后位置的项目选项，CLI配置路径统一相对消费项目解析。
+## 真实产品与待决策项
 
-新增维护入口：cleanup plan/quarantine/restore，执行要求明确actor、reason和确认参数；未知文件不进入自动清理。隔离采用对象库内硬链接和逐对象移除，操作意图先登记，恢复保留隔离副本以支持重试。
+- Levelory已按当前完整配置重新生产候选`64f81025ad3d40f8b7c26a96a73d446d`：10张截图、20秒视频及封面，技术与历史验证PASS，媒体28,121,410字节且预算内。复用已核验的真实捕获输入，未声称重新录屏。中文UI残留英文、完整视觉审核、批准、封存及长期取回未完成。
+- 上述完整候选已完成同文件系统四类自定义目录正向搬迁和返回恢复；两次候选及历史验证均PASS，返回后根绑定一致。[证据](evidence/ADR-002-levelory-real-input-relocation-275a5d1.json)。该候选另已完成独立APFS文件系统四根正反向搬迁，返回验证及历史PASS、原根绑定恢复、临时卷卸载。[证据](evidence/ADR-002-levelory-real-crossfs-3097992.json)。两个产品完整矩阵仍未完成。
+- Levelory完整候选44个依赖、32个独立对象在清理计划中均受保护；3个可清理对象已实际隔离并恢复，候选验证PASS。未执行永久删除。[证据](evidence/ADR-002-levelory-cleanup-reference-protection-3097992.json)。
+- 中文UI英文残留已定位到本地化调用路径；聚焦UI测试因自动化初始化超时未执行断言；当前Xcode MCP权限disabled且服务未运行，不能算失败用例已复现或修复完成。
+- 第二个真实产品及长期持久后端尚未确定。
+- 原ASC视频处理和播放已观察；0×0封面问题尚未关闭，不能以处理成功替代封面验收。
+- 人类输入：第二产品及后端选择、精确候选内容批准、精确上传计划批准。永久删除需要当次授权。
+- 独立可推进工作不等待上述输入：人工敏感证据审查、最终CI/包验证、可逆维护与浏览器验证。
 
-候选处置入口：candidate discard，要求actor、reason和DISCARD确认。弃用记录不可改写；弃用后阻止再验收或封存，Studio最新候选查询排除弃用项。默认保留30日，审批或交付引用继续保护其完整依赖，共享对象只要仍有一个受保护引用就不可回收。新增6项测试覆盖弃用原因、历史不可变、审批引用、默认保留期、共享物料及真实CLI调用。
+## 接下来的交付顺序
 
-永久删除入口：cleanup plan-purge/purge，默认隔离7日，执行需要actor、reason和PURGE确认。再次校验引用、存储绑定及哈希；恢复过的操作拒绝永久删除，部分删除中断使用原计划重试，保留业务记录和未知文件。维护说明见docs/artifact-maintenance.md。新增7项测试；全仓128项回归、隔离插件打包和git diff --check通过。未执行真实项目清理。
+1. 完成人工敏感证据审查及Levelory中文素材问题修复，核对新增证据。
+2. 核对最终提交完整CI、独立分发包和实际浏览器；完成自定义目录与维护恢复矩阵。
+3. 完成两个真实产品的新配置生产、精确批准、持久归档、干净取回与实际ASC闭环。
+4. 绑定最终归档提交/PR，合并并推送main，更新插件，复验安装后的真实流程。
 
-事故入口：incident open/status/close，显式绑定artifact/candidate/delivery引用，未结事故保护完整依赖，包括已隔离字节；关闭结果不可改写。新增5项测试覆盖引用依赖、弃用候选、隔离后的purge阻断、非法引用和真实CLI开闭。全仓133项回归、插件隔离打包及git diff --check通过。
+只有全部显式需求有匹配范围的当前证据，才能宣布完成。审查过程与旧观察保留在[历史快照](evidence/ADR-002-progress-history-through-3c200dc.md)中；历史快照不是当前状态权威。
 
-执行租约：所有尝试均有令牌及期限；登记、结束和续期校验当前令牌，续期轮换身份，状态查询不暴露令牌。真实生产持续心跳续期，复制完成后再次校验租约。过期接管留下interrupted和新retry_of，并发接管仅一个成功。最新全仓141项回归通过；之后追加真实CLI续期测试，9项租约测试全部通过；插件隔离打包及git diff --check通过。自动重放执行器及完整崩溃恢复仍待完成。
+旧入口退休后的租约约束补验：现行租约测试完整审查，9项实际回归通过（0.912秒）。独立客户端身份、过期前提交检查、续租旧令牌隔离及并发唯一恢复均有断言。[证据](evidence/ADR-002-test-lease-contract-review.json)。该文件相对origin/main无差异，不增加177/177审查计数；不替代跨卷或真实进程崩溃验收。
 
-远端观察：publication observe/status/export，范围绑定计划哈希、远端目标和物料；上传、处理、媒体/播放及海报分开保存。缺失或过期保持UNKNOWN，矛盾或不同资源形成CONFLICT，必须显式supersedes解决；归档损坏及缺少上传批准阻止整体PASS。脱敏观察及审批摘要追加导出，说明见docs/publication-observations.md。12项观察测试及全仓154项回归、隔离打包、git diff --check通过；尚未采集新的真实ASC证据。
+录屏规范化与媒体探测两个新增测试完整差异审查，7项回归通过（0.631秒），包含实际ffmpeg/ffprobe媒体。原始素材不可变、禁止补帧伪造时长、目标不覆盖及最终格式拒绝均有断言。[证据](evidence/ADR-002-test-recording-media-review.json)。不替代真实产品捕获和ASC验收。
 
-输入统一：input import/resolve及Studio素材导入创建run/attempt、登记捕获对象和来源依赖，支持项目外存储根、稳定受限API预览、冻结输入快照及独立配方封存。Studio配置备份也使用生命周期；禁止静默修改已有存储绑定或项目身份。库存准确区分登记、改变和未知文件。6项输入测试及全仓160项回归、隔离打包、git diff --check通过；外部存储的临时截图样例完成真实离线渲染和验收（测试样例，非产品最终物料）。首次沙箱进程检查失败记录保留，授权重试创建新尝试。输入库退役、孤立CAS分类及更完整容量统计仍待完成。说明见docs/managed-inputs.md。
+录屏执行者与托管录屏测试完整审查，6项回归通过（0.623秒），编译driver别名、SDK/target、隐私字段拒绝、并发收据保留及原始/部分素材依赖有明确断言。[证据](evidence/ADR-002-test-recording-executor-review.json)。真实Swift编译及窗口替换门禁不由夹具证明。
 
-输入退役：input discard/status保留不可变原因，默认退役后保留30日；现有配置、候选、审批/交付及事故等引用继续保护。清理读取当前权威配置并纳入计划指纹，配置编辑后的旧计划失效；工作区绑定唯一配置路径，跨配置写入与维护拒绝。新增6项测试，全仓166项回归、隔离插件打包及git diff --check通过。输入库退役基础合同已实现，孤立CAS分类、工作文件/日志保留、目录搬迁等要求仍待完成。
+截图采集依赖导入测试完整审查，8项回归通过（0.822秒）：失败/部分/损坏采集及无效上游在创建新运行前拒绝，原始采集依赖在生产链保持。[证据](evidence/ADR-002-test-capture-dependency-review.json)。尺寸与重名导入属于独立范围，未由本文件证明。
 
-库存与容量：区分去重引用、孤立/未知对象、缺失、损坏、隔离及已永久删除身份；验证隔离副本后才报告可恢复。容量区分逻辑字节与唯一inode估算分配空间，未知远端容量返回null。工作根及子目录符号链接不跟随，生产前拒绝符号链接工作根。新增11项测试，全仓177项回归、隔离打包及git diff --check通过。库存仍是只读观察，孤立对象处置、工作文件/日志回收、目录relocate和完整后端采集尚未实现；详见docs/artifact-inventory.md。
+记录完整性两个测试文件审查及5项回归通过（0.394秒）：提交后字节篡改、FIFO阻塞替换、锁身份替换及对象目录符号链接替换均拒绝且保护外部文件。[证据](evidence/ADR-002-test-record-integrity-review.json)。重复意图消费不由该范围证明。
 
-目录搬迁基础：storage plan-relocate/verify-relocate/prepare-relocate，绑定配置与源文件精确哈希，活动尝试和目标覆盖拒绝，嵌套对象不重复列入清单。准备先记录意图，在专属暂存目录复制，逐项验证并复查源计划；篡改或复制失败留下记录且保留原数据。14项搬迁测试和全仓191项回归、插件隔离打包及git diff --check通过。正式切换、绑定链、审批内容身份保持、源位置封锁、恢复/回滚和暂存Git忽略门禁仍未完成。详见docs/storage-relocation.md；PREPARED不是搬迁完成。
+工具、实现和产品身份三个测试完整审查，7项通过（0.853秒）：工具替换拒绝、位置无关实现哈希、封存逐尝试身份及无效产品身份写前拒绝均有断言。[证据](evidence/ADR-002-test-portable-identity-review.json)。对象失败注册及重复意图消费仍是独立范围。
 
-搬迁Git门禁：storage relocation-git-policy只生成按真实仓库分组的规则建议；复制前和已准备重试时检查实际忽略及索引状态。未忽略、反向规则、已跟踪条目或Git状态无法确认时拒绝复制，目标属于其他仓库时检查其独立规则。路径控制字符在创建目录前拒绝。新增9项Git门禁测试及全仓200项回归、真实CLI建议输出、隔离插件打包与git diff --check通过。位置切换、原位置写入封锁、失败恢复和回滚仍待完成。
+普通恢复意图测试完整审查，12项通过（0.634秒），包括真实子进程SIGKILL后保留原意图恢复、拒绝篡改/缺失意图及恢复期间阻断旧删除计划。[证据](evidence/ADR-002-test-restore-intent-review.json)。使用隔离夹具，不替代跨卷与两产品验收。
 
-搬迁准备恢复与取消：新增关联重试批次及选择性取消入口；恢复拒绝过期源计划，取消预先验证所有权，保留未知和修改内容。正式切换事务、原位置写入封锁与切换回滚仍待完成。
+配置内容/放置身份与回滚两个测试文件完整审查，11项通过（6.918秒），同字节inode替换、临时文件替换及验证后替换均阻止回滚覆盖，自己的安装证明支持中断恢复。[证据](evidence/ADR-002-test-configuration-identity-review.json)。
 
-搬迁复制竞态：目标文件排他创建且不跟随最终路径符号链接，所有权标记不覆盖已有文件；新增并发目标出现的回归测试。30项搬迁测试、全仓207项测试、隔离插件打包和git diff --check通过。该验证未覆盖所有父目录替换竞态，完整路径防护仍在整改范围内。
+外部交付身份测试完整审查，7项通过（2.326秒）：目标/项目/资产篡改阻断批准交接，实际大媒体流式校验、错误checksum与FIFO拒绝有断言。[证据](evidence/ADR-002-test-external-identity-review.json)。不替代真实长期后端、目录替换或ASC验收。
 
-内容与位置身份：run的config_sha256统一采用排除storage的设计配置哈希，完整原始配置另存config_snapshot_sha256。候选与只读最新状态使用同一身份算法；存储绑定仍独立校验，改变实际位置必须显式搬迁。等价绝对路径配置下已有批准可继续封存。该前置合同不代表位置切换事务已完成。
+交付定位与外部引用合同两个测试完整审查，5项通过（0.517秒）：搬迁映射不改原记录、越界/损坏包拒绝、非法引用写前拒绝。[证据](evidence/ADR-002-test-archive-location-review.json)。测试中的historical指现行设计搬迁前位置，不是旧格式兼容；符号链接替换仍需独立覆盖。
 
-历史存储绑定：新增基于SWITCHED回执哈希的不可变位置链解析，接入run读取；6项测试覆盖多次搬迁链、旧记录不重写、证据缺失、篡改、循环及配置权限范围。正式切换入口尚未生成位置链，归档路径解析和旧位置封锁仍待集成，不能据此报告搬迁完成。
+外部媒体存储测试完整审查，7项通过（0.310秒）：源删除后独立取回、精确版本拒绝回退、目录符号链接替换拒绝并保留外部文件、CLI恢复不改原元数据。[证据](evidence/ADR-002-test-external-store-review.json)。实际长期后端及跨卷/两产品仍待验收。
 
-归档位置解析：封存记录保留原storage，发布和搬迁快照统一通过位置链解析当前包并验证清单。Git提交位置独立于本机路径，已有计划继续核对原archive_path。新增4项位置/损坏测试及1项真实Git归档移动后的计划、审批、状态复查测试；正式切换事务及外部归档导出仍未完成。
+归档清单与来源图两个测试完整审查，12项通过（1.712秒）：重算哈希不能绕过原批准配置/审批语义，别名语义与来源闭包拒绝不完整/失败图，1200节点无递归验证通过。[证据](evidence/ADR-002-test-archive-contract-review.json)。真实封存及完整隐私审查仍独立验收。
 
-旧位置写入封锁：统一锁内事务检查存储绑定的不可变封锁记录，安装前复查源计划、Git和准备副本。6项测试覆盖旧/新客户端、维护、重试、未准备及过期计划、独立CLI进程。尚未开放独立安装命令，正式切换、目标启用、解除与恢复待集成。
+合并后归档绑定测试完整审查，真实本机Git squash/裸远端推送与独立取回1项通过（1.199秒）：新提交新发布范围不复用旧上传批准，原记录保留。[证据](evidence/ADR-002-test-post-merge-binding-review.json)。不替代真实GitHub归档PR绑定与发布。
 
-目标启用及对象归属：统一事务拒绝缺失或不匹配SWITCHED回执的待启用目标；对象库归属保存原完整绑定并通过位置链解析，避免搬迁后改写所有权记录。新增3项启用测试与2项对象归属测试。正式切换入口、配置切换、恢复/回滚和目标安装仍待实现。
+Git独立取回测试完整审查，2项通过（0.532秒）：移除工作树归档后实际clone取回明确提交/清单，未提交路径拒绝。[证据](evidence/ADR-002-test-git-retrieval-review.json)。未删除全部生产配置/源，不能据此声称完整生产环境隔离。
 
-内部位置切换：串联源封锁、待启用目标、排他目录发布、配置原子替换、位置链及最终回执；保存原配置字节/权限，保留所有源数据。5项实际切换测试涵盖全根、对象单根、中断、篡改、旧run和既有批准/归档。CLI尚未开放，中断续执行及回滚仍待完成，因此不能报告目录搬迁能力已完整交付。
+独立取回策略测试完整审查，1项通过（0.324秒）：声明LFS但提交普通媒体字节会被独立取回拒绝。[证据](evidence/ADR-002-test-retrieval-policy-review.json)。文件名不代表正向LFS/外部恢复或完整生产目录隔离；这些门禁仍未关闭。
 
-中断切换回滚：内部入口验证完整源快照与原配置字节，拒绝用户编辑；恢复配置并追加批次封锁解除证据，保留所有目标/暂存副本。5项回滚测试及49项搬迁测试通过；已激活目标的反向搬迁、向前恢复和公开CLI尚未完成。
+分层归档可移植性测试完整审查，2项通过（1.227秒）：本机覆盖不进入归档JSON，重算哈希仍拒绝私有层字段，恢复后配方校验通过。[证据](evidence/ADR-002-test-layered-portability-review.json)。未执行恢复配方重新渲染，不记为独立再生产验收。
 
-向前恢复：内部入口接续已发布根和剩余暂存，核对源快照、配置、操作/封锁证据；拒绝未知目标内容及被修改的切换配置，成功后完成原回执并支持重复查询。4项恢复测试、隔离插件打包及格式检查通过；公开CLI、启用前并发防护和已激活目标反向搬迁仍待完成。
+原生Preview归档集成测试完整审查，2项通过（14.759秒）：实际合成视频/封面经CLI生产封存，删除原项目后从恢复包实际重放成功，便携工具/素材证据保留。[证据](evidence/ADR-002-test-native-preview-archive-review.json)。明确是合成媒体，不替代两真实产品或实际ASC闭环。
 
-启用前窗口修复：工作区保留、仅移动对象库时，在启用元数据安装前通过switch-intent识别目标并拒绝写入。新增回归先复现放行缺口，再验证拒绝；完整启用测试及隔离打包通过。跨工作区/路径竞态、公开CLI和已激活目标反向搬迁仍未完成。
+归档策略配置测试完整审查，4项通过（0.047秒）：三入口非法声明写前拒绝、显式模式保留、探索不虚构选择、取回模式/后端必须匹配。[证据](evidence/ADR-002-test-archive-policy-review.json)。
 
-恢复CLI：新增resume-relocate/rollback-relocate及显式source-workspace，恢复上下文在写入前核对项目、配置权限范围、原配置备份及存储绑定。3项真实CLI测试涵盖配置已切换后的续执行、回滚和权限范围拒绝；正式切换入口及已激活目标反向搬迁仍未完成。
+交付状态与Studio观察两个测试完整审查，5项通过（2.848秒）：损坏包拒绝成功、只读记录不变、远端UNKNOWN独立保留，重启HTTP与实际CLI一致。[证据](evidence/ADR-002-test-delivery-observation-review.json)。不替代实际浏览器和ASC验收。
 
-跨进程切换边界：真实子进程验证目标未激活时拒绝、源客户端等待锁后封锁；统一事务在创建目录前和锁内校验权威配置存储绑定，未发布目标不能提前创建工作区。新增2项测试；路径竞态、正式切换CLI及已激活目标反向搬迁仍待完成。
+外部归档恢复集成测试完整审查，5项通过（1.329秒）：删除原封存/生命周期目录后恢复、无配置clean clone实际CLI取回、指定裸远端明确提交/descriptor验证及缺对象不发布。[证据](evidence/ADR-002-test-external-archive-review.json)。仍为隔离本机后端，不替代真实长期存储验收。
 
-正式切换CLI：switch-relocate复用验证内核，actor/reason与SWITCH确认必填。真实CLI验收覆盖计划、准备、切换、新写入、旧客户端封锁及源对象保留。公开迁移流程已接入；已激活目标反向搬迁、完整路径竞态及其余ADR范围仍未完成。
+622d224完整插件打包及隔离运行时烟雾检查通过。[证据](evidence/ADR-002-package-smoke-622d224.json)。独立59项回归随后已通过；实际adg安装未执行，不关闭最终安装与真实工作流门禁。
+
+622d224独立解压插件运行时59项回归通过（15.078秒），加载路径断言排除源码运行时，包与日志哈希已绑定。[证据](evidence/ADR-002-independent-package-622d224.json)。仍不替代实际adg安装、浏览器及真实产品验收。
+
+库存观察失败与预算测试完整审查，修复HTTP错误响应未关闭导致的资源警告；10项以ResourceWarning错误模式通过（1.406秒）。未知容量不冒充零，观察不完整阻断维护，损坏归档预算UNKNOWN。[证据](evidence/ADR-002-test-inventory-budget-review.json)。
+
+取回进程期限测试完整审查，4项真实子进程验证通过（1.650秒）：忽略终止的子进程、退出leader留下的pipe子进程和取消均收敛，同组命令共享总预算。[证据](evidence/ADR-002-test-retrieval-deadline-review.json)。后续修复将子进程就绪等待与清理超时分离，并用受控时钟验证总预算；4项以ResourceWarning错误模式通过（0.860秒）。未当作远端网络验收。
+
+生命周期记录schema测试完整审查，8项通过（0.137秒）：版本/对象/身份及符号链接边界严格拒绝，全部业务类别不回填无效记录。[证据](evidence/ADR-002-test-record-schema-review.json)。不代表所有业务字段语义已验收。
+
+尝试审计合同测试完整审查，2项通过（0.036秒）：空白/非文本执行者与阶段不创建尝试，非法失败原因不结束尝试。[证据](evidence/ADR-002-test-attempt-audit-review.json)。
+
+Studio分层保存测试完整审查，4项通过（2.500秒）：缺If-Match写前428、本机层变化409、有效目录与本机文档保留及活动归档根变更400。[证据](evidence/ADR-002-test-layered-save-review.json)。不替代实际浏览器保存期间交互。
+
+状态输入与本机层素材导入两个测试完整审查，4项通过（0.951秒）：非法状态身份不写文件，HTTP导入/读取同Unicode本机根且配置字节保留。[证据](evidence/ADR-002-test-input-status-review.json)。重名及导入路径穿越未由该范围证明。
+
+暂存证明绑定测试完整审查，4项通过（2.279秒）：替换目录并重写身份证明仍被原哈希拒绝，正反向恢复/回滚与库存不误报成功。[证据](evidence/ADR-002-test-staging-proof-review.json)。取消和生产失败资格为独立范围。
+
+验证策略绑定测试完整审查，1项通过（0.128秒）：修改验证版本/运行/errors不产生批准。[证据](evidence/ADR-002-test-validation-policy-review.json)。篡改同时触发提交绑定，尚不能独立证明新提交畸形验证的语义门禁。
+
+验证语义覆盖缺口已补齐：新增有效提交事件下畸形验证记录回归，先确认记录读取有效，再断言Passing validation语义拒绝且无批准；2项通过（0.279秒）。未修改运行时行为。
+
+保留策略测试完整审查，5项通过（0.833秒）：明确期限默认、非法策略拒绝、策略变化阻断旧计划、CLI/HTTP只读一致。[证据](evidence/ADR-002-test-retention-policy-review.json)。未执行实际永久清理。
+
+导出服务失败清理回归完整审查，1项通过（0.508秒）：健康失败返回前实际监听不可连接且线程已停止。[证据](evidence/ADR-002-test-server-cleanup-review.json)。
+
+PNG完整性回归完整审查，2项通过（0.003秒）：截断/像素块损坏在两种host工具路径均拒绝，合法RGB/alpha保留。[证据](evidence/ADR-002-test-png-integrity-review.json)。
+
+独立封面合同测试完整审查，3项通过（0.292秒）：缺封面/尺寸不匹配拒绝，匹配封面本地通过。[证据](evidence/ADR-002-test-poster-contract-review.json)。视频probe为mock，时间点/依赖和ASC封面故障仍需独立验收。
+
+封面生产/本机层请求/覆盖坐标三个测试完整审查，7项通过（1.377秒）：时间点及视频哈希绑定、失败取消部分素材保留、ETag执行前拒绝及滤镜坐标注入拒绝。[证据](evidence/ADR-002-test-poster-production-review.json)。抽帧为mock，不关闭实际封面/ASC验收。
+
+发布目标/资产消费测试完整审查，3项通过（2.210秒）：保存记录篡改拒绝，有效提交下错误资产仍由归档语义比较拒绝，无交接目录。[证据](evidence/ADR-002-test-publication-consumption-review.json)。新提交非法目标及批准后变化仍需独立覆盖。
+
+发布目标语义缺口补齐：有效提交且可正常读取的非法平台/app/version记录，仍由目标语义门禁拒绝批准和交接，原批准字节不变；4项通过（2.460秒）。未修改运行行为。
+
+Studio发布HTTP/CLI测试完整审查，2项通过（2.485秒）：只读查询记录不变，UPLOAD批准和EXPORT交接保持独立，未声称实际上传/远端验证。[证据](evidence/ADR-002-test-studio-publication-review.json)。重启与实际浏览器为独立范围。
+
+发布取回证明测试完整审查，7项通过（2.916秒）：实际clone身份绑定、clone失败无计划、有效提交下非法证明拒绝及归档模式不能重声明。[证据](evidence/ADR-002-test-publication-retrieval-review.json)。
+
+托管Preview测试完整审查，7项通过（0.727秒）：输入目录失败终态、部分输出保留、便携证据与来源链、不合格输入执行前拒绝、复用输入媒体身份保留。[证据](evidence/ADR-002-test-managed-preview-review.json)。executor为mock，不代表实际编码或执行中输入变化验收。
+
+存储配置预览测试完整审查，8项通过（2.433秒）：默认/派生/本机来源、搬迁要求、归属冲突及CLI/重启HTTP一致，完整磁盘快照不变。[证据](evidence/ADR-002-test-storage-preview-review.json)。只读预览不替代实际保存与搬迁矩阵。
+
+配置分层核心测试完整审查，13项通过（0.510秒）：本机优先与配方身份分离、实际Git忽略且未跟踪、重复键/符号链接/解析中变更拒绝及命名后端访问保持本机。[证据](evidence/ADR-002-test-configuration-layers-review.json)。
+
+正向搬迁配置层测试完整审查，8项通过（0.762秒）：源文档绑定、层出现/同字节文件替换写前拒绝、准备保留配置、缺共享authority不创建计划。[证据](evidence/ADR-002-test-relocation-layer-review.json)。完成切换更新owning层另行验证。
+
+反向搬迁配置层测试完整审查，8项通过（8.118秒）：配置替换/本机层漂移阻断交换与恢复，恢复审阅层状态后可续执行，目录身份不被误改。[证据](evidence/ADR-002-test-reverse-layer-review.json)。完成本机层切换字节与返回后新运行为独立范围。
+
+本机配置层正向及反向切换执行测试完整审查，9项以ResourceWarning错误模式通过（42.769秒）。完成切换后原素材可校验、可创建新运行，共享配方保持原字节；实际CLI三次往返及注入中断恢复有断言。[证据](evidence/ADR-002-test-local-switch-execution-review.json)。仍不替代真实产品与跨卷验收。
+
+配置写入归属、本机层安装与中断恢复三个测试完整审查，10项以ResourceWarning错误模式通过（4.805秒）：精确文档/权限/字节与inode绑定、缺失证明拒绝及恢复替换前同步均有断言。[证据](evidence/ADR-002-test-configuration-installation-review.json)。单元夹具内部日志与注入中断不替代真实产品、跨卷或断电验收。
+
+分层运行时、截图生产及命令分派三个测试完整审查，14项以ResourceWarning错误模式通过（4.772秒）：配置来源/快照绑定、运行前拒绝陈旧配置、生产期间变更拒绝及Studio HTTP一致性有断言。[证据](evidence/ADR-002-test-layered-runtime-production-review.json)。渲染mock与命令分派直接调用不冒充真实浏览器、完整CLI或产品验收。
+
+配置准备、恢复来源与分层变更三个测试完整审查，26项以ResourceWarning错误模式通过（6.339秒）：暂存所有权/完整计划绑定、部分文件保留、无旧格式回退及权限/身份变更拒绝有断言。[证据](evidence/ADR-002-test-configuration-preparation-authority-review.json)。内部日志夹具与注入中断不替代真实产品或跨卷验收。
+
+9d57a9c完整分发包烟雾及独立解压运行时103项回归通过（28.097秒）；只复制测试，运行时加载路径断言排除源码目录。[证据](evidence/ADR-002-independent-package-9d57a9c.json)。不替代实际adg安装、真实浏览器或产品验收。
+
+搬迁保留计划、重验与来源处置三个测试完整审查，30项以ResourceWarning错误模式通过（26.702秒）：独立副本/期限/引用保护、文件身份变化拒绝、隔离与恢复库存及CLI/HTTP一致性有断言。[证据](evidence/ADR-002-test-relocation-retention-disposition-review.json)。未执行永久删除，不替代真实产品、浏览器与跨卷验收。
+
+搬迁隔离准备、提交与库存三个测试完整审查，35项以ResourceWarning错误模式通过（31.909秒）：部分产物保留、身份替换/目录别名拒绝、部分多文件提交恢复及重启HTTP库存一致性有断言。[证据](evidence/ADR-002-test-relocation-quarantine-review.json)。未执行永久删除，注入失败不替代真实跨卷及产品验收。
+
+搬迁暂存和备份库存两个测试完整审查，17项以ResourceWarning错误模式通过（19.052秒）：全文件字节只读观察、身份冲突/缺失/别名、实际中断位置以及CLI/重启HTTP一致性有断言。[证据](evidence/ADR-002-test-relocation-staging-backup-review.json)。单文件系统与注入失败不替代真实产品/跨卷验收。
+
+恢复锁与配置持久化两个测试完整审查，6项以ResourceWarning错误模式通过（2.757秒）：四恢复入口锁身份拒绝、缺失/FIFO锁拒绝、替换后同步顺序与失败期间fence保留有断言。[证据](evidence/ADR-002-test-recovery-lock-durability-review.json)。不证明真实进程竞争或断电/跨卷。
+
+实际搬迁/准备进程崩溃两个测试完整审查，19项以ResourceWarning错误模式通过（25.054秒）：真实SIGKILL于意图、目录、配置、回执边界后由公开CLI恢复或回滚，准备重试保留原暂存字节。[证据](evidence/ADR-002-test-relocation-process-crash-review.json)。同卷夹具与选定中断点不证明真实产品、跨卷或断电。
+
+9d57a9c完整CI及日志已核对：Python1045项运行/33项跳过（286.757秒）、前端98项/33文件、类型检查、构建及完整分发烟雾全部通过。[证据](evidence/ADR-002-ci-9d57a9c.json)。最新HEAD与真实产品门禁单独保留。
+
+反向切换与回滚两个测试完整审查，23项以ResourceWarning错误模式通过（36.330秒）：新增运行/素材保留、旧源fence、共享workspace、重复恢复、外部变更拒绝及CLI显式来源有断言。[证据](evidence/ADR-002-test-reverse-switch-rollback-review.json)。注入中断与同卷夹具不替代真实产品或跨卷验收。
+
+搬迁状态与Studio HTTP控制两个测试完整审查，17项以ResourceWarning错误模式通过（14.096秒）：激活与媒体完整性独立、篡改拒绝、来源fence及HTTP正反切换有断言。[证据](evidence/ADR-002-test-relocation-status-review.json)。不冒充浏览器或跨卷/真实产品验收。
+
+重复正向搬迁与反向循环两个测试完整审查，15项以ResourceWarning错误模式通过（42.594秒）：前驱绑定保留、多次往返累计运行、共享workspace与篡改拒绝有断言。[证据](evidence/ADR-002-test-repeated-relocation-review.json)。现行格式前驱历史不是旧格式兼容；同卷夹具不证明真实产品与跨卷。
+
+反向计划与配置回滚两个测试完整审查，19项以ResourceWarning错误模式通过（21.792秒）：原位置/新数据绑定、失败/取消部分证据保留以及原始/安装/恢复inode替换拒绝有断言。[证据](evidence/ADR-002-test-reverse-plan-config-rollback-review.json)。不推断真实竞争、跨卷或产品验收。
+
+反向配置安装与正向配置准备两个测试完整审查，9项以ResourceWarning错误模式通过（12.208秒）：准备/安装证明传递、源身份替换拒绝及Git保护建议有断言。[证据](evidence/ADR-002-test-relocation-config-evidence-review.json)。不冒充真实跨卷或产品验收。
+
+维护与搬迁协调及配置恢复两个测试完整审查，13项以ResourceWarning错误模式通过（10.991秒）：未完成操作阻断、取消保留证据、篡改准备证明写前拒绝有断言。[证据](evidence/ADR-002-test-maintenance-relocation-coordination-review.json)。purge仅操作一次性测试素材，不代表产品永久删除授权或验收。
+
+Studio维护及反向恢复两个测试完整审查，8项以ResourceWarning错误模式通过（13.033秒）：确认词/输入拒绝、部分素材保留、重启后精确purge计划续作有断言。[证据](evidence/ADR-002-test-studio-maintenance-recovery-review.json)。仅一次性测试删除与HTTP服务，不代表真实产品删除授权或浏览器验收。
+
+搬迁purge计划及执行两个测试完整审查，25项以ResourceWarning错误模式通过（22.633秒）：独立恢复副本、期限/incident保护、精确计划续作及变更停止有断言。[证据](evidence/ADR-002-test-relocation-purge-review.json)。仅删除一次性测试素材，不代表实际产品删除授权或验收。
+
+普通及搬迁purge进程崩溃两个测试完整审查，6项以ResourceWarning错误模式通过（4.120秒）：真实SIGKILL于意图、文件检查点/删除与终止回执边界，公开CLI按原计划续作并保留元数据/活动恢复副本。[证据](evidence/ADR-002-test-purge-process-crash-review.json)。仅删除一次性测试素材，不代表产品永久删除授权或跨卷/断电验收。
+
+隔离进程崩溃与维护效果观察两个测试完整审查，9项以ResourceWarning错误模式通过（7.258秒）：真实SIGKILL提交/恢复续作、实际字节独立观察与重现文件保留有断言。[证据](evidence/ADR-002-test-quarantine-crash-status-review.json)。只读JSON范围与同卷夹具不冒充完整产品/跨卷验收。
+
+设计/上传批准完整性与人工授权合同三个测试完整审查，13项以ResourceWarning错误模式通过（5.729秒）：篡改/缺事件拒绝、畸形授权写前拒绝及有效提交错误范围的独立语义检查有断言。[证据](evidence/ADR-002-test-approval-integrity-scope-review.json)。夹具授权不是实际人工批准，不关闭真实产品或ASC门禁。
+
+候选依赖失效、审核恢复及设计目标三个测试完整审查，7项以ResourceWarning错误模式通过（1.428秒）：现场输入变更阻止新批准/封存、既有归档保持有效、重启精确审核恢复及目标不符拒绝有断言。[证据](evidence/ADR-002-test-candidate-review-target-review.json)。不代替实际人工批准、浏览器或产品/ASC验收。
+
+物料提交完整性、运行快照及提交放弃三个测试完整审查，15项以ResourceWarning错误模式通过（0.781秒）：元数据/失败状态篡改拒绝、运行绑定及明确放弃不可复用身份有断言。[证据](evidence/ADR-002-test-artifact-run-abandonment-review.json)。夹具失败不代替实际进程或产品验收。
+
+生产者合同、视频执行集成与消费方验证模板三个测试完整审查，15项以ResourceWarning错误模式通过（0.705秒）：源时段/封面时间码、并发文件不覆盖、失败/取消证据及实际模板委托有断言。[证据](evidence/ADR-002-test-producer-consumer-contract-review.json)。执行器mock不替代实际编码、真实产品或ASC验收。
+
+ASC适配器与规范化CLI两个测试完整审查，10项以ResourceWarning错误模式通过（0.451秒）：上传/处理/封面事实独立、范围/重复身份拒绝、响应/计划哈希与FIFO非阻塞有断言。[证据](evidence/ADR-002-test-asc-normalization-review.json)。合成响应不代表真实ASC故障关闭；隐私脱敏由独立范围验证。
+
+私有观察取回与诊断保留两个测试完整审查，12项以ResourceWarning错误模式通过（0.344秒）：可信locator/summary与敏感值拒绝、用户输出保留及诊断依赖/期限保护有断言。[证据](evidence/ADR-002-test-private-evidence-diagnostics-review.json)。负向取回不证明所有公开包无私有响应；实际后端与隐私全审仍保留。
+
+Git远端与LFS取回两个测试完整审查，8项实际Git/LFS以ResourceWarning错误模式通过无跳过（7.997秒）：精确远端提交、LFS实际对象取回及缺对象/端点覆盖/错误pointer拒绝有断言。[证据](evidence/ADR-002-test-git-remote-lfs-review.json)。一次性本机裸远端不是实际长期后端；超时注入不证明独立脱敏。
+
+外部发布与清理后取回两个测试完整审查，9项以ResourceWarning错误模式通过（5.567秒）：实际裸远端取回在原交付、元数据副本及对象移除后仍成功；独立CLI恢复拒绝覆盖现有目录。[证据](evidence/ADR-002-test-external-publication-purge-retrieval-review.json)。本机后端与剩余生命周期元数据仍存在；清理删除冗余副本，不替代完整生产环境移除后的真实后端取回，也未证明私有原始观察响应隔离。
+
+目录交换、重试/回滚和本机配置搬迁计划三个测试完整审查，17项以ResourceWarning错误模式通过（0.802秒）：实际原子交换保持目录身份和字节，注入同步失败后重试不反转方向，替换目标与非法根拒绝；本机层准备不激活目标。[证据](evidence/ADR-002-test-directory-recovery-local-plan-review.json)。同卷隔离夹具不替代跨卷、断电或真实产品验收。
+
+操作历史、日志与安全暂存三个测试完整审查，19项通过（4.031秒）；CLI/HTTP只读一致、未提交与重复事件区分、租约复核及所有者文件保留有断言。[证据](evidence/ADR-002-test-operation-history-staging-review.json)。注入故障不替代真实崩溃验收。
+
+Python门禁、分发包及配置临时文件三个测试完整审查，5项通过（2.784秒）：实际打包排除字节码、缺模块拒绝、替换失败保留配置及所有者临时文件。[证据](evidence/ADR-002-test-package-python-atomic-json-review.json)。版本门禁采用模拟version_info，不冒充实际Python3.11运行；实际安装仍待验收。
+
+跨卷观察/进程恢复及OS权限三个测试完整审查：37项发现，4项实际权限拒绝验证通过、33项缺独立测试卷跳过（1.880秒）。[证据](evidence/ADR-002-test-crossfs-permission-review.json)。跳过不记为跨卷通过，跨卷真实验收仍待关闭。
+
+正向来源库存及保留依赖两个测试完整审查，9项通过（4.694秒）：来源身份/额外文件、返回活动路径、清理依赖一致性有断言。[证据](evidence/ADR-002-test-forward-inventory-dependency-review.json)。端到端循环案例先触发提交完整性，独立纯验证器循环测试不能替代有效提交循环图验收。
+
+最后六个测试文件完整审查，40项断言通过（42.456秒）；来源读取测试出现3个未关闭HTTPError资源警告，已修复清理并重跑3项无警告通过（1.622秒）。[证据](evidence/ADR-002-test-final-location-studio-review.json)。177/177测试文件审查及当前哈希核对完成，不关闭完整敏感证据审查、跨卷、浏览器或真实产品验收。
+
+cc4b069完整分发包打包烟雾通过，独立解压环境120项回归通过（28.782秒）；sys.path及运行时模块路径断言排除源码运行时。[证据](evidence/ADR-002-independent-package-cc4b069.json)。503个变更UTF-8文件凭据模式筛查无命中。[证据](evidence/ADR-002-sensitive-screen-cc4b069.json)。实际adg安装、人工敏感信息审查与真实产品门禁仍未关闭。
+
+e12bde5实际IAB浏览器完成四类自定义目录预览、保存及刷新保持，保存期间编辑/导出控件禁用；独立核对磁盘配置与页面一致。[证据](evidence/ADR-002-browser-custom-root-save-e12bde5.json)。空白隔离项目与源码运行时不替代两产品生产/恢复矩阵或实际adg安装。
+
+实际浏览器在CLI创建运行后拒绝普通保存更换活动归档根；完整项目文件哈希快照不变，新目标目录未创建。[证据](evidence/ADR-002-browser-active-root-refusal-e12bde5.json)。重新加载按钮超时，未记为刷新通过；真实产品搬迁仍待验收。
+
+cc4b069完整CI已成功，日志核对1045项Python运行/33项跳过（289.222秒）、98项前端/33文件、类型检查、构建及完整分发烟雾均通过。[证据](evidence/ADR-002-ci-cc4b069.json)。后续文档提交与最终发行仍独立核对。浏览器新页签可加载正确保存目录，但编辑后的保存动作未观察到状态转换；未据此声明恢复完成，需继续诊断。
+
+浏览器保存复核：同一浏览器新页签以键盘Enter激活Save project后显示Project saved，刷新保留新标题；磁盘配置一致。[证据](evidence/ADR-002-browser-save-recovery-e12bde5.json)。此前鼠标操作无可观察效果，原因未确定；未认定运行时缺陷、未修改运行时代码。
+
+Levelory新隔离工作区重新导入10张真实原始截图，在显式临时LFS策略下创建新截图候选252428f54ab04c61a4bfd35bd78f37ad，技术验证及操作历史PASS。[证据](evidence/ADR-002-levelory-fresh-screenshot-run-e12bde5.json)。复用旧真实输入，中文界面Search Clips/Copy Result仍英文；视频/封面未纳入本次候选，未批准或封存，不关闭完整Levelory验收。
+
+预算复核发现新工作区误用了retentionPolicy字段，252428f候选未绑定有效预算；已纠正证据与配置为artifactPolicy，不回填原运行，必须重新生产。
+
+修正预算后另起新运行cac53501dec547448bc995c6b8812d3a，10张截图候选9a37adf941974609be47f95483b2674d技术及历史PASS；运行快照包含artifactPolicy预算声明，精确候选预算WITHIN_BUDGET：23,602,078/1,073,741,824 bytes。[证据](evidence/ADR-002-levelory-budget-bound-run-e12bde5.json)。中文原始UI、视频/封面、批准/封存与长期后端仍未完成。
+
+新受管视频ce4dd874e4dc4cd9a7a9a743f6854950及17秒封面f742e1bcabf44ac4bf8b1526ce04db33生产成功；保留9个视频来源依赖，媒体实测20秒/1920×1080/H264/30fps/AAC，代表帧呈现真实大写转换过程。[证据](evidence/ADR-002-levelory-new-preview-poster-275a5d1.json)。尚未组成含视频的正式候选，代表帧不替代完整播放及人类视觉批准。
+
+完整候选组装未通过：截图阶段缺视频、追加媒体后配方源未入闭包，尝试绑定已编码源触发重复逻辑证据路径冲突。未批准/封存；已将下一次配置源更正为真实标准化录像sources/en-US/filter-journey.mov，保留全部已有记录，需新运行重新验证。
+
+真实标准化录像源配置的新完整候选64f81025ad3d40f8b7c26a96a73d446d包含10截图/视频/封面，技术验证及历史PASS，来源闭包无冲突、预算内。[证据](evidence/ADR-002-levelory-complete-candidate-275a5d1.json)。中文UI残留英文、人类视觉批准、封存、长期取回与实际ASC仍待完成。
+
+本轮四份Levelory证据摘要已逐份内容审查，未见凭据、签名URL、主机绝对路径或捕获的用户正文；JSON解析通过。[证据](evidence/ADR-002-levelory-evidence-content-review-275a5d1.json)。此范围不关闭仓库级人工敏感证据审查。
+
+中文素材只读诊断：当前String Catalog的`Search Clips`与`filter.action.copyResult`已有简体中文翻译；`Agent Relay`及`mainWindow.sidebar.agentRelay`条目不存在，侧栏源码使用直接英文Label。因此不能统一归因于翻译缺失；需核对捕获构建与语言生效，并分别处理缺失条目。未修改Levelory用户已有工作。
+
+中文英文残留进一步定位：搜索框英文String直接传入AppKit `placeholderString`，主窗口`FilterOutputActionPresentation.title`直接返回英文；捕获Dev构建的简体中文编译资源经原生plutil查询包含“搜索剪贴内容”。这两处存在绕过本地化调用的源码路径。[诊断](evidence/ADR-002-levelory-localization-diagnosis.json)。需修正产品调用后重新捕获，不以素材后期修图代替；本轮仅只读诊断，未改产品源代码。
+
+Levelory真实输入临时工作区执行零天保留清理计划，完整候选的44个依赖/32个独立对象均受保护、没有进入可清理范围。3个符合清理条件的对象实际隔离后立即恢复，返回完整候选验证PASS。[证据](evidence/ADR-002-levelory-cleanup-reference-protection-3097992.json)。未执行永久删除；不关闭跨卷、故障注入、浏览器维护或持久归档验收。
+
+七份浏览器、真实产品及分发包证据摘要完成全文内容审查并绑定哈希；历史目录路径仅为一次性合成夹具与loopback监听。修正旧截图记录scope与有效预算缺失的矛盾，不回填旧记录。[审查](evidence/ADR-002-evidence-content-review-browser-product.json)。仓库级人工敏感审查仍未关闭。
+
+八份录屏、远端、存储与回归摘要完成敏感内容全文审查并绑定哈希，未见实际ASC签名URL、授权秘密或私人正文。[审查](evidence/ADR-002-evidence-content-review-recording-storage.json)。早期cda553c/24634da有独立挂载APFS卷夹具证据；不替代当前真实素材跨卷验收，仓库级人工审查仍未完成。
+
+当前Levelory完整候选已完成独立挂载APFS文件系统的四根正向搬迁与反向返回，两侧候选验证PASS，返回历史PASS，原根绑定恢复、卷已卸载且不再挂载。[证据](evidence/ADR-002-levelory-real-crossfs-3097992.json)。此项关闭Levelory实际跨文件系统正反搬迁这一子项；两个产品完整矩阵、故障注入、浏览器维护、持久归档及ASC仍待验收。
+
+fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994)，Python运行1045项、跳过33项（483.169秒），Studio98项/33文件通过，类型检查、构建及完整分发检查通过。[证据](evidence/ADR-002-ci-fd86067.json)。后续提交及最终发行门禁仍需核对；不替代真实产品批准、持久取回、实际ASC或安装后验收。
+
+当前变更ADR证据内容审查已汇总：209份文件当前哈希一致，历史权威声明和失效相对链接已修正。[审查报告](evidence/ADR-002-evidence-content-review-consolidated.json)。仅覆盖证据内容，不关闭其他文档、技能、源码及测试的仓库级敏感审查，也不代替真实产品验收。
+
+82f5c82完整包独立解压入口检查通过；与此前cc4b069独立120项回归包的245份文件载荷全部相同，无新增、删除或内容变化。[打包](evidence/ADR-002-package-smoke-82f5c82.json)、[载荷比较](evidence/ADR-002-package-payload-comparison-82f5c82.json)。本轮未重复执行120项测试；实际ADG安装和真实产品复验仍独立验收。
+
+最新独立解压包实际复核Levelory完整候选，12项媒体技术验证PASS并生成新不可变验证e3aa6f311926418194983dc39a0d8057；无批准、封存或远端写入。[证据](evidence/ADR-002-independent-levelory-review-82f5c82.json)。此命令会保存验证记录，不记为只读；未重新捕获中文UI，实际ADG安装和完整产品验收仍未完成。

@@ -1,0 +1,39 @@
+{
+  "scope": "Full remote_observations.py review",
+  "runtime_sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4",
+  "reviewed": [
+    "Gate-specific fact and source allowlists",
+    "Upload checksum, independent playback and exact poster time/dimension checks",
+    "Plan/target/artifact binding and same-scope supersession",
+    "Freshness and conflicting remote identity handling",
+    "Private raw retention with sanitized summary dependency",
+    "Portable locator hashes, backend version references and independent retrieval",
+    "Derived publication status versus evidence custody diagnostics",
+    "Append-only observation/approval export without raw evidence"
+  ],
+  "new_defects": [],
+  "verification": [
+    {
+      "tests": 65,
+      "seconds": 106.469,
+      "result": "PASS",
+      "modules": [
+        "test_remote_observations",
+        "test_asc_observation_cli",
+        "test_external_reference_contract"
+      ]
+    },
+    {
+      "tests": 7,
+      "seconds": 0.03,
+      "result": "PASS",
+      "modules": [
+        "test_observation_evidence_retrieval"
+      ]
+    }
+  ],
+  "limitations": [
+    "Fixture remote facts do not prove actual ASC playback/poster",
+    "Real durable backend and two product acceptance remain open"
+  ]
+}

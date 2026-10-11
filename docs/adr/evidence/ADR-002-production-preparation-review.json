@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "base_head": "a28e698765e2ebed6638233a07cc9ea2afbd7ed1",
+  "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/production_lifecycle.py",
+  "sha256": "245c4576a6964169851a446f083968b46683264589e19e63292c716f9ede4d7a",
+  "reviewed_functions": [
+    "produce",
+    "latest"
+  ],
+  "finding": "Attempt created before input/output mkdir, but mkdir outside exception handler left no terminal outcome on ordinary permission failure.",
+  "red_verified": true,
+  "fix": "Prepare input/output directories inside the existing attempt exception handler; retain failed diagnostic and outcome.",
+  "tests": {
+    "executed": 24,
+    "passed": 24,
+    "seconds": 7.019,
+    "log_sha256": "0391409eae9ef06dc37dc548b58812a319a9d4a01632f1bfb8b33afafcc97c09"
+  },
+  "latest_full_ci_verified": false,
+  "overall_review_complete": false,
+  "installed_validation": {
+    "exit_code": 0,
+    "output": ".........................\n----------------------------------------------------------------------\nRan 25 tests in 9.389s\n\nOK\n",
+    "package_sha256": "6c4d38f3c65f5393c650a8b1d158f43aa34769739dc125691d0e5d51ef4e308c",
+    "source_repository_runtime_used": false
+  },
+  "source_final_validation_log_sha256": "cf65df07f0b1c6d707ed193cb3b3dcde87ef3d4b2a6dcff093f5bcb80dd05176",
+  "source_final_validation_tests": 25
+}

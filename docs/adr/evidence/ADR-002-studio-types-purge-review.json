@@ -1,0 +1,19 @@
+{
+  "scope": "Full static review of frontend type/dimension definitions and purge plan parser",
+  "files": {
+    "types.ts": "b29a8310f713f2be131b6b00b52d4aa1fefc25604171236eef4237bf9ff6156e",
+    "relocationPurgeState.ts": "b7203db1bfdb033706bbcf51685ee30d52624ab694aa929c12453577106ee58a"
+  },
+  "findings": [
+    "No new execution defect identified in reviewed scope",
+    "Purge parser binds selected quarantine, unexecuted plan, disjoint paths, exact recovery hash/size coverage and safe integer byte sizes",
+    "Frontend type declarations do not validate imported JSON; runtime configuration validation remains authoritative",
+    "Target scaling uses integer base canvas rounding; physical output dimensions come from target definitions, real visual/export acceptance remains separate"
+  ],
+  "remaining": [
+    "Full App orchestration static review",
+    "Test diff and sensitive evidence review",
+    "Actual browser and two-product lifecycle matrix"
+  ],
+  "validation": "2 purge parser tests passed; no types.test.ts exists and no dimension-specific test was executed."
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "Full current quarantine process-death and maintenance effect inspection tests",
+  "files": [
+    {
+      "file": "tests/test_quarantine_process_crash.py",
+      "sha256": "02f1c353de7d4bf0a31daf2d74ae22aaab1060146b8065a20eb4ddbe4e7305a8"
+    },
+    {
+      "file": "tests/test_maintenance_execution_status.py",
+      "sha256": "ca902c2a6cebf67e828da8154c96f689843628a281fe0b3439182f4e3760010b"
+    }
+  ],
+  "assessment": [
+    "Actual owned SIGKILL at intent, move and receipt during commit/restore reports COMMIT_STARTED/RESTORING and recovers through public CLI",
+    "Independent active artifact remains valid and original copy can be restored after recovery",
+    "Maintenance observation checks actual bytes independently of saved outcome and preserves JSON records",
+    "Plans report NOT_EXECUTED; fixture purge reappearance reports FAIL while retaining owner bytes",
+    "CLI and HTTP match core and reject workspace overrides"
+  ],
+  "verification": {
+    "tests": 9,
+    "seconds": 7.258,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_quarantine_process_crash test_maintenance_execution_status -q"
+  },
+  "limitations": [
+    "HTTP inspection test title mentions restart but only one server context asserted",
+    "Readonly preservation compares JSON records rather than all media files",
+    "Disposable single-filesystem fixtures and selected kill boundaries; real products, cross-volume and browser separate",
+    "Any purge deletes only disposable test media, not product assets"
+  ]
+}

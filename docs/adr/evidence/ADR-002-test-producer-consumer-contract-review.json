@@ -1,0 +1,36 @@
+{
+  "scope": "Full current recording/preview producer, video integration and consumer validation template tests",
+  "files": [
+    {
+      "file": "tests/test_producer_contracts.py",
+      "sha256": "5b80af7f37182f20fa987a51aa1f51bab21fbbd361023c7dbe9c83996d8023a1"
+    },
+    {
+      "file": "tests/test_video_execution_contract.py",
+      "sha256": "93c2f3564a4e3b841e0c7f5ae5e1fe23d59bc0d5bce5b2f5fc4bd2ba3a6f497e"
+    },
+    {
+      "file": "tests/test_consumer_validation_template.py",
+      "sha256": "64cea1096e87ba322815a4600b032b813c92ac0cade5d26a5bb66ce5933148e9"
+    }
+  ],
+  "assessment": [
+    "Recorder requires explicit window, bounded duration and no desktop/cursor scope",
+    "Preview command handles silent audio, source trim, timed overlays and end card; duration drift/source bounds/audio mismatch rejected",
+    "Existing and concurrently created output/receipt/frame owner bytes preserved",
+    "Config video delegates evidenced executor and registers portable receipt/frame plus preview/poster dependencies",
+    "Missing/invalid poster time code rejects before production; failure/cancellation preserves partial preview and diagnostics without candidate",
+    "Actual consumer shell template invokes managed candidate validation, records exact candidate and rejects corrupt bytes without retired workflow files"
+  ],
+  "verification": {
+    "tests": 15,
+    "seconds": 0.705,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_producer_contracts test_video_execution_contract test_consumer_validation_template -q"
+  },
+  "limitations": [
+    "Encoder, screenshot renderer, poster extractor and probe mocked in integration contract tests; no actual visual acceptance",
+    "Execution identity/tool replacement validated in separate reviews, not this scope",
+    "Fixture media and local template execution rather than real product or ASC acceptance"
+  ]
+}

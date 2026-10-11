@@ -9,7 +9,7 @@
 
 ## Authenticity
 
-Every pixel inside the product viewport must originate from the running app. Cropping a real capture is allowed when the manifest calls for it. Redrawing, retouching controls, replacing content, or generating a plausible UI is not allowed.
+Every pixel inside the product viewport must originate from the running app. Cropping a real capture is allowed when the reviewed run recipe calls for it. Redrawing, retouching controls, replacing content, or generating a plausible UI is not allowed.
 
 ## Checkpoint evidence
 

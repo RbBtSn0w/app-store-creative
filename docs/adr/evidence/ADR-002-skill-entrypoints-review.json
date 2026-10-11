@@ -1,0 +1,33 @@
+{
+  "scope": "Full static review of six skill entrypoints; referenced contracts and schemas remain separate pending review",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/SKILL.md": "962034274f367c81c7acaa0aa5efd8fe1e08ac92dcf4a1d3ea373a5b69f86dac",
+    "plugins/app-store-creative/skills/app-store-creative-design/SKILL.md": "afff7dd18b6a5655dc351418e9900d7ea2ff36823c6462334cfb110e8aac4baa",
+    "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md": "3a1f7f32033f5c842e02db695f81f9b32fc2df592d825fd3b8da426499426521",
+    "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md": "a0e8ab4548e6df4b0dd5de10f102eb5a9189ee5ba91e0c90b70a865aa76ec035",
+    "plugins/app-store-creative/skills/app-store-preview-producer/SKILL.md": "ac58e1fa3ee8ed02e440303bbe7fa4a95d5beaf4117f6621a7f1d8922f80bee0",
+    "plugins/app-store-creative/skills/e2e-screenshot-capture/SKILL.md": "229b0a847ac9139383f0f31a17abfe52b30046b402b7eed3160c01123aa83ac5"
+  },
+  "findings": [
+    {
+      "file": "app-store-creative-design/SKILL.md",
+      "resolution": "Removed historical v2.1 workflow label; current workflow is configuration-driven."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "resolution": "Corrected publication export example to boolean --confirm; CLI --help confirms EXPORT is not an accepted positional value."
+    }
+  ],
+  "review_notes": [
+    "Runtime root resolves inside the main skill payload; specialist installation dependencies checked separately.",
+    "Real UI capture, leased attempts, immutable outputs and preservation of partial failures remain explicit.",
+    "Design approval and exact-plan upload approval remain separate; agents cannot invent human authorization.",
+    "Official ASC executes external operations; local validation and normalization do not prove playback or poster acceptance.",
+    "Git changes require authorization; original evidence stays private and independent retrieval requires a trusted locator."
+  ],
+  "remaining": [
+    "Referenced lifecycle and specialist contracts",
+    "Schemas",
+    "Actual installed real workflows"
+  ]
+}

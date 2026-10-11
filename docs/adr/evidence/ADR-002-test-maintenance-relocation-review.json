@@ -1,0 +1,34 @@
+{
+  "scope": "Full new test-file diffs against origin/main for six maintenance/relocation helpers",
+  "files": {
+    "plugins/app-store-creative/studio/src/relocationState.test.ts": {
+      "sha256": "aa3b5304920fd5008f5928c7bcdaec3fac94e1fa700f309164653471d9ea183e",
+      "assessment": "Forward/reverse plan accepted; root scope, hash, path traversal, duplicates and logical totals rejected."
+    },
+    "plugins/app-store-creative/studio/src/relocationMaintenanceState.test.ts": {
+      "sha256": "4c7c781f3215b9b03065438d7b46cc26c14d6726b9b81bf0d37c0d5b82fe13a7",
+      "assessment": "Unexecuted retention scope and unique identities; action phase allowlist rejects changed evidence and identity conflicts."
+    },
+    "plugins/app-store-creative/studio/src/relocationPurgeState.test.ts": {
+      "sha256": "1e5cf4d0365a2e87658a42b53d29be35750b17aa12cc723019bb9a42a8e1c309",
+      "assessment": "Exact selected quarantine, disjoint recovery path and complete hash/size recovery; wrong or duplicate recovery rejected."
+    },
+    "plugins/app-store-creative/studio/src/relocatedObjects.test.ts": {
+      "sha256": "1f2bba07cec51fba2d44dcac8a9f095a137ebb7a60025f7f74c1cbbcdb73819c",
+      "assessment": "Selected relocation and nonempty checked scope required for PASS; UNKNOWN remains unverified."
+    },
+    "plugins/app-store-creative/studio/src/maintenanceState.test.ts": {
+      "sha256": "f28cbd166b4b6c47e6d2c33502d957ad9db078a7ec9ea64a2934c17db5fc9037",
+      "assessment": "Operator/reason/review and exact typed PURGE needed; busy or unknown outcomes block further action."
+    },
+    "plugins/app-store-creative/studio/src/maintenanceInspection.test.ts": {
+      "sha256": "38f8c282e0db54584acd24b37bb9005ed1ddaca5ba64bd098cfe09f87e591cc9",
+      "assessment": "Recorded phase alone insufficient; exact identity and explicit execution flag required; UNKNOWN not promoted."
+    }
+  },
+  "finding": "No weakened assertions or new skips found",
+  "limitations": [
+    "These tests do not perform filesystem relocation or deletion",
+    "Browser action dispatch, actual recovery and cross-filesystem acceptance remain separate"
+  ]
+}

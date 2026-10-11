@@ -1,0 +1,21 @@
+{
+  "scope": "Full current publication target/asset consumption tests",
+  "file": "tests/test_publication_target_consumption.py",
+  "sha256": "ef950818e3311512865dd5e92946b9c32153770d1fd403b9dcec342ccc6f87ae",
+  "assessment": [
+    "Altered saved target or assets refuse approval/export and preserve records",
+    "Fresh valid committed plans with wrong path/hash/checksum/role/artifact identity fail asset semantic comparison against archive",
+    "Invalid consumption produces no handoff directory",
+    "Fresh readable committed invalid platform/app/version target rejected by semantic required/platform gate; approval bytes unchanged and no handoff directory"
+  ],
+  "verification": {
+    "tests": 4,
+    "seconds": 2.46,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_publication_target_consumption -q"
+  },
+  "limitations": [
+    "No post-approval mutation or localization scope assertion in this file",
+    "No actual ASC write"
+  ]
+}

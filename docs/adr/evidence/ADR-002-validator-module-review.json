@@ -1,0 +1,32 @@
+{
+  "scope": "Full validator.py review",
+  "runtime_sha256": "28f4e890f6e42dbca03d8226efa1571e08827b80daf9e130ca91f9e7fce893d6",
+  "reviewed": [
+    "Preview locale subset and declared screenshot matrix",
+    "Full PNG integrity and dimensions/alpha checks",
+    "Scoped source/config/output hash and render-ready evidence binding",
+    "Video probe codec, duration, fps and configured dimensions",
+    "Poster requires validated preview and matching dimensions",
+    "Final configuration/source/output/evidence reread rejects changed inputs",
+    "Read-only probe facts versus lifecycle-owned immutable validation"
+  ],
+  "new_defects": [],
+  "verification": {
+    "tests": 39,
+    "seconds": 10.496,
+    "result": "PASS",
+    "modules": [
+      "test_validator_png_integrity",
+      "test_poster_validation",
+      "test_v2_workflow",
+      "test_studio_release",
+      "test_validation_policy_binding",
+      "test_consumer_validation_template"
+    ]
+  },
+  "prior_fix": "ADR-002-validator-png-integrity.json",
+  "limitations": [
+    "No proof of actual ASC acceptance or poster availability",
+    "Configured technical constraints are not a new exhaustive Apple rules certification"
+  ]
+}

@@ -1,0 +1,1244 @@
+{
+  "scope": "Changed test-file inventory only; passing execution is not full diff review",
+  "files": [
+    {
+      "file": "plugins/app-store-creative/studio/src/ArchivePolicySettings.test.tsx",
+      "change": "A",
+      "sha256": "886d93c6a975a3bc19eeb57d7c5b3a7c54fa5cc6666c3fbe73a9c33e290262f0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/CandidateApproval.test.tsx",
+      "change": "A",
+      "sha256": "01567cb0b04b8ccb04d50a863960351ae9f646dc14dd414902fb370f314e8426",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ExportView.test.ts",
+      "change": "A",
+      "sha256": "1695143ced42700feb53c5dbb6185ad7656de397bff0e0da71065164a039e058",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/InventoryView.test.tsx",
+      "change": "A",
+      "sha256": "985baffcdd89a88cd4e3ebd7fcaf15736049884acabc7c1f47a64f803be9dc47",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/MediaBudgetPanel.test.tsx",
+      "change": "A",
+      "sha256": "d8cbbd664a12d729c0a4019012f3adf04f509d4fdd1e83f10d98df5118afdcfa",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/OperationHistory.test.tsx",
+      "change": "A",
+      "sha256": "57ab9834b9e82889d6279ba6ad0cc37daef8de207782248d577b8f602f46878b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/PublicationHistory.test.tsx",
+      "change": "A",
+      "sha256": "1590700bc423475d65fba2d0d40115c4f2db1aa0acbc25382a3f652ae2434981",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationPurgeReview.test.tsx",
+      "change": "A",
+      "sha256": "19e1ad70315bb01015e441f22f4d79c7ff782edc38c75568d43781040bae8c21",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RunHistory.test.ts",
+      "change": "A",
+      "sha256": "82e84bc53cdbccd5eb2434787cab6755c58e0b9365dd2aa9560b3c14a1f8afcf",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/StorageSettings.test.tsx",
+      "change": "A",
+      "sha256": "4c5bf776161c995472516b4015d34cbc1291842c5ea2054611647fb8c032d9e7",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-panels-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/artifactPolicy.test.ts",
+      "change": "A",
+      "sha256": "af8a033bc447e106238f112548d2d001ec76c0b2cca366fda76381a74a9e1a8d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/components/CardView.test.tsx",
+      "change": "M",
+      "sha256": "8884033180f34276aae3ed13c5f72cdd327d08637127ce6d4bc12182c56d764c",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/copyFormulas.test.ts",
+      "change": "D",
+      "sha256": null,
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/deliveryStatus.test.ts",
+      "change": "A",
+      "sha256": "5ad03ce8b4a9908001fb9d6e8f2782c9951cf07241cacfe8125cde5af713c712",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/historyRequest.test.ts",
+      "change": "A",
+      "sha256": "2709cda9b5a0d78cf97d77b0e385cf3ee72dd06d050aaa34e6ef8e076700b427",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/inventoryPresentation.test.ts",
+      "change": "A",
+      "sha256": "a5d99d715d95078d3aa276ed67a7ee5ff03b880d36df907d94fd05a244e9fb1c",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceInspection.test.ts",
+      "change": "A",
+      "sha256": "38f8c282e0db54584acd24b37bb9005ed1ddaca5ba64bd098cfe09f87e591cc9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceRequest.test.ts",
+      "change": "A",
+      "sha256": "4da8d711dc50bb3a503594af674e980dff4cb801fefd1671c1f69e703b7f50c9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-history-timeout-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceState.test.ts",
+      "change": "A",
+      "sha256": "f28cbd166b4b6c47e6d2c33502d957ad9db078a7ec9ea64a2934c17db5fc9037",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/mediaBudget.test.ts",
+      "change": "A",
+      "sha256": "9bffe9084e52855e5f66707e2ada15d15c99d811b3738ca370339c825b4349ce",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/publicationHandoffState.test.ts",
+      "change": "A",
+      "sha256": "4bad0eeee51b96fe78776b85bbf7e3fb28b9972024c74873f3a02eeb90490f30",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/releaseState.test.ts",
+      "change": "M",
+      "sha256": "2e1ea68078666d939e71622c8afddf7097b2559c5cd1a0a598cde00b8043076b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocatedObjects.test.ts",
+      "change": "A",
+      "sha256": "1f2bba07cec51fba2d44dcac8a9f095a137ebb7a60025f7f74c1cbbcdb73819c",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationMaintenanceState.test.ts",
+      "change": "A",
+      "sha256": "4c7c781f3215b9b03065438d7b46cc26c14d6726b9b81bf0d37c0d5b82fe13a7",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationPurgeState.test.ts",
+      "change": "A",
+      "sha256": "1e5cf4d0365a2e87658a42b53d29be35750b17aa12cc723019bb9a42a8e1c309",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationState.test.ts",
+      "change": "A",
+      "sha256": "aa3b5304920fd5008f5928c7bcdaec3fac94e1fa700f309164653471d9ea183e",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/storagePreview.test.ts",
+      "change": "A",
+      "sha256": "4694886925665c418bfd8b7628367b225bb51492746129cd857ad5289d6b507c",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-policy-state-review.json"
+    },
+    {
+      "file": "tests/test_approval_commit_integrity.py",
+      "change": "A",
+      "sha256": "2dd6ce1d4bdbf10039fe6390b055bb38216b3efed8c2f565685a0cca869b8950",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json"
+    },
+    {
+      "file": "tests/test_archive_manifest_contract.py",
+      "change": "A",
+      "sha256": "66cc90d835f23d819011984fcd064e8b2561dd69ded4fb8fc0a4fa362d197b94",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-contract-review.json"
+    },
+    {
+      "file": "tests/test_archive_policy_configuration.py",
+      "change": "A",
+      "sha256": "52394dc764ef58b33576c524f904c043252f14cb9daf60eb239a421fe822a4c9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-policy-review.json"
+    },
+    {
+      "file": "tests/test_archive_policy_independent_retrieval.py",
+      "change": "A",
+      "sha256": "2aedbbdb0ce788672983a25153c66316109160f47b1a0ed3b3bb892ee19d8861",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-retrieval-policy-review.json"
+    },
+    {
+      "file": "tests/test_archive_provenance.py",
+      "change": "A",
+      "sha256": "e1e90aac99b5466261827a742420f5c1666d93fb41a2ed5fa8e195ec6f8febad",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-contract-review.json"
+    },
+    {
+      "file": "tests/test_artifact_commit_integrity.py",
+      "change": "A",
+      "sha256": "ff90a07ca284bba15b5850773f3622c706f36cf58bab94954e6b3822a1c75f26",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json"
+    },
+    {
+      "file": "tests/test_artifact_handoff.py",
+      "change": "M",
+      "sha256": "2fc0ab2efc01a082108c2d9a3bb21a0e07eb50a6aff5e574e2e6089c1ba60da8",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json"
+    },
+    {
+      "file": "tests/test_artifact_lifecycle.py",
+      "change": "M",
+      "sha256": "23c3c55508eb014b38cd8924777379f1dbee843d9600df01514dfdc983ccb4e9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
+    },
+    {
+      "file": "tests/test_artifact_policy.py",
+      "change": "A",
+      "sha256": "b527dd7d843d656c2f8bdc8be4681a9f7a0b58db136d5ee56a834104c068204f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-retention-policy-review.json"
+    },
+    {
+      "file": "tests/test_asc_observation_adapter.py",
+      "change": "A",
+      "sha256": "f6d15c00db240b5dbecfb8e978a65cbf23a801f56bb4a2bdb91e6e5480382a64",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json"
+    },
+    {
+      "file": "tests/test_asc_observation_cli.py",
+      "change": "A",
+      "sha256": "072772417b24d9afc3ce13d9f64845e39543b1fe609307ec72af015910a6d680",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json"
+    },
+    {
+      "file": "tests/test_attempt_audit_contract.py",
+      "change": "A",
+      "sha256": "d2fd393a8a93337a7f5955c5f68288dd7f3c613b827951f5f06fcc895060761e",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-attempt-audit-review.json"
+    },
+    {
+      "file": "tests/test_candidate_dependency_invalidation.py",
+      "change": "A",
+      "sha256": "d72316641066456af1c2259c7297154b1905515e98f94e3990e9b437eb82d8fa",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json"
+    },
+    {
+      "file": "tests/test_candidate_review.py",
+      "change": "A",
+      "sha256": "2080918502a3d6092683d7707077002ab2df7265e60106cca5cc03251525483a",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json"
+    },
+    {
+      "file": "tests/test_capture_artifact_import.py",
+      "change": "A",
+      "sha256": "85dc6a69711ca66a11db7317df21bdc2668b6ab506002c35ecf02222169aba50",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-capture-dependency-review.json"
+    },
+    {
+      "file": "tests/test_chrome_renderer.py",
+      "change": "M",
+      "sha256": "a2d372ec65f77ae9b8e2eee80c8ae7a245b368f90e9eddd591ab80e009312a54",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json"
+    },
+    {
+      "file": "tests/test_commit_abandonment.py",
+      "change": "A",
+      "sha256": "a7f1b6b8d8a1a3899eef929bc6f8c22c3e121e6ef633c92e3c9b349b3d65f1e5",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json"
+    },
+    {
+      "file": "tests/test_configuration_cli.py",
+      "change": "A",
+      "sha256": "151d63f7ad1daacb6433e2c7ca0a49d095eb4c700500b05b44aaeaf0d4dbc6f1",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json"
+    },
+    {
+      "file": "tests/test_configuration_installation_recovery.py",
+      "change": "A",
+      "sha256": "e1ca2b4d16ba53c363ba47cc16f47062e56d5acb466fbdb752a8a4ab3c5f71f8",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json"
+    },
+    {
+      "file": "tests/test_configuration_layer_changes.py",
+      "change": "A",
+      "sha256": "915f51c211ba188c141d7cdc8fe4d62ad9b71131bc9741fd0899d013c4a04772",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json"
+    },
+    {
+      "file": "tests/test_configuration_layers.py",
+      "change": "A",
+      "sha256": "1232ecc2d6bf9bd5903659aaf4f92476f2ed59512ec2eb9d491f6f6293cb6d5f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-layers-review.json"
+    },
+    {
+      "file": "tests/test_configuration_local_forward_execution.py",
+      "change": "A",
+      "sha256": "c029ffe76a7834652bdc994e8849a698bfe37563137cc25f47b8004b6924a7d9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-local-switch-execution-review.json"
+    },
+    {
+      "file": "tests/test_configuration_local_installation.py",
+      "change": "A",
+      "sha256": "ad5e1b3e461ac791a666a4922ff7801980907ef9a8c7057b589b6ffe299671a0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json"
+    },
+    {
+      "file": "tests/test_configuration_local_relocation_plan.py",
+      "change": "A",
+      "sha256": "4af17c985054becbde2f6e2572c18e3d842e2e570e036b5fe7d95389ef4e61d0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json"
+    },
+    {
+      "file": "tests/test_configuration_local_reverse_execution.py",
+      "change": "A",
+      "sha256": "e9b6b1c9b00565b9063f636d3c22d3985e4ac4306168822aad866a752968e867",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-local-switch-execution-review.json"
+    },
+    {
+      "file": "tests/test_configuration_owning_document.py",
+      "change": "A",
+      "sha256": "ae8ea1ffa11ad7c56f95f15985b4576a4a689a8435e198dba6575ee90089a491",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json"
+    },
+    {
+      "file": "tests/test_configuration_preparation.py",
+      "change": "A",
+      "sha256": "45c817d5b1746b7d0a1b2533d16ab9c3616c51d4be6361c006d1ef436ca80b38",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json"
+    },
+    {
+      "file": "tests/test_configuration_production.py",
+      "change": "A",
+      "sha256": "cfcce0c4f8f28088634c5bfc7ea21332a0f98e176da8d9110bac8866307c085b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json"
+    },
+    {
+      "file": "tests/test_configuration_recovery_source.py",
+      "change": "A",
+      "sha256": "7305eb2604bbe7b39a8858c3c6091f604745b53367fd338ecd81c54c92d7e548",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json"
+    },
+    {
+      "file": "tests/test_configuration_rollback_identity.py",
+      "change": "A",
+      "sha256": "627fdae656d4572679fbf3ce0cdbba817a07d7ec79536cfcd6ccede07aa28c45",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-configuration-identity-review.json"
+    },
+    {
+      "file": "tests/test_configuration_runtime.py",
+      "change": "A",
+      "sha256": "7ec427bbb43f18180f83b4b78537367af10c1d9063b4c1eaae9c9ff1739f1875",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json"
+    },
+    {
+      "file": "tests/test_configuration_studio_inputs.py",
+      "change": "A",
+      "sha256": "04c9949f9debffd692d6fb60a340725d30dde3a2e4f2b984427b119981348bef",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-input-status-review.json"
+    },
+    {
+      "file": "tests/test_configuration_studio_poster.py",
+      "change": "A",
+      "sha256": "aa31d7c75bdc18833de1147a7b1f467bdf2fe36f4a2fe04dadcd51b9989bad30",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-production-review.json"
+    },
+    {
+      "file": "tests/test_configuration_studio_save.py",
+      "change": "A",
+      "sha256": "4d5ea7b9514fa4c91cb341a019b14beaf75a4a23381581110879160c2d2c1fc4",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-save-review.json"
+    },
+    {
+      "file": "tests/test_consumer_validation_template.py",
+      "change": "A",
+      "sha256": "64cea1096e87ba322815a4600b032b813c92ac0cade5d26a5bb66ce5933148e9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
+    },
+    {
+      "file": "tests/test_cross_filesystem_observation_evidence.py",
+      "change": "A",
+      "sha256": "4f41ddf317a262e404756580037ccab17e2337af81a1e38016d0568982779a3b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json"
+    },
+    {
+      "file": "tests/test_cross_filesystem_process_crash.py",
+      "change": "A",
+      "sha256": "63c7ced6e70e5b02a132931737951e829d9e4cdcda9824379b039912830df4dd",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json"
+    },
+    {
+      "file": "tests/test_delivery_lifecycle.py",
+      "change": "M",
+      "sha256": "3aa3108313c340f2231aebdb3bd1faf7bbd88dddfebc77578839625fa9306218",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-delivery-publication-review.json"
+    },
+    {
+      "file": "tests/test_delivery_status.py",
+      "change": "A",
+      "sha256": "f2deb7dba9f3493af8b483eb083a19b8e2df1cbcdf739460143460e85eb8fe74",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-delivery-observation-review.json"
+    },
+    {
+      "file": "tests/test_design_target_binding.py",
+      "change": "A",
+      "sha256": "4da112c0aef520b7e7c49d26d074deb2589a3dea9876b440284f09843db65625",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json"
+    },
+    {
+      "file": "tests/test_diagnostic_retention.py",
+      "change": "A",
+      "sha256": "71e98dc45f90510054c7f965cc0031ca5d4cd4759f3e9d5dbeb9530a1323532d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-private-evidence-diagnostics-review.json"
+    },
+    {
+      "file": "tests/test_directory_change_recovery.py",
+      "change": "A",
+      "sha256": "fcf530fe178f2e974d1c063103d40c87f2f6a6088722a360773e409ca137a9c7",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json"
+    },
+    {
+      "file": "tests/test_directory_exchange.py",
+      "change": "A",
+      "sha256": "12563d09bbdc85a30d8331a8afc2e89479ee19d8a6a1c58c99bc53100078db8e",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json"
+    },
+    {
+      "file": "tests/test_export_server_cleanup.py",
+      "change": "A",
+      "sha256": "d6e90534c7d61a02bce4b5560e886145fef561d0f86c844f44d01625a699c704",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-server-cleanup-review.json"
+    },
+    {
+      "file": "tests/test_external_delivery_archive.py",
+      "change": "A",
+      "sha256": "d15845ed517d2e46225cb6236a4d73b85e453decb6a0c941ec8fa01e27386e3f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-archive-review.json"
+    },
+    {
+      "file": "tests/test_external_delivery_identity.py",
+      "change": "A",
+      "sha256": "6389e0d626c729df804b8befefa89b4dcf3bfd21b0600336df9a0a0a63b5eea0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-identity-review.json"
+    },
+    {
+      "file": "tests/test_external_media_store.py",
+      "change": "A",
+      "sha256": "a1b0dc0c40138e4f58b75123dd7256fd6b9cba812c26edc74f0dd5fb87be7025",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-store-review.json"
+    },
+    {
+      "file": "tests/test_external_publication.py",
+      "change": "A",
+      "sha256": "f69f3782613a0e065b915e64a81c5e8040e41e8dac1ffe3585f515a491a801b5",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-publication-purge-retrieval-review.json"
+    },
+    {
+      "file": "tests/test_external_reference_contract.py",
+      "change": "A",
+      "sha256": "8609c1365018363d88b033f3b6944fe69611fbfbeebb0cfeddecd829bcaefbd1",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-archive-location-review.json"
+    },
+    {
+      "file": "tests/test_filesystem_permission_acceptance.py",
+      "change": "A",
+      "sha256": "08e9d4dda2015f28acaa7579ae0783ad84c86a1a289207e91ee77f2227d6073a",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json"
+    },
+    {
+      "file": "tests/test_forward_source_inventory.py",
+      "change": "A",
+      "sha256": "fe9ad25f1a4195a3706ba090248db32348500940325b0559317c147165b58eb0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-forward-inventory-dependency-review.json"
+    },
+    {
+      "file": "tests/test_git_archive_retrieval.py",
+      "change": "A",
+      "sha256": "e5c1e2335dbea6b84328393f4805efca874373a74b5797de2beff258858c45d6",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-git-retrieval-review.json"
+    },
+    {
+      "file": "tests/test_git_lfs_retrieval.py",
+      "change": "A",
+      "sha256": "978fe7900265dfa82365f73c30477992a68703603af1d0b16c6f2fcd1df06979",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-git-remote-lfs-review.json"
+    },
+    {
+      "file": "tests/test_git_remote_retrieval.py",
+      "change": "A",
+      "sha256": "3fb62d72be2280f173148f60632be5a461b3897777745cba33b9683125d98e17",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-git-remote-lfs-review.json"
+    },
+    {
+      "file": "tests/test_human_approval_contract.py",
+      "change": "A",
+      "sha256": "e95243751c9a889267bbdc033ae04e041d97e1c8d8c3faa15a1e2b3c01183b2f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json"
+    },
+    {
+      "file": "tests/test_incident_lifecycle.py",
+      "change": "M",
+      "sha256": "bd47140051ed5273d4d503978628a83882dba27f8be3835494ea44417f88f734",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
+    },
+    {
+      "file": "tests/test_input_lifecycle.py",
+      "change": "M",
+      "sha256": "54a4719a619d86da0a0eada9c9f36daff5e5939085c1df5983fc29943467718b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json"
+    },
+    {
+      "file": "tests/test_inventory_lifecycle.py",
+      "change": "M",
+      "sha256": "6459c9782f3933a44f55d3bcedde869988377f1e6069a6496c17c3ba8aeaacad",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
+    },
+    {
+      "file": "tests/test_inventory_observation_failures.py",
+      "change": "A",
+      "sha256": "320a844247f25eb8dee4abc781076a273bffbf1d0dfe726650b6ac5a8763a677",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-inventory-budget-review.json"
+    },
+    {
+      "file": "tests/test_layered_archive_portability.py",
+      "change": "A",
+      "sha256": "d7bbb58ac6de1a849a12a91bffd9db57d99ef6f64bd65c9d8a922a2cfbca28ba",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-layered-portability-review.json"
+    },
+    {
+      "file": "tests/test_lifecycle_record_schema.py",
+      "change": "A",
+      "sha256": "768aafa24d3c9758ef4492f621fd3b9acfe6df4218b7bce96af041bcc2e19974",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-record-schema-review.json"
+    },
+    {
+      "file": "tests/test_maintenance_execution_status.py",
+      "change": "A",
+      "sha256": "ca902c2a6cebf67e828da8154c96f689843628a281fe0b3439182f4e3760010b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-quarantine-crash-status-review.json"
+    },
+    {
+      "file": "tests/test_maintenance_relocation_coordination.py",
+      "change": "A",
+      "sha256": "905f6e8b2dffb4af40caec59ffa80c55a8dc9660d65d63f81d8472b5b40d6d09",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-coordination-review.json"
+    },
+    {
+      "file": "tests/test_managed_poster.py",
+      "change": "A",
+      "sha256": "0dad08722b9067d072ca093683f8866817d8a2fd79f3ef7249dd06f7fb30b9e5",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-production-review.json"
+    },
+    {
+      "file": "tests/test_managed_preview.py",
+      "change": "A",
+      "sha256": "676ae090f0516214486ad78760994c7eeaa5a09853f848d43a7d935e2afa6525",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-managed-preview-review.json"
+    },
+    {
+      "file": "tests/test_managed_recording.py",
+      "change": "A",
+      "sha256": "5a463c568db666dd949888bfd2868b33ba0193bad725b8c622f998e5c5e090fe",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-executor-review.json"
+    },
+    {
+      "file": "tests/test_media_budget.py",
+      "change": "A",
+      "sha256": "8e68fbc88c08efed05405430840da7bea35cf16506f4378a339d34841d4d84c6",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-inventory-budget-review.json"
+    },
+    {
+      "file": "tests/test_media_tool_identity.py",
+      "change": "A",
+      "sha256": "1009b3389db25c41a52d7829267004ab65398de06ef0f7243414854e1d230331",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-portable-identity-review.json"
+    },
+    {
+      "file": "tests/test_native_preview_archive.py",
+      "change": "A",
+      "sha256": "9b11116b67fa265afea985b19d6a8d96b5c9d1150d07c1cc5c792cf48ddfc002",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-native-preview-archive-review.json"
+    },
+    {
+      "file": "tests/test_object_purge_process_crash.py",
+      "change": "A",
+      "sha256": "a7d493afaef5415f4a567775c5c615ebe64f29ae555324e19c94b6fad6ee848c",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-purge-process-crash-review.json"
+    },
+    {
+      "file": "tests/test_observation_evidence_retrieval.py",
+      "change": "A",
+      "sha256": "69459b5f6543fbea2762f2e73713dfe68cba74ac304ce8b66b43aaf05c12d519",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-private-evidence-diagnostics-review.json"
+    },
+    {
+      "file": "tests/test_operation_history.py",
+      "change": "A",
+      "sha256": "1bced81c3e02c1cd7511d1b4e8ebbfea16a498a7ce9e07e7b0821ffed7b82f91",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json"
+    },
+    {
+      "file": "tests/test_operation_journals.py",
+      "change": "A",
+      "sha256": "4822291194e91b3c71455a137ed95235dbabd217bc604093ecf549a32efe15f7",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json"
+    },
+    {
+      "file": "tests/test_ordinary_restore_intent.py",
+      "change": "A",
+      "sha256": "4720909b10a1fac61a1505a6fa245f43b6c9312e83d5ea0145a1a686aeacdf7e",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-restore-intent-review.json"
+    },
+    {
+      "file": "tests/test_package_runtime.py",
+      "change": "A",
+      "sha256": "709ab72c9b83501d8749cb36a03b071914c871a7844e3d0936a0fe72a6a0d224",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json"
+    },
+    {
+      "file": "tests/test_post_merge_archive_binding.py",
+      "change": "A",
+      "sha256": "a00154421a0d075afd425097514bb8020ca725590823a35e052d266ec3f93805",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-post-merge-binding-review.json"
+    },
+    {
+      "file": "tests/test_post_purge_retrieval.py",
+      "change": "A",
+      "sha256": "23a8ec9f2dbe4def28d0f9b0f5a599a8c9f98dcf6c5a94872cb843b78171d290",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-external-publication-purge-retrieval-review.json"
+    },
+    {
+      "file": "tests/test_poster_validation.py",
+      "change": "A",
+      "sha256": "11905f4edca7af09dc4dc4e1e468cfe964410c9d4d0ce290c8ffa263e532c298",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-contract-review.json"
+    },
+    {
+      "file": "tests/test_preview_overlay_coordinates.py",
+      "change": "A",
+      "sha256": "258432530a55a15f5dcaf10794e00be4194442a830670e1a54d42f70062bd196",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-poster-production-review.json"
+    },
+    {
+      "file": "tests/test_producer_contracts.py",
+      "change": "A",
+      "sha256": "5b80af7f37182f20fa987a51aa1f51bab21fbbd361023c7dbe9c83996d8023a1",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
+    },
+    {
+      "file": "tests/test_production_lifecycle.py",
+      "change": "M",
+      "sha256": "b56cc854724b9cb27cd827a5162878ec7dafd04d4df4ffd6e928576b9e1e0964",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
+    },
+    {
+      "file": "tests/test_project_identity.py",
+      "change": "A",
+      "sha256": "55b1a93ff1ee7e2be1b51e7620ee1290a6c2709ce7b74e799fda95c937493995",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-portable-identity-review.json"
+    },
+    {
+      "file": "tests/test_publication_retrieval_proof.py",
+      "change": "A",
+      "sha256": "83e49188c11b27cb03164ba6c46036be9179bbd63b65dc18a9e4bc420e45471f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-retrieval-review.json"
+    },
+    {
+      "file": "tests/test_publication_target_consumption.py",
+      "change": "A",
+      "sha256": "ef950818e3311512865dd5e92946b9c32153770d1fd403b9dcec342ccc6f87ae",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-publication-consumption-review.json"
+    },
+    {
+      "file": "tests/test_purge_process_crash.py",
+      "change": "A",
+      "sha256": "b7789f521aa0617d96c6dfbebcaf5bd5211f1232fd80d1f9cf32e2a77d4e265a",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-purge-process-crash-review.json"
+    },
+    {
+      "file": "tests/test_python_requirement.py",
+      "change": "A",
+      "sha256": "b3629f326459050e48ccea8f682d3fd153737391fd1b5fdd29c11728c54580b0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json"
+    },
+    {
+      "file": "tests/test_quarantine_location_projection.py",
+      "change": "A",
+      "sha256": "6d62e338953e3e0990e715fe9b5220216a87963d04296242a76e35aa4b27d3fe",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
+    },
+    {
+      "file": "tests/test_quarantine_location_recovery.py",
+      "change": "A",
+      "sha256": "b413ca4adcab123ccb27da7e43be52b04654ad0fd504d4481ef5c493345c7f2f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
+    },
+    {
+      "file": "tests/test_quarantine_process_crash.py",
+      "change": "A",
+      "sha256": "02f1c353de7d4bf0a31daf2d74ae22aaab1060146b8065a20eb4ddbe4e7305a8",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-quarantine-crash-status-review.json"
+    },
+    {
+      "file": "tests/test_record_commit_consumption.py",
+      "change": "A",
+      "sha256": "dca6cc383f95bae33cff456180162a573d37976ff9d0d4b3cdcc9207f970a757",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-record-integrity-review.json"
+    },
+    {
+      "file": "tests/test_record_file_identity.py",
+      "change": "A",
+      "sha256": "f87d397be3f3b39d1656d10a6994e2293d5224fe9bd86a1f465c936927871a41",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-record-integrity-review.json"
+    },
+    {
+      "file": "tests/test_recorder_execution_identity.py",
+      "change": "A",
+      "sha256": "a2d72e0eacfae488b5b7f3f11f32a6149b45c69a55ddfd2081525929bf3e0b12",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-executor-review.json"
+    },
+    {
+      "file": "tests/test_recording_normalization.py",
+      "change": "A",
+      "sha256": "63e1a53c5397e6bb800939c4a595b25ee1a5081c74d4223ec6844827a017fb07",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-media-review.json"
+    },
+    {
+      "file": "tests/test_recording_probe_contract.py",
+      "change": "A",
+      "sha256": "2be1c03426f3f50d49ebb73bffcfe7103dbe142c2d8fb2d5ed439c25c6fc1415",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recording-media-review.json"
+    },
+    {
+      "file": "tests/test_relocation_backup_inventory.py",
+      "change": "A",
+      "sha256": "f614bcfe3eaa5d33e569d849b9f0ac4ae328163038aad7e5a0b0537ba78b5baa",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-staging-backup-review.json"
+    },
+    {
+      "file": "tests/test_relocation_config_durability.py",
+      "change": "A",
+      "sha256": "283444143bd8dbf7f6c09c99629618c9e36e69eb5218a4b37d0f4085eae97187",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recovery-lock-durability-review.json"
+    },
+    {
+      "file": "tests/test_relocation_configuration_layers.py",
+      "change": "A",
+      "sha256": "edbeea5608bd99e5f36aa62e139edfb3537e0d43300e5282b9579384b2162fa0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-layer-review.json"
+    },
+    {
+      "file": "tests/test_relocation_configuration_preparation.py",
+      "change": "A",
+      "sha256": "054ba0a44468f777f3aa3ac388ab1d734e57b6c333470a6e9ff1c68cceec8b5b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-config-evidence-review.json"
+    },
+    {
+      "file": "tests/test_relocation_configuration_resume.py",
+      "change": "A",
+      "sha256": "0c115586d65579010c1eecd6b829f255e47a32c7d4feabbba1e64a700642cc75",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-relocation-coordination-review.json"
+    },
+    {
+      "file": "tests/test_relocation_preparation_process_crash.py",
+      "change": "A",
+      "sha256": "34c79b10706dccc1e30d1b6cfa86d617e2a8b74be1d2c49faac764c78f8b8db1",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-process-crash-review.json"
+    },
+    {
+      "file": "tests/test_relocation_process_crash.py",
+      "change": "A",
+      "sha256": "981ab158ef00c74b3ae6b24c616949149501b77405c094cda471ee9724b651d3",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-process-crash-review.json"
+    },
+    {
+      "file": "tests/test_relocation_purge_execution.py",
+      "change": "A",
+      "sha256": "391999a01a7581d7fc78222a2dbdcda4b485e29db1ea668b942e8ac14a549958",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-purge-review.json"
+    },
+    {
+      "file": "tests/test_relocation_purge_plan.py",
+      "change": "A",
+      "sha256": "f515c04d290ac5642e337c6fe10f48f981cd0f290f26cb4d8de565f2e7d482d5",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-purge-review.json"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_commit.py",
+      "change": "A",
+      "sha256": "4094488c6a360cdc4fe1fc307fc3892d937e5b2785f1dec1595613d3cf2974e5",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_inventory.py",
+      "change": "A",
+      "sha256": "e31a49a3c199635ce968b3e1b7d33369855f091005ad2609335f73372f1f7cd1",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_preparation.py",
+      "change": "A",
+      "sha256": "974e3afae4cdc33e7fa236989340fc5199f8196d13b82ded9c89a269a5c941f2",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json"
+    },
+    {
+      "file": "tests/test_relocation_recovery.py",
+      "change": "M",
+      "sha256": "5d99fec08ea7aa451ea71faf3a5536f50acca56d47a147d008f9fcd24f25b076",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
+    },
+    {
+      "file": "tests/test_relocation_recovery_lock.py",
+      "change": "A",
+      "sha256": "aabca2225e1baca504c546eb5af21afb8de34f4d845566c17da2f9817711d1a7",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-recovery-lock-durability-review.json"
+    },
+    {
+      "file": "tests/test_relocation_resume.py",
+      "change": "M",
+      "sha256": "1446504988369117ed575acb2f326655b4916dcc710575459f0a9bd2a89962c0",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
+    },
+    {
+      "file": "tests/test_relocation_retention_plan.py",
+      "change": "A",
+      "sha256": "fdf4dc0d60e7c112c4c37b965a0ddb6f4c88fa724cdbf66ac3887f71524f587b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json"
+    },
+    {
+      "file": "tests/test_relocation_retention_verification.py",
+      "change": "A",
+      "sha256": "eaaa156b1f7792f216c64dade7b4a17263694b6e1a05eaf6d7327948a592de6d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json"
+    },
+    {
+      "file": "tests/test_relocation_source_dispositions.py",
+      "change": "A",
+      "sha256": "50f900e53972ffaf7e753e66f7ad12ca5071c3d34b6d9a3933ce1a59cc6ecf27",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json"
+    },
+    {
+      "file": "tests/test_relocation_staging_inventory.py",
+      "change": "A",
+      "sha256": "28584efe2e6ed9a9db0ee20c757d2da72ba877ebab3dcc52c604452b6a21ba90",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-staging-backup-review.json"
+    },
+    {
+      "file": "tests/test_relocation_status.py",
+      "change": "A",
+      "sha256": "c374953ca4cac6d2d81d63d0c7aa0b9ccc9bee7a506f9021ac4698aa38f1859d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-status-review.json"
+    },
+    {
+      "file": "tests/test_remote_observations.py",
+      "change": "M",
+      "sha256": "bc401cf22d9b995b6a7310435e5fa6ff4de0b860cb17b956029f3cb2569a6cec",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-remote-observations-review.json"
+    },
+    {
+      "file": "tests/test_repeated_relocation.py",
+      "change": "A",
+      "sha256": "1473f201dafd3460679e4cf1210d1780358be62be958ceacde4d48fa02db2787",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-repeated-relocation-review.json"
+    },
+    {
+      "file": "tests/test_retention_dependency_contract.py",
+      "change": "A",
+      "sha256": "729cd6cad7ad8848289e551c9d936f0e50bd7533671e26137c50b3248f8daf71",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-forward-inventory-dependency-review.json"
+    },
+    {
+      "file": "tests/test_retention_lifecycle.py",
+      "change": "M",
+      "sha256": "8c991ab45638ae785c1109506225c3120700046bec17e999918e81903cfb4927",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json"
+    },
+    {
+      "file": "tests/test_retrieval_process_budget.py",
+      "change": "A",
+      "sha256": "9b81ad109754ecb125343049ad2eb816587051b58f9a217b1ba9da696ab5988f",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-retrieval-deadline-review.json"
+    },
+    {
+      "file": "tests/test_reverse_configuration_installation.py",
+      "change": "A",
+      "sha256": "9717d9ade940a7a32c8d3698183789e5152bb19492e2f2791a501949033fb843",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-config-evidence-review.json"
+    },
+    {
+      "file": "tests/test_reverse_configuration_layers.py",
+      "change": "A",
+      "sha256": "61d97062ef023029848fd03dd1cb69992e75172a9ef4008d2894b0420a87f203",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-layer-review.json"
+    },
+    {
+      "file": "tests/test_reverse_configuration_rollback.py",
+      "change": "A",
+      "sha256": "ee4f073887efced3a4ed8f5a1cfb8e3e29b74fe268500a596ba2f0a8b7dcd6be",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-plan-config-rollback-review.json"
+    },
+    {
+      "file": "tests/test_reverse_relocation_cycles.py",
+      "change": "A",
+      "sha256": "cbc830098f7bb054148ca34d1f5c1f9b6d8b05c4d7889001423ad2f06a22d4fd",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-repeated-relocation-review.json"
+    },
+    {
+      "file": "tests/test_reverse_relocation_plan.py",
+      "change": "A",
+      "sha256": "6319b128bf394037d948e559fcbdc42ba130b348483edc2845d53dde054ce6d8",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-plan-config-rollback-review.json"
+    },
+    {
+      "file": "tests/test_reverse_relocation_rollback.py",
+      "change": "A",
+      "sha256": "6c6052c6978b4bc8f10f1e91a1879f6bef26744b52fd74baafeef8cc84deadf4",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-switch-rollback-review.json"
+    },
+    {
+      "file": "tests/test_reverse_relocation_switch.py",
+      "change": "A",
+      "sha256": "201a9fea4d22c6e35dfe4c6f1ca10727e36da404dba79397f14c66cf757ddbd9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-reverse-switch-rollback-review.json"
+    },
+    {
+      "file": "tests/test_run_workflow_snapshot.py",
+      "change": "A",
+      "sha256": "952b66c5d78c64e00017a561323ba9c13a5d1efc82c3452ede279c28c001aa88",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json"
+    },
+    {
+      "file": "tests/test_runtime_distribution.py",
+      "change": "M",
+      "sha256": "f642ca32b767d5f536b9dc88c46d4ccf5896b06ae324ee339872e7b4646352d4",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json"
+    },
+    {
+      "file": "tests/test_runtime_identity.py",
+      "change": "A",
+      "sha256": "5fb31306542354c93a5290fc2bdf652b4f5659c96f32dc1dc6efcdf2742ac86b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-portable-identity-review.json"
+    },
+    {
+      "file": "tests/test_safe_staging.py",
+      "change": "A",
+      "sha256": "377d702c532f12cfc3e179fc123a1a6923c05015cff007f6a8a713341fad5669",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json"
+    },
+    {
+      "file": "tests/test_staging_proof_binding.py",
+      "change": "A",
+      "sha256": "927cb8dfde0940b0d0f1e6826ea877870ab6fe4c524fd88b2173e3174c243beb",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-staging-proof-review.json"
+    },
+    {
+      "file": "tests/test_status_input_contract.py",
+      "change": "A",
+      "sha256": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-input-status-review.json"
+    },
+    {
+      "file": "tests/test_storage_configuration_preview.py",
+      "change": "A",
+      "sha256": "982f77f6293db7e089622cba3aa921aae589d1a85a96ad5d2267f73f9dde1251",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-storage-preview-review.json"
+    },
+    {
+      "file": "tests/test_storage_control_projection.py",
+      "change": "A",
+      "sha256": "0fd1931812a48113093a90425ee205425940acc282f5fab57fcbac0ce1b0f62b",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
+    },
+    {
+      "file": "tests/test_studio_approval_flow.py",
+      "change": "A",
+      "sha256": "76a32b212030b22516523ee2594404ab66158823725e35474aa89bff62d16ab8",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
+    },
+    {
+      "file": "tests/test_studio_atomic_json.py",
+      "change": "A",
+      "sha256": "10d41de41328e8268eb1899d301d6611696d8dc180bad1ead2bfb2af6e4b93ce",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json"
+    },
+    {
+      "file": "tests/test_studio_delivery_status.py",
+      "change": "A",
+      "sha256": "ed71208c515f12ce5ef0fd1ca9cb336a1eb4e2cc65202e5716fd9b96cc22a96a",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-delivery-observation-review.json"
+    },
+    {
+      "file": "tests/test_studio_maintenance.py",
+      "change": "A",
+      "sha256": "ec319e63c23b90a28e6efd11d37637a5018d2e01f519471e41c0a8493b7d012d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
+    },
+    {
+      "file": "tests/test_studio_publications.py",
+      "change": "A",
+      "sha256": "d6e47228caa4c9fb9f3b733f17bbb1bc321c1e62471b35341ccba13e1dc9d5b4",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-publication-review.json"
+    },
+    {
+      "file": "tests/test_studio_read_origins.py",
+      "change": "A",
+      "sha256": "3a814ce5e6689c1b87ee8f6c2efb839b24c8cdfa1b9a5b63bccec6c2c4edd182",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json"
+    },
+    {
+      "file": "tests/test_studio_release.py",
+      "change": "M",
+      "sha256": "e27715f7b7ed97603ca4fa315926350127ddd523d34781212fbe5447a6a4ce9c",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-release-review.json"
+    },
+    {
+      "file": "tests/test_studio_relocation_maintenance.py",
+      "change": "A",
+      "sha256": "3742737520eae97e442da7fca60bb192f408fe134ba399936dda5804160e34d9",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-maintenance-recovery-review.json"
+    },
+    {
+      "file": "tests/test_studio_relocation_status.py",
+      "change": "A",
+      "sha256": "d2e957a82d1a092daaeab57e91663b7217c6e3b8af0c31a94621520c4ada7e15",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-relocation-status-review.json"
+    },
+    {
+      "file": "tests/test_studio_reverse_recovery.py",
+      "change": "A",
+      "sha256": "3a88efaacfebe071a081b996eca78f4324300f2889d0cc981149c0fe99205c06",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-studio-maintenance-recovery-review.json"
+    },
+    {
+      "file": "tests/test_upload_approval_commit_integrity.py",
+      "change": "A",
+      "sha256": "f0b52274d5be27f95d3e590de8fc77f17d492362aa406926eb57d289c9035667",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json"
+    },
+    {
+      "file": "tests/test_v2_workflow.py",
+      "change": "M",
+      "sha256": "2638baac51f43e7a06ddaee7e7bb42f05270feeae8b645a570f1454c944259e4",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json"
+    },
+    {
+      "file": "tests/test_validation_policy_binding.py",
+      "change": "A",
+      "sha256": "9ba186c8dc0cc4e2f8b5f390525f01bb37a2faf93655259d77e1a0321398a83d",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-validation-policy-review.json"
+    },
+    {
+      "file": "tests/test_validator_png_integrity.py",
+      "change": "A",
+      "sha256": "636cfb71c1b5c3efa19e3a12ae75a8e9b7afc4d02349b270d993b3431509f586",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-png-integrity-review.json"
+    },
+    {
+      "file": "tests/test_video_execution_contract.py",
+      "change": "A",
+      "sha256": "93c2f3564a4e3b841e0c7f5ae5e1fe23d59bc0d5bce5b2f5fc4bd2ba3a6f497e",
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json"
+    },
+    {
+      "file": "tests/test_workflow.py",
+      "change": "D",
+      "sha256": null,
+      "review_status": "reviewed_current_diff",
+      "evidence": "docs/adr/evidence/ADR-002-test-deleted-workflow-review.json"
+    }
+  ]
+}

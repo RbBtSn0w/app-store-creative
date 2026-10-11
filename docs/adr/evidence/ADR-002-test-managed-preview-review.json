@@ -1,0 +1,24 @@
+{
+  "scope": "Full current managed Preview tests",
+  "file": "tests/test_managed_preview.py",
+  "sha256": "676ae090f0516214486ad78760994c7eeaa5a09853f848d43a7d935e2afa6525",
+  "assessment": [
+    "Input-directory failure records failed terminal attempt",
+    "Snapshot inputs and outputs registered; executor receives isolated input copy",
+    "Encoding failure retains partial output and reason",
+    "Portable receipt and acceptance frames retained without original workspace/tool paths",
+    "Registered capture preserves original producer evidence transitively",
+    "Unfinished/partial/failed or ambiguous source refused before execution",
+    "Reusable registered snapshot preserves video name/media type and dependency identity"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 0.727,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_managed_preview -q"
+  },
+  "limitations": [
+    "Executor mocked; no actual encoding acceptance here",
+    "No explicit approval_granted or mid-execution input mutation assertion in this file"
+  ]
+}

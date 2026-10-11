@@ -9,11 +9,15 @@ Resolve `<runtime-root>` as `<plugin-root>/skills/app-store-creative/runtime`.
 All executable and template resources ship with the main orchestration skill.
 
 
-Use the official Figma plugin as the editable design system. Before any Figma operation, load its mandatory `figma-use` skill; load its generation skill when creating or materially restructuring designs. Never copy Figma connector code or authentication into this plugin.
+When the task uses Figma, use the official Figma plugin as the editable design system. Before any Figma operation, load its mandatory `figma-use` skill; load its generation skill when creating or materially restructuring designs. Never copy Figma connector code or authentication into this plugin.
 
-## Agent-Native Design Workflow (v2.1)
+## Managed Lifecycle Binding
 
-In v2.1, screenshot creative composition is declared directly in `creative.config.json` and previewed live in Localhost Studio (`localhost:3100`).
+Read the [managed specialist contract](../app-store-creative/references/specialist-lifecycle.md) and apply it to new work. Use leased attempts and registered input/output artifacts; preserve partial failures and their reasons. A producer receipt or file does not grant approval, seal a delivery, or prove remote readiness. Standalone capture/encoding executors still require this explicit registration adapter.
+
+## Configuration-Driven Design Workflow
+
+Screenshot creative composition is declared directly in `creative.config.json` and previewed live in Localhost Studio (`localhost:3100`).
 
 ### 1. The 5-Slide Role Arc
 
@@ -70,21 +74,17 @@ Apply any of the 18 pre-configured visual style presets under `theme.stylePreset
 
 ---
 
-## Legacy Multi-Agent Figma Workflow (v1 Contract)
+## Managed Figma Production
 
-1. Read the plan, manifest, copy source, raw-capture receipt, and [figma-design-contract.md](references/figma-design-contract.md).
-2. Claim the design task.
+1. Read the run snapshot, recipe, copy source, raw-capture evidence, and [figma-design-contract.md](references/figma-design-contract.md).
+2. Start a leased design attempt.
 3. Update deterministic source-asset nodes with raw captures.
 4. Compose every required locale, scene, device class, and release theme without editing pixels inside the captured UI region.
 5. Keep text editable. Enforce safe areas, contrast, line limits, locale fit, and consistent product geometry.
-6. Export review artifacts at the manifest's exact size and color requirements.
-7. Record the Figma file/key, page and frame identifiers, input hashes, export mapping, and visual-review notes in the receipt; complete the task.
+6. Export review artifacts at the recipe's exact size and color requirements.
+7. Record the Figma file/key, page and frame identifiers, input hashes, export mapping, and visual-review notes in a registered evidence artifact; terminate the attempt.
 
-```sh
-python3 <runtime-root>/scripts/app_store_creative.py claim --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id>
-python3 <runtime-root>/scripts/app_store_creative.py complete --repo <repo> --run-id <run-id> --task-id <task-id> --agent-id <agent-id> --receipt <receipt-file>
-```
 
-Do not promote exports yourself. The orchestrator may request design approval only after validation succeeds; that approval is not upload approval. The approval confirmation token is `APPROVE`.
+Do not promote exports yourself. The orchestrator may request design approval only after validation succeeds; that approval is not upload approval. Record approval only through the managed approval contract with the actual human authorization reference.
 
-For a follow-up that changes copy or presentation only, update only the Figma frames selected by the source map. If a product capture hash changes, export every frame that references it. For `source-map-v1`, complete with a `design` receipt containing the required capture hashes, output binding, and Figma node IDs; see the orchestrator's [iteration contract](../app-store-creative/references/iteration-contract.md).
+For copy or framing changes, update the affected Figma frames and retain authentic captures. When product inputs change, reproduce every dependent frame using its registered input bindings. Record the new output and producer evidence in a new attempt; see the [iteration contract](../app-store-creative/references/iteration-contract.md).

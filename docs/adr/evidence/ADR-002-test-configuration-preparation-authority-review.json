@@ -1,0 +1,36 @@
+{
+  "scope": "Full current configuration preparation, source recovery and layer change test review",
+  "files": [
+    {
+      "file": "tests/test_configuration_preparation.py",
+      "sha256": "45c817d5b1746b7d0a1b2533d16ab9c3616c51d4be6361c006d1ef436ca80b38"
+    },
+    {
+      "file": "tests/test_configuration_recovery_source.py",
+      "sha256": "7305eb2604bbe7b39a8858c3c6091f604745b53367fd338ecd81c54c92d7e548"
+    },
+    {
+      "file": "tests/test_configuration_layer_changes.py",
+      "sha256": "915f51c211ba188c141d7cdc8fe4d62ad9b71131bc9741fd0899d013c4a04772"
+    }
+  ],
+  "assessment": [
+    "Preparation preserves active documents and private staging mode; receipt reuse requires whole plan, inode ownership and Git protection",
+    "Complete staged payload resumes after injected sync interruption; partial payload preserved without rewrite",
+    "Source edit during preparation refuses prepared receipt",
+    "Recovery reconstructs full recipe from owning-layer backup without writes; duplicate authority and substituted backup refuse",
+    "Missing new layer authority refuses rather than legacy fallback",
+    "Plan binds both documents, presence, inode and mode; changed target/path or Git protection invalidates plan before activation"
+  ],
+  "verification": {
+    "tests": 26,
+    "seconds": 6.339,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_configuration_preparation test_configuration_recovery_source test_configuration_layer_changes -q"
+  },
+  "limitations": [
+    "Recovery fixtures construct internal journal records rather than execute full public migration",
+    "Sync interruption injected rather than actual process termination",
+    "Single-filesystem disposable fixtures; real product, browser and cross-volume acceptance remain open"
+  ]
+}
