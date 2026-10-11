@@ -1,0 +1,33 @@
+{
+  "scope": "Technical validation of complete real-input Levelory screenshot/preview/poster candidate",
+  "source_commit": "275a5d1",
+  "run_id": "28bd9624478b452a8e1b10255340d648",
+  "candidate_id": "64f81025ad3d40f8b7c26a96a73d446d",
+  "selected_artifacts": 12,
+  "validation_id": "1183bfed7411485c8370d3cc5bf9fe8a",
+  "validation_status": "PASS",
+  "history_status": "PASS",
+  "preview_id": "b8680b87c8a84a22912aa8b8d012def8",
+  "poster_id": "7d6a4a82c72e4639b62fe682d026e43e",
+  "budget": {
+    "candidate_id": "64f81025ad3d40f8b7c26a96a73d446d",
+    "candidate_payload_bytes": 28121410,
+    "configured_limit_bytes": 1073741824,
+    "current_payload_bytes": 0,
+    "forecast_payload_bytes": 28121410,
+    "git_history_bytes": null,
+    "observed_payload_bytes": 0,
+    "remote_storage_bytes": null,
+    "schema_version": 1,
+    "scope": "Logical artifact payload copies in registered retained local revisions; excludes metadata and unobserved Git/remote history",
+    "status": "WITHIN_BUDGET",
+    "unverified_deliveries": [],
+    "writes_performed": false
+  },
+  "limitations": [
+    "Prior actual product UI captures/recording reused; Chinese UI English remnants remain",
+    "No human design approval or immutable delivery seal",
+    "Provisional LFS policy; no durable backend/clean retrieval",
+    "No actual ASC upload, processing, playback or remote poster acceptance"
+  ]
+}

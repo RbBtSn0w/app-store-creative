@@ -1,0 +1,27 @@
+{
+  "scope": "Read-only diagnosis of English remnants in Levelory Chinese capture",
+  "findings": [
+    {
+      "surface": "Search placeholder",
+      "source": "Projects/LeveloryKit/Sources/Views/MainWindow/MainTimelineColumn.swift",
+      "cause": "English String is passed directly to NSTextField.placeholderString without localized lookup",
+      "compiled_zh_hans_value": "搜索剪贴内容"
+    },
+    {
+      "surface": "Main window copy output action",
+      "source": "Projects/LeveloryKit/Sources/Views/MainWindow/MainFilterWorkspaceState.swift",
+      "cause": "FilterOutputActionPresentation.title directly returns English Copy Result or interpolated Paste to title",
+      "caller": "MainWindowView passes outputAction.title as pasteResultTitle"
+    },
+    {
+      "surface": "Agent Relay sidebar",
+      "source": "Projects/LeveloryKit/Sources/Views/MainWindow/MainSidebarColumn.swift",
+      "cause": "Direct English Label; no Agent Relay or mainWindow.sidebar.agentRelay entry in current catalog"
+    }
+  ],
+  "limitations": [
+    "No product source edits or new capture in this diagnosis",
+    "Other surfaces and complete capture language behavior not verified",
+    "Existing user modifications preserved"
+  ]
+}

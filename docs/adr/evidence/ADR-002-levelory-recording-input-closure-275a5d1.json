@@ -1,0 +1,51 @@
+{
+  "scope": "Read-only verification of existing actual Levelory recording dependency closure before new timeline production",
+  "source_commit": "275a5d1",
+  "selected_capture_id": "930326e6598345f7be77c90314a308a3",
+  "artifacts": [
+    {
+      "id": "4e379d920b53413085866dc1c34ec874",
+      "role": "capture",
+      "logical_path": "sources/en-US/filter-journey.native.mov",
+      "sha256": "eb51fda9753914f4af5444e4784c21516c844dde86bffe22feb81400a7de5d83",
+      "size_bytes": 2286117,
+      "inputs": []
+    },
+    {
+      "id": "e666aabf4e6040d98e6efd16652683f9",
+      "role": "producer-evidence",
+      "logical_path": "evidence/filter-journey.mov.recording.json",
+      "sha256": "a41f1d117c40406c8170555e7958fc232d0e2760aaadb791203f76a575220feb",
+      "size_bytes": 4986,
+      "inputs": [
+        "4e379d920b53413085866dc1c34ec874"
+      ]
+    },
+    {
+      "id": "56e24ce497da4152844e96f88a641e33",
+      "role": "capture",
+      "logical_path": "sources/en-US/filter-journey.mov",
+      "sha256": "37fb2a11d5e54982108bd96463727d8bc0acc99d22a6dae8dd985486875c3570",
+      "size_bytes": 527847,
+      "inputs": [
+        "e666aabf4e6040d98e6efd16652683f9"
+      ]
+    },
+    {
+      "id": "930326e6598345f7be77c90314a308a3",
+      "role": "capture",
+      "logical_path": "sources/input-0.mov",
+      "sha256": "37fb2a11d5e54982108bd96463727d8bc0acc99d22a6dae8dd985486875c3570",
+      "size_bytes": 527847,
+      "inputs": [
+        "56e24ce497da4152844e96f88a641e33"
+      ]
+    }
+  ],
+  "result": "verified",
+  "limitations": [
+    "Existing actual earlier recording, not fresh capture",
+    "New-run import must preserve native take and portable receipt dependencies",
+    "Does not produce or approve new preview/poster"
+  ]
+}

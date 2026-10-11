@@ -1,16 +1,16 @@
 # ADR-002 实施状态
 
-更新日期：2026-10-10。**核心能力已实现；完整审查、真实产品验收与发行未完成。**
+更新日期：2026-10-11。**核心能力已实现；完整审查、真实产品验收与发行未完成。**
 
 本文件是当前进度的唯一权威；需求以 [ADR-002](ADR-002-artifact-lifecycle-and-release-archive.md) 为准。实现、专项验证、完整产品验收分别记录，不按测试数或模块数计算整体完成率。采用完整重新设计，不提供历史兼容、旧格式读取或自动回填。
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `cc4b069cd12cb1e3a4675e0415c755c9d49851b2`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `275a5d18a6cfa6f24e42ac2763f18aaa5f0e6c92`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
-- 最近推送提交CI：[run 38051343029](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38051343029)，最近查询in_progress；0479b56的run 38050792162已成功；9d57a9c的run 38049241718已成功并核对完整日志。
-- 已保存的最新详细CI证据绑定9d57a9c；最新远端成功状态与最终发行门禁分别核对，不能提前关闭最终发行门禁。
+- 最近核对的275a5d1远端CI已成功；最终发行提交仍需重新核对。
+- 已保存完整日志的CI证据绑定cc4b069：[run 38051343029](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38051343029)，Python运行1045项（33项跳过），Studio98项通过，类型检查、构建和分发通过。
 
 ## 能力实现 checklist
 
@@ -61,15 +61,16 @@
 
 ## 真实产品与待决策项
 
-- Levelory已有10张真实设计截图、20秒视频及封面候选，技术检查通过；候选早于新归档/预算要求，必须新配置重新生产，不能回填冒充新闭环。
+- Levelory已按当前完整配置重新生产候选`64f81025ad3d40f8b7c26a96a73d446d`：10张截图、20秒视频及封面，技术与历史验证PASS，媒体28,121,410字节且预算内。复用已核验的真实捕获输入，未声称重新录屏。中文UI残留英文、完整视觉审核、批准、封存及长期取回未完成。
+- 上述完整候选已完成同文件系统四类自定义目录正向搬迁和返回恢复；两次候选及历史验证均PASS，返回后根绑定一致。[证据](evidence/ADR-002-levelory-real-input-relocation-275a5d1.json)。真实跨文件系统与两个产品完整矩阵仍未完成。
 - 第二个真实产品及长期持久后端尚未确定。
 - 原ASC视频处理和播放已观察；0×0封面问题尚未关闭，不能以处理成功替代封面验收。
 - 人类输入：第二产品及后端选择、精确候选内容批准、精确上传计划批准。永久删除需要当次授权。
-- 独立可推进工作不等待上述输入：剩余测试差异审查、最终CI/包验证、可逆维护与浏览器验证。
+- 独立可推进工作不等待上述输入：人工敏感证据审查、最终CI/包验证、可逆维护与浏览器验证。
 
 ## 接下来的交付顺序
 
-1. 完成剩余测试差异与人工敏感证据审查，修复发现的问题。
+1. 完成人工敏感证据审查及Levelory中文素材问题修复，核对新增证据。
 2. 核对最终提交完整CI、独立分发包和实际浏览器；完成自定义目录与维护恢复矩阵。
 3. 完成两个真实产品的新配置生产、精确批准、持久归档、干净取回与实际ASC闭环。
 4. 绑定最终归档提交/PR，合并并推送main，更新插件，复验安装后的真实流程。
@@ -251,3 +252,15 @@ Levelory新隔离工作区重新导入10张真实原始截图，在显式临时L
 预算复核发现新工作区误用了retentionPolicy字段，252428f候选未绑定有效预算；已纠正证据与配置为artifactPolicy，不回填原运行，必须重新生产。
 
 修正预算后另起新运行cac53501dec547448bc995c6b8812d3a，10张截图候选9a37adf941974609be47f95483b2674d技术及历史PASS；运行快照包含artifactPolicy预算声明，精确候选预算WITHIN_BUDGET：23,602,078/1,073,741,824 bytes。[证据](evidence/ADR-002-levelory-budget-bound-run-e12bde5.json)。中文原始UI、视频/封面、批准/封存与长期后端仍未完成。
+
+新受管视频ce4dd874e4dc4cd9a7a9a743f6854950及17秒封面f742e1bcabf44ac4bf8b1526ce04db33生产成功；保留9个视频来源依赖，媒体实测20秒/1920×1080/H264/30fps/AAC，代表帧呈现真实大写转换过程。[证据](evidence/ADR-002-levelory-new-preview-poster-275a5d1.json)。尚未组成含视频的正式候选，代表帧不替代完整播放及人类视觉批准。
+
+完整候选组装未通过：截图阶段缺视频、追加媒体后配方源未入闭包，尝试绑定已编码源触发重复逻辑证据路径冲突。未批准/封存；已将下一次配置源更正为真实标准化录像sources/en-US/filter-journey.mov，保留全部已有记录，需新运行重新验证。
+
+真实标准化录像源配置的新完整候选64f81025ad3d40f8b7c26a96a73d446d包含10截图/视频/封面，技术验证及历史PASS，来源闭包无冲突、预算内。[证据](evidence/ADR-002-levelory-complete-candidate-275a5d1.json)。中文UI残留英文、人类视觉批准、封存、长期取回与实际ASC仍待完成。
+
+本轮四份Levelory证据摘要已逐份内容审查，未见凭据、签名URL、主机绝对路径或捕获的用户正文；JSON解析通过。[证据](evidence/ADR-002-levelory-evidence-content-review-275a5d1.json)。此范围不关闭仓库级人工敏感证据审查。
+
+中文素材只读诊断：当前String Catalog的`Search Clips`与`filter.action.copyResult`已有简体中文翻译；`Agent Relay`及`mainWindow.sidebar.agentRelay`条目不存在，侧栏源码使用直接英文Label。因此不能统一归因于翻译缺失；需核对捕获构建与语言生效，并分别处理缺失条目。未修改Levelory用户已有工作。
+
+中文英文残留进一步定位：搜索框英文String直接传入AppKit `placeholderString`，主窗口`FilterOutputActionPresentation.title`直接返回英文；捕获Dev构建的简体中文编译资源经原生plutil查询包含“搜索剪贴内容”。这两处存在绕过本地化调用的源码路径。[诊断](evidence/ADR-002-levelory-localization-diagnosis.json)。需修正产品调用后重新捕获，不以素材后期修图代替；本轮仅只读诊断，未改产品源代码。
