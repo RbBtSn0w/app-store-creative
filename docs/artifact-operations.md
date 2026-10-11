@@ -40,7 +40,7 @@ creative storage --repo "$CREATIVE_REPO" git-policy --media-mode lfs
 
 生命周期CLI、受管理截图生产和Studio预览、共享条件保存、捕获导入、海报及管理查询已使用有效配置。Studio目录字段编辑共享配置，预览显示本机覆盖后的路径；清空共享字段不删除本机覆盖。两份配置变化后重新加载页面或重建运行实例，旧版本请求不会自动改用新目录。
 
-本机拥有层已支持受管理正向计划、准备、切换，以及未激活切换中断后的续执行/回滚；使用下文及存储迁移说明的明确操作，先审查Git建议。不要直接改本机根后把旧run当作新位置读取。本机反向计划、准备、切换及其安装后中断恢复/回滚已接入，并验证多次往返；成功激活目标后使用独立反向计划，不把中断回滚当作反向迁移使用。全部中断点、跨文件系统及进程中断恢复验收仍未完成。旧公开验证及发布路径已退出；真实渲染及两个产品全链路验收仍未完成，不能从配置示例推断真实生产已验收。
+本机拥有层使用受管理的正向计划、准备和切换；未激活的中断目标通过原操作续执行或回滚。先审查Git建议，不直接改变本机根后将旧run解释为新位置。成功激活目标后，撤回位置使用独立反向计划、准备和切换，不把中断回滚当作反向迁移。故障切点、跨文件系统及两个真实产品的验收状态统一记录在ADR实施状态中，配置示例不是验收证据。
 
 ## 业务记录审计
 
@@ -50,7 +50,7 @@ creative history --repo "$CREATIVE_REPO" verify
 
 业务记录提交前保存不可变事件，绑定精确记录路径、SHA-256、记录时间、执行客户端身份、Python版本及已知actor。客户端ID是本次内核实例的执行标签，不是经过认证的人类身份；未知actor保持null。事件不保存租约令牌或本机路径。新业务记录必须包含由内核分配的_commit_event_id，与唯一事件ID及完整字节哈希绑定；缺少或损坏该字段的旧记录拒绝读取，不补写兼容事件。记录落盘后审计派生COMMITTED，事件已落盘但记录缺失为INCOMPLETE，字节或时间不同且无另一份有效提交证明为CHANGED。写入失败后由合法接管生成另一份完整提交时，先前意图为NOT_COMMITTED并列出实际提交事件，不误报篡改。同一位置及同一预期哈希的重复声明仍使审计FAIL。CLI失败时返回非零退出状态。
 
-Studio GET /api/history与CLI共用同一审计结果，拒绝任意工作区查询参数。审计使用已有写锁的共享锁与严格普通文件读取，不创建、修复或补写历史事件。保存事件失败不提交业务记录；提交业务记录失败保留未完成意图。产物和终止结果在事件持久化后再次复查租约，避免落盘期间过期的执行者继续提交。审计覆盖run、attempt/lease、artifact/import、输入及候选处置、验收、批准、交付、publication、远端观察及事故记录。迁移、清理和存储fence使用已有操作日志，目前不在这项审计覆盖内；完整执行工具身份、这些操作日志的统一查询与进程中断及文件系统错误恢复验收仍需完成。该审计验证本机提交证据，不代替设计授权、媒体真实性或ASC远端验收。
+Studio GET /api/history与CLI共用同一审计结果，拒绝任意工作区查询参数。审计使用已有写锁的共享锁与严格普通文件读取，不创建、修复或补写历史事件。保存事件失败不提交业务记录；提交业务记录失败保留未完成意图。产物和终止结果在事件持久化后再次复查租约，避免落盘期间过期的执行者继续提交。审计覆盖run、attempt/lease、artifact/import、输入及候选处置、验收、批准、交付、publication、远端观察及事故记录。迁移、清理和存储fence使用已有操作日志，目前不在这项审计覆盖内；维护日志使用下文的独立操作查询；执行工具身份及故障恢复的具体验收范围见ADR实施状态。该审计验证本机提交证据，不代替设计授权、媒体真实性或ASC远端验收。
 
 ## 生产与候选验收
 
@@ -127,7 +127,7 @@ creative cleanup --repo "$CREATIVE_REPO" plan-purge --id "$CREATIVE_QUARANTINE_O
 creative cleanup --repo "$CREATIVE_REPO" purge --id "$CREATIVE_PURGE_PLAN_ID" --actor "$CREATIVE_HUMAN" --reason "$CREATIVE_REASON" --confirm PURGE
 ```
 
-隔离期默认采用项目artifactPolicy.quarantineDays；显式覆盖需要针对本次计划审查。永久删除不能承诺可恢复；未知文件不在清理范围。工作文件/日志的完整保留策略和孤立对象处置仍待实现，不能据此删除整个自定义目录。
+隔离期默认采用项目artifactPolicy.quarantineDays；显式覆盖需要针对本次计划审查。永久删除不能承诺可恢复；未知文件不在清理范围。未知工作文件和日志仅报告，不得据此删除整个自定义目录。
 
 ## 故障处理与责任
 
@@ -145,7 +145,7 @@ creative cleanup --repo "$CREATIVE_REPO" purge --id "$CREATIVE_PURGE_PLAN_ID" --
 
 ## 完成记录
 
-每次执行记录实际运行与交付 ID、可信清单哈希、Git 完整 SHA、设计/上传授权来源、发布 ID、各远端门禁证据，以及异常和恢复结果。凭据和租约令牌不进入共享记录。只有本地和要求的远端门禁均有可信证据才能宣布发布完成。本文尚待两个真实产品的完整执行演练，命令存在不等于运营验收已完成。
+每次执行记录实际运行与交付 ID、可信清单哈希、Git 完整 SHA、设计/上传授权来源、发布 ID、各远端门禁证据，以及异常和恢复结果。凭据和租约令牌不进入共享记录。只有本地和要求的远端门禁均有可信证据才能宣布发布完成。两个真实产品的完整执行演练状态见ADR实施状态，命令存在不等于运营验收已完成。
 
 ### ASC Preview 响应转换
 
@@ -153,7 +153,7 @@ creative cleanup --repo "$CREATIVE_REPO" purge --id "$CREATIVE_PURGE_PLAN_ID" --
 
 scope必须包含且仅包含target、artifact_id、localization_id、remote_id、observed_at、evidence_reference。target必须与计划完全相同；artifact_id必须为计划内Preview物料；时间必须带时区，证据引用为不含凭据或资源URL的执行方标识。将输出数组中的每项保存为独立JSON，再使用既有`publication observe --id <publication-id> --observation <observation.json> --evidence <original-response.json>`登记。
 
-转换分别提取上传校验和、处理状态和封面时间码/尺寸。0尺寸形成封面失败事实；正尺寸或视频URL都不能证明图片加载或播放成功，仍需独立浏览器或媒体验证。2026-10-07实际只读查询Levelory 1.5英文Preview返回COMPLETE与0×0封面，转换结果保留这两个独立事实。该查询不等于新合同发布全流程验收。
+转换分别提取上传校验和、处理状态和封面时间码/尺寸。0尺寸形成封面失败事实；正尺寸或视频URL都不能证明图片加载或播放成功，仍需独立浏览器或媒体验证。同一响应可能同时包含COMPLETE处理状态与0×0封面；转换必须保留两个独立事实，不能由处理完成推断封面成功。
 
 ### Studio 记录检查
 
@@ -191,7 +191,7 @@ archive verify-external-git --commit <full-commit> --path <repository-relative-b
 
 archive externalize --delivery-id <id> --backend <name> --backend-root <absolute-root> --confirm EXTERNALIZE从已封存并核验的交付生成新的不可变元数据包，位置由publicationRoot管理。原归档不修改；媒体及全部recipe/inputs转为稳定后端引用，保留原manifest、recipe/config和其余证据。external.json绑定原清单哈希和全部外部对象路径/版本/大小；发布元数据包前先作为独立消费者完整取回并通过原归档验证。external-archives记录绑定交付ID及descriptor_sha256，记录不含后端根目录。
 
-授权后可将该元数据包提交Git；不要提交后端对象目录或本机访问路径。archive restore-external --path <metadata-bundle> --destination <new-directory> --expected-sha256 <trusted-descriptor-sha256> --backend <name> --backend-root <absolute-root> --confirm RESTORE不依赖项目配置或原工作区。完整取回所有媒体/配方输入并验证原清单、来源图及配方后才原子发布新目录。descriptor哈希必须来自可信交付或已核验提交；不能从待验证的包自己生成哈希来替代信任绑定。缺失、损坏、额外文件、链接、覆盖目标和不完整引用均拒绝，失败不发布半成品目录。当前已用临时Git真实干净克隆验证；publication计划已接入external归档的提交/远端绑定，实际持久共享后端尚待验收。
+授权后可将该元数据包提交Git；不要提交后端对象目录或本机访问路径。archive restore-external --path <metadata-bundle> --destination <new-directory> --expected-sha256 <trusted-descriptor-sha256> --backend <name> --backend-root <absolute-root> --confirm RESTORE不依赖项目配置或原工作区。完整取回所有媒体/配方输入并验证原清单、来源图及配方后才原子发布新目录。descriptor哈希必须来自可信交付或已核验提交；不能从待验证的包自己生成哈希来替代信任绑定。缺失、损坏、额外文件、链接、覆盖目标和不完整引用均拒绝，失败不发布半成品目录。publication计划核对external归档的提交和远端绑定；持久共享后端的实际验收见ADR实施状态。
 
 ### 外部归档发布计划与 ASC 文件准备
 
@@ -229,11 +229,11 @@ ASC本机准备结果保存为不可变publication-preparations记录，包含�
 
 Studio HTTP已接入上传批准和交接导出，分别为POST /api/publications/approve-upload与POST /api/publications/export。批准必须提供publication_id、actor、authorization_reference及confirm=UPLOAD；导出提供publication_id及confirm=EXPORT。额外字段或查询覆盖拒绝。内核核对原归档和独立取回证据，批准绑定具体计划哈希和远端目标。
 
-导出仅写本地不可变交接材料，明确uploaded=false、remote_write=false。没有批准时交接仍标记pending，不能据文件存在授权上传。ASC插件负责实际远端执行和复查。2项HTTP回归通过，包含错误批准确认拒绝及批准/导出后远端仍未验证；前端协调表单已接入，下文记录模拟项目浏览器验收；真实产品批准及ASC远端验收尚待完成。
+导出仅写本地不可变交接材料，明确uploaded=false、remote_write=false。没有批准时交接仍标记pending，不能据文件存在授权上传。ASC插件负责实际远端执行和复查。HTTP确认和本地交接不能替代真实产品批准或ASC远端验收。
 
-发布状态面板选择计划后，可用Load bound upload plan加载经过归档复查的具体目标、计划哈希和完整资产列表。填写真实批准人与授权引用、勾选审查后才可批准上传；导出另需审查确认。执行后清除旧预览并要求重新加载，失败不会自动重试。前端选择其他计划时重建表单，不沿用旧批准勾选。表单已接入；真实浏览器及远端执行验收仍待完成。
+发布状态面板选择计划后，可用Load bound upload plan加载经过归档复查的具体目标、计划哈希和完整资产列表。填写真实批准人与授权引用、勾选审查后才可批准上传；导出另需审查确认。执行后清除旧预览并要求重新加载，失败不会自动重试。前端选择其他计划时重建表单，不沿用旧批准勾选。浏览器及远端执行的验收范围以ADR实施状态和对应证据为准。
 
-发布交接真实浏览器验收在明确模拟媒体/批准的独立测试项目完成：加载计划与具体目标/物料、默认未勾选审查、保存测试上传批准、重新加载及独立确认导出，最终状态批准已保存但远端仍未验证。独立内核核验本地plan.json存在、uploaded=false与remote_write=false。证据/tmp/creative-publication-browser-proof.json及截图；不代表真实人类产品批准或ASC上传。
+交接导出后核对本地plan.json、uploaded=false和remote_write=false；这些字段说明只完成本地准备。模拟媒体、测试批准及本机文件存在均不能作为真实人类产品批准或ASC上传证据。
 
 ## 维护操作执行核验
 
