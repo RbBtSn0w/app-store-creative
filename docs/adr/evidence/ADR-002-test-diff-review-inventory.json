@@ -648,9 +648,9 @@
     {
       "file": "tests/test_managed_recording.py",
       "change": "A",
-      "sha256": "5a463c568db666dd949888bfd2868b33ba0193bad725b8c622f998e5c5e090fe",
+      "sha256": "813fe3143949c5346f91becd72da25b419239e057f1ed9fb1c510c33dcf2b141",
       "review_status": "reviewed_current_diff",
-      "evidence": "docs/adr/evidence/ADR-002-test-recording-executor-review.json"
+      "evidence": "docs/adr/evidence/ADR-002-portable-probe-privacy-review.json"
     },
     {
       "file": "tests/test_media_budget.py",
@@ -1246,6 +1246,13 @@
       "sha256": "ed2854aa852ab2bbbebd197915574436926712a158179d0b96e08d536d2d7cf1",
       "review_status": "reviewed_current_diff",
       "evidence": "docs/adr/evidence/ADR-002-native-capture-and-ci-d3a6d25.json"
+    },
+    {
+      "file": "tests/test_portable_probe_privacy.py",
+      "change": "A",
+      "review_status": "reviewed_current_diff",
+      "sha256": "f28b81511aaeeb9ab4193a61372cfb80929116cce3f20bd6b9a4e4fa0fd5f4c1",
+      "evidence": "docs/adr/evidence/ADR-002-portable-probe-privacy-review.json"
     }
   ]
 }

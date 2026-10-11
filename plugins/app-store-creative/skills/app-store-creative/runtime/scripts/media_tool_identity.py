@@ -40,3 +40,19 @@ class MediaTools:
         for item in self.evidence:
             if self.digest(self.paths[item['name']]) != item['executable_sha256']:
                 raise ValueError('Media executable changed during production: ' + item['name'])
+
+
+def portable_probe(probe):
+    """Export technical media facts without source-authored tags or side data."""
+    format_fields = {'filename', 'format_name', 'nb_streams', 'start_time',
+                     'duration', 'size', 'bit_rate'}
+    stream_fields = {'index', 'codec_name', 'codec_type', 'width', 'height',
+                     'pix_fmt', 'sample_rate', 'channels', 'channel_layout',
+                     'avg_frame_rate', 'r_frame_rate', 'time_base', 'start_time',
+                     'duration', 'bit_rate', 'nb_frames', 'sample_aspect_ratio',
+                     'display_aspect_ratio'}
+    def select(value, fields):
+        return {key: item for key, item in value.items()
+                if key in fields and isinstance(item, (str, int, float))}
+    return {'format': select(probe.get('format', {}), format_fields),
+            'streams': [select(stream, stream_fields) for stream in probe.get('streams', [])]}

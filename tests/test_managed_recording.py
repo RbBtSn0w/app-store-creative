@@ -25,7 +25,8 @@ class ManagedRecordingTests(unittest.TestCase):
             native = output.with_name(output.stem + '.native.mov'); native.write_bytes(b'native fixture')
             native_sha = hashlib.sha256(native.read_bytes()).hexdigest()
             output_sha = hashlib.sha256(output.read_bytes()).hexdigest()
-            native_probe = {'format': {'filename':str(native),'duration':'15'}, 'streams':[{
+            native_probe = {'format': {'filename':str(native),'duration':'15',
+                'tags': {'comment': 'synthetic-private-native-comment'}}, 'streams':[{
                 'codec_type':'video','codec_name':'h264','width':1920,'height':1080,'avg_frame_rate':'24/1'}]}
             receipt.write_text(json.dumps({'plan':plan,'command':['/tmp/helper'],
                 'execution_identity':fixture_execution_identity(),
@@ -44,6 +45,7 @@ class ManagedRecordingTests(unittest.TestCase):
         evidence = self.store.verify_artifact(capture['inputs'][0])
         data = self.store.object_path(evidence['sha256']).read_text()
         self.assertNotIn(str(self.root),data); self.assertNotIn('/tmp/helper',data)
+        self.assertNotIn('synthetic-private-native-comment', data)
         self.assertEqual(len(evidence['inputs']), 1)
         native = self.store.verify_artifact(evidence['inputs'][0])
         self.assertTrue(native['logical_path'].endswith('.native.mov'))

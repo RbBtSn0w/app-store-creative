@@ -7,6 +7,7 @@ import sys
 from artifact_lifecycle import canonical, digest
 from recording_adapters import macos_recording_plan, validate_recording_probe, validate_execution_identity
 from delivery_lifecycle import relative_name
+from media_tool_identity import portable_probe
 
 
 def run_recorder(plan, output, receipt):
@@ -44,7 +45,7 @@ def record(core, run_id, bundle_id, window_id, duration, width, height, fps, log
             validate_native_recording_probe(plan, normalization['native_probe'])
             native_artifact = core.register(attempt['id'], native_output, 'capture',
                 logical_path=str(Path(logical_path).with_suffix('.native.mov')))
-            native_probe = json.loads(canonical(normalization['native_probe']))
+            native_probe = portable_probe(normalization['native_probe'])
             native_probe.get('format', {}).pop('filename', None)
             portable_normalization = {'native_sha256': normalization['native_sha256'],
                 'output_sha256': normalization['output_sha256'], 'native_probe': native_probe,
@@ -53,7 +54,7 @@ def record(core, run_id, bundle_id, window_id, duration, width, height, fps, log
             execution_identity = validate_execution_identity(raw.get('execution_identity'))
             validate_recording_probe(plan, raw['output']['probe'])
             portable_path='recipe/inputs/'+logical_path
-            probe=json.loads(canonical(raw['output']['probe']))
+            probe=portable_probe(raw['output']['probe'])
             if 'filename' in probe.get('format',{}):
                 probe['format']['filename']=portable_path
             portable_plan={**plan,'output':portable_path}

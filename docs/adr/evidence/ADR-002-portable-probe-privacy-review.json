@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "scope": "Portable producer probe privacy; not source-media sanitization or complete repository sensitive review",
+  "red": {
+    "real_ffmpeg_source_comment": "FAIL: synthetic metadata copied to portable receipt",
+    "managed_native_probe": "FAIL: synthetic native metadata copied to portable receipt"
+  },
+  "green": {
+    "status": "PASS",
+    "tests_run": 20,
+    "duration_seconds": 17.256,
+    "covers": [
+      "real source metadata exclusion",
+      "native recording evidence",
+      "config video export",
+      "preview production",
+      "independent archive recipe replay",
+      "recording normalization",
+      "recorder execution identity"
+    ]
+  },
+  "preserved": [
+    "source bytes and private probes",
+    "technical dimensions and duration",
+    "source hashes and dependency closure"
+  ],
+  "package": {
+    "status": "PASS",
+    "sha256": "db0de17d0aee8ee3cdefe91a8c933d5f100293c5a6e3f19ce3aa65d8f4e52110"
+  },
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py": "d8bb5bfd88041ef4bcd59ae06c8a4f649e7c54b9f79da55892c8ee0d94e3f5dd",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py": "5aad13f46f7ca484ac0ca056b58d1b978a190183a9d5747864c7f20452c51beb",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py": "21261bdca43e8c010390999cdcc018ee4aeb5a8708809b682141011bd2ed89e9",
+    "tests/test_managed_recording.py": "813fe3143949c5346f91becd72da25b419239e057f1ed9fb1c510c33dcf2b141",
+    "tests/test_portable_probe_privacy.py": "f28b81511aaeeb9ab4193a61372cfb80929116cce3f20bd6b9a4e4fa0fd5f4c1"
+  }
+}

@@ -131,15 +131,15 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py",
-      "sha256": "2ded0998d15d4237e7c8fe3f3fc6c83d90e759c4195fa699293f9ee785db59e9",
+      "sha256": "d8bb5bfd88041ef4bcd59ae06c8a4f649e7c54b9f79da55892c8ee0d94e3f5dd",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
-      "evidence": "ADR-002-preview-poster-review.json"
+      "evidence": "ADR-002-portable-probe-privacy-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py",
-      "sha256": "66b3a6cf67958707a4a3d86ebdbf0c5b69a31714345e23e20a10286bf33437e0",
+      "sha256": "5aad13f46f7ca484ac0ca056b58d1b978a190183a9d5747864c7f20452c51beb",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
-      "evidence": "ADR-002-managed-recording-review-3580e3a.json"
+      "evidence": "ADR-002-portable-probe-privacy-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py",
@@ -149,9 +149,9 @@
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py",
-      "sha256": "b12c8136f8763705bf16f941d01658be8b4608bd2fede2ec42c9f56d8a9c272c",
+      "sha256": "21261bdca43e8c010390999cdcc018ee4aeb5a8708809b682141011bd2ed89e9",
       "review_status": "CURRENT_FULL_MODULE_REVIEW",
-      "evidence": "ADR-002-policy-identity-review-e70e281.json"
+      "evidence": "ADR-002-portable-probe-privacy-review.json"
     },
     {
       "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",

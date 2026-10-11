@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import shutil
 from artifact_lifecycle import canonical
+from media_tool_identity import portable_probe
 
 
 def portable_receipt(data, inputs, outputs, input_prefix="sources/"):
@@ -17,7 +18,8 @@ def portable_receipt(data, inputs, outputs, input_prefix="sources/"):
             mapping[str(command[-1])] = mapping[str(outputs[index][0])]
     def visit(value):
         if isinstance(value, dict):
-            return {key: visit(item) for key, item in value.items()}
+            return {key: visit(portable_probe(item) if key == 'probe' else item)
+                    for key, item in value.items()}
         if isinstance(value, list):
             return [visit(item) for item in value]
         if isinstance(value, str):
