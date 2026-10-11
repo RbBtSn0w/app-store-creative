@@ -6,7 +6,7 @@
 
 ## 当前交付状态
 
-- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `d3a6d25a5d3e212f5210a618da701d7411e54a3a`；本清单记录核对时点，当前HEAD以Git为准。
+- 分支：`feat/unified-artifact-lifecycle-v2`；最近已核对的推送提交 `0e29a77927acfe55d74ec6975a4d9e7a08673ead`；本清单记录核对时点，当前HEAD以Git为准。
 - [PR #11](https://github.com/RbBtSn0w/app-store-creative/pull/11)：OPEN / DRAFT，目标 main；未合并、未推送 main、未更新安装插件。
 - 待发布版本：0.3.0；不提供历史兼容、旧格式读取或自动回填。
 - fd86067远端完整CI已成功：[run 38098578994](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994)，Python运行1045项（33项跳过）、Studio98项通过，类型检查、构建与完整分发检查通过。[证据](evidence/ADR-002-ci-fd86067.json)。后续提交与最终发行仍需重新核对。
@@ -33,7 +33,7 @@
 | [x] | 批准配置与归档配方绑定 | 必需证据及统一路径转换检查；96项调用方与29项独立分发验证已通过 |
 | [x] | 正式交付显式预算 | 实现、专项及实际浏览器保存/刷新验证已通过 |
 | [ ] | 完整差异及敏感证据审查 | 源代码静态审查已完成；测试差异179/179，完整人工敏感信息审查未关闭；209份当前变更证据内容已审查并绑定哈希，其他范围敏感审查仍待核对 |
-| [ ] | 当前运行源码完整 CI | d3a6d25 的[run 38136152561](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38136152561)成功；Python 1048项（34项跳过）、Studio 98项、类型检查、构建与分发通过；后续源码变更和最终发行仍需重新绑定 |
+| [x] | 当前运行源码完整 CI | 0e29a77 的[run 38137249480](https://github.com/RbBtSn0w/app-store-creative/actions/runs/38137249480)成功；Python 1049项（34项跳过）、Studio 98项、类型检查、构建与分发通过；后续源码变更和最终发行仍需重新绑定 |
 | [ ] | 最新完整独立安装验收 | b911bd2完整包检查通过；独立包已验证Levelory完整候选，实际ADG安装仍未完成 |
 | [ ] | 长期持久存储 | 确定项目后端、访问控制与成本；完成真实媒体保存和干净环境取回 |
 | [ ] | Levelory 全链路 | 新候选 b4a4a8b0c1364591a39e4b000f541bc4 的双语10张截图、真实操作20秒视频和封面验证PASS；播放节奏验收、精确批准、封存、提交绑定、干净取回未完成 |
@@ -296,3 +296,7 @@ fd86067完整远端CI已成功并核对日志：[run 38098578994](https://github
 - 上述是当前进展，不关闭完整敏感审查、长期归档、两个产品全链路、实际ASC及安装发行门禁。证据：[当前验证摘要](evidence/ADR-002-native-capture-and-ci-d3a6d25.json)。
 
 便携媒体探测隐私边界复核：真实FFmpeg视频的自由文本metadata及托管原生探测metadata此前进入导出收据，两个针对性RED已复现。当前共享探测投影仅保留技术字段，源字节和私有探测不变；20项相关回归通过（17.256秒），完整包通过。该修复晚于d3a6d25的完整CI，需核对修复提交的新CI；不声称原媒体内容已脱敏或完整敏感审查关闭。[证据](evidence/ADR-002-portable-probe-privacy-review.json)。
+
+当前隐私修复后的独立包验收：0e29a77源码的245份载荷与独立解包文件逐字节一致，20项仓库外回归通过（16.373秒）；模块来源限定包内runtime。包内CLI复验Levelory12项及Fubiao2项候选均PASS；实际临时Studio HTTP服务对两候选返回相同清单哈希、资产数及PASS，批准/delivery均为空、remote_write=false。不是浏览器视觉验收，不替代ADG安装、正式归档取回或ASC闭环。[证据](evidence/ADR-002-independent-package-probe-privacy-0e29a77.json)。
+
+0e29a77完整CI终态SUCCESS，日志已取回。Levelory当前20秒Preview在本地IAB实际从零播放至Ended20.00/20.00且error=none；重播中段12.27秒可见Uppercase结果。补齐本地播放可用性证据，不冒充逐帧编辑审查、人类批准或ASC播放。[CI与播放证据](evidence/ADR-002-ci-and-local-playback-0e29a77.json)。两候选63/8项依赖中的17/2份JSON定向路径及URL查询检查无命中；仅定位筛查，不关闭完整人工隐私审查。[范围证据](evidence/ADR-002-real-candidate-json-portability-locator.json)。
