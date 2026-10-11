@@ -2,8 +2,8 @@
   "scope": "Complete three modification diffs against origin/main",
   "files": {
     "tests/test_artifact_lifecycle.py": {
-      "sha256": "967d6083c04a0aca22cd4527dd62d055360b327b91419a3750c7b2b4ae228ee0",
-      "assessment": "Additions cover corrupt history observation without rewriting, partial/failed/unfinished eligibility, recursive source failures, immutable candidate selection, stable pagination and literal custom LFS directories."
+      "sha256": "23c3c55508eb014b38cd8924777379f1dbee843d9600df01514dfdc983ccb4e9",
+      "assessment": "Additions cover corrupt history observation without rewriting, partial/failed/unfinished eligibility, recursive source failures, immutable candidate selection, stable pagination and literal custom LFS directories. Additional independent A/B source branches prove corrupt A blocks only A selection while B remains selectable; both prior candidate records remain byte-identical."
     },
     "tests/test_production_lifecycle.py": {
       "sha256": "b56cc854724b9cb27cd827a5162878ec7dafd04d4df4ffd6e928576b9e1e0964",
@@ -21,5 +21,14 @@
   "limitations": [
     "Permission injection is not actual OS permission acceptance",
     "Immutable object corruption tests do not by themselves prove all recording dependency cases"
-  ]
+  ],
+  "additional_verification": {
+    "scope": "Independent dependency-branch regression plus existing lifecycle and candidate dependency modules",
+    "tests_run": 24,
+    "result": "PASS",
+    "seconds": 1.262,
+    "limitations": [
+      "Local object corruption does not prove every live capture replacement or real-product scenario"
+    ]
+  }
 }

@@ -242,7 +242,7 @@
     {
       "file": "tests/test_artifact_lifecycle.py",
       "change": "M",
-      "sha256": "967d6083c04a0aca22cd4527dd62d055360b327b91419a3750c7b2b4ae228ee0",
+      "sha256": "23c3c55508eb014b38cd8924777379f1dbee843d9600df01514dfdc983ccb4e9",
       "review_status": "reviewed_current_diff",
       "evidence": "docs/adr/evidence/ADR-002-test-production-source-review.json"
     },

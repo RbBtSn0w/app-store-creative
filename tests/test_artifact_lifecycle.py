@@ -214,6 +214,34 @@ class ArtifactLifecycleTests(unittest.TestCase):
         self.assertEqual(self.store._path('candidates', candidate['id']).read_bytes(), original)
 
 
+    def test_corrupt_source_invalidates_only_its_dependency_branch(self):
+        run = self.store.start_run({})
+        branches = {}
+        for label in ('a', 'b'):
+            attempt = self.store.start_attempt(run['id'], 'render', 'agent')
+            source_path = self.root / (label + '-source')
+            source_path.write_bytes((label + ' source').encode())
+            source = self.store.register(attempt['id'], source_path, 'source')
+            output_path = self.root / (label + '-output')
+            output_path.write_bytes((label + ' output').encode())
+            output = self.store.register(attempt['id'], output_path, 'screenshot', inputs=[source['id']])
+            self.store.finish_attempt(attempt['id'], 'succeeded')
+            candidate = self.store.select(run['id'], [output['id']])
+            branches[label] = (source, output, candidate)
+        original = {label: self.store._path('candidates', branch[2]['id']).read_bytes()
+                    for label, branch in branches.items()}
+        self.store.object_path(branches['a'][0]['sha256']).write_bytes(b'corrupt a')
+        status = self.store.status(run['id'])
+        candidates = {item['id']: item for item in status['candidates']}
+        self.assertEqual(candidates[branches['a'][2]['id']]['source_status'], 'FAIL')
+        self.assertEqual(candidates[branches['b'][2]['id']]['source_status'], 'PASS')
+        with self.assertRaisesRegex(ValueError, 'source|Source'):
+            self.store.select(run['id'], [branches['a'][1]['id']])
+        selected = self.store.select(run['id'], [branches['b'][1]['id']])
+        self.assertEqual(selected['artifacts'], [branches['b'][1]['id']])
+        for label, branch in branches.items():
+            self.assertEqual(self.store._path('candidates', branch[2]['id']).read_bytes(), original[label])
+
     def test_run_list_pagination_is_stable_when_new_runs_arrive(self):
         runs = [self.store.start_run({'version':str(index)}) for index in range(3)]
         first = self.store.list_runs(limit=2)
