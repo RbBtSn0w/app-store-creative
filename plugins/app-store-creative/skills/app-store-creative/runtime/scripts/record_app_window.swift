@@ -12,8 +12,8 @@ final class RecordingDelegate: NSObject, SCRecordingOutputDelegate {
     private let lock = NSLock()
     private var completion: Result<Void, Error>?
     func recordingOutputDidStartRecording(_ output: SCRecordingOutput) {
-        print("RECORDING_STARTED")
-        fflush(stdout)
+        fputs("RECORDING_STARTED\n", stderr)
+        fflush(stderr)
     }
     func recordingOutput(_ output: SCRecordingOutput, didFailWithError error: Error) {
         lock.lock(); defer { lock.unlock() }
@@ -93,7 +93,7 @@ func run() async throws {
         }
     }
     for _ in 0..<100 {
-        if let result = delegate.result() { try result.get(); print("RECORDING_FINISHED"); return }
+        if let result = delegate.result() { try result.get(); fputs("RECORDING_FINISHED\n", stderr); return }
         try await Task.sleep(nanoseconds: 100_000_000)
     }
     throw CaptureError(description: "Recording did not finalize within 10 seconds")
