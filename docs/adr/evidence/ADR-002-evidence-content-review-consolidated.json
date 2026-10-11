@@ -694,8 +694,8 @@
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-diff-review-inventory.json",
-      "sha256": "d0fd557322f06e5b8c8d127763f793cc7eda5f07664dfd45b3fc291dfe843101",
-      "assessment": "Complete parsed field coverage: manually read all 177 source filenames, all 87 evidence reference names and every other unique text value; validated all SHA256 values as lowercase hex64. No private host location, credential, signed URL or personal content observed. Did not treat the earlier truncated output as complete."
+      "sha256": "c15314abe744ec97aa95a5ebf3d80e3d5a0b13eef4bb83b9ffefec614b249037",
+      "assessment": "Prior full content review plus complete current e7c3472 diff review; only test hash, generic branch assessment and scoped test result changed. No private content observed."
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json",
@@ -859,8 +859,8 @@
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-production-source-review.json",
-      "sha256": "b1809070d7650392427f23c1126d3dad8e82b6e2f3ddaa1867316248e9a42a53",
-      "assessment": "Full JSON read; bounded historical test evidence, relative source names and hashes only; no actual human authorization secret, ASC signed URL or captured user content observed"
+      "sha256": "526982d1bf8dcf87587900c3300d09106079c90934ee636267de7e8197768329",
+      "assessment": "Prior full content review plus complete current e7c3472 diff review; only test hash, generic branch assessment and scoped test result changed. No private content observed."
     },
     {
       "path": "docs/adr/evidence/ADR-002-test-publication-consumption-review.json",
@@ -1073,5 +1073,91 @@
     "Private originals and media content excluded",
     "Structured inventory reviews read all unique textual values and validate hash formats rather than printing repeated raw records",
     "Report does not self-attest its own review"
-  ]
+  ],
+  "additional_document_and_skill_review": {
+    "scope": "Only explicitly full-read documents and skill contracts; not all repository source/tests or full privacy acceptance",
+    "files": [
+      {
+        "path": "docs/storage-relocation.md",
+        "sha256": "50faf1c4c1ee11cf886686c63e96dac64e86cebeac019d50a87f5a3b32d7ea7a",
+        "assessment": "Full content read; command examples, source-relative identifiers and temporary synthetic proof paths only. No actual credentials, signed URLs or private user bodies observed. Repository-wide review remains incomplete."
+      },
+      {
+        "path": "docs/adr/ADR-002-precommit-review.md",
+        "sha256": "76dd19b68cb24020ed63b019194643a955923f2946477e72e078d14ed6d9926c",
+        "assessment": "Full content read; command examples, source-relative identifiers and temporary synthetic proof paths only. No actual credentials, signed URLs or private user bodies observed. Repository-wide review remains incomplete."
+      },
+      {
+        "path": "docs/adr/ADR-002-entity-contract-audit.md",
+        "sha256": "ab57ededf3b103fda67e0e00fc80ed6b4e66839423989aba7f2b7a4d350aa93f",
+        "assessment": "Full content read; command examples, source-relative identifiers and temporary synthetic proof paths only. No actual credentials, signed URLs or private user bodies observed. Repository-wide review remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+        "sha256": "962034274f367c81c7acaa0aa5efd8fe1e08ac92dcf4a1d3ea373a5b69f86dac",
+        "assessment": "Full content read; managed command examples and relative reference links only. No actual credentials, signed URLs or private user bodies observed. Full repository gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+        "sha256": "3a1f7f32033f5c842e02db695f81f9b32fc2df592d825fd3b8da426499426521",
+        "assessment": "Full content read; managed command examples and relative reference links only. No actual credentials, signed URLs or private user bodies observed. Full repository gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md",
+        "sha256": "2a9c38c795b919fe333961639aa02c0aa4d1f375a70220baa9463c766b0f1d18",
+        "assessment": "Full content read; managed command examples and relative reference links only. No actual credentials, signed URLs or private user bodies observed. Full repository gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/e2e-screenshot-capture/SKILL.md",
+        "sha256": "229b0a847ac9139383f0f31a17abfe52b30046b402b7eed3160c01123aa83ac5",
+        "assessment": "Full content read; managed command examples and relative reference links only. No actual credentials, signed URLs or private user bodies observed. Full repository gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative-design/SKILL.md",
+        "sha256": "afff7dd18b6a5655dc351418e9900d7ea2ff36823c6462334cfb110e8aac4baa",
+        "assessment": "Full content read; generic design examples, placeholders and relative references only. No actual credentials, signed URLs or private user bodies observed. Repository-wide gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/e2e-screenshot-capture/references/capture-contract.md",
+        "sha256": "ec6b06a418a2b6b9f2f47cce361fe57c53c9c5ccb6d6550a44b91db5edcacd09",
+        "assessment": "Full content read; generic design examples, placeholders and relative references only. No actual credentials, signed URLs or private user bodies observed. Repository-wide gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md",
+        "sha256": "ddb7d0bb99d5c53cd5e775595edd1d7bdebe67c91715efc949201e52fbc49a61",
+        "assessment": "Full content read; generic design examples, placeholders and relative references only. No actual credentials, signed URLs or private user bodies observed. Repository-wide gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative/references/iteration-contract.md",
+        "sha256": "36899cbbf240540485c5222b6200271b014070ff96ac83a721611a3c146b9c39",
+        "assessment": "Full content read; generic design examples, placeholders and relative references only. No actual credentials, signed URLs or private user bodies observed. Repository-wide gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+        "sha256": "4f26078d0805305dbbd0ab18279db1419bfd7428f1da6ec6c334f75c160cbef6",
+        "assessment": "Full content read in bounded ranges where needed; generic command placeholders, relative references and public Apple documentation links only. No actual credentials, signed URLs or private user bodies observed. Repository gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md",
+        "sha256": "120a5965c81ba9fc5c759240a5034428868633aa69903639de6cbae07cdff3a6",
+        "assessment": "Full content read in bounded ranges where needed; generic command placeholders, relative references and public Apple documentation links only. No actual credentials, signed URLs or private user bodies observed. Repository gate remains incomplete."
+      },
+      {
+        "path": "plugins/app-store-creative/skills/app-store-creative-publisher/references/asc-recovery.md",
+        "sha256": "889791cac93702fac7064d70a117f714fd22003afa26167348ebcdbe4456950b",
+        "assessment": "Full content read in bounded ranges where needed; generic command placeholders, relative references and public Apple documentation links only. No actual credentials, signed URLs or private user bodies observed. Repository gate remains incomplete."
+      },
+      {
+        "path": "docs/adr/ADR-002-artifact-lifecycle-and-release-archive.md",
+        "sha256": "a1667c4ee908d1cf5a0320707bc21f73430719693004099a14aa1413b607e55b",
+        "assessment": "Full 361-line ADR read in three bounded ranges; generic project configuration and operator examples only. No actual credentials, signed URLs or private user bodies observed. Explicit full scope retains two-product lifecycle, actual remote acceptance and durable retrieval."
+      },
+      {
+        "path": "docs/adr/ADR-002-delivery-closure.md",
+        "sha256": "56dd9e3690ead0ae65fd4f49f8dda6a18f99cbf35d0b9cb7d00e41688fb59d95",
+        "assessment": "Full 308-line historical audit read in bounded ranges, with truncated artifact paragraph reread. Generic synthetic fixture IDs, owned temporary proof paths and public CLI examples only; no actual credentials, signed URLs or private user body observed. Historical statements are not current acceptance."
+      }
+    ],
+    "remote_and_installation_acceptance": "INCOMPLETE"
+  }
 }
