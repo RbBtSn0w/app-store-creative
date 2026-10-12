@@ -19,6 +19,7 @@ import { RelocationStatusPanel } from './RelocationStatusPanel';
 import { RelocationActions } from './RelocationActions';
 import { RelocationRecovery } from './RelocationRecovery';
 import { CandidateApproval } from './CandidateApproval';
+import { CandidatePreviewMedia } from './CandidatePreviewMedia';
 import { StorageSettings } from './StorageSettings';
 import { ArchivePolicySettings } from './ArchivePolicySettings';
 import { loadStoragePreview, storageSaveConflict, type StoragePreview } from './storagePreview';
@@ -299,6 +300,8 @@ export const App: React.FC = () => {
             return Object.hasOwn(status.validation!.assets, name) ? <li key={name}><a className="text-indigo-200 underline" target="_blank" rel="noreferrer"
               href={'/api/artifacts/' + encodeURIComponent(status.candidate_id || '') + '/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
           })))}</ul>}
+        {!dirty && status.candidate_id && status.validation?.assets &&
+          <CandidatePreviewMedia candidateId={status.candidate_id} assets={status.validation.assets} />}
         {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
       </section>
       {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
