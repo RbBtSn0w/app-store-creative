@@ -2,6 +2,7 @@
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
 import shutil
@@ -29,11 +30,22 @@ def atomic_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix='.' + path.name, delete=False) as out:
         temporary = Path(out.name)
+        opened = os.fstat(out.fileno())
+        identity = (opened.st_dev, opened.st_ino)
         out.write((json.dumps(data, indent=2, ensure_ascii=False) + '\n').encode())
     try:
+        observed = temporary.lstat()
+        if (observed.st_dev, observed.st_ino) != identity:
+            raise ValueError('Configuration temporary identity changed')
         temporary.replace(path)
     finally:
-        temporary.unlink(missing_ok=True)
+        try:
+            observed = temporary.lstat()
+        except FileNotFoundError:
+            pass
+        else:
+            if (observed.st_dev, observed.st_ino) == identity:
+                temporary.unlink()
 
 
 def check_copy(fields, label):
@@ -69,8 +81,15 @@ def check_background(value, label):
 
 
 def check_config(config):
+    if isinstance(config, dict):
+        from artifact_policy import resolve
+        resolve(config)
+        from archive_policy import resolve as resolve_archive_policy
+        resolve_archive_policy(config)
     if not isinstance(config, dict) or not isinstance(config.get('cards'), list):
         raise ValueError("Configuration requires a cards array")
+    from project_identity import require_project_identity
+    require_project_identity(config)
     for field in ('project',):
         if not isinstance(config.get(field), dict):
             raise ValueError(f'Configuration requires a {field} object')
