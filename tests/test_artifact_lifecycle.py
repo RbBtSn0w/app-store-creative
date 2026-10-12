@@ -274,6 +274,25 @@ class ArtifactLifecycleTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.store.list_runs(cursor='missing')
 
+    def test_lfs_policy_covers_original_media_but_keeps_recipe_metadata_in_git(self):
+        subprocess.run(['git', '-C', str(self.root), 'init', '-q'], check=True)
+        for release in ('deliveries', 'archive [set] with spaces'):
+            core = lifecycle.Lifecycle(self.root, {**self.cfg,
+                'storage': {**self.cfg['storage'], 'releaseRoot': release}})
+            policy = core.git_policy('lfs')
+            (self.root / '.gitattributes').write_text('\n'.join(policy['gitattributes']) + '\n')
+            prefix = release + '/project/mac/1.5/revision/recipe/inputs/'
+            for name in ('capture.png', 'capture.PNG', 'nested/recording.mov',
+                         'nested/preview.mp4', 'nested/source.JPEG', 'nested/audio.wav'):
+                with self.subTest(release=release, name=name):
+                    result = subprocess.run(['git', '-C', str(self.root), 'check-attr', '-z',
+                        'filter', '--', prefix + name], check=True, capture_output=True)
+                    self.assertEqual(result.stdout.split(b'\0')[2], b'lfs')
+            for name in ('reviewed-recipe.json', 'capture.receipt.json', '.creative-input-snapshot.json'):
+                result = subprocess.run(['git', '-C', str(self.root), 'check-attr', '-z',
+                    'filter', '--', prefix + name], check=True, capture_output=True)
+                self.assertEqual(result.stdout.split(b'\0')[2], b'unspecified')
+
     def test_lfs_policy_matches_literal_custom_release_directory(self):
         subprocess.run(['git', '-C', str(self.root), 'init', '-q'], check=True)
         for name in ('媒体 assets', 'archive [set]', 'archive *', 'archive "one"'):

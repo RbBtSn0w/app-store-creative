@@ -658,10 +658,18 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         if media_mode in ('git', 'lfs') and releases is None:
             raise ValueError('Git media archive must be inside project')
         if media_mode == 'lfs':
-            pattern = escape_pattern(releases) + '/**/media/**'
-            if any(char.isspace() or char == '"' for char in releases):
-                pattern = json.dumps(pattern, ensure_ascii=False)
-            attributes.append(pattern + ' filter=lfs diff=lfs merge=lfs -text')
+            patterns = [escape_pattern(releases) + '/**/media/**']
+            # Original media is required to reproduce a sealed archive; JSON receipts stay in Git.
+            for extension in ('png', 'jpg', 'jpeg', 'tif', 'tiff', 'heic', 'heif',
+                              'webp', 'gif', 'bmp', 'avif', 'mov', 'mp4', 'm4v',
+                              'webm', 'avi', 'mkv', 'wav', 'aif', 'aiff', 'm4a',
+                              'mp3', 'aac', 'flac', 'ogg'):
+                suffix = ''.join('[' + char + char.upper() + ']' for char in extension)
+                patterns.append(escape_pattern(releases) + '/**/recipe/inputs/**/*.' + suffix)
+            for pattern in patterns:
+                if any(char.isspace() or char == '"' for char in releases):
+                    pattern = json.dumps(pattern, ensure_ascii=False)
+                attributes.append(pattern + ' filter=lfs diff=lfs merge=lfs -text')
         return {'gitignore': ignores, 'gitattributes': attributes,
                 'tracked_roots': [relative(p) for p in (self.paths.releases, self.paths.publications) if relative(p)],
                 'media_mode': media_mode, 'applied': False}
