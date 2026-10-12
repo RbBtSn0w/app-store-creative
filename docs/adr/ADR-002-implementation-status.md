@@ -6,6 +6,9 @@
 
 ## 最新交付快照（2026-10-12）
 
+目标已明确以 Levelory 完整物料工作流作为首个真实客户：验证发现的通用缺陷必须回到插件所属层修复，再复验同一工作流。Fubiao 已完成证据保留作第二产品回归；不以更多第二产品工作替代 Levelory 主线闭环。
+
+
 本节覆盖下方历史记录中的旧提交、旧阻塞和旧候选声明。历史验证只证明其当时明确范围，不能作为当前完整交付证明。
 
 - 当前评审单元为 GitHub 原生 Stack #19：PR #12–#18；PR #11 保留为原完整变更参考。各层仍为 Draft，未合并，main 未发布，安装插件未更新。
@@ -26,6 +29,8 @@
 
 - Levelory 正式发布计划 `6650e89aff2848a685c24da9108929ea` 已获单独上传及验证后清理授权。官方 ASC 执行后，中英文各保留 5 张新截图且顺序、校验和、尺寸一致；英文保留 1 个新视频，Safari 实际播放至 20/20 秒，19 秒封面实际加载为 1920×1080。35 项远端门禁通过，清单列明的 10 张旧截图和旧视频已删除并查询确认不存在。未提交 App Review。[证据](evidence/ADR-002-levelory-approved-asc-reconciliation.json)。
 - 两次已批准归档的唯一 LFS 媒体分别为 Levelory 25,035,316 字节/24 对象、Fubiao 5,626,937 字节/4 对象。两仓库当前为 PRIVATE，当前账号 ADMIN，独立远端取回已通过；无访问设置变更。统计仅覆盖本次归档，实际账号账单保持未知，项目 1 GiB 预算不是 GitHub 支出上限。[存储证据](evidence/ADR-002-approved-archive-storage-ledger.json)。
+
+- Levelory 最新独立包已完成真实 30 对象/21,960,164 字节隔离与全部恢复，批准交付及发布状态前、中、后 PASS。当前正式交付四根目录往返后有效目录、具名归档仓库访问、交付、发布和历史均通过。本机覆盖会规范化为显式原根值，未声称字节恢复；共享制作配方没有改写。当前源码 19 项进程中断恢复与 4 项本机反向搬迁回归通过。[主客户维护证据](evidence/ADR-002-levelory-primary-customer-maintenance.json)。
 
 [本轮归档与 Studio 证据](evidence/ADR-002-approved-archives-and-preview-studio.json)。
 
