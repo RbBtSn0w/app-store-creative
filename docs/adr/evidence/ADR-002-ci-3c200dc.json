@@ -1,0 +1,19 @@
+{
+  "source_commit": "3c200dc162feef43314008d56150827fa6d3db5e",
+  "run_id": 38027214043,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38027214043",
+  "status": "completed",
+  "conclusion": "success",
+  "job_id": 114140496715,
+  "confirmed_successful_steps": [
+    "Validate plugin package",
+    "Run unit tests",
+    "Test and build Studio frontend",
+    "Smoke-test complete plugin distribution"
+  ],
+  "limitations": [
+    "Job and step outcomes inspected; exact test counts and skipped cases not extracted from logs",
+    "Does not prove real product, browser, durable backend or ASC acceptance",
+    "Later commits require exact-head verification"
+  ]
+}

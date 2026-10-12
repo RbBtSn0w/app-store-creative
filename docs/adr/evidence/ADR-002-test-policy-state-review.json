@@ -1,0 +1,33 @@
+{
+  "scope": "Full new files and complete releaseState test diff against origin/main",
+  "files": {
+    "plugins/app-store-creative/studio/src/storagePreview.test.ts": {
+      "sha256": "4694886925665c418bfd8b7628367b225bb51492746129cd857ad5289d6b507c",
+      "assessment": "Read-only preview request, cleared override immutability, conflicts, invalid provenance and stalled abort are checked. Actual config save is separate."
+    },
+    "plugins/app-store-creative/studio/src/mediaBudget.test.ts": {
+      "sha256": "9bffe9084e52855e5f66707e2ada15d15c99d811b3738ca370339c825b4349ce",
+      "assessment": "Candidate identity and forecast arithmetic bound; unavailable deliveries and unknown remote totals cannot imply healthy budget."
+    },
+    "plugins/app-store-creative/studio/src/artifactPolicy.test.ts": {
+      "sha256": "af8a033bc447e106238f112548d2d001ec76c0b2cca366fda76381a74a9e1a8d",
+      "assessment": "Version/source/hash and nonnegative integer policy reject booleans and guessed defaults."
+    },
+    "plugins/app-store-creative/studio/src/inventoryPresentation.test.ts": {
+      "sha256": "a5d99d715d95078d3aa276ed67a7ee5ff03b880d36df907d94fd05a244e9fb1c",
+      "assessment": "Unknown measurement differs from zero; unrecognized states explicit; incomplete envelopes refused. Does not prove exhaustive category parsing."
+    },
+    "plugins/app-store-creative/studio/src/deliveryStatus.test.ts": {
+      "sha256": "5ad03ce8b4a9908001fb9d6e8f2782c9951cf07241cacfe8125cde5af713c712",
+      "assessment": "Local verified requires package/recipe/provenance; unknown remains incomplete. No remote verdict inferred."
+    },
+    "plugins/app-store-creative/studio/src/releaseState.test.ts": {
+      "sha256": "2e1ea68078666d939e71622c8afddf7097b2559c5cd1a0a598cde00b8043076b",
+      "assessment": "Only changed assertion replaces removed legacy policy terminology with current candidate checks; existing dirty/busy/error/layout precedence assertions retained."
+    }
+  },
+  "finding": "No newly weakened safety assertions or added skips found",
+  "limitations": [
+    "Parser and helper regressions do not prove browser interaction or backend storage effects"
+  ]
+}

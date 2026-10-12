@@ -1,0 +1,29 @@
+{
+  "source_commit": "622d224967d86a7dc4debf1ae27470f5a33f7bec",
+  "source_runtime_used": false,
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "returncode": 0,
+  "log_sha256": "a7f055506101041ccb21ce2d180be2b5db4137f61c3e7390a4707f214b3b32ab",
+  "modules": [
+    "test_validator_png_integrity",
+    "test_export_server_cleanup",
+    "test_v2_workflow",
+    "test_poster_validation",
+    "test_production_lifecycle",
+    "test_studio_release",
+    "test_studio_atomic_json",
+    "test_safe_staging",
+    "test_preview_production",
+    "test_relocation_recovery_lock",
+    "test_attempt_audit_contract",
+    "test_configuration_studio_save"
+  ],
+  "scope": "Independent extracted complete plugin runtime; only tests copied from source, loading path assertions exclude source runtime",
+  "tests": 59,
+  "seconds": 15.078,
+  "result": "passed",
+  "limitations": [
+    "Selected regression scope, not full suite",
+    "Not actual adg installation, real browser or real product workflow"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "scope": "Full static review of archive settings, retention policy response parser, budget panel and budget parser; not real backend or full frontend acceptance",
+  "files": {
+    "plugins/app-store-creative/studio/src/ArchivePolicySettings.tsx": "36578d7f91e040cca9b1391a23271d13d4351f1b3f32088a3ddc77d3194584b2",
+    "plugins/app-store-creative/studio/src/artifactPolicy.ts": "d4d98d50c7770950a9a7f9d8d6a7b144119a83c0e3c08b64cc8421fe5ce9ae74",
+    "plugins/app-store-creative/studio/src/MediaBudgetPanel.tsx": "b03110d4cc33ddb3fabbecfeb273e67f3dd88378c71a5940a0ad08ccada924a1",
+    "plugins/app-store-creative/studio/src/mediaBudget.ts": "75fd3a90418a396b835d46759f45e18a766092e020851191031bf08fda421b03"
+  },
+  "findings": [],
+  "notes": [
+    "Exploration can omit archive choice/budget; formal requirements remain runtime-enforced against original run snapshot.",
+    "External backend selection requires a shared name, with access location kept in private configuration.",
+    "Budget input constraints are advisory UI validation; backend rejects invalid values rather than trusting HTML constraints.",
+    "Budget parser preserves unknown totals, rejects remote-usage claims, checks candidate scope and verifies consistent derived totals/status.",
+    "Requests clear old reports and are generation-bound; report never executes deletion or paid-storage changes."
+  ],
+  "verification": {
+    "count": 7,
+    "files": 4,
+    "result": "PASS",
+    "runtime": "Node25.8.2"
+  }
+}

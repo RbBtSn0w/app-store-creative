@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scope": "Generated Git policy for root-level relocation ownership markers",
+  "trigger": "Actual Fubiao custom release/publication roots exposed .relocation-owner.json as untracked files",
+  "red": "Real git check-ignore returned 1 for root ownership marker with generated rules",
+  "green": {
+    "related_tests": 45,
+    "duration_seconds": 5.142,
+    "additional_formal_media_test": {
+      "tests": 1,
+      "duration_seconds": 0.082,
+      "status": "PASS"
+    }
+  },
+  "actual_product": {
+    "applied_rules": [
+      "/Marketing/Creative/releases/.relocation-owner.json",
+      "/.creative/publications/.relocation-owner.json"
+    ],
+    "ownership_markers_ignored": true,
+    "remaining_untracked_creative_paths": [],
+    "product_commit": false,
+    "remote_write": false
+  },
+  "package": {
+    "status": "PASS",
+    "sha256": "a1a8068becac32ba1242026a4b61cdf6ebdfda8c149f5deb8ffaf10daf8f0489"
+  },
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_lifecycle.py": "d653449b93269aef3bdc8a2f9c4096d038bcc1c3e3fd7935edb994b17f809d0a",
+    "tests/test_artifact_lifecycle.py": "55e8040475becdd9a86009a5c46de4d9d722d12e6d298772750bec25e731e32c"
+  },
+  "boundaries": [
+    "No automatic Git rule/index mutation by plugin inspection",
+    "Only exact root ownership markers ignored",
+    "Formal archive and publication namespaces remain trackable",
+    "No product commit or remote upload"
+  ]
+}

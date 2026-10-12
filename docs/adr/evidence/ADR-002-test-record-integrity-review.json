@@ -1,0 +1,29 @@
+{
+  "scope": "Full current record commit-consumption and file-identity tests",
+  "files": [
+    {
+      "file": "tests/test_record_commit_consumption.py",
+      "sha256": "dca6cc383f95bae33cff456180162a573d37976ff9d0d4b3cdcc9207f970a757"
+    },
+    {
+      "file": "tests/test_record_file_identity.py",
+      "sha256": "f87d397be3f3b39d1656d10a6994e2293d5224fe9bd86a1f465c936927871a41"
+    }
+  ],
+  "assessment": [
+    "All operation-history business categories refuse record bytes changed after original commit and preserve substituted bytes",
+    "Actual child process rejects FIFO record and metadata without hanging; FIFO remains intact",
+    "Write lock replacement after acquisition refuses before record mutation",
+    "Object directory swapped to symlink during copy refuses registration and preserves foreign owner file"
+  ],
+  "verification": {
+    "tests": 5,
+    "seconds": 0.394,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_record_commit_consumption test_record_file_identity -q"
+  },
+  "limitations": [
+    "No repeated-intent consumption assertion in these files; not assumed",
+    "Fault injection covers selected identity boundaries rather than exhaustive operating-system race schedules"
+  ]
+}

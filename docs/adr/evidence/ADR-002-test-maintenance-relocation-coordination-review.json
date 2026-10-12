@@ -1,0 +1,31 @@
+{
+  "scope": "Full current maintenance/migration coordination and configuration resume tests",
+  "files": [
+    {
+      "file": "tests/test_maintenance_relocation_coordination.py",
+      "sha256": "905f6e8b2dffb4af40caec59ffa80c55a8dc9660d65d63f81d8472b5b40d6d09"
+    },
+    {
+      "file": "tests/test_relocation_configuration_resume.py",
+      "sha256": "0c115586d65579010c1eecd6b829f255e47a32c7d4feabbba1e64a700642cc75"
+    }
+  ],
+  "assessment": [
+    "Unfinished quarantine or interrupted purge blocks forward/reverse planning and stale existing preparation",
+    "Cancelled quarantine preserves payload and foreign notes, rejects later commit/resume; completed restore or fixture purge unblocks planning",
+    "Cancellation is idempotent but altered proof refuses planning; completed proof survives subsequent relocation",
+    "Commit-started maintenance cannot be cancelled",
+    "Replaced source config/staging and mismatched preparation receipt refuse resume before new resume intent, retaining active configuration"
+  ],
+  "verification": {
+    "tests": 13,
+    "seconds": 10.991,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_maintenance_relocation_coordination test_relocation_configuration_resume -q"
+  },
+  "limitations": [
+    "Purge only disposable test media; no product permanent deletion or approval implied",
+    "Injected failures and same-filesystem fixtures rather than real process competition",
+    "Actual products, cross-volume and browser maintenance acceptance remain open"
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "head": "f89d644c72c4f768f3934c095a4868d01eb5e3f0",
+  "overall_review_complete": false,
+  "reviewed_scopes": [
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py",
+      "sha256": "7cf6e6ab60396432fe986f5c6b3ccc8f99357036b229ed91e94a26b6a83613e5",
+      "functions": [
+        "import_capture_artifact"
+      ],
+      "notes": "Complete acquisition ancestry and archival-path checks before import writes."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_lifecycle.py",
+      "sha256": "ed8d0b98c492110f2cd37628fb50a10390815cdfff4e725cfde3c3a87f6cee8e",
+      "functions": [
+        "transaction",
+        "_read",
+        "_record"
+      ],
+      "notes": "Lock substitution fixed; read/commit binding inspected. Whole module review remains open."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/publication_lifecycle.py",
+      "sha256": "8459aecf63d81b5d2182bdf260bb427581f00edc81f75a7b5927f8adc36a5f06",
+      "functions": [
+        "_require_retrieval_proof",
+        "_verify_publication_archive",
+        "approve_upload",
+        "export_publication"
+      ],
+      "notes": "Target, plan, archive and retrieval binding inspected."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py",
+      "sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4",
+      "functions": [
+        "record_observation",
+        "_publication_state"
+      ],
+      "notes": "Separate gate verdicts, time freshness, conflict and supersession scope inspected."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_execution.py",
+      "sha256": "7293a32a1cdb2a96ada3d11207ca642d8750a7b336bdeb61329e67fe5015545d",
+      "functions": [
+        "_context",
+        "_preflight",
+        "_delete",
+        "execute"
+      ],
+      "notes": "Scoped deletion, checkpoint recovery and preservation checks inspected."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_guards.py",
+      "sha256": "c2c72172c1b9ba63ff998ba94fcf8db648575db8992ecaa893038a2ddedbfe5e",
+      "functions": [
+        "references",
+        "scan"
+      ],
+      "notes": "Reference and unknown-file guards inspected."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_media_store.py",
+      "sha256": "c1c450a41d797c8e475f72bb1964c3aac199616cf2d82c00e834681dd1cb8f86",
+      "functions": [
+        "_copy",
+        "object_path",
+        "_verify",
+        "persist",
+        "retrieve"
+      ],
+      "notes": "Parent substitution cleanup defect fixed; descriptor and hash boundaries inspected."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py",
+      "sha256": "618fdc7aa87d64b1247e181575b2c3e12490fdf32e2356858f2e7938767b6cab",
+      "functions": [
+        "_local_request",
+        "do_POST:maintenance/approval/seal routes"
+      ],
+      "notes": "Loopback/origin/JSON and explicit confirmation routes inspected; other routes remain open."
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py",
+      "sha256": "a2f97ceddcbd231b40db434e50c7c8c769ac14d80fd27028600e3aa5175d5a70",
+      "functions": [
+        "_check_lease",
+        "renew_attempt",
+        "recover_attempt",
+        "keep_lease"
+      ],
+      "notes": "Token rotation, expiry fencing and explicit replacement attempt inspected. No additional tests executed in this review pass."
+    }
+  ],
+  "remaining_scope": "All other runtime functions/modules, schema/CLI/Studio contract consistency, full changed test/delivery payload review. Partial review is not merge approval.",
+  "unresolved_findings": [
+    {
+      "file": "artifact_lifecycle.py",
+      "function": "register",
+      "issue": "Path-based temporary cleanup remains; destination-directory substitution needs reproduction before deciding whether it shares the external-store defect.",
+      "status": "RESOLVED_BY_SHARED_STAGING_PENDING_FULL_CI",
+      "evidence": "ADR-002-shared-staging.json"
+    },
+    {
+      "file": "creative.config.schema.json / delivery_lifecycle.py / publication_lifecycle.py",
+      "issue": "ADR-002 requires explicit project media mode/backend declaration; configuration lacks this contract and retrieval proof only infers observed mode. Declared-versus-actual policy enforcement is incomplete.",
+      "status": "IMPLEMENTED_AND_TARGETED_VERIFIED_PENDING_FULL_LATEST_CI_AND_PRODUCT_ACCEPTANCE",
+      "requirement": "ADR-002-artifact-lifecycle-and-release-archive.md:203",
+      "evidence": "ADR-002-archive-policy-contract.json"
+    }
+  ]
+}

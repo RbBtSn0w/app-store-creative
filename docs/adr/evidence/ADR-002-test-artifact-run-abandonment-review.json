@@ -1,0 +1,36 @@
+{
+  "scope": "Full current artifact integrity, run workflow snapshot and commit abandonment tests",
+  "files": [
+    {
+      "file": "tests/test_artifact_commit_integrity.py",
+      "sha256": "ff90a07ca284bba15b5850773f3622c706f36cf58bab94954e6b3822a1c75f26"
+    },
+    {
+      "file": "tests/test_run_workflow_snapshot.py",
+      "sha256": "952b66c5d78c64e00017a561323ba9c13a5d1efc82c3452ede279c28c001aa88"
+    },
+    {
+      "file": "tests/test_commit_abandonment.py",
+      "sha256": "a7f1b6b8d8a1a3899eef929bc6f8c22c3e121e6ef633c92e3c9b349b3d65f1e5"
+    }
+  ],
+  "assessment": [
+    "Rewritten role/dependencies/logical path/partial/media type or missing commit event refuses artifact consumption",
+    "Altered failed outcome cannot become selectable success; changed attempt owner cannot renew lease",
+    "Run stores workflow implementation and refuses missing/unknown workflow or modified snapshot/target/source binding before attempt creation",
+    "Invalid project identity creates no files",
+    "Explicit abandonment preserves missing intent, forbids committed or referenced target abandonment and prevents same identity recreation",
+    "Public CLI abandonment requires exact confirmation and leaves auditable ABANDONED outcome"
+  ],
+  "verification": {
+    "tests": 15,
+    "seconds": 0.781,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_artifact_commit_integrity test_run_workflow_snapshot test_commit_abandonment -q"
+  },
+  "limitations": [
+    "Snapshot tamper tests partly trigger commit binding rather than independently committed malformed semantic records",
+    "Failed publication injected rather than actual process death",
+    "Local disposable fixtures; real products, independent installed workflow and browser acceptance separate"
+  ]
+}

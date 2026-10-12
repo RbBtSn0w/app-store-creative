@@ -1,0 +1,12 @@
+{
+  "head_commit": "24634da72213b0b46a18f3a44194c51bb771b8db",
+  "mount_is_mount_after_detach": false,
+  "exit_code": 0,
+  "elapsed_seconds": 71.11531683302019,
+  "mount_detached": true,
+  "log_sha256": "fe88713be21d928f0e91501ffad1a3f34ceb7990fa023cb78dd2aab863ba1d50",
+  "scope": "Temporary independently mounted APFS volume; public relocation SIGKILL recovery matrix, not production media/backend acceptance",
+  "tests_run": 33,
+  "test_elapsed_seconds": 69.575,
+  "skipped": 0
+}

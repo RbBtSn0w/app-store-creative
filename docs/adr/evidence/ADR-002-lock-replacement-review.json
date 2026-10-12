@@ -1,0 +1,23 @@
+{
+  "base_head": "4c6421251ec1d29b08599da5b5eadeee1d98bf4c",
+  "change": "Revalidate write.lock device/inode after exclusive flock acquisition and before workspace metadata or business records are written.",
+  "red": "Expected refusal absent; one regression test failed before implementation.",
+  "green": {
+    "tests": 38,
+    "elapsed_seconds": 3.03,
+    "modules": [
+      "test_record_file_identity",
+      "test_artifact_lifecycle",
+      "test_relocation_concurrency",
+      "test_operation_history"
+    ]
+  },
+  "status": "PASS",
+  "ci_covers_change": false,
+  "process_verification": {
+    "child_exit": 1,
+    "rejected_changed_identity": true,
+    "business_records_unchanged": true,
+    "scope": "Owned temporary project; independent process waits on original inode before pathname replacement."
+  }
+}

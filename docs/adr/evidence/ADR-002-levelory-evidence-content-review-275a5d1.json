@@ -1,0 +1,14 @@
+{
+  "scope": "Manual content review of four new Levelory evidence summaries only",
+  "files": [
+    "ADR-002-levelory-complete-candidate-275a5d1.json",
+    "ADR-002-levelory-new-preview-poster-275a5d1.json",
+    "ADR-002-levelory-real-input-relocation-275a5d1.json",
+    "ADR-002-levelory-recording-input-closure-275a5d1.json"
+  ],
+  "result": "No credentials, signed URLs, host absolute paths or captured user content in reviewed JSON summaries",
+  "limitations": [
+    "Does not close repository-wide manual sensitive evidence review",
+    "Does not inspect original private recording receipts or every media frame"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "runtime_head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",
+  "sha256": "82bb4b3fe80d3f3e86f6bb52393d66edffb2faa903190a5515bd08a07d9f68be",
+  "scope": "Entire operation_history module; record write consumers remain separately scoped",
+  "checks": [
+    "Commit intent durable before business record publication",
+    "Read lock verifies regular file identity before and after flock",
+    "Strict event schema, executor identity and record digest binding",
+    "Missing changed duplicate and superseded targets distinguished",
+    "Journal observation does not infer execution success",
+    "Abandonment requires explicit actor/reason and unchanged unreferenced missing target",
+    "Original commit intent retained; committed targets cannot be abandoned"
+  ],
+  "validation": {
+    "tests": 35,
+    "seconds": 9.618,
+    "result": "PASS",
+    "log_sha256": "7ca3892236f6f9b5d5bd253954eeae9431e17b06d885f5a0e647cec21eafe747"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

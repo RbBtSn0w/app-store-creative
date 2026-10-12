@@ -1,0 +1,23 @@
+{
+  "scope": "Full current forward relocation configuration layer tests",
+  "file": "tests/test_relocation_configuration_layers.py",
+  "sha256": "edbeea5608bd99e5f36aa62e139edfb3537e0d43300e5282b9579384b2162fa0",
+  "assessment": [
+    "Plan pins source documents and proposed target binding",
+    "New local layer invalidates prior plan even without overrides; preparation refuses before copy/intent",
+    "Same-byte replaced shared config refuses switch before fence",
+    "Layered preparation preserves configuration until explicit switch",
+    "Edited target proposal refused; absence observed at planning invalidated by later config appearance",
+    "Local layer without shared authority creates no new plan"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 0.762,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_relocation_configuration_layers -q"
+  },
+  "limitations": [
+    "This file covers planning/preparation gates, not completed switch updating owning layer",
+    "Actual product relocation and cross-volume matrix separate"
+  ]
+}

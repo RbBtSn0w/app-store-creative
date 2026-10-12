@@ -1,0 +1,33 @@
+{
+  "scope": "Full current three poster/overlay tests",
+  "files": [
+    {
+      "file": "tests/test_configuration_studio_poster.py",
+      "sha256": "aa31d7c75bdc18833de1147a7b1f467bdf2fe36f4a2fe04dadcd51b9989bad30"
+    },
+    {
+      "file": "tests/test_managed_poster.py",
+      "sha256": "0dad08722b9067d072ca093683f8866817d8a2fd79f3ef7249dd06f7fb30b9e5"
+    },
+    {
+      "file": "tests/test_preview_overlay_coordinates.py",
+      "sha256": "258432530a55a15f5dcaf10794e00be4194442a830670e1a54d42f70062bd196"
+    }
+  ],
+  "assessment": [
+    "Studio poster uses effective local roots and refuses changed local ETag before extraction",
+    "Poster receipt binds selected timestamp and verified Preview hash without host paths or implied approval",
+    "Failure/cancellation preserve partial bytes and selected-time plan; partial candidate selection rejected",
+    "Overlay numeric coordinates bounded to canvas; filter expressions, booleans and nonfinite values rejected"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 1.377,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_configuration_studio_poster test_managed_poster test_preview_overlay_coordinates -q"
+  },
+  "limitations": [
+    "Poster extraction mocked; actual frame extraction and ASC separate",
+    "Coordinates assert generated command only, not actual visual placement"
+  ]
+}

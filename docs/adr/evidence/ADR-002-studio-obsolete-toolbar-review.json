@@ -1,0 +1,16 @@
+{
+  "scope": "Full static review of obsolete toolbar, its copy templates and active style presets",
+  "removed": {
+    "components/Toolbar.tsx": "424df448087ad3e31f14199861eb5565a15739a1ac5b1e33c6560bf18211cba4",
+    "copyFormulas.ts": "683b882f5f0ddc4aadf5f662f1c552f50f90368142905bf31b19ae942402605c",
+    "copyFormulas.test.ts": "0143d135d640b341f7b79aa84e0c7fd8390048a715de5420900bdf416a5c3709"
+  },
+  "reason": "No runtime imports reference Toolbar. Copy templates are referenced only by this obsolete component and data-shape tests. Keep one active App interface without dormant readiness/publication claims.",
+  "preserved": {
+    "stylePresets.ts": "32f030de58270a7572e0f5bd12998e4b926e0559eea16365aa15121a1ffc0870"
+  },
+  "limitations": [
+    "Style presets are presentation data; visual suitability still requires real-product acceptance"
+  ],
+  "validation": "98 tests across 33 files passed; TypeScript and distributable build passed on Node 25. Four removed tests checked only deleted copy-template data shape."
+}

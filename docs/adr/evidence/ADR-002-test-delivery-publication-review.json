@@ -1,0 +1,22 @@
+{
+  "scope": "Complete delivery modification diff plus retained validation/approval/archive assertions; full new publication lifecycle file",
+  "files": {
+    "tests/test_delivery_lifecycle.py": "3aa3108313c340f2231aebdb3bd1faf7bbd88dddfebc77578839625fa9306218",
+    "tests/test_publication_lifecycle.py": "02329888bed359554b40ddc60533412a98d1df2d701c637e26712d1a3bbdf4ea"
+  },
+  "findings": [
+    "Mandatory archive and budget absence reject sealing before release writes",
+    "Configuration mutation invalidates approval binding without deleting original approval; invalid/corrupt output cannot be approved",
+    "Portable archive recovery and working archive corruption are exercised",
+    "Publication binds actual Git commit, manifest and checksum; exported handoff remains local with upload approval pending"
+  ],
+  "open_followups": [
+    "Immutable original input/recording closure differs from old mutable source-file checks; source-closure tests still require review"
+  ],
+  "limitations": [
+    "Unit Git fixture is not a selected real durable backend",
+    "No actual human approval or official ASC upload performed"
+  ],
+  "ordering_regression": "Two screenshots deliberately reverse filename alphabetical order; publication_assets preserves approved manifest order and each associated MD5 checksum. No new runtime behavior introduced.",
+  "validation": "7 publication lifecycle tests passed in 2.321 seconds"
+}

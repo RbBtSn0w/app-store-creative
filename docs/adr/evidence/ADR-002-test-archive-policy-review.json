@@ -1,0 +1,21 @@
+{
+  "scope": "Full current archive policy configuration test",
+  "file": "tests/test_archive_policy_configuration.py",
+  "sha256": "52394dc764ef58b33576c524f904c043252f14cb9daf60eb239a421fe822a4c9",
+  "assessment": [
+    "Lifecycle, composition and Studio consistently reject invalid explicit archive declarations before writes",
+    "Git/LFS/external mode and named backend preserved in run configuration",
+    "Exploration without declaration does not invent archive choice",
+    "Retrieval proof must match declared mode and external backend"
+  ],
+  "verification": {
+    "tests": 4,
+    "seconds": 0.047,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_archive_policy_configuration -q"
+  },
+  "limitations": [
+    "Formal sealing rejection for undeclared policy belongs to delivery tests",
+    "No real backend or upload executed"
+  ]
+}

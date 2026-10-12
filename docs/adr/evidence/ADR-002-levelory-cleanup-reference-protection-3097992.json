@@ -1,0 +1,18 @@
+{
+  "scope": "Actual Levelory reference protection and reversible quarantine/restore of three eligible temporary objects",
+  "source_commit": "3097992",
+  "candidate_id": "64f81025ad3d40f8b7c26a96a73d446d",
+  "plan_id": "38e73251c7c2412884bfc733faf18eee",
+  "closure_artifacts": 44,
+  "protected_unique_objects": 32,
+  "eligible_objects": 3,
+  "protected_objects_eligible": 0,
+  "all_candidate_dependencies_verified": true,
+  "limitations": [
+    "Temporary same-filesystem real-input workspace, not durable archive",
+    "No permanent deletion, crash injection, browser maintenance or cross-volume acceptance"
+  ],
+  "quarantine_operation_id": "9bd2d01cef48475c9de31711e4d7f74b",
+  "quarantined_and_restored_objects": 3,
+  "returned_candidate_validation": "PASS"
+}

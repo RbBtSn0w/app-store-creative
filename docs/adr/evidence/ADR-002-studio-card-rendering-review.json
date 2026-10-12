@@ -1,0 +1,21 @@
+{
+  "scope": "Full static review of card rendering, device framing, target/localization resolution and variant editing",
+  "files": {
+    "components/CardView.tsx": "c7e8724493c5c797b4998596a81fc199b45b7e3a7576f2a2f936b474e01e38fa",
+    "components/DeviceFrame.tsx": "885018ffbda161af56920df1f66fb513c567175810f01bf73555d06e756687fe",
+    "project.ts": "61db4420e59c4b00a5b45ad6acd47e0457b2d16105bac4796af22a3f77738fd7"
+  },
+  "findings": [
+    "No new execution defect identified in this review scope",
+    "Custom per-card background stays isolated; shared background uses a bounded deck index",
+    "Mac native framing contains complete capture; phone/tablet frames use deliberate cover cropping and require visual acceptance",
+    "Localized empty optional copy is preserved; target capture selection and default copy edits follow current contract",
+    "Export excludes editable fields and metadata badge; copy is React-escaped"
+  ],
+  "validation": "14 tests across CardView, DeviceFrame and project passed on Node 25",
+  "limitations": [
+    "Static markup tests do not prove physical browser layout, image visibility or crop acceptability",
+    "Real two-product render and export matrix remains open",
+    "All frontend files have not yet been reviewed"
+  ]
+}

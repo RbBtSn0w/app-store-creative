@@ -1,0 +1,44 @@
+{
+  "base_head": "e70e281af528a6a79354c738fbf7dce5e8501929",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py",
+      "sha256": "2ded0998d15d4237e7c8fe3f3fc6c83d90e759c4195fa699293f9ee785db59e9",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_poster.py",
+      "sha256": "e1ca04ac3764a2dd1d4b341242c53f835da34cc289ee8aa2dff80587d5b52130",
+      "scope": "Entire module"
+    }
+  ],
+  "finding": "Preview input directory creation occurred before failure handler, leaving an attempt without terminal outcome on mkdir failure",
+  "fix": "Prepare input directory within leased production failure handling",
+  "status": "IMPLEMENTED_SCOPED_VALIDATION_PASSED",
+  "validation": {
+    "tests": 13,
+    "seconds": 1.17,
+    "result": "PASS",
+    "green_log_sha256": "05d6b7ac9b3bdb8e509d764cadd8c77f9d7c7466f75d94a3f6230cc208f605ad",
+    "red_log_sha256": "4074459e1ea2f60b256d59108e933d86c7c0bac3b7f9087388243ad82ac92f85",
+    "full_ci": "Uncommitted runtime change not covered",
+    "installed": {
+      "package_sha256": "dd52c951ea483fc5b9d8be7dc93b620e5eec35f0f2c32e4590ec91e0180b46e4",
+      "exit_code": 0,
+      "log_sha256": "8771086218559afe368be77d855cc77de6d06909e67b1fabdf1b58ea6f35b5ff",
+      "source_runtime_used": false,
+      "tests": 13,
+      "seconds": 2.989,
+      "result": "PASS"
+    }
+  },
+  "checks": [
+    "Registered immutable input snapshots drive preview execution",
+    "Receipts reject unbound absolute paths",
+    "Frames and producer receipts included in source closure",
+    "Poster references a completed selected preview and validated timestamp",
+    "Failed/cancelled output retained as partial with terminal attempt",
+    "Success does not grant human approval or assert upload"
+  ],
+  "overall_review_complete": false
+}

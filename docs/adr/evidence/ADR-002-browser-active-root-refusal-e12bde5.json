@@ -1,0 +1,16 @@
+{
+  "scope": "Actual browser rejects direct active-root edit after public CLI run creation",
+  "source_commit": "e12bde5",
+  "run_id": "cde5226b1be4473d8df5441f5e69492b",
+  "observations": [
+    "Browser save rejects activity-bound release-root replacement and preserves draft",
+    "Complete project file hash snapshot unchanged after refused browser save",
+    "Replacement destination absent"
+  ],
+  "screenshot_sha256": "72a6f19c0209a037b80fee972d29029117937a57673df2ece6316937566f92d3",
+  "limitations": [
+    "Disposable synthetic project; not real product export or cross-filesystem acceptance",
+    "Browser reload button timed out; reload result not claimed",
+    "No actual installed plugin or remote ASC operation"
+  ]
+}

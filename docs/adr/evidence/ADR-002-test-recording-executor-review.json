@@ -1,0 +1,31 @@
+{
+  "scope": "Full current two recording executor test files; changed files counted only when present in inventory",
+  "files": [
+    {
+      "file": "tests/test_recorder_execution_identity.py",
+      "sha256": "a2d72e0eacfae488b5b7f3f11f32a6149b45c69a55ddfd2081525929bf3e0b12"
+    },
+    {
+      "file": "tests/test_managed_recording.py",
+      "sha256": "5a463c568db666dd949888bfd2868b33ba0193bad725b8c622f998e5c5e090fe"
+    }
+  ],
+  "assessment": [
+    "Compiler driver symlink alias retained while SDK and target pinned; fixture compiler produces executable",
+    "Missing execution identity and private machine fields refused",
+    "Receipt appearing concurrently is preserved and recorder returns failure rather than success receipt",
+    "Capture links portable evidence to immutable native take; private local paths stripped",
+    "Failed acquisition retains partial capture and reason; normalization failure retains native take as partial"
+  ],
+  "verification": {
+    "tests": 6,
+    "seconds": 0.623,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_recorder_execution_identity test_managed_recording -q"
+  },
+  "limitations": [
+    "Compilation uses fixture shell driver, not actual Swift compiler acceptance",
+    "Recorder and normalization are mocked; no real desktop capture performed",
+    "This scope does not prove window/configuration replacement fencing; those contracts require separate tests"
+  ]
+}

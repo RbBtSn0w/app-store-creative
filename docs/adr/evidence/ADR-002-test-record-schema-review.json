@@ -1,0 +1,21 @@
+{
+  "scope": "Full current lifecycle record schema tests",
+  "file": "tests/test_lifecycle_record_schema.py",
+  "sha256": "768aafa24d3c9758ef4492f621fd3b9acfe6df4218b7bce96af041bcc2e19974",
+  "assessment": [
+    "Reader/writer refuse missing, non-integer and unknown versions; invalid writes create no record",
+    "Non-object JSON and mismatched identities rejected",
+    "Parent symlink and dangling outcome link rejected rather than invent running status",
+    "Attempt started/outcome records and all business categories enforce same schema boundary without rewriting invalid bytes"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 0.137,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_lifecycle_record_schema -q"
+  },
+  "limitations": [
+    "Schema/version/identity boundaries only; not every business field semantics",
+    "No legacy format reader or backfill introduced"
+  ]
+}

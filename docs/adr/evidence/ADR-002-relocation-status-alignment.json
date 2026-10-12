@@ -1,0 +1,38 @@
+{
+  "base_head": "120279b6acd4b1e2144b33bcc261bb437e60f9df",
+  "ci_run": 38185670319,
+  "ci_result": "FAIL",
+  "ci_tests_run": 1056,
+  "ci_tests_skipped": 34,
+  "ci_failure_count": 1,
+  "cause": "Prior test expected UNKNOWN because target lock was absent; repaired preparation now establishes lock before activation",
+  "local_red": "Same single assertion reproduced locally",
+  "repair": "Expect first object inspection PASS with records unchanged; retain corrupted-object FAIL assertion; add missing-lock UNKNOWN and no-lock-creation assertion",
+  "intermediate_edit_error": "Initial insertion moved corrupt-object assertions into missing-lock case; corrected before final verification",
+  "runtime_changed": false,
+  "current_green": {
+    "tests": 21,
+    "seconds": 15.807,
+    "result": "PASS",
+    "log_sha256": "c48b1bf609f53fa4b7cd5bb31df5da9cd231f5aa4ca3b610ffe4417cfda076c7"
+  },
+  "cross_filesystem": {
+    "source_head": "120279b6acd4b1e2144b33bcc261bb437e60f9df",
+    "exit_code": 0,
+    "log_sha256": "5b3f474f98a0afbe786dd6bc0e01bcdd128f380ff3e378b760e00cbb44ea578b",
+    "test_summary": ".................................\n----------------------------------------------------------------------\nRan 33 tests in 71.184s\n\nOK\n",
+    "independent_filesystem_verified": true,
+    "scope": "Owned temporary APFS volume, public process-death and observation evidence recovery fixtures; not real product durable archive or ASC acceptance",
+    "mount_detached": true,
+    "elapsed_seconds": 72.737
+  },
+  "sensitive_review": "Generic owned fixture paths and scoped technical identities only; no credentials or private media",
+  "files": {
+    "tests/test_relocation_status.py": "38c7af437cb30cadf38f0cc0e93b0efbc64c61ffebad432c630129df91104bee"
+  },
+  "limitations": [
+    "Current final complete CI still required",
+    "Cross-volume matrix uses disposable fixtures, not durable real-product archive",
+    "No approval, upload or ADG installation"
+  ]
+}

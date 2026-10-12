@@ -1,0 +1,70 @@
+{
+  "run_id": 37902471567,
+  "head": "5bcf5e2330f67882957ea6c110f36eed7cbd7835",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "validate",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out repository",
+          "conclusion": "success"
+        },
+        {
+          "name": "Validate plugin package",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install media tools",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run unit tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Test and build Studio frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Smoke-test complete plugin distribution",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Setup Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out repository",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "source_tests": {
+    "executed": 1000,
+    "passed": 967,
+    "skipped": 33,
+    "elapsed_seconds": 454.486,
+    "individual_skip_reasons_available": false
+  },
+  "studio_tests": {
+    "files_passed": 30,
+    "tests_passed": 90
+  },
+  "log_sha256": "d3869f40eb021f01a91c39197124f2b23118701ca1f16561af69e465948e4958"
+}

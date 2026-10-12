@@ -1,183 +1,75 @@
 # App Store Creative
 
-App Store Creative is an Agent-native, local-first release engine and Studio for
-producing, validating, and publishing reproducible App Store screenshot and
-preview releases.
+App Store Creative prepares App Store screenshots, preview videos, posters, and their provenance through one local artifact lifecycle. CLI, Studio, and agents share immutable records, leased production attempts, content-addressed media, candidate validation, human approvals, and sealed delivery archives. The official ASC plugin owns App Store Connect authentication and remote execution.
 
-It replaces heavy external design software with an instant **Localhost Canvas**
-supporting connected panoramic cards, executes deterministic 1:1 headless
-rendering with zero network access, and enforces App Store Connect constraints
-before publishing.
+The unified redesign is under development on `feat/unified-artifact-lifecycle-v2`; it is not a completed release. See [implementation status](docs/adr/ADR-002-implementation-status.md) and the [delivery closure audit](docs/adr/ADR-002-delivery-closure.md) for remaining gates. The new contract has no historical compatibility requirement. Old task commands, release manifests, and standalone validation/publication writes are removed; existing consumer files are not automatically migrated or deleted.
 
-## Key Capabilities (v2.0)
+## Runtime and prerequisites
 
-- **Localhost Studio Canvas**: Pre-bundled Vite + React studio with real Apple device bezels (iPhone 16 Pro Max, iPad, Mac) and hot reload.
-- **Connected Track Support**: Continuous panoramic canvas allowing cards, decorative gradients, and tilted phones to span across screen boundaries.
-- **Headless 1:1 Store Rendering**: Uses system Chrome for deterministic, zero-tolerance resolution export (1320x2868, 1290x2796, etc.) with 24-bit RGB and no alpha channel.
-- **Zero-Network Release Validator**: Strictly verifies dimensions, format, file sizes, and generates immutable `.creative/release-lock.json` evidence.
-- **Native macOS Window Recorder**: Packaged ScreenCaptureKit executor with explicit window selection, bounded capture, and hash-bound recording receipts (macOS 15+).
-- **Source Timeline Production**: Select intervals from real takes, preflight media/filter capabilities, and emit production receipts plus acceptance contact sheets.
-- **App Preview Video Synthesizer**: Native FFmpeg automation producing compliant H.264 stereo AAC App Preview videos (15-30s).
-- **ASC Publishing Handoff**: Connects safely with the official App Store Connect plugin (`asc`).
+The complete installed payload lives at `<plugin-root>/skills/app-store-creative/runtime`, including scripts, schemas, templates, and the bundled Studio. Specialist installs require the main skill so the runtime remains available. Source-tree links are development conveniences; consumers use the installed payload.
 
-## Prerequisites
+Use Python 3.11 or newer, a supported Chrome-family browser for screenshot rendering, and FFmpeg/ffprobe for video production and validation. The shell launcher prefers Homebrew Python on macOS; `APP_STORE_CREATIVE_PYTHON` selects an explicit interpreter. Figma is an optional design executor. ASC is required for remote operations.
 
-- **Python 3.10+**
-- **Google Chrome** (or Chromium / Brave / Edge) for headless pixel exports.
-- **FFmpeg & ffprobe** (optional, only required if generating App Preview videos).
-- **ASC plugin / CLI** (optional, for remote App Store Connect publishing).
+## Consuming project
 
-## Install from this repository
+Copy `runtime/assets/templates/creative.config.json` into the product repository and set its stable project identity, localized cards, real UI captures, target devices, and storage roots. The effective storage order is defaults, shared project configuration, then the adjacent protected `creative.config.local.json`. Local configuration selects storage roots and named host-local filesystem media backends; it cannot override shared archive or artifact policies and must be untracked and ignored by actual Git policy.
 
-From a clone of this repository, register its repo-local marketplace and install
-the plugin:
-
-```bash
-codex plugin marketplace add <repo-root>
-codex plugin add app-store-creative@personal
+```sh
+CREATIVE_RUNTIME=/absolute/path/to/plugin/skills/app-store-creative/runtime
+CREATIVE_REPO=/absolute/path/to/product
+creative() {
+  "$CREATIVE_RUNTIME/scripts/app-store-creative" "$@"
+}
+creative --help
+creative storage inspect --repo "$CREATIVE_REPO"
+creative storage git-policy --repo "$CREATIVE_REPO" --media-mode lfs
+creative studio --repo "$CREATIVE_REPO"
 ```
 
-Replace `<repo-root>` with the absolute path to this repository. After an
-install, reinstall, or local plugin update, start a new Codex thread so plugin
-discovery picks up the current manifest, skills, and versioned templates.
+Review Git rule suggestions before applying them. Four configurable roots separate working records, content objects, sealed releases, and publication evidence. Moving existing storage requires the explicit relocation plan/prepare/switch/recovery workflow; editing paths alone does not relocate records.
 
-## Start a consuming project
+## Managed production and release
 
-Copy the files under
-`plugins/app-store-creative/assets/templates/` into the consuming repository,
-then adapt the project and release manifests to that product. Keep the
-validator wrapper unchanged so the pinned plugin and schema versions remain
-visible during review. Vendor the matching local runtime at
-`.app-store-creative/runtime/0.1.0/app_store_creative.py`, or set
-`APP_STORE_CREATIVE_CLI` to that exact local version. The wrapper never installs
-dependencies or contacts the network.
+Import authentic product captures through `input import`. Use managed screenshot export, `preview record`, `preview produce`, and `preview poster` for production. Each attempt owns its lease and isolated working files; failed or interrupted output remains evidence, and retries create new attempts.
 
-## Agent-Native Workflow (v2.0)
-
-In v2.0, the entire release intent is declared in a single `creative.config.json`. No Figma or external design accounts are required.
-
-### 1. Initialize or copy the config
-Copy the template to your repository:
-```bash
-cp plugins/app-store-creative/assets/templates/creative.config.json ./creative.config.json
+```sh
+creative export --repo "$CREATIVE_REPO"
+creative candidate validate --repo "$CREATIVE_REPO" --id "$CREATIVE_CANDIDATE_ID"
 ```
 
-### 2. Live Preview with Localhost Studio
-Start the Studio server to interactively preview your cards, test continuous panoramic layouts, and inspect multi-locale typography:
-```bash
-python3 plugins/app-store-creative/scripts/app_store_creative.py dev
-# Opens http://localhost:3100
+Use actual IDs returned by commands. Select the complete ordered candidate and validate its source dependencies and media matrix. Review visuals separately, record the human design authorization, and seal an immutable delivery. Format checks and generated files do not grant approval.
+
+Persist the selected archive according to its Git/LFS policy only with Git authorization. Verify independent retrieval from the exact intended commit and remote. Create a publication plan for explicit ASC app/version/platform IDs, record separate human upload authorization bound to that plan, then export its handoff:
+
+```sh
+creative publication export --repo "$CREATIVE_REPO" --id "$CREATIVE_PUBLICATION_ID" --confirm
+creative publication status --repo "$CREATIVE_REPO" --id "$CREATIVE_PUBLICATION_ID"
 ```
 
-### 3. Headless 1:1 Pixel Export
-Export store-ready, 24-bit RGB PNGs across all target devices and locales in seconds:
-```bash
-python3 plugins/app-store-creative/scripts/app_store_creative.py export
-# With App Preview video:
-python3 plugins/app-store-creative/scripts/app_store_creative.py export --with-video
-```
+ASC executes authorized remote operations and supplies fresh evidence. Upload, processing, playback, and poster readiness are independent gates. Missing or contradictory evidence remains unproven. Creative never submits a version for review or uploads from CI.
 
-### 4. Zero-Network Release Verification
-Verify that all generated assets strictly adhere to Apple App Store Connect specifications:
-```bash
-python3 plugins/app-store-creative/scripts/app_store_creative.py verify
-# Generates immutable audit evidence: .creative/release-lock.json
-```
-
-### 5. Prepare an ASC Agent Handoff
-Inspect verified artifacts and prepare their local handoff for the official ASC plugin:
-```bash
-# Dry-run inspection
-python3 plugins/app-store-creative/scripts/app_store_creative.py publish
-
-# Write .creative/asc-handoff.json (no remote upload)
-python3 plugins/app-store-creative/scripts/app_store_creative.py publish --confirm
-```
-
-The handoff binds ordered screenshots and previews to their hashes, configuration,
-and release lock. `--confirm` confirms local handoff generation only: it never
-uploads, approves a design, or grants upload approval. The ASC agent resolves
-version/localization IDs, obtains separate human approvals, uploads through the
-official ASC plugin, and audits remote processing and order. Creative reports
-`uploaded: false` until ASC provides independent remote evidence.
-
-An enabled `previewVideo` requires an existing real UI recording and its final
-video. Missing files or unavailable media probes fail validation. `verify` checks
-the entire declared screenshot matrix, including after a partial export.
-
-The complete executable payload lives under
-`skills/app-store-creative/runtime/` (scripts, schemas, templates, and Studio dist).
-ADG's declared-component filtering preserves this subtree. The canonical ADG
-manifest requires the main skill when installing any specialist, so partial
-skill installs retain the runtime. Source-tree `scripts/`, `schemas/`, `assets/`,
-and `studio/dist/` are compatibility symlinks; installed consumers use
-`skills/app-store-creative/runtime/scripts/app_store_creative.py`.
-Run `.github/package_plugin.py --output <package.zip>` after building Studio;
-it smoke-tests the extracted runtime before emitting a distributable package.
-
----
-
-## Stable CLI Contract (v1 Legacy Compatibility)
-
-Every `--release` argument is a path to a JSON release manifest, not an inline
-JSON value. The approval boundaries require exact, case-sensitive confirmation
-words:
-
-```bash
-python3 app_store_creative.py approve \
-  --repo <project-root> \
-  --release <release.json> \
-  --stage design \
-  --approved-by <reviewer> \
-  --input-manifest <review-manifest.json> \
-  --confirm APPROVE
-
-python3 app_store_creative.py promote \
-  --repo <project-root> \
-  --release <release.json> \
-  --input-dir <approved-export-root> \
-  --confirm-approved PROMOTE
-
-python3 app_store_creative.py upload \
-  --repo <project-root> \
-  --release <release.json> \
-  --plan <upload-plan.json> \
-  --confirm-approved UPLOAD
-```
-
-For an unpromoted completed task whose source inputs changed without changing
-its release-manifest fields, archive its current receipt and reopen it with:
-
-```bash
-python3 app_store_creative.py invalidate \
-  --repo <project-root> \
-  --run-id <run-id> \
-  --task-id <task-id> \
-  --actor <identity> \
-  --reason <reason>
-```
-
-Invalidation preserves receipt and approval history, clears current approvals,
-and makes prior upload plans stale. Create a new run for changed task fields or
-for work that was already promoted.
-
-The promotion input directory must preserve every task's relative `output`
-path. For example, an output of `artifacts/en-US/mac/01-hero.png` is read from
-`<approved-export-root>/artifacts/en-US/mac/01-hero.png`. This prevents
-same-named files from different locales or devices from colliding.
-
-In v0.1, the engine's `upload` command is a dry-run safety gate. It validates
-the immutable plan and approvals and does not mutate App Store Connect. After
-that gate passes, the publisher skill performs the actual remote mutation
-through the official ASC plugin. The template therefore defaults to
-`remoteWrite: false`; changing remote state always remains a separate, explicit
-publisher action.
+For full commands and approval arguments, read the [operations guide](docs/artifact-operations.md), [storage relocation guide](docs/storage-relocation.md), and installed [lifecycle contract](plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md). Inventory and planned quarantine/restore/purge operations govern retention; unknown files are preserved.
 
 ## Repository validation
 
-The GitHub Actions workflow validates the plugin package and exercises the
-same zero-network release validator wrapper shipped to consuming projects.
+```sh
+python3 -m unittest discover -s tests -q
+python3 .github/validate_plugin.py
+python3 .github/package_plugin.py --output /absolute/path/to/app-store-creative.zip
+```
+
+The package check extracts the complete plugin and runs its installed managed interface independently of the source checkout. Studio tests and its build run from `plugins/app-store-creative/studio`. Package checks and unit tests do not substitute for the two-product production and ASC acceptance required by ADR-002.
 
 ## License
 
 MIT
+
+To reuse an already registered capture without losing its acquisition provenance, import
+its artifact identity and use the returned managed input path in the screenshot recipe:
+
+```sh
+app-store-creative input import --repo . --artifact <capture-id> --actor <actor>
+```
+
+`--artifact` and `--source` are mutually exclusive. Artifact imports require a complete
+capture from a successful acquisition attempt and retain the original capture dependency.

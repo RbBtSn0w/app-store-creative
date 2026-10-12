@@ -1,0 +1,17 @@
+{
+  "old_package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "new_package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "old_entries": 245,
+  "new_entries": 245,
+  "added": [],
+  "removed": [],
+  "changed": [],
+  "scope": "Complete ZIP file payload comparison against independently tested cc4b069 package",
+  "source_commit": "82f5c827bdd17b894e3a92399bc0dc33a68a89f1",
+  "result": "IDENTICAL_PAYLOAD",
+  "prior_regression_evidence": "ADR-002-independent-package-cc4b069.json",
+  "limitations": [
+    "No regression tests rerun in this comparison",
+    "Payload equality does not prove actual ADG installation or real product workflow acceptance"
+  ]
+}

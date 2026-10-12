@@ -1,0 +1,34 @@
+{
+  "scope": "Full current candidate dependency invalidation, review and design target tests",
+  "files": [
+    {
+      "file": "tests/test_candidate_dependency_invalidation.py",
+      "sha256": "d72316641066456af1c2259c7297154b1905515e98f94e3990e9b437eb82d8fa"
+    },
+    {
+      "file": "tests/test_candidate_review.py",
+      "sha256": "2080918502a3d6092683d7707077002ab2df7265e60106cca5cc03251525483a"
+    },
+    {
+      "file": "tests/test_design_target_binding.py",
+      "sha256": "4da112c0aef520b7e7c49d26d074deb2589a3dea9876b440284f09843db65625"
+    }
+  ],
+  "assessment": [
+    "Changed live recipe blocks new design approval/seal without modifying old approval",
+    "Changed original source blocks new seal but existing immutable archive stays valid and unchanged",
+    "Restarted runtime and actual HTTP recover exact validation, approval and delivery ids with JSON records unchanged; fresh candidate invents none",
+    "Changed committed run target blocks status/seal, and portable manifest target differing from approval is rejected"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 1.428,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_candidate_dependency_invalidation test_candidate_review test_design_target_binding -q"
+  },
+  "limitations": [
+    "Changed run target test triggers commit binding; independently valid wrong approval scope covered separately",
+    "Readonly snapshots cover JSON records rather than all media files",
+    "Fixture approvals and HTTP rather than actual human or browser acceptance; real product and ASC separate"
+  ]
+}

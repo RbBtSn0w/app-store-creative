@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "head_sha": "a28e698765e2ebed6638233a07cc9ea2afbd7ed1",
+  "run_id": 37910716485,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/37910716485",
+  "conclusion": "success",
+  "python": {
+    "executed": 1015,
+    "skipped": 33,
+    "passed": 982,
+    "seconds": 458.877
+  },
+  "studio": {
+    "test_files": 31,
+    "tests_passed": 92,
+    "typecheck_passed": true,
+    "build_passed": true
+  },
+  "complete_distribution_smoke_passed": true,
+  "log_sha256": "10de23385d9a583df3fefcbfe0ed860a0a7591122dca3b37dd2c3f481330ff9f",
+  "full_review_complete": false,
+  "real_product_acceptance_complete": false
+}

@@ -10,6 +10,8 @@
 
 本 ADR 从零定义 App Store Creative 的产物管理架构，不以已有代码、目录、版本或项目实践作为设计约束。范围覆盖输入接收、捕获、设计、试制、验收、选择、审批、正式交付、外部执行结果、保留、清理和恢复。
 
+本次改造明确采用完整重设计：旧命令、旧数据格式、旧目录语义及旧客户端协议不属于兼容承诺，不新增双写、自动升级或旧格式读取分支。CLI、Studio、agent 和打包后的技能统一使用新内核合同。已有物料文件保留；保留文件不等于承认旧记录为新生命周期权威。本文的存储迁移仅指新架构下用户显式改变自定义目录的位置，仍须支持验证、恢复和回滚，不是历史版本兼容迁移。
+
 目标是回答每个文件的来源、用途、有效性、选用情况、保留理由及可恢复性。无论成功、失败、取消或进程中断，工作结束都必须形成可查询记录。物料应能跨机器取回、校验和用于后续修订。
 
 非目标：App Store 应用构建、提交审核、生产发布、外部系统认证，以及多租户云平台。复现要求是保留准确的输入、配方和工具版本；最终批准字节单独保存，不依赖未来重新渲染获得相同字节。
@@ -72,8 +74,10 @@ creative.config.json
     deliveries/<revision-id>.json
     publications/<publication-id>/
       plan.json
-      receipts/<receipt-id>.json
-      observations/<observation-id>.json
+    publication-preparations/<preparation-id>.json
+    remote-observations/<observation-id>.json
+    observation-evidence/<evidence-id>.json
+    external-media/<external-version-id>.json
     events/<event-id>.json
   objects/sha256/<prefix>/<sha256>
   work/<attempt-id>/
@@ -86,6 +90,8 @@ creative-releases/<project-id>/<platform>/<version>/<revision-id>/
   media/<locale>/<device-target>/
 ```
 
+观察、私有证据关联、外部持久版本和文件准备分别追加独立记录，通过 publication_id、observation_id、artifact_id 及对应哈希关联；不在已封存包中补写回执，也不维护 publication 目录内的第二份权威副本。目录示例展示主要实体，其他租约、处置、验证、事故及维护记录仍由同一内核登记。
+
 状态根、对象根和交付根可配置，逻辑合同固定。对象文件没有业务含义的名字，名称、语言、顺序及使用角色由清单定义。用户查看和下载时通过清单获得友好文件名。导出包由清单复制媒体字节形成，能够脱离本机对象库使用。
 
 所有执行器开始前领取 attempt，工作路径由内核分配。先写临时文件，验证媒体和哈希后原子提交对象，再登记引用；对象提交但登记失败时只是未引用对象，不能成为候选。记录登记失败必须报告，重试相同提交具有幂等性。失败或部分输出可登记为 partial；日志和工作空间诊断采用独立保留类别。
@@ -97,6 +103,14 @@ creative-releases/<project-id>/<platform>/<version>/<revision-id>/
 正式包使用内部相对路径，无绝对本机路径或外部对象库硬链接。包封存前完成复制和全量哈希检查；跨文件系统失败不产生有效交付记录。禁止路径逃逸、符号链接绕出允许根、非正规文件和不受管理的删除目标。
 
 ### 自定义目录配置合同
+
+分层优先级确定为内置默认 < 项目storage字段 < 本机storage字段，逐根覆盖。本机文件与所选项目配置相邻：creative.config.json对应creative.config.local.json，自定义配置文件名按同样的.local后缀派生。该文件必需schema_version、project_id和storage，可选mediaBackends；不覆盖制作配方、文案、目标、审批或外部发布配置。mediaBackends仅将稳定后端名称映射到明确provider与绝对访问根，当前本地文件提供者为filesystem；它是本机访问配置，不是便携对象定位符，不允许凭据字段。该配置随拥有层搬迁保留，但不进入有效制作配方、交付包或便携发布计划。project_id必须与共享项目身份一致。省略objectRoot且各层均未显式指定时，从有效workspaceRoot派生objects子目录。
+
+本机文件处于Git工作树时，读取及写入前必须检查它未被跟踪且受实际忽略规则保护，反向忽略规则按Git实际结果判断。该文件包含本机路径，不进入发布交接、正式配方或Git提交。发现跟踪、未知字段、重复JSON键、不安全文件或读取期间变化时拒绝，不静默降级为共享配置。检查与规则建议不自动修改索引或用户规则。
+
+配置版本绑定两份文档的内容及本机文件不存在状态。保存、生产、维护及迁移必须在同一内核按该版本复查；目录位置变化仍使用显式迁移，前后回执绑定两层原文及目标层写入，不得只更新共享配置而留下继续覆盖它的本机旧根。纯目录变化不改变制作配方身份。本机路径不能因配置快照或错误日志导出再次泄露到正式归档。
+
+以上是完整实现合同。最新实现证据与剩余验收统一记录在ADR-002-implementation-status和ADR-002-delivery-closure；本ADR不再维护阶段性的实现状态。
 
 自定义目录属于完整实现范围，CLI、Studio 和 agent 使用相同的解析结果。项目在配置中声明逻辑根目录，内部批次、尝试、对象及修订结构由内核统一生成，不开放任意文件命名替代生命周期登记。
 
@@ -275,25 +289,27 @@ RACI 是职责分工，不额外制造审批角色。单人项目可以由同一
 
 ## 接口与使用合同
 
-以下为目标命令设计，不表示当前已经实现：
+以下为已核对的当前公开入口；参数通过对应`--help`查看。入口存在不表示该能力的完整验收已关闭，关闭证据仍以本ADR及实施状态为准。
 
 ```text
-creative run start
-creative attempt start
-creative artifact register
-creative candidate select
-creative validate
-creative approval record
-creative delivery seal
-creative publication plan
-creative observation record
-creative status
-creative inventory
-creative gc plan
-creative gc quarantine
-creative gc restore
-creative gc purge
-creative archive verify
+app-store-creative run start
+app-store-creative attempt start
+app-store-creative artifact register
+app-store-creative candidate select
+app-store-creative candidate validate
+app-store-creative approval record
+app-store-creative delivery seal
+app-store-creative publication plan
+app-store-creative publication observe
+app-store-creative run status
+app-store-creative inventory
+app-store-creative cleanup plan
+app-store-creative cleanup quarantine
+app-store-creative cleanup restore
+app-store-creative cleanup purge
+app-store-creative archive verify
+app-store-creative storage artifact-policy
+app-store-creative storage media-budget
 ```
 
 CLI 和 Studio 调用相同用例，不各自实现文件写入和状态规则。变更调用包含对象版本或前置哈希；并发条件不匹配返回 conflict。外部交接包含确切目标、清单哈希、批准范围、操作幂等键及所需回执 schema。未知字段版本拒绝写入，不能静默忽略关键证据。
@@ -309,6 +325,21 @@ CLI 和 Studio 调用相同用例，不各自实现文件写入和状态规则�
 7. CLI、Studio、agent 工具合同，以及使用说明、收尾 SOP 和恢复演练。
 8. Git 跟踪合同、LFS/external 校验、PR及提交绑定、干净克隆恢复和CI只读门禁；忽略与媒体规则从目录配置生成。
 9. 自定义根的端到端验收、存储位置绑定及显式 relocate；将目录配置同步纳入 CLI、Studio、交接和维护操作。
+
+### 自定义目录实施与验收计划
+
+以下事项纳入统一整改计划，逐项以实现与可复现证据验收；勾选前不得仅凭设计或已有部分能力宣称完成。
+
+- [ ] 配置入口：支持四类根目录的默认值及项目级覆盖；CLI、Studio、agent 读取同一配置，展示相同的最终路径和校验错误。
+- [ ] 配置优先级与可移植性：定义内置默认、项目配置及本机覆盖的合并顺序；共享配置使用项目相对路径，本机绝对路径覆盖不进入 Git。CLI、Studio、agent 显示有效值及配置来源；Studio 保存前展示解析路径和冲突，附默认、仓库内自定义及项目外目录示例。
+- [ ] 路径边界：覆盖相对路径、显式项目外绝对路径、空格及 Unicode；验证根重叠、符号链接、权限不足及写入期间路径替换，失败时不产生有效交付。
+- [ ] Git 策略：按配置位置生成可审查的忽略与 LFS 规则；检查正式归档和发布记录可跟踪，仓库外归档明确导出策略；不自动 stage、commit 或 push。
+- [ ] 存储位置绑定：新运行使用新配置，既有运行按原绑定读取；位置变化不修改内容身份、来源或批准范围。
+- [ ] 受管理迁移：计划、复制、哈希复查、原子切换、崩溃续执行及切换后的反向迁移均提供证据；覆盖中断回滚后重试，以及 A → B → A → B → A 的多次切换。每次切换保留历史证据，当前存储位置只能依据已验证回执更新；源数据及备份处置单独经过清理流程。
+- [ ] 清理与恢复：只处理已登记路径，未知文件保留并报告；跨文件系统隔离、恢复及自定义根下的引用保护通过验收。
+- [ ] 端到端演练：在两个独立产品工作区中，完成自定义目录下的生产、封存、发布交接、清理、恢复和干净克隆取回；CLI 与 Studio 的业务结果一致。
+
+实施进度统一记录在 `ADR-002-implementation-status.md`；本清单表示待验收范围，不替代当前实现状态。
 
 这些是同一架构的完整职责，不以历史兼容或迁移作为交付项。实现顺序按依赖由底层存储至生产、交付、外部验收和维护推进；只有全链路通过验收才能称为统一产物管理完成。
 

@@ -1,0 +1,32 @@
+{
+  "scope": "Full current reverse plan and reverse configuration rollback tests",
+  "files": [
+    {
+      "file": "tests/test_reverse_relocation_plan.py",
+      "sha256": "6319b128bf394037d948e559fcbdc42ba130b348483edc2845d53dde054ce6d8"
+    },
+    {
+      "file": "tests/test_reverse_configuration_rollback.py",
+      "sha256": "ee4f073887efced3a4ed8f5a1cfb8e3e29b74fe268500a596ba2f0a8b7dcd6be"
+    }
+  ],
+  "assessment": [
+    "Reverse plan pins occupied original roots and new active data, preserves configuration and both copies during preparation",
+    "Changed original bytes/unknown files, stale active input, altered staging or replaced occupied root refuse reuse",
+    "Failed reverse copy recovers distinct plan retaining partial note; cancellation exposes retained paths",
+    "Forward execution rejects reverse plan rather than bypass dedicated exchange",
+    "Original, installed and restored configuration inode substitution refuse rollback/retry; own restored inode supports sync retry",
+    "Configuration substituted during directory revert blocks completion; actual Git suggestions protect restoration and keep private records untracked"
+  ],
+  "verification": {
+    "tests": 19,
+    "seconds": 21.792,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_reverse_relocation_plan test_reverse_configuration_rollback -q"
+  },
+  "limitations": [
+    "Some no-fence-release assertion inferred from missing completion record; actual lock contention not covered",
+    "Injected sync/copy interruptions, not actual process crash",
+    "Disposable same-filesystem fixtures; no real products, cross-volume or browser acceptance"
+  ]
+}

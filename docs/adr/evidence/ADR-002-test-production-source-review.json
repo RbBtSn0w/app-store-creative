@@ -1,0 +1,34 @@
+{
+  "scope": "Complete three modification diffs against origin/main",
+  "files": {
+    "tests/test_artifact_lifecycle.py": {
+      "sha256": "23c3c55508eb014b38cd8924777379f1dbee843d9600df01514dfdc983ccb4e9",
+      "assessment": "Additions cover corrupt history observation without rewriting, partial/failed/unfinished eligibility, recursive source failures, immutable candidate selection, stable pagination and literal custom LFS directories. Additional independent A/B source branches prove corrupt A blocks only A selection while B remains selectable; both prior candidate records remain byte-identical."
+    },
+    "tests/test_production_lifecycle.py": {
+      "sha256": "b56cc854724b9cb27cd827a5162878ec7dafd04d4df4ffd6e928576b9e1e0964",
+      "assessment": "Injected input/output directory permission failures retain exactly one terminal failed outcome and partial diagnostic artifact."
+    },
+    "tests/test_incident_lifecycle.py": {
+      "sha256": "bd47140051ed5273d4d503978628a83882dba27f8be3835494ea44417f88f734",
+      "assessment": "Candidate fixture now uses successful producer for selection; incident protection assertions remain. Failed trials remain default."
+    }
+  },
+  "findings": [
+    "No safety assertion weakening or new skips found",
+    "Source-closure regression explicitly corrupts retained input object and blocks output selection without rewriting candidate history"
+  ],
+  "limitations": [
+    "Permission injection is not actual OS permission acceptance",
+    "Immutable object corruption tests do not by themselves prove all recording dependency cases"
+  ],
+  "additional_verification": {
+    "scope": "Independent dependency-branch regression plus existing lifecycle and candidate dependency modules",
+    "tests_run": 24,
+    "result": "PASS",
+    "seconds": 1.262,
+    "limitations": [
+      "Local object corruption does not prove every live capture replacement or real-product scenario"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "scope": "Full artifact_lifecycle.py review; delegated mixin modules have separate review evidence",
+  "runtime_sha256": "a3edeef99b28dc7c4155c95385472bb1dd66919acfa1bb719db0b4bb4ceeb1a5",
+  "reviewed": [
+    "Storage root overlap, aliases and transaction lock identity",
+    "Immutable records and commit event bindings",
+    "Run workflow/configuration snapshots and storage binding",
+    "Content-addressed registration, deduplication and lease precommit checks",
+    "Dependency closure, source eligibility and candidate run constraints",
+    "Status diagnosis versus approval authority",
+    "Inventory and generated Git/LFS policy boundaries"
+  ],
+  "defect": "Attempt stage/owner and unsuccessful outcome reason accepted whitespace or non-text",
+  "red": "Whitespace reason ended attempt; invalid stage and owner values created attempts",
+  "green": {
+    "tests": 54,
+    "seconds": 3.892,
+    "result": "PASS",
+    "modules": [
+      "test_attempt_audit_contract",
+      "test_artifact_lifecycle",
+      "test_artifact_commit_integrity",
+      "test_record_commit_consumption",
+      "test_lease_lifecycle",
+      "test_candidate_dependency_invalidation",
+      "test_operation_history"
+    ]
+  },
+  "limitations": [
+    "Complete CI and new package required for source change",
+    "Does not close whole lifecycle or real product acceptance"
+  ]
+}

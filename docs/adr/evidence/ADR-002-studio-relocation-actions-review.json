@@ -1,0 +1,33 @@
+{
+  "scope": "Full static review of relocation actions, recovery, status panel, plan and relocated-object parsers; bounded read/write transports reused",
+  "files": {
+    "plugins/app-store-creative/studio/src/RelocationActions.tsx": "8bd369f12e1ea8a25eb9b1bbceeefefa8c1d468f2b510d60fa42a65ece5b9a29",
+    "plugins/app-store-creative/studio/src/relocationState.ts": "cfe414d6a5c2bff37d900239235b477db40fb398a236873409944c6a818ce1e6",
+    "plugins/app-store-creative/studio/src/RelocationRecovery.tsx": "1368557bb601b3d7c4ef678f41acb83cf9936921ce3f107310c4d1f0d911b315",
+    "plugins/app-store-creative/studio/src/RelocationStatusPanel.tsx": "824f6a5d726ede6ee5d10574d37de6ad85b0d34c2d13e77af6eef5d51a7b3277",
+    "plugins/app-store-creative/studio/src/relocatedObjects.ts": "d170ec5b19751f149257d66a976dbb4d32c13945f8bf7aed73595f046e78b0a0"
+  },
+  "findings": [
+    "Unbounded action transport now uses verified maintenanceRequest."
+  ],
+  "notes": [
+    "Forward/reverse scope is bound to saved plan identity; roots and complete file totals validated before review.",
+    "PREPARE and SWITCH require separate typed confirmation and renewed review.",
+    "Switch callback disables stale shared editing before dispatch; success or uncertainty requires reload.",
+    "Timeout does not authorize retry or cancel server execution.",
+    "Recovery binds original source workspace and direction; callback disables stale editing before dispatch and unresolved state requires reload.",
+    "Read-only stage, writable binding and activation remain separate from explicit copied-object integrity; empty scope cannot produce PASS."
+  ],
+  "verification": {
+    "tests": 97,
+    "files": 32,
+    "types": "PASS",
+    "build": "PASS",
+    "runtime": "Node25.8.2"
+  },
+  "remaining": [
+    "Actual browser switch/timeout matrix",
+    "Final CI",
+    "Two real product recovery drills"
+  ]
+}

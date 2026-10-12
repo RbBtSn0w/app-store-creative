@@ -1,0 +1,37 @@
+{
+  "source_commit": "cc4b069cd12cb1e3a4675e0415c755c9d49851b2",
+  "source_runtime_used": false,
+  "package_sha256": "5c8f020d6e9b799fe8191b10628009c3a8134f2d268394e036d9ed2c36106e81",
+  "returncode": 0,
+  "log_sha256": "9d94496ed0814f3f2b5499f714ccb4f6bb5dfd3b26543b78f4302ddd8bd56156",
+  "modules": [
+    "test_validator_png_integrity",
+    "test_export_server_cleanup",
+    "test_v2_workflow",
+    "test_poster_validation",
+    "test_production_lifecycle",
+    "test_studio_release",
+    "test_studio_atomic_json",
+    "test_safe_staging",
+    "test_preview_production",
+    "test_relocation_recovery_lock",
+    "test_attempt_audit_contract",
+    "test_configuration_studio_save",
+    "test_configuration_runtime",
+    "test_configuration_preparation",
+    "test_configuration_layer_changes",
+    "test_configuration_installation_recovery",
+    "test_configuration_local_installation",
+    "test_configuration_owning_document",
+    "test_retrieval_process_budget",
+    "test_studio_read_origins",
+    "test_storage_control_projection"
+  ],
+  "tests": 120,
+  "seconds": 28.782,
+  "scope": "Independent complete-package runtime regression, not actual adg installation or real product acceptance",
+  "limitations": [
+    "Tests copied from source; runtime extracted solely from distribution",
+    "No actual plugin-manager installation, browser UI, cross-volume or real-product/ASC acceptance"
+  ]
+}

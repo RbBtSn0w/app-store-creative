@@ -1,0 +1,2032 @@
+{
+  "scope": "Pattern screening of all current changed UTF-8 files against origin/main; does not replace manual sensitive evidence review",
+  "source_commit": "cc4b069cd12cb1e3a4675e0415c755c9d49851b2",
+  "files": [
+    {
+      "file": ".github/package_plugin.py",
+      "sha256": "b2cace4101c56c3789259f6736d78b75b2ac11a9d1ecf2dc1b142cff8a0b1ad8"
+    },
+    {
+      "file": ".github/validate_plugin.py",
+      "sha256": "ef3addaff1e9fcccd2a196e1b338b532e21d1d4b201cb9d1b8e87ec76190ae2a"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "eb8e0a009feec3471edff332cce8bc85f80ecb9cf7a2ac8f5b52fd68dd61472f"
+    },
+    {
+      "file": "README.md",
+      "sha256": "fb3830e3e819b4c155416acb3776c44d05a9b5b3758eb43d857e8a1e38d01119"
+    },
+    {
+      "file": "docs/adr/ADR-002-artifact-lifecycle-and-release-archive.md",
+      "sha256": "a1667c4ee908d1cf5a0320707bc21f73430719693004099a14aa1413b607e55b"
+    },
+    {
+      "file": "docs/adr/ADR-002-delivery-closure.md",
+      "sha256": "d05568df62145f4760b38b652a757474bb43bf0de8aab9f2fc4d4d1172a9a8ed"
+    },
+    {
+      "file": "docs/adr/ADR-002-entity-contract-audit.md",
+      "sha256": "3d0cf9fcf1b7da8b90c05606ed8391c4951e8fa06941af995fdc469990ad6e67"
+    },
+    {
+      "file": "docs/adr/ADR-002-implementation-status.md",
+      "sha256": "3250f433137ab560f2d33e39c4cde567909a1af3d10f3903eec8cb423c357f8e"
+    },
+    {
+      "file": "docs/adr/ADR-002-precommit-review.md",
+      "sha256": "76dd19b68cb24020ed63b019194643a955923f2946477e72e078d14ed6d9926c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-archive-policy-contract.json",
+      "sha256": "0f6255330d106f95d5a7fe45b15c84e36f3762d764a4e22041e39ce690c0891e"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-artifact-core-review.json",
+      "sha256": "2b14ee16a7dbb3d18e2d345c57bbe416ed403009d76664b0d21db0db2cade6d2"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-browser-directory-preview.json",
+      "sha256": "d54c4c2e1b1d311f49cac09c2aaede5de1beeb8ba84e27f943a0d2ce38a096ee"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-budget-declaration-review.json",
+      "sha256": "b5998892b26546d0e758ac20bdb275e742047c812d2fedd23c47a0c3e15c51bf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-candidate-approval-review-c98edbc.json",
+      "sha256": "e19a0dc202794ee084a1c27dd0af205bda0f141de11de127bd993984d83e6949"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-chrome-renderer-review.json",
+      "sha256": "6677067d78ceb6514ad01fb349e88357a3687eedbf1de625dd837d21120e1d61"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-3c200dc.json",
+      "sha256": "03a730f3d157cbb2b8d175c8ddca53d841de9c527fe361a850679ff2be330f36"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-5bcf5e2.json",
+      "sha256": "443cbe115c7662dbd588a3e83d7387936e238d8230f84ca84ee002daff3d38b7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-6faa6b5.json",
+      "sha256": "31b24e5db5e81b834f6ec6d81cbebc0ae089e77106f35370851ab9c763fee6d9"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-9d57a9c.json",
+      "sha256": "6a812af2251fd5bb6b6159bc78c0c877b9257541d30b5c5aafa52fb5462ab27f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-a28e698.json",
+      "sha256": "df191c0df95bfa49b5868f17c2442b7f6a9e633ac4b02233ad4b58e3278fa0f3"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-b2477be.json",
+      "sha256": "2000d7eb8452dd33d56cfe0c52aeccbbdcd71242a506bf61d877de94a3cadf39"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-c98edbc.json",
+      "sha256": "e14cdf64d8a0510847c3a7018fa6f6850bf1717ee4c8db20fb0154d93cf82bf4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-cli-entry-review.json",
+      "sha256": "7b888a31b8a78ed2558b44611a6f844cc0a8a61048b28f155ca8665755467ebf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-configuration-review-a28e698.json",
+      "sha256": "ccd29fd25453c1beb58cdb78e10a2deb6d9a966fe4ea97aa43a910b843b0def1"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-control-projection-review.json",
+      "sha256": "451c1b332ac03ea4d70030a2fde4d8f9c682d109ea35046a6e73d2ac495e641f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-crossfs-24634da.json",
+      "sha256": "b530629f0f1c004ff52ad2566be8a89554eccc76c799a46ce25642920a079072"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-delivery-module-review-c98edbc.json",
+      "sha256": "77bea6949e6dc7820ac941e3ca4ab0744b47db82647cd61b66b3fe57ea8ccbbf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-documented-cli-parsing.json",
+      "sha256": "674e2773a50ea3d95177887fddc1cd68d1fd4eea6c7bed63998960fd436911a3"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-export-module-review.json",
+      "sha256": "0acfcf37043bae6a14720a6ba73751eca764e2bc6c607d855c855c6a4b1824a6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-export-server-cleanup.json",
+      "sha256": "616c9af3f476db433ef1b586743ee9e136d0a71bbd4df443b7d1e9e4f7d259cb"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-external-parent-replacement.json",
+      "sha256": "46557740b4c4467e7a9ffa28e274d9100b4803e39e1224007c3123f112193589"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-external-storage-review-c98edbc.json",
+      "sha256": "71285d96a3ba58853aa14fad38fb1274738b00a5afec9ff183a8544f92e09faf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-forward-source-review.json",
+      "sha256": "168558fc2eafd4bee94057d26e7093733f207cf2cec23798d7714e6e371b825b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-frontend-review-inventory.json",
+      "sha256": "ab820ff555c4b483b180a9ac3a79aa746b084b89c02c4a4da1d6ab84083e0401"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-git-staging-review-6faa6b5.json",
+      "sha256": "ef04443e22da8a1595571f4f175a5d50a0438f6f096f3ecab71e9cca122cb039"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-history-review-c98edbc.json",
+      "sha256": "c278cad081d52688abb5794cc9ad2162c31812d755d01ef3b398f4d6681d93d4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-identity-incident-review-c98edbc.json",
+      "sha256": "79b8c571fbddaa1a9f2f81966ca2a197ab065b0258e2084a9997d0fd8a51fc05"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-implementation-history-2026-10-09.md",
+      "sha256": "00506adecc9048d6c05b094d354fd7034bb6a9900acc62450749656c7dbc7819"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-052eeb5.json",
+      "sha256": "a648d6c5fae154388147409a50c671a3616f847a95a967674356a16c7794b67d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-622d224.json",
+      "sha256": "87badf02292c65ce66e5e774868100d847d2387a395369c63993898f40b1614a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-7037630.json",
+      "sha256": "5201efd31ccf2852810c21a65e948308e09fe48e4c221e2f28188eab96dc37f7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-9d57a9c.json",
+      "sha256": "e26eff736397f06d3eb273fb22ed6bcd83df07911af8a3bbd5b6f95b8313506c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-ec69c26.json",
+      "sha256": "d6230c5ee7c325a940ac921eebbeeb538c8640499e0ea92d27dc7c120c3e59a8"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-input-configuration-review.json",
+      "sha256": "55b40a259918b84e151d80a03e9506cc09a15eba65a4c30fc6338fb67f39af65"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-installed-24634da.json",
+      "sha256": "379f3fb3051fb6e18b9a88b5b8180d068d1d42c1e455351e46e40977c76ffc44"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-inventory-purge-proof-review.json",
+      "sha256": "4e1f2739ea2d9ab881bef14f844937412ab2e5b8d05b4045b9ad87a378a718ee"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-inventory-review-ffa1460.json",
+      "sha256": "19f22c7ffe2b042eeb7e285c50c350b70b31a6433a73cf2d371ecbfcffe19e4d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lease-review-c98edbc.json",
+      "sha256": "50764ad4f88cc4cbc8e3b16ac64372d7c1e80c0de3daae71a8b87a8a7423f09c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lfs-custom-paths.json",
+      "sha256": "cf710de12aaf16c8b1b908c568c7399425b7e43aa4ef44f6e925c89c451ee827"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lifecycle-commands-review.json",
+      "sha256": "abecfd1f5ad905ebedc300af93600b91a5f799ad9b5d8f74eb49de5ed1348cca"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-local-verification.json",
+      "sha256": "835c91092121e8fb6fa9df687031f52b6d3efe1cd08c3215b8f3e17e9fc9905a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lock-replacement-review.json",
+      "sha256": "bbb5880f035f176df60ab879fe2a57d60fd039b71ddabc08c202c885601b44b7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-main-contract-review.json",
+      "sha256": "a30af5a8ca0eddd9205e0646d6dcc34f5af37f740bb222e8c4696fd5393d4289"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-maintenance-boundaries-5bcf5e2.json",
+      "sha256": "fde4c5380b8400c9a343da7d5e26242b9a2b396c1909dd51dc1198cc701a5ad6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-maintenance-observation-review.json",
+      "sha256": "c6aac9f7045bc36ac51580724cf0158a55fd01cf3d44252c24b9f9a838bc6e11"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-managed-recording-review-3580e3a.json",
+      "sha256": "5378937038f2c0e6622b4831caa609e5a3140f1fe66bcf737636218639bd0987"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-package-smoke-622d224.json",
+      "sha256": "bcbe471e48ca1ed42a9807e1dfcea6b8ce5d84e11f37ff6d90478a8ae281d754"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-package-smoke-9d57a9c.json",
+      "sha256": "19bd68938b117bcb62f78d287f262260f3be1a29221e6bd2875bad0e062f8050"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-packaging-review.json",
+      "sha256": "879badaaf54c8d1277357ed2f30cdd48534d3182088039373e55670d073e3957"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-policy-identity-review-e70e281.json",
+      "sha256": "89cb7f66cd050402a73bace492afaf7db46eccadf2940225e73aaed884a5ee6a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-preview-poster-review.json",
+      "sha256": "d89aafe77159f6d3f3a4075ac72f27649a2b6aa90abec761aa3455ebcc21173b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-preview-publication-review.json",
+      "sha256": "655c1618029b0d3ed19a1a068b6f693ce8dc7c6a3c51d9f3954cc20223de0673"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-private-evidence-review-a28e698.json",
+      "sha256": "30a8ba487557bcb59538ebf6af651d488bc4357d8f8e019b75e4c865842a3c4a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-production-preparation-review.json",
+      "sha256": "b5552739319d97d483e4327f2e5f92e67121ee7a4ce0726095fa21374c9b93bf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-progress-history-through-17f4477.md",
+      "sha256": "5e29eb7301955ece21e43f06d10c7309aa854beeb174cb184f602ec717ead39d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-progress-history-through-3c200dc.md",
+      "sha256": "b27fbcb43c8a7d3d558f230a50cd3353195ab05387b871cf7479c0964892c569"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-publication-review-c98edbc.json",
+      "sha256": "99cb7c27927f7a792663b5c513b11baba7578b896d255268c168ba92b021174d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-purge-review.json",
+      "sha256": "d2e4a1878106e316fc0b164cc82ac8468373aa89228abce2b34f60c8d4c4b6ea"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-quarantine-review.json",
+      "sha256": "10d1292b85fa9c582cc2c6c1ce51c5079b72ca8022ada5bf517d483e84500570"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-recipe-approval-binding-gap.json",
+      "sha256": "dcf88d5710524f3aa8132852f1450ceb47042174c87fd8c83ecbd74a2272913d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-recorder-receipt-review.json",
+      "sha256": "5bfb1da6aa1d25a34fb69b18c866312e75b2681fa1bce9ce394424d1456a8f48"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-recording-contract-review-e70e281.json",
+      "sha256": "fe7066bf0c58516257f2b799e1a9d3058f6a30b4e2ce49e7e608a816d586fdca"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-relocation-core-review.json",
+      "sha256": "c159b4389cfdc664b9f7d7e169e28a9c12e45f291d4658f045f5fc0e70502b0e"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-relocation-inventory-review.json",
+      "sha256": "68b1b00ae8688a624a0c18ec04cc85b7e5ab98d378c1297b636041a9bc70ac3a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-relocation-retention-review.json",
+      "sha256": "b5337910e927c6c95a4fd3ce68028bcfe75c5a85911e62d9c7336ea92a2a6073"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-remote-observations-review.json",
+      "sha256": "b496b83df7ea136859f91bf5f7a810279eed8cbc179a1ed8bb807240f1d9b0ea"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-retention-module-review.json",
+      "sha256": "c1b08b1fbd027a38f28673b6857d7b04ee0d6ea719c7d0b1fd485b516eec9f24"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-reverse-relocation-review.json",
+      "sha256": "91ddca4e0f4b66f47de406bbd35c149ca9ed4cc8a2ca5ae200847ae502e5ed3c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-review-coverage-f89d644.json",
+      "sha256": "9aaab80140dd9b07d2af72620471be72672e039dc1e5770d0d2c4cba4e9ba693"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-runtime-review-inventory-c98edbc.json",
+      "sha256": "1eb508b5767cddefc803ad6bfb5215f355ffcefdc2a16fb6f5c7b9b84021e921"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-sensitive-evidence-screening.json",
+      "sha256": "5dd26e043e0589f86306221f92f209ab20f7e1653a33a27733cb9824ec4fbf03"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-shared-staging.json",
+      "sha256": "4038624fbaf3c640841861e4466a885afde59d0f54ce92513bf1c6a7c9821fac"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-skill-entrypoints-review.json",
+      "sha256": "589108dd4e89015fb8ccf63facb25aaa709e497e5645dbaf72d585f96d1d02cc"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-specialist-contract-review.json",
+      "sha256": "24df48df3cd0b8f4d8f1eac37e10d21aa44f04ab87b465f321548c621d1ec4db"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-staging-object-review.json",
+      "sha256": "7f190c549be9a7c9bf378a1adf6dc5edd02dadbb22901fd6d33cd7e44da68be5"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-staging-review-c98edbc.json",
+      "sha256": "41284822597a4929870ee3ce26e55ac20bbedad842bccee26942ca845000eec6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-storage-policy-schema-review.json",
+      "sha256": "456419da7be5c2dac7b7e217c9b736e6390b1d194c8a958a814303b204dfbd57"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-storage-video-review.json",
+      "sha256": "45db4b1ac3723b094fe1c50956815d1d9d990ca75f6639debe975719c28bd182"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-app-orchestration-review.json",
+      "sha256": "2f156708a15c7c2335a0589ba9583de53e042ab0f47d9135b9b9e32c7acdbe7f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-archive-policy.json",
+      "sha256": "3286cf148b71cc46835679956520338307d69c67309ded2ea0fbd2c8909f28cf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-card-rendering-review.json",
+      "sha256": "d14a7ffb1a405826f952e8ca46148397e90756daa095f2a58db18c7a145b213f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-contract-review.json",
+      "sha256": "0182a8b1dd76e08fe1f8fe57e3673a982b7a7bafcb61c0c348fd0e0fff5a7eaa"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-copy-history-review.json",
+      "sha256": "4fac0a6d93f191e6064c0da96706ea7b4c370989933e118a1422eb8d4cd3c95f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-directory-review.json",
+      "sha256": "e56bdc11e6616297b59a934ecd8dc34cb1dfa573ff5783fc54677b31efed5470"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-entry-download-review.json",
+      "sha256": "6ae8931270bbcf4918ae0842503a2da17b03001831dd138c5783a5d0aea03fba"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-export-readiness-review.json",
+      "sha256": "144278d1ffb4d68402e4febe2f0103e4e82b24a4426933c4951a586a9398562a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-history-review.json",
+      "sha256": "85e43bf00445fe0996ed8d101094c735c276491e025979ac607e14ed67f3c2d6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-inventory-review.json",
+      "sha256": "410c481c7c4a98fe188e9e3d257f5718b5254068b0496737a13e3e784a5b77cf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-maintenance-review.json",
+      "sha256": "ae9d8e60f865ab727e4a073878c5efa1f9f9376e5dd8ef576848b7b2913235bf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-obsolete-toolbar-review.json",
+      "sha256": "80678254b23563725ad80dc902bdda2469637b21e891958b1ed26bb358bf30fb"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-policy-browser-a28e698.json",
+      "sha256": "a34584139e0d607affdcf5a482c1600509abf7c32253353fcc8d7a17f01dbb9d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-policy-budget-review.json",
+      "sha256": "51b017a7fb71adb05736c2447d1630d8084316aefeae2de539fa12fe9e18122d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-release-panels-review.json",
+      "sha256": "7ab738800b87e7ea104e9ef956df1b359028e6e18ea54a4efb5109bda8016cea"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-relocation-actions-review.json",
+      "sha256": "6b0464ae3c653ab64426d2f97621d2462b30589208e65a498eb74ad5d548aad4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-run-history-review.json",
+      "sha256": "7acc6fbd38c7c736ca5174a191e7cdccab52612e15f4ec683b464067f4a44b19"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-save-editor-review.json",
+      "sha256": "3a09077d044e1f0a9ce4a0884eda2731dd56b0a3bcb17b035e2a294c2fb7073f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-server-review.json",
+      "sha256": "4051ed8b70ef5a9a4e4cfd5af3c88b60b30d604faf9cceb16d1d6f1226fed54f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-types-purge-review.json",
+      "sha256": "acb1630ab90e8aa273ebcd15ea5f1c525e4abf80c382702912bf486b1fd1c063"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-approval-integrity-scope-review.json",
+      "sha256": "c2de62a3e5018bf3e9beb6d8317d28a69bec696abbae9d78c5bc0d0297af98ce"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-archive-contract-review.json",
+      "sha256": "71034fab1aa437b402b75a79c4a582c7619f16419dbcb85596febf912a4c17dd"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-archive-location-review.json",
+      "sha256": "88c54d191d483be28665c87d05ac4ecb43f04762657922c5cc2bcf5511a99815"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-archive-policy-review.json",
+      "sha256": "e9e397f438ead9520069febe8c9eaa23b93e95944a8f0dc2de3b7f7705eb9d14"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-artifact-run-abandonment-review.json",
+      "sha256": "c1e7edaa602fb1e76eb443553cad38f5c816a2855d585ce4c488ce4554e6d84d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-asc-normalization-review.json",
+      "sha256": "0fc48847aab52e71b70b95333709e28270d1f49dd42b50f4754c439c9a6c4b9e"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-attempt-audit-review.json",
+      "sha256": "6821628ef1d010f321a38ee9e0dd4af5b9279725042f6b8ea7a73ce88e701268"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-candidate-review-target-review.json",
+      "sha256": "4b8a91afb8bf34f6e4180790968778500f60f75db435a73ad4ed3164cd7ce011"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-capture-dependency-review.json",
+      "sha256": "45bdbf19ca47e5a7020f3148ed56d75704bbbaf55e94e74e965e95c117cd0e5c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-configuration-identity-review.json",
+      "sha256": "30efd11c4ccfeb6437503ffe30681595c5a8081f111a0f6e82249373f88f2a8b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-configuration-installation-review.json",
+      "sha256": "130a3eca17705ca19e565b1432fab32574947fec0ede2331d4192aa20124f7b4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-configuration-layers-review.json",
+      "sha256": "546d448afd342ed742b8bba177d8de88ca5028abc50d7d2f698bc568ad2d8d6b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-configuration-preparation-authority-review.json",
+      "sha256": "84be322c2d15d791c5c70852e249d2143232edc84f786969f16a94ec9b8fc3fe"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-crossfs-permission-review.json",
+      "sha256": "bca359db799ede218498d17e3a1a30ee7f2f84f0d9f82976559a56e25c2039bd"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-deleted-workflow-review.json",
+      "sha256": "5edc1789196fe250604ecb2701f95f04d638c4e3f0396b2a8a1b58b4ebda9684"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-delivery-observation-review.json",
+      "sha256": "7805c946536c3725e5cf27a33605eefc09f017f40ad3dab9b98866004b54e26c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-delivery-publication-review.json",
+      "sha256": "d937ef4bfedfdec4b45be53729076b2677fac618872eecccfe0f2ae99412b2d9"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-diff-review-inventory.json",
+      "sha256": "d0fd557322f06e5b8c8d127763f793cc7eda5f07664dfd45b3fc291dfe843101"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-directory-recovery-local-plan-review.json",
+      "sha256": "fc3a437466bda41d2282dee55b589fada0fad8bef3bffd49792757159d82455c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-external-archive-review.json",
+      "sha256": "ffeeffa8b138b7c8555e4b5b3d772035096821c0551cbd02065866c7039d75ba"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-external-identity-review.json",
+      "sha256": "3066e50928fdc2abef1ce675f3804866789442f23eb027292054f62aa7d71372"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-external-publication-purge-retrieval-review.json",
+      "sha256": "faafdb694cea32d52cc173e51299011a39ad06487b6820f85b83bc8771106c8b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-external-store-review.json",
+      "sha256": "50ead010905fa651722f2b13c283df2b7f5915dfc330dccb571ce6c362787527"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-final-location-studio-review.json",
+      "sha256": "0b2210adf10133422a0e8634db42ac0de5f79e4f6ac851ba0fa32e9e3ba3fd50"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-forward-inventory-dependency-review.json",
+      "sha256": "f434885812f252d8f72c9c869a83e7861ad82e7badb8f74459aabd62110e9566"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-git-remote-lfs-review.json",
+      "sha256": "ae50b6af5458c38f7747d8e795e85716ee43f29369c54ac5968aed65393288a5"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-git-retrieval-review.json",
+      "sha256": "d0b34f1e9e1b685fab22a8a6e02feef8575c1215b38755a56f4e824ef4fd66e7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-history-timeout-review.json",
+      "sha256": "dadd2a9af65c482db5a9a63c6509bcf500907cd20af86863cf0caf283ad9adc7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-input-status-review.json",
+      "sha256": "624d606829a0f4d37c3822d5f4f01f67615078038e7db49e2eb0f1791561aed8"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-inventory-budget-review.json",
+      "sha256": "584634bc55d3404331e284c89fbdef2adbd6872a2eef67fe004b576a7d6ad836"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-layered-portability-review.json",
+      "sha256": "1b32a5752e615339c1a4a12f33be20cd8f17f5f4e5ec6e4a196ffbbf536201da"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-layered-runtime-production-review.json",
+      "sha256": "bebdf9ae97089cf9534433ea40872d8361f1eb8a1b002bd585a112fbfd332878"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-layered-save-review.json",
+      "sha256": "45b8c37e93e4a6bc29fcf4ceb915ce926df81ee3f894a1ea46dfc847f6ae4419"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-lease-contract-review.json",
+      "sha256": "4e6114f3e00fba00fe7c5255e7ef88cd4e9b4c135acb3c3bf621be4646a23d5d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-local-switch-execution-review.json",
+      "sha256": "c70f844986cd9db1953732838f44f8c39725c1a4f45fba59820a98334f570892"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-maintenance-modifications-review.json",
+      "sha256": "93f02486a41d037f9ddd593cfcbb9733efaaf06ae3f49e96bec79fe49edee7e2"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-maintenance-relocation-coordination-review.json",
+      "sha256": "fbafd444f6355093ca463ef6a2f4c63df738c1cbfd89549461e1f15e7f7f917d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-maintenance-relocation-review.json",
+      "sha256": "43477da6baa0bc275071c8985d7de4c01451436d352d097cef0b6ecd94a5582a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-managed-preview-review.json",
+      "sha256": "896d117d526fe54c2b5a94d1eb7b87b2e6af03f0f475bb425aacd4d3c76ae60f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-native-preview-archive-review.json",
+      "sha256": "7d21e7fd8cfcbd88a66c3996b59428e4a76c2962f92a988664c32efea78f0f3d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-operation-history-staging-review.json",
+      "sha256": "f22e026d105c786b29935493f2536b4a8c9ff4e2966d33c82b43b9c4cb944f7c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-package-python-atomic-json-review.json",
+      "sha256": "c1b8be41515bf8f996d3cc62bdad2ae01b81546633b0e081e78ff247080f97d4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-png-integrity-review.json",
+      "sha256": "2f563c362235fa8fb3707ffa0c8883ef3d35a6afc401a2ddc96136f4264f97b8"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-policy-state-review.json",
+      "sha256": "c2932652dd799e557791889b6b5cc425d6bcb1d089e9ea532fdc105edda551e7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-portable-identity-review.json",
+      "sha256": "3ad19c89a67d033724534ea6ff8fc5f2d780b591805e853b554ad81940311200"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-post-merge-binding-review.json",
+      "sha256": "aa9aac3e019148264f9f00ca8a3234cf5edaca8dba98450de00edb40a246e8e9"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-poster-contract-review.json",
+      "sha256": "aa68684b989a753f07053c8c89e864df9bbbd47bb6aaa39f44043dd17732ba55"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-poster-production-review.json",
+      "sha256": "ba52758f0f90be25b1f65b2a09fed909d580080c8d54a9df6e1386f3e173be34"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-private-evidence-diagnostics-review.json",
+      "sha256": "c057a2dc33d9871ff6ff8ae7286536265881f66195d47ae1f2418b1d61d48152"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-producer-consumer-contract-review.json",
+      "sha256": "47ee94d31825b05099147a5726078242890b112f9da551a5b72ce6c360679600"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-production-source-review.json",
+      "sha256": "b1809070d7650392427f23c1126d3dad8e82b6e2f3ddaa1867316248e9a42a53"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-publication-consumption-review.json",
+      "sha256": "e3cbf47859c6e6fb18ce9886402e388b5338fc22f6b60658daa81d758c6ef4ef"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-publication-retrieval-review.json",
+      "sha256": "1642859f5459c36a666ed6e1c3ef0dd7ae785880fb2f0400101f0b4b7accd233"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-publication-review.json",
+      "sha256": "21d6d5e578723d2b954e2281e841d0a54f3f5d47e625fd092c6b52cb97eb11ae"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-purge-process-crash-review.json",
+      "sha256": "3822bfb1d2361ae92258895dded0dc384da480aa01e0c832b949ea8a8aec0712"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-quarantine-crash-status-review.json",
+      "sha256": "09a9177653cc0fae5f5380ee62db74fba2695eb73ad394a93e431b194ee602df"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-record-integrity-review.json",
+      "sha256": "40d682f3c12db43978b86b085c3fc0702e9272fdb8732b4348c7a54c8e33bf3f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-record-schema-review.json",
+      "sha256": "bf024171c656334b240365784b427e982234673480fe9f962e6654f8c03a6f70"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-recording-executor-review.json",
+      "sha256": "ebd7fc32b206243dd2dbcc19695491cff5f4c1f85cbbdc1763d1fdd960355c66"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-recording-media-review.json",
+      "sha256": "e5fe455a464f30fc04fe1aaf283359781297e65d7c217cb6561362efcfcfa2cc"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-recovery-lock-durability-review.json",
+      "sha256": "d6abc203f5b1f6f549c4fc156314bbf3c5874a087f5330c3de543d913b819a6a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-config-evidence-review.json",
+      "sha256": "5da81b3ebca9f2bc82d08e532acefc62229cf4a7ae92ba150f6e4ab7dd98ef07"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-layer-review.json",
+      "sha256": "c691ad12420cbd830e391d20a2ffc4f832ad50799c4ec8b3992e1bc05552b484"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-process-crash-review.json",
+      "sha256": "9ec7c8cdc57b0192a4115e6d7abbc826ba23ca18ff46f4629c5903189daac53b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-purge-review.json",
+      "sha256": "b61849b9e437bc021ee5eefd75456e737c30c41e5cce3073097dfc26d61bfa56"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-quarantine-review.json",
+      "sha256": "4aaf1e1a4e285fe1f4527cc8b943ffe764bc30fc0448cff227ad4d70bcfb1711"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-retention-disposition-review.json",
+      "sha256": "e422fd6ffc572fb92aac175f5fd60c92a2e6bdcd75177e362a559254cda4dbee"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-staging-backup-review.json",
+      "sha256": "94f800af94ff4d36edb75e193b1aa31ffe09b0ee6c4e91d4628b7e60d9ed49bb"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-relocation-status-review.json",
+      "sha256": "8a80a2f6c0fa4798b412a5d5144989905f09c7cb480d199459ad9f63016d7258"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-remaining-frontend-review.json",
+      "sha256": "0cc777c2eef55696c6dc17a500a91a3e7b95a2eb2156829f7f87ae9cd3aeac49"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-remote-observations-review.json",
+      "sha256": "bbebbe614fb50df6245bc9250d956a553e790c07cf8088ac2a6e1a808bb87967"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-render-workflow-modifications-review.json",
+      "sha256": "247c83bd969644372ac0a9e27b24a35a8cccc18fe3de4230b28a6579d3050063"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-repeated-relocation-review.json",
+      "sha256": "fa423546ff1d99abcca806ac9471b6c27ecfed146f4a731c9f6e8969f4dcb538"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-restore-intent-review.json",
+      "sha256": "a8c59e7aa9838f84661349f0450d565a11adee428aefaa1db5a827bf8ddc1607"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-retention-policy-review.json",
+      "sha256": "765d42bb99e5a1d59ae83763f696892b45baf80ff51ae2f91748a87bb6081876"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-retrieval-deadline-review.json",
+      "sha256": "94a4a8882a45f91a84a77ba1de4e2ee439a65a6001acf5d097477165f2a61a65"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-retrieval-policy-review.json",
+      "sha256": "38dd3a94776007e61480b15fbe18aca49ecd4a7dff490c4863d26f1f71a50c90"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-reverse-layer-review.json",
+      "sha256": "ab6ee09589e2ed266d693f5c6f4a40333e8d1fbdc0954aca58dcef15d08d33e4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-reverse-plan-config-rollback-review.json",
+      "sha256": "a4f936aa6dc8ec57bbd46043007b05657df5764eab210f92e77978ccc253ccf3"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-reverse-switch-rollback-review.json",
+      "sha256": "9bccfe69992d9d2099007adf8b1fc0cd3b11fa98d0e832385a1064a6dc7d1757"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-runtime-retirement-review.json",
+      "sha256": "5bb2d6cf7a9f8cdfb610fe062450d1eebca8ca401c3359b976843f0ad752fa53"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-server-cleanup-review.json",
+      "sha256": "8b69ba16edba3294db2a2eba3f713ca51e5e09b2fdbc9b044d8f6c0b90f67f1d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-staging-proof-review.json",
+      "sha256": "e319864e949a669b0e33d5efc050ff58fe8b41634d924427609f955f6ce90300"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-storage-panels-review.json",
+      "sha256": "dd5b357a9ad001b15ac84a3887e5a9d8b76fdc4ee9e5632d86b1530ce690e7c3"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-storage-preview-review.json",
+      "sha256": "c5b662a967020a7e9263eaa358a990264dae4c8bde5787eb0e86aed04faac36b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-studio-maintenance-recovery-review.json",
+      "sha256": "3a001420d3a9a06f4ce0fb55af25bd2943adcbddce71af4034d0bdfca5b3dc9c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-studio-publication-review.json",
+      "sha256": "76ea6e3baecbb4001558858308dc4739cb39a2a01f16c2ad89ca69fd91dd2f4f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-studio-release-review.json",
+      "sha256": "6e21ea761cf38286b708881e782e43c51bce8a7ec2ef603622fab88b07a90d26"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-test-validation-policy-review.json",
+      "sha256": "cf10e897bf880db86d73d81dc2f2383e4b654ca5a5da882058c4866e5b475e01"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-validator-module-review.json",
+      "sha256": "0b44866429fc390d9aa9fe281baf1453260aaaaa1ce13e66f6b1893510653d5f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-validator-png-integrity.json",
+      "sha256": "9576046d3605dfd5c6457bc2be772fc97eab846b76e302ed33ae55665a6e3794"
+    },
+    {
+      "file": "docs/artifact-inventory.md",
+      "sha256": "a6c97128436bc2ffdd56c61a9d218648cdd62670825f0831be9941a3af630844"
+    },
+    {
+      "file": "docs/artifact-maintenance.md",
+      "sha256": "b27b91740cc732e4d683bb1e2f89e8c17043a5b7717684ee59df886bec24a309"
+    },
+    {
+      "file": "docs/artifact-operations.md",
+      "sha256": "14f5170b0325d46f1cb6f35d16fecd2852d19fdbf2716065577c6b745bf1402d"
+    },
+    {
+      "file": "docs/git-archive-retrieval.md",
+      "sha256": "56049c0f0f0666de9313fef6a277e80245cbf25ee56d5a89a2c873e8d949d119"
+    },
+    {
+      "file": "docs/publication-observations.md",
+      "sha256": "cad782e09f4bc68b42881eee820f6df672031757ecd5da7d8f52ef2aeab71015"
+    },
+    {
+      "file": "docs/releases/0.3.0.md",
+      "sha256": "6f7fbba98e3a8adf98b7740c1418a64f0ebf00778461790d96c2a4f15cdb6fc7"
+    },
+    {
+      "file": "docs/storage-relocation.md",
+      "sha256": "fa382ab35123c3396e4f803592c712d3ac69fc8044c2640746572d697709fb27"
+    },
+    {
+      "file": "plugins/app-store-creative/.agents/.plugin.json",
+      "sha256": "1fcccc4acff6d9be7bf5ad06f420acff5882f843372d47ab17da4b5cca052167"
+    },
+    {
+      "file": "plugins/app-store-creative/.codex-plugin/plugin.json",
+      "sha256": "b2767e425ae198c0281cc2b7f055a09bfc103d9525345e78f8a2ee5ee8c8b9f0"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-design/SKILL.md",
+      "sha256": "afff7dd18b6a5655dc351418e9900d7ea2ff36823c6462334cfb110e8aac4baa"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "sha256": "3a1f7f32033f5c842e02db695f81f9b32fc2df592d825fd3b8da426499426521"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md",
+      "sha256": "a0e8ab4548e6df4b0dd5de10f102eb5a9189ee5ba91e0c90b70a865aa76ec035"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-validator/references/validation.md",
+      "sha256": "4a49d2ecf2c735689c52800e899204ebda0ab54440d5c524a256bd4ebc07cc7f"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "sha256": "962034274f367c81c7acaa0aa5efd8fe1e08ac92dcf4a1d3ea373a5b69f86dac"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md",
+      "sha256": "ddb7d0bb99d5c53cd5e775595edd1d7bdebe67c91715efc949201e52fbc49a61"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/iteration-contract.md",
+      "sha256": "936885ba5f803eb971a60fde4363c131c64064bce1318bf2e3107e2d88c9ff2b"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "sha256": "4f26078d0805305dbbd0ab18279db1419bfd7428f1da6ec6c334f75c160cbef6"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md",
+      "sha256": "120a5965c81ba9fc5c759240a5034428868633aa69903639de6cbae07cdff3a6"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/workflow-contract.md",
+      "sha256": "dc87de92a56f30184be1ef7fe4f968fdfa8a227abe707d21d782d2a5b958af82"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/assets/templates/creative.config.json",
+      "sha256": "bae34246de0fc5371d336685bbe0409c59177999de005492e0e7d42cad385fbb"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/assets/templates/validate-app-store-creative.sh",
+      "sha256": "c075d4badb9d15e007600a6e29b60dbbe0fa58d01e971a93149b927d06f88603"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/schemas/creative.config.schema.json",
+      "sha256": "326fa4517799ad47226e90ece56f89f8d0fc2a2893c12bcd0845a0196388ac2b"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app-store-creative",
+      "sha256": "21f085b5a55d7d487bad403722de278dad5044ba7bf7268353769d2215c72aea"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app_store_creative.py",
+      "sha256": "76555d98930e3ba1cf980f744ed19f1eef3748f31bb62147fb9bc76d11efa04b"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/archive_policy.py",
+      "sha256": "f421c8e91cd09dd2d4197c95897ad1f6e5cc6310bbeb686ace99d91af0e0b063"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_lifecycle.py",
+      "sha256": "a3edeef99b28dc7c4155c95385472bb1dd66919acfa1bb719db0b4bb4ceeb1a5"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_policy.py",
+      "sha256": "9ad2b2c302e9e17ba5286736e112f5114daee8ffeadbbce5ab55d2534e20de3f"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py",
+      "sha256": "08e9db0993efc0dd7e22fa14d40bc7c6f2b56e9d0fbd924c377540a09b8971ae"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/chrome_renderer.py",
+      "sha256": "ec1d41cc13a0926480d05518f8143ce151921c5b9d24b94359338dcbcb234026"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_installation.py",
+      "sha256": "d04f1bbd61dad5ee2c3fcadbf0964491dd1723db54458e91fa1dabecb9fa2759"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_layers.py",
+      "sha256": "b3413f081be26ba2fe0af9d73506a3746dc37d18f7a91b9b4ce5e7bc8f6c93c7"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_preparation.py",
+      "sha256": "2f4b98fc282c43b3b999226890950fe3eec813b78b204e960888ca9c430c9b7f"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/delivery_lifecycle.py",
+      "sha256": "ae8ce36b9b9807e21a9dcd26c993b509e3ba6dadc6b5e7550f5345a68fb5f741"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/export_engine.py",
+      "sha256": "d5fb65f5f01b44b70c2c29a509f5f9acbf10a75694857824a816916ca562277e"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_delivery_archive.py",
+      "sha256": "1bf5a7fe01043df3fab074a0c5888cb27dbd48286e5426cef8f14b89da2ebe3b"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_media_store.py",
+      "sha256": "514ea3f216aa5dde7fdf1fe7275b7c002d3e35c471dd202b52b308cc07db15ab"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/forward_source_copies.py",
+      "sha256": "d8d7471dfc312141e1ff50f35c80b033a62b7159c41ea1fe4e99994c16799a9d"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py",
+      "sha256": "f9345b0866ae47f50503e7d88ab80af1e35e14f22378dc28449c23fee57bcc06"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/inventory_lifecycle.py",
+      "sha256": "de22fa31f82d3758c9326779b416a9369f6559f98f80a21772d5f3b569cc4397"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py",
+      "sha256": "a2f97ceddcbd231b40db434e50c7c8c769ac14d80fd27028600e3aa5175d5a70"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lifecycle_commands.py",
+      "sha256": "a9821e24e487a0bc3eaef5e4a53430400136e6f6e1ea2bdcc5aea0093cddc4e8"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_fences.py",
+      "sha256": "ba67fcfeee5d066b7b2451c50818d2e825ee4ad3639386257ae3e6078a7f3bae"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_observations.py",
+      "sha256": "29451dd39c4264549c7da743420b80f3e155d5335926060efd381821eddb090c"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_poster.py",
+      "sha256": "e1ca04ac3764a2dd1d4b341242c53f835da34cc289ee8aa2dff80587d5b52130"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py",
+      "sha256": "2ded0998d15d4237e7c8fe3f3fc6c83d90e759c4195fa699293f9ee785db59e9"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py",
+      "sha256": "66b3a6cf67958707a4a3d86ebdbf0c5b69a31714345e23e20a10286bf33437e0"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py",
+      "sha256": "13c6a2bde2f5a958f2a1b4d899c5bfcd93c317982489371ed375a0a6b48e0edd"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py",
+      "sha256": "b12c8136f8763705bf16f941d01658be8b4608bd2fede2ec42c9f56d8a9c272c"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",
+      "sha256": "82bb4b3fe80d3f3e86f6bb52393d66edffb2faa903190a5515bd08a07d9f68be"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/produce_app_preview.py",
+      "sha256": "994f17d02e39dbafb91c10f98acc92c42256d4dc0aac8f9d1bd39df20279aa9e"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/production_lifecycle.py",
+      "sha256": "245c4576a6964169851a446f083968b46683264589e19e63292c716f9ede4d7a"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/project_identity.py",
+      "sha256": "602c7114ceaed27be4ab29aa45bedc89ae1983a0d8a43b90fe32f50f530500bc"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/publication_lifecycle.py",
+      "sha256": "48866f30557b4a166d1e4c9e25ee87fc6eeadc8a95a28ccc4f2592eab3a5b29d"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_execution.py",
+      "sha256": "7293a32a1cdb2a96ada3d11207ca642d8750a7b336bdeb61329e67fe5015545d"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_guards.py",
+      "sha256": "c2c72172c1b9ba63ff998ba94fcf8db648575db8992ecaa893038a2ddedbfe5e"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_observations.py",
+      "sha256": "4afff23a957ba4f92572cc8d675283d540ae299c92211131a6190f3a0595bb74"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_commit.py",
+      "sha256": "fe5c225098d7b12f3416ad0b89d52a2e8320d2beb78813be99132950827cc0c7"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_inventory.py",
+      "sha256": "18c40643c47609dbbf5fe395ba44610726fd72c6ae0718fd6fe6148b79d98e88"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_locations.py",
+      "sha256": "d07f47a01384a95e2b2aacf6bec72eea5d966645d1c1ae47fa3b32450200cb3f"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.py",
+      "sha256": "bfca16a0abcd1664fad53805621a54656c635c2f14392e01b1a3ce933d9a3148"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.swift",
+      "sha256": "e421b616f2eeb4ea2fa23eb5ca2bee7a850a615a49cd3dabdcd93f35e51eb7bf"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_adapters.py",
+      "sha256": "b7c35114eb7ac0fbe7ca3634534351273aa4f12cff46025b407b65e121ca0d13"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_normalization.py",
+      "sha256": "4372db64a647a4edb421e28c34d443e941591e41a04725aa3ac02a98660004b1"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py",
+      "sha256": "7e2df2338826648d639227ee573699287f51ede6ea93d829b7a7cf21712c8584"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py",
+      "sha256": "c916400c450562f570c92b3211a910338f03e443d466265251de066a20e33399"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_object_observations.py",
+      "sha256": "d67264e58f7cbd697ce5543153d3036b47e5adb9eb89b35c47f78e3deea64e2c"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_purge.py",
+      "sha256": "ab181c8f5e2319625d9c1698cc54ba6b2c249be9db87c9c5629338a796a62f79"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_quarantine.py",
+      "sha256": "55b796b65d273e9fbc6942a3852f8cd9e336746c50d05e8ee7bbbe95428ac2d2"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_retention.py",
+      "sha256": "4b441e706ae90d470dcc92f7bb655a5a6851029626b1e20934e975aa80cfbe78"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py",
+      "sha256": "f4168fc01160a118eaec6f5b489a3a1f5d06bd035eae56919a64c63b1ef717d4"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/retention_lifecycle.py",
+      "sha256": "c531d02bcdb9100b0ebdce9b69cfd391fde570667717de8bd60adabf18b5876c"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py",
+      "sha256": "70ef87b75034a78cc445ca0de108ec6f7b3218a0bed540a7383b25fdb1191cfe"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py",
+      "sha256": "f2679b571002a1c0915cb5d94d6bdfe4dd0788787fa0247b1e0e2f721189dbcf"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/safe_staging.py",
+      "sha256": "ec48f134d6f480c6e26667f1603cc69d31c5b289ba819f38ff3c28a91300275f"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/source_dispositions.py",
+      "sha256": "cfe17519dfefb968925b9a200aeac8bacddefecda38ae49f49ba9329bd1f55e8"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py",
+      "sha256": "594df0ee5784673b188619526cda86f3c2bc242e598198f03a9b3551440ffb56"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_configuration.py",
+      "sha256": "df4bff3d169f619edf8c242e7a3d8145b22b208a4f05ca7cf607ad57936846fb"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_control_projection.py",
+      "sha256": "2c9a1ed36503f22fd2f17b10116be736e56d41784d9be417b7441966ddfa8df3"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_contract.py",
+      "sha256": "8aa06352e44f9fabb5f56a435ca05cca2d80660f2b49d70b99583715d93e19b7"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py",
+      "sha256": "23694fe841dc9525641c211cef73822f0f973eb34a1bdc73edb4017f4485514e"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/validator.py",
+      "sha256": "28f4e890f6e42dbca03d8226efa1571e08827b80daf9e130ca91f9e7fce893d6"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py",
+      "sha256": "cc271e65271240350c58e4c7bb5338f3f2b07eb32992e675f6bd36d470eb4598"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/assets/index-BMX6LS2e.js",
+      "sha256": "e456c7d1530a2e321950282e6f80ad0df15e9d5536b72884d1f8e9271efda448"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/assets/index-D3-B8qrz.css",
+      "sha256": "47a4b85aab10a30d420b9f28c9c22dd1980c038a3228f6a2eafd8bc4549838c0"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/index.html",
+      "sha256": "9bac512d7a34c7acbc00f9ffa0c21f9762f66717e08efa118ed0bdf7075fc720"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-preview-producer/SKILL.md",
+      "sha256": "ac58e1fa3ee8ed02e440303bbe7fa4a95d5beaf4117f6621a7f1d8922f80bee0"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-preview-producer/references/video-capture.md",
+      "sha256": "1f82380199253e2800e89936c440e0622bbc540a34a7ef6cd1d9dcbbf3c36c8e"
+    },
+    {
+      "file": "plugins/app-store-creative/skills/e2e-screenshot-capture/SKILL.md",
+      "sha256": "229b0a847ac9139383f0f31a17abfe52b30046b402b7eed3160c01123aa83ac5"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/App.tsx",
+      "sha256": "e0e24968558130eb279e24668f143a8833f7f99c07687081c8a542e86ce4b60c"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ArchivePolicySettings.test.tsx",
+      "sha256": "886d93c6a975a3bc19eeb57d7c5b3a7c54fa5cc6666c3fbe73a9c33e290262f0"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ArchivePolicySettings.tsx",
+      "sha256": "36578d7f91e040cca9b1391a23271d13d4351f1b3f32088a3ddc77d3194584b2"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/CandidateApproval.test.tsx",
+      "sha256": "01567cb0b04b8ccb04d50a863960351ae9f646dc14dd414902fb370f314e8426"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/CandidateApproval.tsx",
+      "sha256": "310db55883bf124db3ce8944df11eb0008a880fb680a963487401c05670506af"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/DeliveryHistory.tsx",
+      "sha256": "0c5d75879956b50352eb100c1593100b6542117e3f4211b33c14009c67f93cec"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/EvidencePersistence.tsx",
+      "sha256": "be4bf31f04ff10655463638827a8e0ce1668566a7523d41939bed1d622b201ea"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ExportView.test.ts",
+      "sha256": "1695143ced42700feb53c5dbb6185ad7656de397bff0e0da71065164a039e058"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ExportView.tsx",
+      "sha256": "04f0c6a032094745ede544d97b406a87643b2337b561a51dd439cbaa8bf2d152"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/InventoryView.test.tsx",
+      "sha256": "985baffcdd89a88cd4e3ebd7fcaf15736049884acabc7c1f47a64f803be9dc47"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/InventoryView.tsx",
+      "sha256": "8cd202dbf0a3aea9017f5ed4067104776e59a2d5a884dae7cdd5d4647a0269b1"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/MaintenancePanel.tsx",
+      "sha256": "700af8974f30b906ad063d30c593363f599ea6b75745462e0b4d2da4ac419c1c"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/MediaBudgetPanel.test.tsx",
+      "sha256": "d8cbbd664a12d729c0a4019012f3adf04f509d4fdd1e83f10d98df5118afdcfa"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/MediaBudgetPanel.tsx",
+      "sha256": "b03110d4cc33ddb3fabbecfeb273e67f3dd88378c71a5940a0ad08ccada924a1"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/ObservationEvidence.tsx",
+      "sha256": "071e7aefa71356eb484c9e682dd621d96239509a1def7a6a6c3b8913c97b5fce"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/OperationHistory.test.tsx",
+      "sha256": "57ab9834b9e82889d6279ba6ad0cc37daef8de207782248d577b8f602f46878b"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/OperationHistory.tsx",
+      "sha256": "4ff10c5582b16fa1e14048afbf87b9cfe630981b6913d540e03b1ce647f3baf3"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/PublicationHandoff.tsx",
+      "sha256": "f079538c58637c7ec0d791165528d45edd3be219c098ab1b15048a9770080eaf"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/PublicationHistory.test.tsx",
+      "sha256": "1590700bc423475d65fba2d0d40115c4f2db1aa0acbc25382a3f652ae2434981"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/PublicationHistory.tsx",
+      "sha256": "092f413e853fda85b4d5799b7cdd6e6080a70f342911c63e807e99405b4fa411"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationActions.tsx",
+      "sha256": "8bd369f12e1ea8a25eb9b1bbceeefefa8c1d468f2b510d60fa42a65ece5b9a29"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationMaintenance.tsx",
+      "sha256": "2fa8f02a277b99fd494a06190c82af2bd5591a36c3c13c4ba80fd414eb804b86"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationMaintenanceHistory.tsx",
+      "sha256": "dca10a8717359a1f034ca312bfd839c14381c9415feeee96d7e5532651988b51"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationPurgeReview.test.tsx",
+      "sha256": "19e1ad70315bb01015e441f22f4d79c7ff782edc38c75568d43781040bae8c21"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationPurgeReview.tsx",
+      "sha256": "b45fb64f44c19d9b1509e83b0979cdc39b31c193d04915d80dada6164753dafe"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationRecovery.tsx",
+      "sha256": "1368557bb601b3d7c4ef678f41acb83cf9936921ce3f107310c4d1f0d911b315"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RelocationStatusPanel.tsx",
+      "sha256": "824f6a5d726ede6ee5d10574d37de6ad85b0d34c2d13e77af6eef5d51a7b3277"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RunHistory.test.ts",
+      "sha256": "82e84bc53cdbccd5eb2434787cab6755c58e0b9365dd2aa9560b3c14a1f8afcf"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/RunHistory.tsx",
+      "sha256": "3beceb286471e34e6b449121660cf0f5a6fd7af33ae75d419e9fc29f3a86cba6"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/StorageSettings.test.tsx",
+      "sha256": "4c5bf776161c995472516b4015d34cbc1291842c5ea2054611647fb8c032d9e7"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/StorageSettings.tsx",
+      "sha256": "a0f7ba946b0b98eb4161df0162b57f698904730f37f4f4b8b58958fdf2c96a49"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/artifactPolicy.test.ts",
+      "sha256": "af8a033bc447e106238f112548d2d001ec76c0b2cca366fda76381a74a9e1a8d"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/artifactPolicy.ts",
+      "sha256": "d4d98d50c7770950a9a7f9d8d6a7b144119a83c0e3c08b64cc8421fe5ce9ae74"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/components/CardView.test.tsx",
+      "sha256": "8884033180f34276aae3ed13c5f72cdd327d08637127ce6d4bc12182c56d764c"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/components/CardView.tsx",
+      "sha256": "c7e8724493c5c797b4998596a81fc199b45b7e3a7576f2a2f936b474e01e38fa"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/deliveryStatus.test.ts",
+      "sha256": "5ad03ce8b4a9908001fb9d6e8f2782c9951cf07241cacfe8125cde5af713c712"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/deliveryStatus.ts",
+      "sha256": "7aa9430efef8803ab62f01cda88ba7d1d5bf1c71c8ec25def06045465b4ff005"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/historyRequest.test.ts",
+      "sha256": "2709cda9b5a0d78cf97d77b0e385cf3ee72dd06d050aaa34e6ef8e076700b427"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/historyRequest.ts",
+      "sha256": "46ea4181a7ae41f87d46c0673fe76817f5a7f956c8e7bd90b3e78ef99f0a11a3"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/inventoryPresentation.test.ts",
+      "sha256": "a5d99d715d95078d3aa276ed67a7ee5ff03b880d36df907d94fd05a244e9fb1c"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/inventoryPresentation.ts",
+      "sha256": "cf229d3d061c891c14136cc31e7744bd88d4eeb6322f27bb7fdd6314a00afe38"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceInspection.test.ts",
+      "sha256": "38f8c282e0db54584acd24b37bb9005ed1ddaca5ba64bd098cfe09f87e591cc9"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceInspection.ts",
+      "sha256": "22a1574a43e3d58ba023a2aa3e73ea79a92c3bb36c44abd7fc1f7169e660714f"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceRequest.test.ts",
+      "sha256": "4da8d711dc50bb3a503594af674e980dff4cb801fefd1671c1f69e703b7f50c9"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceRequest.ts",
+      "sha256": "9a3d631c721e2f1dad024a106bd1e92e8210ff2478ef588a1baa3065db1854bb"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceState.test.ts",
+      "sha256": "f28cbd166b4b6c47e6d2c33502d957ad9db078a7ec9ea64a2934c17db5fc9037"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/maintenanceState.ts",
+      "sha256": "191291b5e6d2150f351d1f970764be39154548b0506429842eb6b0c2f6af9133"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/mediaBudget.test.ts",
+      "sha256": "9bffe9084e52855e5f66707e2ada15d15c99d811b3738ca370339c825b4349ce"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/mediaBudget.ts",
+      "sha256": "75fd3a90418a396b835d46759f45e18a766092e020851191031bf08fda421b03"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/project.ts",
+      "sha256": "61db4420e59c4b00a5b45ad6acd47e0457b2d16105bac4796af22a3f77738fd7"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/publicationHandoffState.test.ts",
+      "sha256": "4bad0eeee51b96fe78776b85bbf7e3fb28b9972024c74873f3a02eeb90490f30"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/publicationHandoffState.ts",
+      "sha256": "23d3470a8120d9aa8d0d4aee1502650987c50f5cd103affc3761907727f2417e"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/releaseState.test.ts",
+      "sha256": "2e1ea68078666d939e71622c8afddf7097b2559c5cd1a0a598cde00b8043076b"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/releaseState.ts",
+      "sha256": "a795fa5be76c51c95520e48fee4c8af9325f02f0ffe8d9b0a27f6a970d2819cd"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocatedObjects.test.ts",
+      "sha256": "1f2bba07cec51fba2d44dcac8a9f095a137ebb7a60025f7f74c1cbbcdb73819c"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocatedObjects.ts",
+      "sha256": "d170ec5b19751f149257d66a976dbb4d32c13945f8bf7aed73595f046e78b0a0"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationMaintenanceState.test.ts",
+      "sha256": "4c7c781f3215b9b03065438d7b46cc26c14d6726b9b81bf0d37c0d5b82fe13a7"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationMaintenanceState.ts",
+      "sha256": "3a733bdfbf8fe6d7653278f02c83c2a934bf9afd6067e6328492e563705adfac"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationPurgeState.test.ts",
+      "sha256": "1e5cf4d0365a2e87658a42b53d29be35750b17aa12cc723019bb9a42a8e1c309"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationPurgeState.ts",
+      "sha256": "b7203db1bfdb033706bbcf51685ee30d52624ab694aa929c12453577106ee58a"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationState.test.ts",
+      "sha256": "aa3b5304920fd5008f5928c7bcdaec3fac94e1fa700f309164653471d9ea183e"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/relocationState.ts",
+      "sha256": "cfe414d6a5c2bff37d900239235b477db40fb398a236873409944c6a818ce1e6"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/storagePreview.fixture.ts",
+      "sha256": "42f001b4cd372a152a46d27144e44c06ad19a1f5dfa4d811e3e9fd438302c471"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/storagePreview.test.ts",
+      "sha256": "4694886925665c418bfd8b7628367b225bb51492746129cd857ad5289d6b507c"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/storagePreview.ts",
+      "sha256": "d36987670e13fa51da3455e5fecb4133c5e627d2af3940d1f494f544e2769573"
+    },
+    {
+      "file": "plugins/app-store-creative/studio/src/types.ts",
+      "sha256": "b29a8310f713f2be131b6b00b52d4aa1fefc25604171236eef4237bf9ff6156e"
+    },
+    {
+      "file": "tests/test_approval_commit_integrity.py",
+      "sha256": "2dd6ce1d4bdbf10039fe6390b055bb38216b3efed8c2f565685a0cca869b8950"
+    },
+    {
+      "file": "tests/test_archive_manifest_contract.py",
+      "sha256": "66cc90d835f23d819011984fcd064e8b2561dd69ded4fb8fc0a4fa362d197b94"
+    },
+    {
+      "file": "tests/test_archive_policy_configuration.py",
+      "sha256": "52394dc764ef58b33576c524f904c043252f14cb9daf60eb239a421fe822a4c9"
+    },
+    {
+      "file": "tests/test_archive_policy_independent_retrieval.py",
+      "sha256": "2aedbbdb0ce788672983a25153c66316109160f47b1a0ed3b3bb892ee19d8861"
+    },
+    {
+      "file": "tests/test_archive_provenance.py",
+      "sha256": "e1e90aac99b5466261827a742420f5c1666d93fb41a2ed5fa8e195ec6f8febad"
+    },
+    {
+      "file": "tests/test_artifact_commit_integrity.py",
+      "sha256": "ff90a07ca284bba15b5850773f3622c706f36cf58bab94954e6b3822a1c75f26"
+    },
+    {
+      "file": "tests/test_artifact_handoff.py",
+      "sha256": "2fc0ab2efc01a082108c2d9a3bb21a0e07eb50a6aff5e574e2e6089c1ba60da8"
+    },
+    {
+      "file": "tests/test_artifact_lifecycle.py",
+      "sha256": "967d6083c04a0aca22cd4527dd62d055360b327b91419a3750c7b2b4ae228ee0"
+    },
+    {
+      "file": "tests/test_artifact_policy.py",
+      "sha256": "b527dd7d843d656c2f8bdc8be4681a9f7a0b58db136d5ee56a834104c068204f"
+    },
+    {
+      "file": "tests/test_asc_observation_adapter.py",
+      "sha256": "f6d15c00db240b5dbecfb8e978a65cbf23a801f56bb4a2bdb91e6e5480382a64"
+    },
+    {
+      "file": "tests/test_asc_observation_cli.py",
+      "sha256": "072772417b24d9afc3ce13d9f64845e39543b1fe609307ec72af015910a6d680"
+    },
+    {
+      "file": "tests/test_attempt_audit_contract.py",
+      "sha256": "d2fd393a8a93337a7f5955c5f68288dd7f3c613b827951f5f06fcc895060761e"
+    },
+    {
+      "file": "tests/test_candidate_dependency_invalidation.py",
+      "sha256": "d72316641066456af1c2259c7297154b1905515e98f94e3990e9b437eb82d8fa"
+    },
+    {
+      "file": "tests/test_candidate_review.py",
+      "sha256": "2080918502a3d6092683d7707077002ab2df7265e60106cca5cc03251525483a"
+    },
+    {
+      "file": "tests/test_capture_artifact_import.py",
+      "sha256": "85dc6a69711ca66a11db7317df21bdc2668b6ab506002c35ecf02222169aba50"
+    },
+    {
+      "file": "tests/test_chrome_renderer.py",
+      "sha256": "a2d372ec65f77ae9b8e2eee80c8ae7a245b368f90e9eddd591ab80e009312a54"
+    },
+    {
+      "file": "tests/test_commit_abandonment.py",
+      "sha256": "a7f1b6b8d8a1a3899eef929bc6f8c22c3e121e6ef633c92e3c9b349b3d65f1e5"
+    },
+    {
+      "file": "tests/test_configuration_cli.py",
+      "sha256": "151d63f7ad1daacb6433e2c7ca0a49d095eb4c700500b05b44aaeaf0d4dbc6f1"
+    },
+    {
+      "file": "tests/test_configuration_installation_recovery.py",
+      "sha256": "e1ca2b4d16ba53c363ba47cc16f47062e56d5acb466fbdb752a8a4ab3c5f71f8"
+    },
+    {
+      "file": "tests/test_configuration_layer_changes.py",
+      "sha256": "915f51c211ba188c141d7cdc8fe4d62ad9b71131bc9741fd0899d013c4a04772"
+    },
+    {
+      "file": "tests/test_configuration_layers.py",
+      "sha256": "1232ecc2d6bf9bd5903659aaf4f92476f2ed59512ec2eb9d491f6f6293cb6d5f"
+    },
+    {
+      "file": "tests/test_configuration_local_forward_execution.py",
+      "sha256": "c029ffe76a7834652bdc994e8849a698bfe37563137cc25f47b8004b6924a7d9"
+    },
+    {
+      "file": "tests/test_configuration_local_installation.py",
+      "sha256": "ad5e1b3e461ac791a666a4922ff7801980907ef9a8c7057b589b6ffe299671a0"
+    },
+    {
+      "file": "tests/test_configuration_local_relocation_plan.py",
+      "sha256": "4af17c985054becbde2f6e2572c18e3d842e2e570e036b5fe7d95389ef4e61d0"
+    },
+    {
+      "file": "tests/test_configuration_local_reverse_execution.py",
+      "sha256": "e9b6b1c9b00565b9063f636d3c22d3985e4ac4306168822aad866a752968e867"
+    },
+    {
+      "file": "tests/test_configuration_owning_document.py",
+      "sha256": "ae8ea1ffa11ad7c56f95f15985b4576a4a689a8435e198dba6575ee90089a491"
+    },
+    {
+      "file": "tests/test_configuration_preparation.py",
+      "sha256": "45c817d5b1746b7d0a1b2533d16ab9c3616c51d4be6361c006d1ef436ca80b38"
+    },
+    {
+      "file": "tests/test_configuration_production.py",
+      "sha256": "cfcce0c4f8f28088634c5bfc7ea21332a0f98e176da8d9110bac8866307c085b"
+    },
+    {
+      "file": "tests/test_configuration_recovery_source.py",
+      "sha256": "7305eb2604bbe7b39a8858c3c6091f604745b53367fd338ecd81c54c92d7e548"
+    },
+    {
+      "file": "tests/test_configuration_rollback_identity.py",
+      "sha256": "627fdae656d4572679fbf3ce0cdbba817a07d7ec79536cfcd6ccede07aa28c45"
+    },
+    {
+      "file": "tests/test_configuration_runtime.py",
+      "sha256": "7ec427bbb43f18180f83b4b78537367af10c1d9063b4c1eaae9c9ff1739f1875"
+    },
+    {
+      "file": "tests/test_configuration_studio_inputs.py",
+      "sha256": "04c9949f9debffd692d6fb60a340725d30dde3a2e4f2b984427b119981348bef"
+    },
+    {
+      "file": "tests/test_configuration_studio_poster.py",
+      "sha256": "aa31d7c75bdc18833de1147a7b1f467bdf2fe36f4a2fe04dadcd51b9989bad30"
+    },
+    {
+      "file": "tests/test_configuration_studio_save.py",
+      "sha256": "4d5ea7b9514fa4c91cb341a019b14beaf75a4a23381581110879160c2d2c1fc4"
+    },
+    {
+      "file": "tests/test_consumer_validation_template.py",
+      "sha256": "64cea1096e87ba322815a4600b032b813c92ac0cade5d26a5bb66ce5933148e9"
+    },
+    {
+      "file": "tests/test_cross_filesystem_observation_evidence.py",
+      "sha256": "4f41ddf317a262e404756580037ccab17e2337af81a1e38016d0568982779a3b"
+    },
+    {
+      "file": "tests/test_cross_filesystem_process_crash.py",
+      "sha256": "63c7ced6e70e5b02a132931737951e829d9e4cdcda9824379b039912830df4dd"
+    },
+    {
+      "file": "tests/test_delivery_lifecycle.py",
+      "sha256": "3aa3108313c340f2231aebdb3bd1faf7bbd88dddfebc77578839625fa9306218"
+    },
+    {
+      "file": "tests/test_delivery_status.py",
+      "sha256": "f2deb7dba9f3493af8b483eb083a19b8e2df1cbcdf739460143460e85eb8fe74"
+    },
+    {
+      "file": "tests/test_design_target_binding.py",
+      "sha256": "4da112c0aef520b7e7c49d26d074deb2589a3dea9876b440284f09843db65625"
+    },
+    {
+      "file": "tests/test_diagnostic_retention.py",
+      "sha256": "71e98dc45f90510054c7f965cc0031ca5d4cd4759f3e9d5dbeb9530a1323532d"
+    },
+    {
+      "file": "tests/test_directory_change_recovery.py",
+      "sha256": "fcf530fe178f2e974d1c063103d40c87f2f6a6088722a360773e409ca137a9c7"
+    },
+    {
+      "file": "tests/test_directory_exchange.py",
+      "sha256": "12563d09bbdc85a30d8331a8afc2e89479ee19d8a6a1c58c99bc53100078db8e"
+    },
+    {
+      "file": "tests/test_export_server_cleanup.py",
+      "sha256": "d6e90534c7d61a02bce4b5560e886145fef561d0f86c844f44d01625a699c704"
+    },
+    {
+      "file": "tests/test_external_delivery_archive.py",
+      "sha256": "d15845ed517d2e46225cb6236a4d73b85e453decb6a0c941ec8fa01e27386e3f"
+    },
+    {
+      "file": "tests/test_external_delivery_identity.py",
+      "sha256": "6389e0d626c729df804b8befefa89b4dcf3bfd21b0600336df9a0a0a63b5eea0"
+    },
+    {
+      "file": "tests/test_external_media_store.py",
+      "sha256": "a1b0dc0c40138e4f58b75123dd7256fd6b9cba812c26edc74f0dd5fb87be7025"
+    },
+    {
+      "file": "tests/test_external_publication.py",
+      "sha256": "f69f3782613a0e065b915e64a81c5e8040e41e8dac1ffe3585f515a491a801b5"
+    },
+    {
+      "file": "tests/test_external_reference_contract.py",
+      "sha256": "8609c1365018363d88b033f3b6944fe69611fbfbeebb0cfeddecd829bcaefbd1"
+    },
+    {
+      "file": "tests/test_filesystem_permission_acceptance.py",
+      "sha256": "08e9d4dda2015f28acaa7579ae0783ad84c86a1a289207e91ee77f2227d6073a"
+    },
+    {
+      "file": "tests/test_forward_source_inventory.py",
+      "sha256": "fe9ad25f1a4195a3706ba090248db32348500940325b0559317c147165b58eb0"
+    },
+    {
+      "file": "tests/test_git_archive_retrieval.py",
+      "sha256": "e5c1e2335dbea6b84328393f4805efca874373a74b5797de2beff258858c45d6"
+    },
+    {
+      "file": "tests/test_git_lfs_retrieval.py",
+      "sha256": "978fe7900265dfa82365f73c30477992a68703603af1d0b16c6f2fcd1df06979"
+    },
+    {
+      "file": "tests/test_git_remote_retrieval.py",
+      "sha256": "3fb62d72be2280f173148f60632be5a461b3897777745cba33b9683125d98e17"
+    },
+    {
+      "file": "tests/test_human_approval_contract.py",
+      "sha256": "e95243751c9a889267bbdc033ae04e041d97e1c8d8c3faa15a1e2b3c01183b2f"
+    },
+    {
+      "file": "tests/test_incident_lifecycle.py",
+      "sha256": "bd47140051ed5273d4d503978628a83882dba27f8be3835494ea44417f88f734"
+    },
+    {
+      "file": "tests/test_input_lifecycle.py",
+      "sha256": "54a4719a619d86da0a0eada9c9f36daff5e5939085c1df5983fc29943467718b"
+    },
+    {
+      "file": "tests/test_inventory_lifecycle.py",
+      "sha256": "6459c9782f3933a44f55d3bcedde869988377f1e6069a6496c17c3ba8aeaacad"
+    },
+    {
+      "file": "tests/test_inventory_observation_failures.py",
+      "sha256": "320a844247f25eb8dee4abc781076a273bffbf1d0dfe726650b6ac5a8763a677"
+    },
+    {
+      "file": "tests/test_layered_archive_portability.py",
+      "sha256": "d7bbb58ac6de1a849a12a91bffd9db57d99ef6f64bd65c9d8a922a2cfbca28ba"
+    },
+    {
+      "file": "tests/test_lifecycle_record_schema.py",
+      "sha256": "768aafa24d3c9758ef4492f621fd3b9acfe6df4218b7bce96af041bcc2e19974"
+    },
+    {
+      "file": "tests/test_maintenance_execution_status.py",
+      "sha256": "ca902c2a6cebf67e828da8154c96f689843628a281fe0b3439182f4e3760010b"
+    },
+    {
+      "file": "tests/test_maintenance_relocation_coordination.py",
+      "sha256": "905f6e8b2dffb4af40caec59ffa80c55a8dc9660d65d63f81d8472b5b40d6d09"
+    },
+    {
+      "file": "tests/test_managed_poster.py",
+      "sha256": "0dad08722b9067d072ca093683f8866817d8a2fd79f3ef7249dd06f7fb30b9e5"
+    },
+    {
+      "file": "tests/test_managed_preview.py",
+      "sha256": "676ae090f0516214486ad78760994c7eeaa5a09853f848d43a7d935e2afa6525"
+    },
+    {
+      "file": "tests/test_managed_recording.py",
+      "sha256": "5a463c568db666dd949888bfd2868b33ba0193bad725b8c622f998e5c5e090fe"
+    },
+    {
+      "file": "tests/test_media_budget.py",
+      "sha256": "8e68fbc88c08efed05405430840da7bea35cf16506f4378a339d34841d4d84c6"
+    },
+    {
+      "file": "tests/test_media_tool_identity.py",
+      "sha256": "1009b3389db25c41a52d7829267004ab65398de06ef0f7243414854e1d230331"
+    },
+    {
+      "file": "tests/test_native_preview_archive.py",
+      "sha256": "9b11116b67fa265afea985b19d6a8d96b5c9d1150d07c1cc5c792cf48ddfc002"
+    },
+    {
+      "file": "tests/test_object_purge_process_crash.py",
+      "sha256": "a7d493afaef5415f4a567775c5c615ebe64f29ae555324e19c94b6fad6ee848c"
+    },
+    {
+      "file": "tests/test_observation_evidence_retrieval.py",
+      "sha256": "69459b5f6543fbea2762f2e73713dfe68cba74ac304ce8b66b43aaf05c12d519"
+    },
+    {
+      "file": "tests/test_operation_history.py",
+      "sha256": "1bced81c3e02c1cd7511d1b4e8ebbfea16a498a7ce9e07e7b0821ffed7b82f91"
+    },
+    {
+      "file": "tests/test_operation_journals.py",
+      "sha256": "4822291194e91b3c71455a137ed95235dbabd217bc604093ecf549a32efe15f7"
+    },
+    {
+      "file": "tests/test_ordinary_restore_intent.py",
+      "sha256": "4720909b10a1fac61a1505a6fa245f43b6c9312e83d5ea0145a1a686aeacdf7e"
+    },
+    {
+      "file": "tests/test_package_runtime.py",
+      "sha256": "709ab72c9b83501d8749cb36a03b071914c871a7844e3d0936a0fe72a6a0d224"
+    },
+    {
+      "file": "tests/test_post_merge_archive_binding.py",
+      "sha256": "a00154421a0d075afd425097514bb8020ca725590823a35e052d266ec3f93805"
+    },
+    {
+      "file": "tests/test_post_purge_retrieval.py",
+      "sha256": "23a8ec9f2dbe4def28d0f9b0f5a599a8c9f98dcf6c5a94872cb843b78171d290"
+    },
+    {
+      "file": "tests/test_poster_validation.py",
+      "sha256": "11905f4edca7af09dc4dc4e1e468cfe964410c9d4d0ce290c8ffa263e532c298"
+    },
+    {
+      "file": "tests/test_preview_overlay_coordinates.py",
+      "sha256": "258432530a55a15f5dcaf10794e00be4194442a830670e1a54d42f70062bd196"
+    },
+    {
+      "file": "tests/test_producer_contracts.py",
+      "sha256": "5b80af7f37182f20fa987a51aa1f51bab21fbbd361023c7dbe9c83996d8023a1"
+    },
+    {
+      "file": "tests/test_production_lifecycle.py",
+      "sha256": "b56cc854724b9cb27cd827a5162878ec7dafd04d4df4ffd6e928576b9e1e0964"
+    },
+    {
+      "file": "tests/test_project_identity.py",
+      "sha256": "55b1a93ff1ee7e2be1b51e7620ee1290a6c2709ce7b74e799fda95c937493995"
+    },
+    {
+      "file": "tests/test_publication_lifecycle.py",
+      "sha256": "02329888bed359554b40ddc60533412a98d1df2d701c637e26712d1a3bbdf4ea"
+    },
+    {
+      "file": "tests/test_publication_retrieval_proof.py",
+      "sha256": "83e49188c11b27cb03164ba6c46036be9179bbd63b65dc18a9e4bc420e45471f"
+    },
+    {
+      "file": "tests/test_publication_target_consumption.py",
+      "sha256": "ef950818e3311512865dd5e92946b9c32153770d1fd403b9dcec342ccc6f87ae"
+    },
+    {
+      "file": "tests/test_purge_process_crash.py",
+      "sha256": "b7789f521aa0617d96c6dfbebcaf5bd5211f1232fd80d1f9cf32e2a77d4e265a"
+    },
+    {
+      "file": "tests/test_python_requirement.py",
+      "sha256": "b3629f326459050e48ccea8f682d3fd153737391fd1b5fdd29c11728c54580b0"
+    },
+    {
+      "file": "tests/test_quarantine_location_projection.py",
+      "sha256": "6d62e338953e3e0990e715fe9b5220216a87963d04296242a76e35aa4b27d3fe"
+    },
+    {
+      "file": "tests/test_quarantine_location_recovery.py",
+      "sha256": "b413ca4adcab123ccb27da7e43be52b04654ad0fd504d4481ef5c493345c7f2f"
+    },
+    {
+      "file": "tests/test_quarantine_process_crash.py",
+      "sha256": "02f1c353de7d4bf0a31daf2d74ae22aaab1060146b8065a20eb4ddbe4e7305a8"
+    },
+    {
+      "file": "tests/test_record_commit_consumption.py",
+      "sha256": "dca6cc383f95bae33cff456180162a573d37976ff9d0d4b3cdcc9207f970a757"
+    },
+    {
+      "file": "tests/test_record_file_identity.py",
+      "sha256": "f87d397be3f3b39d1656d10a6994e2293d5224fe9bd86a1f465c936927871a41"
+    },
+    {
+      "file": "tests/test_recorder_execution_identity.py",
+      "sha256": "a2d72e0eacfae488b5b7f3f11f32a6149b45c69a55ddfd2081525929bf3e0b12"
+    },
+    {
+      "file": "tests/test_recording_normalization.py",
+      "sha256": "63e1a53c5397e6bb800939c4a595b25ee1a5081c74d4223ec6844827a017fb07"
+    },
+    {
+      "file": "tests/test_recording_probe_contract.py",
+      "sha256": "2be1c03426f3f50d49ebb73bffcfe7103dbe142c2d8fb2d5ed439c25c6fc1415"
+    },
+    {
+      "file": "tests/test_relocation_backup_inventory.py",
+      "sha256": "f614bcfe3eaa5d33e569d849b9f0ac4ae328163038aad7e5a0b0537ba78b5baa"
+    },
+    {
+      "file": "tests/test_relocation_config_durability.py",
+      "sha256": "283444143bd8dbf7f6c09c99629618c9e36e69eb5218a4b37d0f4085eae97187"
+    },
+    {
+      "file": "tests/test_relocation_configuration_layers.py",
+      "sha256": "edbeea5608bd99e5f36aa62e139edfb3537e0d43300e5282b9579384b2162fa0"
+    },
+    {
+      "file": "tests/test_relocation_configuration_preparation.py",
+      "sha256": "054ba0a44468f777f3aa3ac388ab1d734e57b6c333470a6e9ff1c68cceec8b5b"
+    },
+    {
+      "file": "tests/test_relocation_configuration_resume.py",
+      "sha256": "0c115586d65579010c1eecd6b829f255e47a32c7d4feabbba1e64a700642cc75"
+    },
+    {
+      "file": "tests/test_relocation_preparation_process_crash.py",
+      "sha256": "34c79b10706dccc1e30d1b6cfa86d617e2a8b74be1d2c49faac764c78f8b8db1"
+    },
+    {
+      "file": "tests/test_relocation_process_crash.py",
+      "sha256": "981ab158ef00c74b3ae6b24c616949149501b77405c094cda471ee9724b651d3"
+    },
+    {
+      "file": "tests/test_relocation_purge_execution.py",
+      "sha256": "391999a01a7581d7fc78222a2dbdcda4b485e29db1ea668b942e8ac14a549958"
+    },
+    {
+      "file": "tests/test_relocation_purge_plan.py",
+      "sha256": "f515c04d290ac5642e337c6fe10f48f981cd0f290f26cb4d8de565f2e7d482d5"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_commit.py",
+      "sha256": "4094488c6a360cdc4fe1fc307fc3892d937e5b2785f1dec1595613d3cf2974e5"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_inventory.py",
+      "sha256": "e31a49a3c199635ce968b3e1b7d33369855f091005ad2609335f73372f1f7cd1"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_preparation.py",
+      "sha256": "974e3afae4cdc33e7fa236989340fc5199f8196d13b82ded9c89a269a5c941f2"
+    },
+    {
+      "file": "tests/test_relocation_recovery.py",
+      "sha256": "5d99fec08ea7aa451ea71faf3a5536f50acca56d47a147d008f9fcd24f25b076"
+    },
+    {
+      "file": "tests/test_relocation_recovery_lock.py",
+      "sha256": "aabca2225e1baca504c546eb5af21afb8de34f4d845566c17da2f9817711d1a7"
+    },
+    {
+      "file": "tests/test_relocation_resume.py",
+      "sha256": "1446504988369117ed575acb2f326655b4916dcc710575459f0a9bd2a89962c0"
+    },
+    {
+      "file": "tests/test_relocation_retention_plan.py",
+      "sha256": "fdf4dc0d60e7c112c4c37b965a0ddb6f4c88fa724cdbf66ac3887f71524f587b"
+    },
+    {
+      "file": "tests/test_relocation_retention_verification.py",
+      "sha256": "eaaa156b1f7792f216c64dade7b4a17263694b6e1a05eaf6d7327948a592de6d"
+    },
+    {
+      "file": "tests/test_relocation_source_dispositions.py",
+      "sha256": "50f900e53972ffaf7e753e66f7ad12ca5071c3d34b6d9a3933ce1a59cc6ecf27"
+    },
+    {
+      "file": "tests/test_relocation_staging_inventory.py",
+      "sha256": "28584efe2e6ed9a9db0ee20c757d2da72ba877ebab3dcc52c604452b6a21ba90"
+    },
+    {
+      "file": "tests/test_relocation_status.py",
+      "sha256": "c374953ca4cac6d2d81d63d0c7aa0b9ccc9bee7a506f9021ac4698aa38f1859d"
+    },
+    {
+      "file": "tests/test_remote_observations.py",
+      "sha256": "bc401cf22d9b995b6a7310435e5fa6ff4de0b860cb17b956029f3cb2569a6cec"
+    },
+    {
+      "file": "tests/test_repeated_relocation.py",
+      "sha256": "1473f201dafd3460679e4cf1210d1780358be62be958ceacde4d48fa02db2787"
+    },
+    {
+      "file": "tests/test_retention_dependency_contract.py",
+      "sha256": "729cd6cad7ad8848289e551c9d936f0e50bd7533671e26137c50b3248f8daf71"
+    },
+    {
+      "file": "tests/test_retention_lifecycle.py",
+      "sha256": "8c991ab45638ae785c1109506225c3120700046bec17e999918e81903cfb4927"
+    },
+    {
+      "file": "tests/test_retrieval_process_budget.py",
+      "sha256": "9b81ad109754ecb125343049ad2eb816587051b58f9a217b1ba9da696ab5988f"
+    },
+    {
+      "file": "tests/test_reverse_configuration_installation.py",
+      "sha256": "9717d9ade940a7a32c8d3698183789e5152bb19492e2f2791a501949033fb843"
+    },
+    {
+      "file": "tests/test_reverse_configuration_layers.py",
+      "sha256": "61d97062ef023029848fd03dd1cb69992e75172a9ef4008d2894b0420a87f203"
+    },
+    {
+      "file": "tests/test_reverse_configuration_rollback.py",
+      "sha256": "ee4f073887efced3a4ed8f5a1cfb8e3e29b74fe268500a596ba2f0a8b7dcd6be"
+    },
+    {
+      "file": "tests/test_reverse_relocation_cycles.py",
+      "sha256": "cbc830098f7bb054148ca34d1f5c1f9b6d8b05c4d7889001423ad2f06a22d4fd"
+    },
+    {
+      "file": "tests/test_reverse_relocation_plan.py",
+      "sha256": "6319b128bf394037d948e559fcbdc42ba130b348483edc2845d53dde054ce6d8"
+    },
+    {
+      "file": "tests/test_reverse_relocation_rollback.py",
+      "sha256": "6c6052c6978b4bc8f10f1e91a1879f6bef26744b52fd74baafeef8cc84deadf4"
+    },
+    {
+      "file": "tests/test_reverse_relocation_switch.py",
+      "sha256": "201a9fea4d22c6e35dfe4c6f1ca10727e36da404dba79397f14c66cf757ddbd9"
+    },
+    {
+      "file": "tests/test_run_workflow_snapshot.py",
+      "sha256": "952b66c5d78c64e00017a561323ba9c13a5d1efc82c3452ede279c28c001aa88"
+    },
+    {
+      "file": "tests/test_runtime_distribution.py",
+      "sha256": "f642ca32b767d5f536b9dc88c46d4ccf5896b06ae324ee339872e7b4646352d4"
+    },
+    {
+      "file": "tests/test_runtime_identity.py",
+      "sha256": "5fb31306542354c93a5290fc2bdf652b4f5659c96f32dc1dc6efcdf2742ac86b"
+    },
+    {
+      "file": "tests/test_safe_staging.py",
+      "sha256": "377d702c532f12cfc3e179fc123a1a6923c05015cff007f6a8a713341fad5669"
+    },
+    {
+      "file": "tests/test_staging_proof_binding.py",
+      "sha256": "927cb8dfde0940b0d0f1e6826ea877870ab6fe4c524fd88b2173e3174c243beb"
+    },
+    {
+      "file": "tests/test_status_input_contract.py",
+      "sha256": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb"
+    },
+    {
+      "file": "tests/test_storage_configuration_preview.py",
+      "sha256": "982f77f6293db7e089622cba3aa921aae589d1a85a96ad5d2267f73f9dde1251"
+    },
+    {
+      "file": "tests/test_storage_control_projection.py",
+      "sha256": "0fd1931812a48113093a90425ee205425940acc282f5fab57fcbac0ce1b0f62b"
+    },
+    {
+      "file": "tests/test_studio_approval_flow.py",
+      "sha256": "76a32b212030b22516523ee2594404ab66158823725e35474aa89bff62d16ab8"
+    },
+    {
+      "file": "tests/test_studio_atomic_json.py",
+      "sha256": "10d41de41328e8268eb1899d301d6611696d8dc180bad1ead2bfb2af6e4b93ce"
+    },
+    {
+      "file": "tests/test_studio_delivery_status.py",
+      "sha256": "ed71208c515f12ce5ef0fd1ca9cb336a1eb4e2cc65202e5716fd9b96cc22a96a"
+    },
+    {
+      "file": "tests/test_studio_maintenance.py",
+      "sha256": "ec319e63c23b90a28e6efd11d37637a5018d2e01f519471e41c0a8493b7d012d"
+    },
+    {
+      "file": "tests/test_studio_publications.py",
+      "sha256": "d6e47228caa4c9fb9f3b733f17bbb1bc321c1e62471b35341ccba13e1dc9d5b4"
+    },
+    {
+      "file": "tests/test_studio_read_origins.py",
+      "sha256": "3a814ce5e6689c1b87ee8f6c2efb839b24c8cdfa1b9a5b63bccec6c2c4edd182"
+    },
+    {
+      "file": "tests/test_studio_release.py",
+      "sha256": "e27715f7b7ed97603ca4fa315926350127ddd523d34781212fbe5447a6a4ce9c"
+    },
+    {
+      "file": "tests/test_studio_relocation_maintenance.py",
+      "sha256": "3742737520eae97e442da7fca60bb192f408fe134ba399936dda5804160e34d9"
+    },
+    {
+      "file": "tests/test_studio_relocation_status.py",
+      "sha256": "d2e957a82d1a092daaeab57e91663b7217c6e3b8af0c31a94621520c4ada7e15"
+    },
+    {
+      "file": "tests/test_studio_reverse_recovery.py",
+      "sha256": "3a88efaacfebe071a081b996eca78f4324300f2889d0cc981149c0fe99205c06"
+    },
+    {
+      "file": "tests/test_upload_approval_commit_integrity.py",
+      "sha256": "f0b52274d5be27f95d3e590de8fc77f17d492362aa406926eb57d289c9035667"
+    },
+    {
+      "file": "tests/test_v2_workflow.py",
+      "sha256": "2638baac51f43e7a06ddaee7e7bb42f05270feeae8b645a570f1454c944259e4"
+    },
+    {
+      "file": "tests/test_validation_policy_binding.py",
+      "sha256": "9ba186c8dc0cc4e2f8b5f390525f01bb37a2faf93655259d77e1a0321398a83d"
+    },
+    {
+      "file": "tests/test_validator_png_integrity.py",
+      "sha256": "636cfb71c1b5c3efa19e3a12ae75a8e9b7afc4d02349b270d993b3431509f586"
+    },
+    {
+      "file": "tests/test_video_execution_contract.py",
+      "sha256": "93c2f3564a4e3b841e0c7f5ae5e1fe23d59bc0d5bce5b2f5fc4bd2ba3a6f497e"
+    }
+  ],
+  "patterns": {
+    "private_key": "-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
+    "signed_query": "(?:[?&](?:X-Amz-Signature|Signature|sig|token)=)[A-Za-z0-9_%+/-]{16,}",
+    "bearer_token": "Bearer\\s+[A-Za-z0-9_./+-]{24,}",
+    "jwt": "eyJ[A-Za-z0-9_-]{12,}\\.[A-Za-z0-9_-]{12,}\\.[A-Za-z0-9_-]{12,}",
+    "github_token": "\\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})\\b"
+  },
+  "findings": [],
+  "binary_files_not_screened": [],
+  "limitations": [
+    "Unknown credential formats and personal data require manual review",
+    "Generated frontend bundles included but binary media and private temporary logs excluded",
+    "Pattern matches may be deliberate test fixtures; each finding must be inspected without exposing candidate secret"
+  ]
+}

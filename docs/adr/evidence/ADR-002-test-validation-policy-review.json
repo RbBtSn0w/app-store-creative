@@ -1,0 +1,18 @@
+{
+  "scope": "Full current validation policy binding regression",
+  "file": "tests/test_validation_policy_binding.py",
+  "sha256": "9ba186c8dc0cc4e2f8b5f390525f01bb37a2faf93655259d77e1a0321398a83d",
+  "assessment": [
+    "Altered policy version/run binding or invalid errors field cannot create design approval; approval directory remains empty",
+    "Fresh valid commit events with malformed policy/run/errors/status/candidate/config bindings readable by core but refused by Passing validation semantic gate; no approval created"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 0.279,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_validation_policy_binding -q"
+  },
+  "limitations": [
+    "Synthetic committed malformed validation isolates semantic gate; real product approval separate"
+  ]
+}

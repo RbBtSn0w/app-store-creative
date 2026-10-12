@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "source_commit": "0e29a77927acfe55d74ec6975a4d9e7a08673ead",
+  "ci": {
+    "run_id": 38137249480,
+    "status": "SUCCESS",
+    "python_tests": 1049,
+    "skipped": 34,
+    "studio_tests": 98,
+    "package": "PASS",
+    "log_sha256": "c6c107d235b03985658b6a7dbc166e890cd162d1337921b535b0f32a5eaf451b"
+  },
+  "playback": {
+    "candidate_id": "b4a4a8b0c1364591a39e4b000f541bc4",
+    "media_sha256": "b448d0ae892185a0c0a0a949ae05bdd965a3de8a23076a944bad9b385b25b171",
+    "executor": "Codex in-app browser HTML video player; local bound asset only",
+    "observations": [
+      {
+        "state": "Playing",
+        "time_seconds": 0,
+        "duration_seconds": 20,
+        "error": null
+      },
+      {
+        "state": "Playing",
+        "time_seconds": 12.27,
+        "duration_seconds": 20,
+        "error": null
+      },
+      {
+        "state": "Ended",
+        "time_seconds": 20,
+        "duration_seconds": 20,
+        "error": null
+      }
+    ],
+    "observed_content": [
+      "Plain Text initial frame",
+      "Uppercase transformation visible during playback and at end"
+    ],
+    "scope": "Full local playback reached end without media error; sampled rendered frames. Not every-frame editorial review, human design approval, or ASC playback."
+  }
+}

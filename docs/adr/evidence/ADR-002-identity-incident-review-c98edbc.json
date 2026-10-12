@@ -1,0 +1,32 @@
+{
+  "runtime_head": "c98edbc675305951f94968b61745b911b455819b",
+  "documentation_head": "83c7af92ea3a0aeae93127fb49960c5a1fb00de4",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py",
+      "sha256": "f2679b571002a1c0915cb5d94d6bdfe4dd0788787fa0247b1e0e2f721189dbcf",
+      "scope": "Entire module"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/incident_lifecycle.py",
+      "sha256": "a9b1c3f483f78add3027d38d5b5a55324b23c15529d46c0e303fde0024a3f0ac",
+      "scope": "Entire module"
+    }
+  ],
+  "additional_scope": "Incident protection consumers in retention_lifecycle and relocation_purge only; those modules remain separately reviewed",
+  "checks": [
+    "Strict portable source fingerprint fields and nonaliased files",
+    "Fingerprint source bytes and filenames independently of installation path",
+    "Sealed provenance retains per-attempt implementation identity",
+    "Incidents require valid evidence references and immutable resolution",
+    "Open incident roots expanded through dependency closure at cleanup/purge execution"
+  ],
+  "validation": {
+    "tests": 8,
+    "seconds": 0.906,
+    "result": "PASS",
+    "log_sha256": "1a2921eb1583b409ad441095af2dc10574f35755810f2e77f832aaf8c6ce71bb"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

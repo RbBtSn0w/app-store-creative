@@ -1,0 +1,25 @@
+{
+  "scope": "Completed exact-commit CI stages and inspected log summary",
+  "source_commit": "9d57a9cd61d678f2e4ded7bb7a75e34eb637097b",
+  "run_id": 38049241718,
+  "job_id": 114204855183,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38049241718",
+  "result": "success",
+  "python": {
+    "run": 1045,
+    "skipped": 33,
+    "seconds": 286.757
+  },
+  "frontend": {
+    "tests_passed": 98,
+    "files_passed": 33,
+    "type_check": "passed",
+    "build": "passed"
+  },
+  "complete_distribution_smoke": "passed",
+  "log_sha256": "212619e80362d85555566106344627e264123dcdac5029564668b28f57a84679",
+  "limitations": [
+    "Does not prove current HEAD or later documentation changes CI completion",
+    "Does not replace actual browser, products, durable backend or ASC acceptance"
+  ]
+}

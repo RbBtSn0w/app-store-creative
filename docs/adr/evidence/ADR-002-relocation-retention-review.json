@@ -1,0 +1,24 @@
+{
+  "base_head": "90360f0",
+  "scope": "Entire relocation quarantine preparation/cancellation and relocation retention planning/verification modules",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_quarantine.py": "55b796b65d273e9fbc6942a3852f8cd9e336746c50d05e8ee7bbbe95428ac2d2",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_retention.py": "4b441e706ae90d470dcc92f7bb655a5a6851029626b1e20934e975aa80cfbe78"
+  },
+  "checks": [
+    "Retention excludes evidence, configured sources, pending operations and unverified roots",
+    "Independent recovery inode and exact bytes required; hardlinks do not count as independent recovery",
+    "Plan binds configuration, reference hashes, cutoff and source/recovery identities",
+    "Preparation copies to exclusive journaled files, retains partial/unknown data and refuses substituted ownership",
+    "Cancellation is immutable and retains bytes; commit/purge intent prevents cancellation"
+  ],
+  "validation": {
+    "tests": 43,
+    "seconds": 34.493,
+    "result": "PASS",
+    "log_sha256": "a110f9547bf744a7163e332eee32605944a5773bd48069cc26f9f9b708ff50a6"
+  },
+  "new_findings": [],
+  "real_product_acceptance": false,
+  "overall_review_complete": false
+}

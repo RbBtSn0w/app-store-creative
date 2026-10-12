@@ -1,0 +1,21 @@
+{
+  "scope": "Full current Studio publication HTTP/CLI tests",
+  "file": "tests/test_studio_publications.py",
+  "sha256": "d6e47228caa4c9fb9f3b733f17bbb1bc321c1e62471b35341ccba13e1dc9d5b4",
+  "assessment": [
+    "Actual HTTP and CLI listing/detail agree with core without record writes; unknown remote remains unverified",
+    "Foreign repo query rejected",
+    "Read-only handoff preview has no handoff path and no remote write",
+    "Distinct UPLOAD approval confirmation required; local EXPORT creates handoff but explicitly uploaded=false, executor=official-asc-plugin"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 2.485,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_studio_publications -q"
+  },
+  "limitations": [
+    "No restarted service assertion in this file",
+    "No actual browser interaction or official ASC upload"
+  ]
+}

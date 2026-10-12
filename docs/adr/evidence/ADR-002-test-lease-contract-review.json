@@ -1,0 +1,24 @@
+{
+  "scope": "Full current unchanged lease test file; replacement constraint verification, not a changed-test inventory entry",
+  "file": "tests/test_lease_lifecycle.py",
+  "sha256": "c71205f0654cde685724d9362902707d99d0728d88be59d4ca300aba541a724a",
+  "assessment": [
+    "Independent client cannot register without matching token",
+    "Expired producer cannot register; recovery creates separate retry and preserves interrupted original",
+    "Renewal rotates token and rejects stale completion; prior lease records retained",
+    "Active lease cannot be taken over; invalid duration creates no attempt record",
+    "Concurrent recovery yields exactly one replacement",
+    "Lease expiry is rechecked before artifact commit and no artifact record is published",
+    "Heartbeat renews within scoped guard; CLI stale token rejected and latest token succeeds"
+  ],
+  "verification": {
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_lease_lifecycle -q",
+    "tests": 9,
+    "result": "passed",
+    "seconds": 0.912
+  },
+  "limitations": [
+    "Thread concurrency and real local CLI are exercised; this file does not prove process-crash or cross-filesystem recovery",
+    "Heartbeat assertion waits up to two seconds; production timing under resource pressure requires separate acceptance"
+  ]
+}

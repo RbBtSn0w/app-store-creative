@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "scope": "Current submission history and recovery journal regression; not complete maintenance or real product acceptance",
+  "source_commit": "d12156b0cd3a31fbaedd31e0435a68614930bcfc",
+  "command": "python3.14 -W error::ResourceWarning -m unittest discover -s tests -p <test_file>",
+  "suites": [
+    {
+      "file": "test_operation_history.py",
+      "tests": 14,
+      "duration_seconds": 1.427
+    },
+    {
+      "file": "test_commit_abandonment.py",
+      "tests": 6,
+      "duration_seconds": 0.262
+    },
+    {
+      "file": "test_operation_journals.py",
+      "tests": 3,
+      "duration_seconds": 2.503
+    }
+  ],
+  "result": "PASS",
+  "full_content_sensitive_review": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py",
+      "sha256": "82bb4b3fe80d3f3e86f6bb52393d66edffb2faa903190a5515bd08a07d9f68be"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py",
+      "sha256": "7e2df2338826648d639227ee573699287f51ede6ea93d829b7a7cf21712c8584"
+    },
+    {
+      "path": "tests/test_commit_abandonment.py",
+      "sha256": "a7f1b6b8d8a1a3899eef929bc6f8c22c3e121e6ef633c92e3c9b349b3d65f1e5"
+    },
+    {
+      "path": "tests/test_operation_journals.py",
+      "sha256": "4822291194e91b3c71455a137ed95235dbabd217bc604093ecf549a32efe15f7"
+    }
+  ],
+  "boundaries": [
+    "Only these four files received full-content sensitive review in this batch",
+    "No real product records changed",
+    "No deletion, upload or approval performed"
+  ]
+}

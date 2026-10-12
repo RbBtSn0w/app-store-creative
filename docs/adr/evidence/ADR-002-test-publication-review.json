@@ -1,0 +1,26 @@
+{
+  "scope": "Full new test-file diff against origin/main for four frontend publication/history tests",
+  "files": {
+    "plugins/app-store-creative/studio/src/CandidateApproval.test.tsx": {
+      "sha256": "01567cb0b04b8ccb04d50a863960351ae9f646dc14dd414902fb370f314e8426",
+      "assessment": "Initial render requires validate; approval/seal absent and upload authorization disclaimer present. Interactive approve/seal and uncertain-result recovery not covered by this test."
+    },
+    "plugins/app-store-creative/studio/src/PublicationHistory.test.tsx": {
+      "sha256": "1590700bc423475d65fba2d0d40115c4f2db1aa0acbc25382a3f652ae2434981",
+      "assessment": "Processing PASS plus poster FAIL remains failed; explicit remote_verified required; receipt custody cannot imply remote success."
+    },
+    "plugins/app-store-creative/studio/src/publicationHandoffState.test.ts": {
+      "sha256": "4bad0eeee51b96fe78776b85bbf7e3fb28b9972024c74873f3a02eeb90490f30",
+      "assessment": "Plan id/hash, selected target, unique assets and pending/approved distinction checked; remote write claims rejected."
+    },
+    "plugins/app-store-creative/studio/src/historyRequest.test.ts": {
+      "sha256": "2709cda9b5a0d78cf97d77b0e385cf3ee72dd06d050aaa34e6ef8e076700b427",
+      "assessment": "Timeout, server refusal, successful read and inventory-specific error label checked; fake fetch honors abort; no retry behavior inferred."
+    }
+  },
+  "finding": "No weakened assertions or new skips found; candidate test only proves initial static gate",
+  "acceptance_gaps": [
+    "Actual validate/approve/seal browser sequence",
+    "Exact upload-plan approval and official ASC remote gates"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "scope": "Full current media-tool, runtime and project identity tests",
+  "files": [
+    {
+      "file": "tests/test_media_tool_identity.py",
+      "sha256": "1009b3389db25c41a52d7829267004ab65398de06ef0f7243414854e1d230331"
+    },
+    {
+      "file": "tests/test_runtime_identity.py",
+      "sha256": "5fb31306542354c93a5290fc2bdf652b4f5659c96f32dc1dc6efcdf2742ac86b"
+    },
+    {
+      "file": "tests/test_project_identity.py",
+      "sha256": "55b1a93ff1ee7e2be1b51e7620ee1290a6c2709ce7b74e799fda95c937493995"
+    }
+  ],
+  "assessment": [
+    "Pinned tool replacement refused and missing tool never receives invented version",
+    "Runtime fingerprint independent of source location, sensitive to implementation bytes, rejects symlink source and boolean count",
+    "Sealed provenance binds every producing attempt implementation without local paths",
+    "Lifecycle, configuration composition and Studio reject invalid project identity consistently before writes",
+    "Explicit Unicode project identity retained without directory-name inference"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 0.853,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_media_tool_identity test_runtime_identity test_project_identity -q"
+  },
+  "limitations": [
+    "Media tools are fixture executables; provenance sealing uses local fixture product",
+    "Object registration failure and duplicate intent consumption are not covered by this scope"
+  ]
+}

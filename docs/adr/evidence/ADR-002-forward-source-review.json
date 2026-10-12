@@ -1,0 +1,21 @@
+{
+  "base_head": "e9e248d",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/forward_source_copies.py",
+  "sha256": "d8d7471dfc312141e1ff50f35c80b033a62b7159c41ea1fe4e99994c16799a9d",
+  "scope": "Entire forward_source_copies module; relocation executors and rendering source capture remain separate review scopes",
+  "checks": [
+    "Changed storage groups are deduplicated by ancestor root",
+    "Source directory inode remains pinned across full-tree capture",
+    "Plan/prepared/switch receipt and owning configuration evidence bind source manifests",
+    "Post-capture control records projected explicitly rather than inferred from files",
+    "Installed configuration proof and immutable control authority checked before retained-source views"
+  ],
+  "validation": {
+    "tests": 7,
+    "seconds": 5.003,
+    "result": "PASS",
+    "log_sha256": "a8852c7a7cb9da7db8c8ce6c0038c57368b327fc0c3e056d8be8104404dce6e1"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

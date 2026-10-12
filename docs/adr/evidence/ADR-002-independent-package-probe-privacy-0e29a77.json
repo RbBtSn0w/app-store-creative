@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "source_commit": "0e29a77927acfe55d74ec6975a4d9e7a08673ead",
+  "scope": "Independent unpacked plugin regression and existing real candidate validation; not ADG installation, sealed archive retrieval, approval, or ASC acceptance",
+  "package": {
+    "files_compared": 245,
+    "mismatches": [],
+    "package_sha256": "db0de17d0aee8ee3cdefe91a8c933d5f100293c5a6e3f19ce3aa65d8f4e52110"
+  },
+  "regression": {
+    "status": "PASS",
+    "tests_run": 20,
+    "duration_seconds": 16.373,
+    "module_origin": "unpacked package runtime only",
+    "fixture_layout": "Owned plugin alias points only to unpacked package; no source repository path"
+  },
+  "candidates": {
+    "levelory": {
+      "candidate_id": "b4a4a8b0c1364591a39e4b000f541bc4",
+      "candidate_sha256": "195b4abc542f970794f176f7dc5afec4905ee5ebceecf4fbba22e8260c9d98e6",
+      "status": "PASS",
+      "assets": 12,
+      "errors": []
+    },
+    "fubiao": {
+      "candidate_id": "3097c2a9970b4ad5a2eaa129616f86c2",
+      "candidate_sha256": "258a6db0a4b97f862b031dafe37b2cc232906fdfb6b171788e21084d044d7f1a",
+      "status": "PASS",
+      "assets": 2,
+      "errors": []
+    }
+  },
+  "logs": {
+    "creative-probe-independent-regression.log": "06c702e85a19a58bfa24c9db69f48056bda5e3b5f2dbf739a1dffbc1c9982cf4",
+    "creative-probe-independent-levelory.json": "faf2b222b9c3bdfb4e61e9007122188f2f6fb72b9cd933bc0afb8f8e9d1a0cae",
+    "creative-probe-independent-fubiao.json": "dac71b2684cac8bed88d33bed0aeec5db30588d18897bf61ceec3264cca07298"
+  },
+  "studio_http": {
+    "scope": "Actual unpacked Studio HTTP candidate review vs CLI; not browser rendering or human approval",
+    "products": {
+      "levelory": {
+        "candidate_id": "b4a4a8b0c1364591a39e4b000f541bc4",
+        "candidate_sha256": "195b4abc542f970794f176f7dc5afec4905ee5ebceecf4fbba22e8260c9d98e6",
+        "status": "PASS",
+        "assets": 12,
+        "approval_id": null,
+        "delivery_id": null,
+        "remote_write": false,
+        "cli_http_equivalent": true
+      },
+      "fubiao": {
+        "candidate_id": "3097c2a9970b4ad5a2eaa129616f86c2",
+        "candidate_sha256": "258a6db0a4b97f862b031dafe37b2cc232906fdfb6b171788e21084d044d7f1a",
+        "status": "PASS",
+        "assets": 2,
+        "approval_id": null,
+        "delivery_id": null,
+        "remote_write": false,
+        "cli_http_equivalent": true
+      }
+    }
+  }
+}

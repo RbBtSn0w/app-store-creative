@@ -1,0 +1,22 @@
+{
+  "scope": "Full current external delivery archive integration tests",
+  "file": "tests/test_external_delivery_archive.py",
+  "sha256": "d15845ed517d2e46225cb6236a4d73b85e453decb6a0c941ec8fa01e27386e3f",
+  "assessment": [
+    "Metadata-only copied archive restores after original sealed archive and lifecycle workspace removed",
+    "Wrong descriptor hash and missing object refuse before publishing restored archive",
+    "Actual public CLI restores from detached clean Git clone with no project config",
+    "Independent configured bare remote proves exact metadata commit, descriptor and external archive",
+    "Descriptor excludes backend local root and metadata copy excludes media"
+  ],
+  "verification": {
+    "tests": 5,
+    "seconds": 1.329,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_external_delivery_archive -q"
+  },
+  "limitations": [
+    "Disposable filesystem media backend and local bare Git remote; durable team backend and real product acceptance remain",
+    "Original source project root is not completely deleted although clean CLI clone has no config"
+  ]
+}

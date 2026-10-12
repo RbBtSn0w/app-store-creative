@@ -1,0 +1,23 @@
+{
+  "scope": "Full current synthetic native Preview archive integration tests",
+  "file": "tests/test_native_preview_archive.py",
+  "sha256": "9b11116b67fa265afea985b19d6a8d96b5c9d1150d07c1cc5c792cf48ddfc002",
+  "assessment": [
+    "Actual synthetic ffmpeg media, public CLI Preview production and poster extraction sealed with screenshot candidate",
+    "Registered recording variant normalizes actual media while recorder acquisition identity remains fixture",
+    "Original project directory deleted after independent package restoration; archive verifies and poster is actual 1920x1080 PNG",
+    "Source/evidence/acceptance snapshot and tool digests retained without original project path",
+    "Actual Preview replay from restored timeline succeeds after producer workspace deletion"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 14.759,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_native_preview_archive -q"
+  },
+  "limitations": [
+    "Synthetic media and fixture screenshot; explicitly not real product capture",
+    "Recording acquisition mocked; no real window recorder or ASC upload",
+    "Local restored package rather than chosen durable remote backend"
+  ]
+}

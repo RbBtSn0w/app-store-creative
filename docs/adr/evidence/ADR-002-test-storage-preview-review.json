@@ -1,0 +1,21 @@
+{
+  "scope": "Full current storage configuration preview tests",
+  "file": "tests/test_storage_configuration_preview.py",
+  "sha256": "982f77f6293db7e089622cba3aa921aae589d1a85a96ad5d2267f73f9dde1251",
+  "assessment": [
+    "Project/derived/default root sources reported without directory creation",
+    "Managed root change requires relocation, content edit does not; overlapping roots refused",
+    "Actual CLI and restarted HTTP previews identical with unchanged disk snapshots",
+    "Foreign owner and symlink owner refused; project identity conflict separate from root movement",
+    "Protected Unicode local override wins over draft shared roots consistently in CLI/HTTP"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 2.433,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_storage_configuration_preview -q"
+  },
+  "limitations": [
+    "Read-only preview only; no actual browser save or complete product relocation matrix"
+  ]
+}

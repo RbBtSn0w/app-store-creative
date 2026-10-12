@@ -1,0 +1,19 @@
+{
+  "scope": "Full current PNG integrity regression",
+  "file": "tests/test_validator_png_integrity.py",
+  "sha256": "636cfb71c1b5c3efa19e3a12ae75a8e9b7afc4d02349b270d993b3431509f586",
+  "assessment": [
+    "Truncated IEND and corrupt pixel chunk rejected with both absent and mocked available host metadata tool",
+    "Valid RGB/alpha PNG dimensions and transparency retained"
+  ],
+  "verification": {
+    "tests": 2,
+    "seconds": 0.003,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_validator_png_integrity -q"
+  },
+  "limitations": [
+    "Selected PNG corruption samples only; not exhaustive image decoder corpus",
+    "Host metadata tool mocked; actual candidate screenshot/poster gates covered separately"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "Full current delivery status and Studio delivery observation tests",
+  "files": [
+    {
+      "file": "tests/test_delivery_status.py",
+      "sha256": "f2deb7dba9f3493af8b483eb083a19b8e2df1cbcdf739460143460e85eb8fe74"
+    },
+    {
+      "file": "tests/test_studio_delivery_status.py",
+      "sha256": "ed71208c515f12ce5ef0fd1ca9cb336a1eb4e2cc65202e5716fd9b96cc22a96a"
+    }
+  ],
+  "assessment": [
+    "Local status revalidates actual archive and provenance; corrupt media or mismatched identity/approval fails",
+    "Observation leaves records unchanged and remote status UNKNOWN with no remote write",
+    "Stable paginated listing across added delivery, invalid limits/cursors refused; list does not imply package verification",
+    "Actual restarted HTTP service matches core and actual CLI listing; invalid/missing requests return 400/404",
+    "HTTP corrupt archive reported as local failure"
+  ],
+  "verification": {
+    "tests": 5,
+    "seconds": 2.848,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_delivery_status test_studio_delivery_status -q"
+  },
+  "limitations": [
+    "HTTP integration does not exercise rendered browser interaction",
+    "No actual ASC or real product archive acceptance"
+  ]
+}

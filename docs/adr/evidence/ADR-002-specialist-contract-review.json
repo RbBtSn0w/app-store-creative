@@ -1,0 +1,21 @@
+{
+  "scope": "Full static review of specialist lifecycle, agent handoff and iteration contracts; lifecycle-contract.md remains only partially reviewed",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md": "120a5965c81ba9fc5c759240a5034428868633aa69903639de6cbae07cdff3a6",
+    "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md": "ddb7d0bb99d5c53cd5e775595edd1d7bdebe67c91715efc949201e52fbc49a61",
+    "plugins/app-store-creative/skills/app-store-creative/references/iteration-contract.md": "936885ba5f803eb971a60fde4363c131c64064bce1318bf2e3107e2d88c9ff2b"
+  },
+  "findings": [],
+  "review_notes": [
+    "Independent leased attempts own scratch work; registration and termination require current tokens, with explicit recovery after loss.",
+    "Partial and failed outputs remain immutable; retries use new attempts and must not fabricate approvals or remote observations.",
+    "Recipe/source changes require a new run and fresh candidate validation/approval; dependency IDs, not filenames, define affected work.",
+    "Automatic dependency invalidation and real journey acceptance remain explicit unclosed requirements.",
+    "Receipt retention and independent backend retrieval stay separate from remote success and upload permission."
+  ],
+  "reference_check": {
+    "scope": "Relative Markdown file targets across packaged skills, excluding external URLs and anchor validity",
+    "checked": 21,
+    "missing": 0
+  }
+}

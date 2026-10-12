@@ -1,0 +1,28 @@
+{
+  "scope": "Full current status input and layered Studio input tests",
+  "files": [
+    {
+      "file": "tests/test_status_input_contract.py",
+      "sha256": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb"
+    },
+    {
+      "file": "tests/test_configuration_studio_inputs.py",
+      "sha256": "04c9949f9debffd692d6fb60a340725d30dde3a2e4f2b984427b119981348bef"
+    }
+  ],
+  "assessment": [
+    "Malformed delivery/publication/preparation identities rejected with all files unchanged",
+    "Actual HTTP capture import and byte serving share Unicode local override workspace",
+    "Run HTTP listing/detail match core; shared and local config bytes remain unchanged and default workspace not created"
+  ],
+  "verification": {
+    "tests": 4,
+    "seconds": 0.951,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_status_input_contract test_configuration_studio_inputs -q"
+  },
+  "limitations": [
+    "Duplicate filenames and import path traversal not asserted in these files",
+    "Browser interaction and two-product custom directory matrix separate"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "scope": "Full current final six changed test-file review",
+  "files": [
+    {
+      "file": "tests/test_quarantine_location_projection.py",
+      "sha256": "6d62e338953e3e0990e715fe9b5220216a87963d04296242a76e35aa4b27d3fe"
+    },
+    {
+      "file": "tests/test_quarantine_location_recovery.py",
+      "sha256": "b413ca4adcab123ccb27da7e43be52b04654ad0fd504d4481ef5c493345c7f2f"
+    },
+    {
+      "file": "tests/test_storage_control_projection.py",
+      "sha256": "0fd1931812a48113093a90425ee205425940acc282f5fab57fcbac0ce1b0f62b"
+    },
+    {
+      "file": "tests/test_studio_approval_flow.py",
+      "sha256": "76a32b212030b22516523ee2594404ab66158823725e35474aa89bff62d16ab8"
+    },
+    {
+      "file": "tests/test_studio_maintenance.py",
+      "sha256": "ec319e63c23b90a28e6efd11d37637a5018d2e01f519471e41c0a8493b7d012d"
+    },
+    {
+      "file": "tests/test_studio_read_origins.py",
+      "sha256": "3a814ce5e6689c1b87ee8f6c2efb839b24c8cdfa1b9a5b63bccec6c2c4edd182"
+    }
+  ],
+  "assessment": [
+    "Quarantine location observations follow current receipt-bound copies through repeated forward/reverse relocation; changed inode, unknown file and edited location proof do not report verified",
+    "Injected interrupted publication/exchange resumes unchanged copies; substituted payload blocks resume/rollback and preserves configuration and owner note",
+    "Control projection preserves predecessor and transition history, idempotent retries and rollback; foreign edits and substituted temporary files retained",
+    "Studio HTTP explicit validation, approval, seal and maintenance confirmations remain separate; restarted maintenance history does not invent execution verification",
+    "Foreign Origin reads reject media/config with no CORS permission; local reads work and retired hidden asset route remains inaccessible",
+    "Fixed HTTPError response cleanup in origin tests after actual ResourceWarning observation"
+  ],
+  "verification": {
+    "initial_tests": 40,
+    "initial_seconds": 42.456,
+    "initial_result": "assertions passed with three unraisable ResourceWarnings in origin test cleanup",
+    "corrected_origin_tests": 3,
+    "corrected_origin_seconds": 1.622,
+    "corrected_origin_result": "passed_without_warnings",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_quarantine_location_projection test_quarantine_location_recovery test_storage_control_projection test_studio_approval_flow test_studio_maintenance test_studio_read_origins -q",
+    "corrected_command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_studio_read_origins -q"
+  },
+  "limitations": [
+    "Disposable same-filesystem fixtures with injected failures, not cross-volume process death or real products",
+    "Studio interactions are actual HTTP requests rather than browser UI or actual human approval",
+    "Observation record non-rewrite is not exhaustively byte-snapshotted in all location tests",
+    "Permanent deletion occurs only on disposable test fixtures; no product data deletion or ASC upload"
+  ]
+}

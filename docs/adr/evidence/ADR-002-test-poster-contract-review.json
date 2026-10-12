@@ -1,0 +1,20 @@
+{
+  "scope": "Full current independent poster validation tests",
+  "file": "tests/test_poster_validation.py",
+  "sha256": "11905f4edca7af09dc4dc4e1e468cfe964410c9d4d0ce290c8ffa263e532c298",
+  "assessment": [
+    "Required poster missing rejected without managed candidate records",
+    "Poster dimensions differing from inspected Preview rejected",
+    "Matching 1920x1080 poster passes local media gate"
+  ],
+  "verification": {
+    "tests": 3,
+    "seconds": 0.292,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_poster_validation -q"
+  },
+  "limitations": [
+    "Video probe mocked; actual CDN poster failure not proved fixed",
+    "Timestamp and artifact dependency binding are separate producer/lifecycle tests"
+  ]
+}

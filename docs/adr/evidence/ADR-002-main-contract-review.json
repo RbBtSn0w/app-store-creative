@@ -1,0 +1,27 @@
+{
+  "scope": "Full static review of main lifecycle contract; real operation and product acceptance remain separate",
+  "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+  "sha256": "4f26078d0805305dbbd0ab18279db1419bfd7428f1da6ec6c334f75c160cbef6",
+  "reviewed_ranges": [
+    [
+      1,
+      354
+    ]
+  ],
+  "findings": [
+    {
+      "resolution": "Removed contradictory not-yet-active configuration-layer heading; existing text correctly states CLI/Studio and relocation adoption."
+    },
+    {
+      "resolution": "Reconciled six historical pending/refused statements with current owning-layer relocation and managed authority integration; real acceptance gaps retained."
+    }
+  ],
+  "remaining": [
+    "Real product maintenance and relocation matrix",
+    "Full real backend and ASC acceptance"
+  ],
+  "notes": [
+    "Current static review does not establish full filesystem race or real product safety; documented acceptance gaps retained.",
+    "Final sections separate external hydration, evidence custody, local preparation and four remote gates; no additional contradiction found."
+  ]
+}

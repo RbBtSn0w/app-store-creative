@@ -1,0 +1,21 @@
+{
+  "scope": "Full current artifact retention policy tests",
+  "file": "tests/test_artifact_policy.py",
+  "sha256": "b527dd7d843d656c2f8bdc8be4681a9f7a0b58db136d5ee56a834104c068204f",
+  "assessment": [
+    "Declared trial/quarantine days supply cleanup/purge defaults",
+    "Unknown version/field and invalid negative/boolean retention refused",
+    "Policy change invalidates prior cleanup execution plan",
+    "Actual CLI and HTTP policy inspection matches core without record writes; arbitrary query root override rejected"
+  ],
+  "verification": {
+    "tests": 5,
+    "seconds": 0.833,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_artifact_policy -q"
+  },
+  "limitations": [
+    "Invalid policy constructor rejection does not explicitly snapshot all filesystem bytes in this file",
+    "Media budget semantics tested separately; no actual permanent purge executed"
+  ]
+}

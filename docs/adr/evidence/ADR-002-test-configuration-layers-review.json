@@ -1,0 +1,21 @@
+{
+  "scope": "Full current configuration layers tests",
+  "file": "tests/test_configuration_layers.py",
+  "sha256": "1232ecc2d6bf9bd5903659aaf4f92476f2ed59512ec2eb9d491f6f6293cb6d5f",
+  "assessment": [
+    "Local storage precedence preserves shared recipe identity/bytes with no root creation",
+    "Invalid local identity/recipe fields/roots, symlink, duplicate keys and resolution-time mutation refused",
+    "Actual Git requires local config ignored and untracked; negation and forced tracking rejected",
+    "Absent/shared/local documents have distinct review revisions; selected config derives corresponding local filename",
+    "Named backend access stays local and survives relocation plan; relative root/unknown provider/token fields/unsafe backend names refused"
+  ],
+  "verification": {
+    "tests": 13,
+    "seconds": 0.51,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_configuration_layers -q"
+  },
+  "limitations": [
+    "Isolated local Git and configuration only; no actual backend access or real product relocation"
+  ]
+}

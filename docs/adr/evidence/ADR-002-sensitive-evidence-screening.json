@@ -1,0 +1,414 @@
+{
+  "scope": "Pattern screening of changed ADR documents and evidence against origin/main; no media or private tmp logs included",
+  "source_commit": "e2675d5e85d869afd7007ba3b642bd80731489c9",
+  "files": [
+    {
+      "file": "docs/adr/ADR-002-artifact-lifecycle-and-release-archive.md",
+      "sha256": "a1667c4ee908d1cf5a0320707bc21f73430719693004099a14aa1413b607e55b"
+    },
+    {
+      "file": "docs/adr/ADR-002-delivery-closure.md",
+      "sha256": "d05568df62145f4760b38b652a757474bb43bf0de8aab9f2fc4d4d1172a9a8ed"
+    },
+    {
+      "file": "docs/adr/ADR-002-entity-contract-audit.md",
+      "sha256": "3d0cf9fcf1b7da8b90c05606ed8391c4951e8fa06941af995fdc469990ad6e67"
+    },
+    {
+      "file": "docs/adr/ADR-002-implementation-status.md",
+      "sha256": "abeadae2d0619978c9eee99fdefde837aed9583bd6d0ec2c1c4d44d554d80c3d"
+    },
+    {
+      "file": "docs/adr/ADR-002-precommit-review.md",
+      "sha256": "76dd19b68cb24020ed63b019194643a955923f2946477e72e078d14ed6d9926c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-archive-policy-contract.json",
+      "sha256": "0f6255330d106f95d5a7fe45b15c84e36f3762d764a4e22041e39ce690c0891e"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-artifact-core-review.json",
+      "sha256": "2b14ee16a7dbb3d18e2d345c57bbe416ed403009d76664b0d21db0db2cade6d2"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-browser-directory-preview.json",
+      "sha256": "d54c4c2e1b1d311f49cac09c2aaede5de1beeb8ba84e27f943a0d2ce38a096ee"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-budget-declaration-review.json",
+      "sha256": "b5998892b26546d0e758ac20bdb275e742047c812d2fedd23c47a0c3e15c51bf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-candidate-approval-review-c98edbc.json",
+      "sha256": "e19a0dc202794ee084a1c27dd0af205bda0f141de11de127bd993984d83e6949"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-chrome-renderer-review.json",
+      "sha256": "6677067d78ceb6514ad01fb349e88357a3687eedbf1de625dd837d21120e1d61"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-5bcf5e2.json",
+      "sha256": "443cbe115c7662dbd588a3e83d7387936e238d8230f84ca84ee002daff3d38b7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-6faa6b5.json",
+      "sha256": "31b24e5db5e81b834f6ec6d81cbebc0ae089e77106f35370851ab9c763fee6d9"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-a28e698.json",
+      "sha256": "df191c0df95bfa49b5868f17c2442b7f6a9e633ac4b02233ad4b58e3278fa0f3"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-b2477be.json",
+      "sha256": "2000d7eb8452dd33d56cfe0c52aeccbbdcd71242a506bf61d877de94a3cadf39"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-ci-c98edbc.json",
+      "sha256": "e14cdf64d8a0510847c3a7018fa6f6850bf1717ee4c8db20fb0154d93cf82bf4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-cli-entry-review.json",
+      "sha256": "7b888a31b8a78ed2558b44611a6f844cc0a8a61048b28f155ca8665755467ebf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-configuration-review-a28e698.json",
+      "sha256": "ccd29fd25453c1beb58cdb78e10a2deb6d9a966fe4ea97aa43a910b843b0def1"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-control-projection-review.json",
+      "sha256": "451c1b332ac03ea4d70030a2fde4d8f9c682d109ea35046a6e73d2ac495e641f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-crossfs-24634da.json",
+      "sha256": "b530629f0f1c004ff52ad2566be8a89554eccc76c799a46ce25642920a079072"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-delivery-module-review-c98edbc.json",
+      "sha256": "77bea6949e6dc7820ac941e3ca4ab0744b47db82647cd61b66b3fe57ea8ccbbf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-documented-cli-parsing.json",
+      "sha256": "674e2773a50ea3d95177887fddc1cd68d1fd4eea6c7bed63998960fd436911a3"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-export-module-review.json",
+      "sha256": "0acfcf37043bae6a14720a6ba73751eca764e2bc6c607d855c855c6a4b1824a6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-export-server-cleanup.json",
+      "sha256": "616c9af3f476db433ef1b586743ee9e136d0a71bbd4df443b7d1e9e4f7d259cb"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-external-parent-replacement.json",
+      "sha256": "46557740b4c4467e7a9ffa28e274d9100b4803e39e1224007c3123f112193589"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-external-storage-review-c98edbc.json",
+      "sha256": "71285d96a3ba58853aa14fad38fb1274738b00a5afec9ff183a8544f92e09faf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-forward-source-review.json",
+      "sha256": "168558fc2eafd4bee94057d26e7093733f207cf2cec23798d7714e6e371b825b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-frontend-review-inventory.json",
+      "sha256": "ab820ff555c4b483b180a9ac3a79aa746b084b89c02c4a4da1d6ab84083e0401"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-git-staging-review-6faa6b5.json",
+      "sha256": "ef04443e22da8a1595571f4f175a5d50a0438f6f096f3ecab71e9cca122cb039"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-history-review-c98edbc.json",
+      "sha256": "c278cad081d52688abb5794cc9ad2162c31812d755d01ef3b398f4d6681d93d4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-identity-incident-review-c98edbc.json",
+      "sha256": "79b8c571fbddaa1a9f2f81966ca2a197ab065b0258e2084a9997d0fd8a51fc05"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-implementation-history-2026-10-09.md",
+      "sha256": "00506adecc9048d6c05b094d354fd7034bb6a9900acc62450749656c7dbc7819"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-052eeb5.json",
+      "sha256": "a648d6c5fae154388147409a50c671a3616f847a95a967674356a16c7794b67d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-7037630.json",
+      "sha256": "5201efd31ccf2852810c21a65e948308e09fe48e4c221e2f28188eab96dc37f7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-independent-package-ec69c26.json",
+      "sha256": "d6230c5ee7c325a940ac921eebbeeb538c8640499e0ea92d27dc7c120c3e59a8"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-input-configuration-review.json",
+      "sha256": "55b40a259918b84e151d80a03e9506cc09a15eba65a4c30fc6338fb67f39af65"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-installed-24634da.json",
+      "sha256": "379f3fb3051fb6e18b9a88b5b8180d068d1d42c1e455351e46e40977c76ffc44"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-inventory-purge-proof-review.json",
+      "sha256": "4e1f2739ea2d9ab881bef14f844937412ab2e5b8d05b4045b9ad87a378a718ee"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-inventory-review-ffa1460.json",
+      "sha256": "19f22c7ffe2b042eeb7e285c50c350b70b31a6433a73cf2d371ecbfcffe19e4d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lease-review-c98edbc.json",
+      "sha256": "50764ad4f88cc4cbc8e3b16ac64372d7c1e80c0de3daae71a8b87a8a7423f09c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lfs-custom-paths.json",
+      "sha256": "cf710de12aaf16c8b1b908c568c7399425b7e43aa4ef44f6e925c89c451ee827"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lifecycle-commands-review.json",
+      "sha256": "abecfd1f5ad905ebedc300af93600b91a5f799ad9b5d8f74eb49de5ed1348cca"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-local-verification.json",
+      "sha256": "835c91092121e8fb6fa9df687031f52b6d3efe1cd08c3215b8f3e17e9fc9905a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-lock-replacement-review.json",
+      "sha256": "bbb5880f035f176df60ab879fe2a57d60fd039b71ddabc08c202c885601b44b7"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-main-contract-review.json",
+      "sha256": "a30af5a8ca0eddd9205e0646d6dcc34f5af37f740bb222e8c4696fd5393d4289"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-maintenance-boundaries-5bcf5e2.json",
+      "sha256": "fde4c5380b8400c9a343da7d5e26242b9a2b396c1909dd51dc1198cc701a5ad6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-maintenance-observation-review.json",
+      "sha256": "c6aac9f7045bc36ac51580724cf0158a55fd01cf3d44252c24b9f9a838bc6e11"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-managed-recording-review-3580e3a.json",
+      "sha256": "5378937038f2c0e6622b4831caa609e5a3140f1fe66bcf737636218639bd0987"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-packaging-review.json",
+      "sha256": "879badaaf54c8d1277357ed2f30cdd48534d3182088039373e55670d073e3957"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-policy-identity-review-e70e281.json",
+      "sha256": "89cb7f66cd050402a73bace492afaf7db46eccadf2940225e73aaed884a5ee6a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-preview-poster-review.json",
+      "sha256": "d89aafe77159f6d3f3a4075ac72f27649a2b6aa90abec761aa3455ebcc21173b"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-preview-publication-review.json",
+      "sha256": "655c1618029b0d3ed19a1a068b6f693ce8dc7c6a3c51d9f3954cc20223de0673"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-private-evidence-review-a28e698.json",
+      "sha256": "30a8ba487557bcb59538ebf6af651d488bc4357d8f8e019b75e4c865842a3c4a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-production-preparation-review.json",
+      "sha256": "b5552739319d97d483e4327f2e5f92e67121ee7a4ce0726095fa21374c9b93bf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-progress-history-through-17f4477.md",
+      "sha256": "5e29eb7301955ece21e43f06d10c7309aa854beeb174cb184f602ec717ead39d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-publication-review-c98edbc.json",
+      "sha256": "99cb7c27927f7a792663b5c513b11baba7578b896d255268c168ba92b021174d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-purge-review.json",
+      "sha256": "d2e4a1878106e316fc0b164cc82ac8468373aa89228abce2b34f60c8d4c4b6ea"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-quarantine-review.json",
+      "sha256": "10d1292b85fa9c582cc2c6c1ce51c5079b72ca8022ada5bf517d483e84500570"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-recipe-approval-binding-gap.json",
+      "sha256": "dcf88d5710524f3aa8132852f1450ceb47042174c87fd8c83ecbd74a2272913d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-recorder-receipt-review.json",
+      "sha256": "5bfb1da6aa1d25a34fb69b18c866312e75b2681fa1bce9ce394424d1456a8f48"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-recording-contract-review-e70e281.json",
+      "sha256": "fe7066bf0c58516257f2b799e1a9d3058f6a30b4e2ce49e7e608a816d586fdca"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-relocation-core-review.json",
+      "sha256": "c159b4389cfdc664b9f7d7e169e28a9c12e45f291d4658f045f5fc0e70502b0e"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-relocation-inventory-review.json",
+      "sha256": "68b1b00ae8688a624a0c18ec04cc85b7e5ab98d378c1297b636041a9bc70ac3a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-relocation-retention-review.json",
+      "sha256": "b5337910e927c6c95a4fd3ce68028bcfe75c5a85911e62d9c7336ea92a2a6073"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-remote-observations-review.json",
+      "sha256": "b496b83df7ea136859f91bf5f7a810279eed8cbc179a1ed8bb807240f1d9b0ea"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-retention-module-review.json",
+      "sha256": "c1b08b1fbd027a38f28673b6857d7b04ee0d6ea719c7d0b1fd485b516eec9f24"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-reverse-relocation-review.json",
+      "sha256": "91ddca4e0f4b66f47de406bbd35c149ca9ed4cc8a2ca5ae200847ae502e5ed3c"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-review-coverage-f89d644.json",
+      "sha256": "9aaab80140dd9b07d2af72620471be72672e039dc1e5770d0d2c4cba4e9ba693"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-runtime-review-inventory-c98edbc.json",
+      "sha256": "1eb508b5767cddefc803ad6bfb5215f355ffcefdc2a16fb6f5c7b9b84021e921"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-shared-staging.json",
+      "sha256": "4038624fbaf3c640841861e4466a885afde59d0f54ce92513bf1c6a7c9821fac"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-skill-entrypoints-review.json",
+      "sha256": "589108dd4e89015fb8ccf63facb25aaa709e497e5645dbaf72d585f96d1d02cc"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-specialist-contract-review.json",
+      "sha256": "24df48df3cd0b8f4d8f1eac37e10d21aa44f04ab87b465f321548c621d1ec4db"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-staging-object-review.json",
+      "sha256": "7f190c549be9a7c9bf378a1adf6dc5edd02dadbb22901fd6d33cd7e44da68be5"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-staging-review-c98edbc.json",
+      "sha256": "41284822597a4929870ee3ce26e55ac20bbedad842bccee26942ca845000eec6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-storage-policy-schema-review.json",
+      "sha256": "456419da7be5c2dac7b7e217c9b736e6390b1d194c8a958a814303b204dfbd57"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-storage-video-review.json",
+      "sha256": "45db4b1ac3723b094fe1c50956815d1d9d990ca75f6639debe975719c28bd182"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-app-orchestration-review.json",
+      "sha256": "2f156708a15c7c2335a0589ba9583de53e042ab0f47d9135b9b9e32c7acdbe7f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-archive-policy.json",
+      "sha256": "3286cf148b71cc46835679956520338307d69c67309ded2ea0fbd2c8909f28cf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-card-rendering-review.json",
+      "sha256": "d14a7ffb1a405826f952e8ca46148397e90756daa095f2a58db18c7a145b213f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-contract-review.json",
+      "sha256": "0182a8b1dd76e08fe1f8fe57e3673a982b7a7bafcb61c0c348fd0e0fff5a7eaa"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-copy-history-review.json",
+      "sha256": "4fac0a6d93f191e6064c0da96706ea7b4c370989933e118a1422eb8d4cd3c95f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-directory-review.json",
+      "sha256": "e56bdc11e6616297b59a934ecd8dc34cb1dfa573ff5783fc54677b31efed5470"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-entry-download-review.json",
+      "sha256": "6ae8931270bbcf4918ae0842503a2da17b03001831dd138c5783a5d0aea03fba"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-export-readiness-review.json",
+      "sha256": "144278d1ffb4d68402e4febe2f0103e4e82b24a4426933c4951a586a9398562a"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-history-review.json",
+      "sha256": "85e43bf00445fe0996ed8d101094c735c276491e025979ac607e14ed67f3c2d6"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-inventory-review.json",
+      "sha256": "410c481c7c4a98fe188e9e3d257f5718b5254068b0496737a13e3e784a5b77cf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-maintenance-review.json",
+      "sha256": "ae9d8e60f865ab727e4a073878c5efa1f9f9376e5dd8ef576848b7b2913235bf"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-obsolete-toolbar-review.json",
+      "sha256": "80678254b23563725ad80dc902bdda2469637b21e891958b1ed26bb358bf30fb"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-policy-browser-a28e698.json",
+      "sha256": "a34584139e0d607affdcf5a482c1600509abf7c32253353fcc8d7a17f01dbb9d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-policy-budget-review.json",
+      "sha256": "51b017a7fb71adb05736c2447d1630d8084316aefeae2de539fa12fe9e18122d"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-release-panels-review.json",
+      "sha256": "7ab738800b87e7ea104e9ef956df1b359028e6e18ea54a4efb5109bda8016cea"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-relocation-actions-review.json",
+      "sha256": "6b0464ae3c653ab64426d2f97621d2462b30589208e65a498eb74ad5d548aad4"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-run-history-review.json",
+      "sha256": "7acc6fbd38c7c736ca5174a191e7cdccab52612e15f4ec683b464067f4a44b19"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-save-editor-review.json",
+      "sha256": "3a09077d044e1f0a9ce4a0884eda2731dd56b0a3bcb17b035e2a294c2fb7073f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-server-review.json",
+      "sha256": "4051ed8b70ef5a9a4e4cfd5af3c88b60b30d604faf9cceb16d1d6f1226fed54f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-studio-types-purge-review.json",
+      "sha256": "acb1630ab90e8aa273ebcd15ea5f1c525e4abf80c382702912bf486b1fd1c063"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-validator-module-review.json",
+      "sha256": "0b44866429fc390d9aa9fe281baf1453260aaaaa1ce13e66f6b1893510653d5f"
+    },
+    {
+      "file": "docs/adr/evidence/ADR-002-validator-png-integrity.json",
+      "sha256": "9576046d3605dfd5c6457bc2be772fc97eab846b76e302ed33ae55665a6e3794"
+    }
+  ],
+  "patterns": [
+    "private_key",
+    "signed_query",
+    "bearer_token",
+    "jwt"
+  ],
+  "findings": [],
+  "url_hosts": {
+    "127.0.0.1": 3,
+    "github.com": 5
+  },
+  "limitations": [
+    "Pattern screening is not a complete manual sensitive-evidence review",
+    "Unknown secret formats and private paths may be missed",
+    "Complete source/test diff review remains required"
+  ]
+}

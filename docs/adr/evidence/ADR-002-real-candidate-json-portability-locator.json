@@ -1,0 +1,114 @@
+{
+  "scope": "Locator scan of actual candidate JSON dependency bytes; not full human privacy review",
+  "products": {
+    "levelory": {
+      "candidate_id": "b4a4a8b0c1364591a39e4b000f541bc4",
+      "closure_artifacts": 63,
+      "json_inputs": [
+        {
+          "artifact_id": "a9ddcd53551b445b8fa778d270e43015",
+          "sha256": "b57920ecf6403db21823facd4d150b507e61c52874378282248345a3c4db7d6f",
+          "logical_path": "evidence/en-US/01-history.capture.json"
+        },
+        {
+          "artifact_id": "ede24004dfe749679fe7d91380279ce5",
+          "sha256": "95b5c1718bb55e83b0a01e959ee97915c9dc4e4b646ce9e43777a0bd8a910642",
+          "logical_path": "evidence/en-US/02-quick-paste.capture.json"
+        },
+        {
+          "artifact_id": "b05f5a56dfa54252b8c451b90138ffd8",
+          "sha256": "c6d0c132be17f26170d60259d4d8b4e7ff4b19e955885dcd9566edd70b0bdff6",
+          "logical_path": "evidence/en-US/03-filter.capture.json"
+        },
+        {
+          "artifact_id": "cd5f41eb773d451285db4277a65431a9",
+          "sha256": "16a8a886ce94983ff249c0d5e24c34e8db3b691d20b90a643d090b04eb4d32a4",
+          "logical_path": "evidence/en-US/04-collections.capture.json"
+        },
+        {
+          "artifact_id": "02e14a492ac64b8d8843579f35997bc5",
+          "sha256": "8ae9e3d74e0b9aaa202ed111cb289a59b1e4a3a59f62496f67262468731c74eb",
+          "logical_path": "evidence/en-US/05-settings.capture.json"
+        },
+        {
+          "artifact_id": "009d419623d94622b64d3493fd612611",
+          "sha256": "cbe28be607eb6301549e792ce73ff6e95454fe4cda00086bb2a1c7efc2bb0f0a",
+          "logical_path": "evidence/zh-Hans/01-history.capture.json"
+        },
+        {
+          "artifact_id": "70dcbbd4ca0940a7b27ab1146bac9264",
+          "sha256": "2455ec1c0700f9cbb8f8a181ba82de8e7dba88a2f93f7643e604a40f18f200ff",
+          "logical_path": "evidence/zh-Hans/02-quick-paste.capture.json"
+        },
+        {
+          "artifact_id": "f1e8ac15c1204dc888226144604ac040",
+          "sha256": "425a7da2c5a372fe6c1362549c9be0bc585e06f650d39aad397cd575eb851cea",
+          "logical_path": "evidence/zh-Hans/03-filter.capture.json"
+        },
+        {
+          "artifact_id": "1cc2f377001c4bc780e328f22b4b1caa",
+          "sha256": "ade1ba3b42d61904cb551094f1c860c0cf04369e567ad30ea416d1ba233291c3",
+          "logical_path": "evidence/zh-Hans/04-collections.capture.json"
+        },
+        {
+          "artifact_id": "84c9253c05f0448eb59ea84c63f8ec58",
+          "sha256": "e53e99ebaa8428299fc936d9bdd5f54ffead8311c58d4af9e2fc02f7b6455b55",
+          "logical_path": "evidence/zh-Hans/05-settings.capture.json"
+        },
+        {
+          "artifact_id": "50100fbf6be24075a6d08cb40f48db55",
+          "sha256": "b3c94a3abac792c4e34fa682789b0ad43b49857203c14da3c947b4155d340c59",
+          "logical_path": "reviewed-recipe.json"
+        },
+        {
+          "artifact_id": "3a881f1219134df6a35fefd406760dd0",
+          "sha256": "5a1985134b1189ee5f50b38fea05527098af1a7e7b7ba634b0c62735642e9034",
+          "logical_path": ".export-evidence.json"
+        },
+        {
+          "artifact_id": "3efe309fb54c497c8a18da9c8f0f2ba6",
+          "sha256": "0c1d5114bd9b25af2ec56328b3a1900a2ec6075d0fe9de1b586b740b7dcc1cc4",
+          "logical_path": "evidence/native-filter-journey.mov.recording.json"
+        },
+        {
+          "artifact_id": "f48d41e052c64af7b8b6864d125d60f0",
+          "sha256": "aa63dc96373dd9d16bbca5357dec2e07c1a901eb7d405d9fda225e4a6a48b58b",
+          "logical_path": "sources/timeline.json"
+        },
+        {
+          "artifact_id": "a606cab14c46424f9c07abaa7b16108e",
+          "sha256": "7d59178d9ac96a208985b7c92ae1d183df41c09116bb7936a1bb06e5a3cb1c9a",
+          "logical_path": "evidence/preview-receipt.json"
+        },
+        {
+          "artifact_id": "8114c1f965704ae299b9e86db416d1dc",
+          "sha256": "91036803214f47f2fccee7b0ac7cd8c329459b505313447f37705b4e7c29c449",
+          "logical_path": "evidence/poster-plan.json"
+        },
+        {
+          "artifact_id": "3b8b4eff34614e119791c16781e37d67",
+          "sha256": "e01556f6e0d6a08dd027b5cbfa70796ec343dbb1c2fe2ba5d1a1243b49eaf17b",
+          "logical_path": "evidence/poster-receipt.json"
+        }
+      ],
+      "findings": []
+    },
+    "fubiao": {
+      "candidate_id": "3097c2a9970b4ad5a2eaa129616f86c2",
+      "closure_artifacts": 8,
+      "json_inputs": [
+        {
+          "artifact_id": "a40af624227843389fc8aed5b998c0bf",
+          "sha256": "d6db631be7b76970031da02c564a9f2097a9f4a2837378d537f3f09f723726cc",
+          "logical_path": "reviewed-recipe.json"
+        },
+        {
+          "artifact_id": "c71d4deb0df348ce8347db16c4e0be32",
+          "sha256": "4f04111711c8ca36929abf7bbe5657a781f1adcdf5b5a3029626d7e898193052",
+          "logical_path": ".export-evidence.json"
+        }
+      ],
+      "findings": []
+    }
+  }
+}

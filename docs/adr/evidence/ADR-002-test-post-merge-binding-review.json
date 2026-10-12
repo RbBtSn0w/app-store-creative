@@ -1,0 +1,20 @@
+{
+  "scope": "Full current post-merge archive binding test",
+  "file": "tests/test_post_merge_archive_binding.py",
+  "sha256": "a00154421a0d075afd425097514bb8020ca725590823a35e052d266ec3f93805",
+  "assessment": [
+    "Real local git squash changes commit while preserving archive manifest bytes",
+    "Bare remote push makes old review commit unavailable as publication origin; old commit plan rejected",
+    "Merged commit independently retrieved and rebound into new publication scope",
+    "Pre-merge approval and plan remain unchanged; new scope requires new upload approval and never claims remote verification"
+  ],
+  "verification": {
+    "tests": 1,
+    "seconds": 1.199,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_post_merge_archive_binding -q"
+  },
+  "limitations": [
+    "Disposable local bare remote; actual GitHub PR merge and product archive not performed"
+  ]
+}
