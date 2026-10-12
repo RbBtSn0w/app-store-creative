@@ -37,6 +37,9 @@ def observation_summary(observation):
 
 
 def requirements(asset):
+    # ASC derives a poster from the preview; the reference PNG is not uploaded.
+    if asset['role'] == 'poster':
+        return ['media']
     return ['upload', 'processing', 'playback', 'poster'] if asset['role'] == 'preview' else ['upload', 'processing', 'media']
 
 

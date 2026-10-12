@@ -140,6 +140,14 @@ class RemoteObservationTests(unittest.TestCase):
         self.observe(plan, 'processing', {'processing_state': 'COMPLETE'}, remote_id='different-resource')
         self.assertEqual(self.store.publication_status(plan['id'])['status'], 'CONFLICT')
 
+    def test_poster_reference_requires_visual_media_evidence_not_an_independent_upload(self):
+        from remote_observations import gate_result, requirements
+        poster = {'role': 'poster'}
+        self.assertEqual(requirements(poster), ['media'])
+        self.assertEqual(gate_result(poster, 'media', {'media_verified': True}, 'asc-api'), 'UNKNOWN')
+        self.assertEqual(gate_result(poster, 'media', {'media_verified': True}, 'browser'), 'PASS')
+        self.assertEqual(gate_result(poster, 'media', {'media_verified': False}, 'browser'), 'FAIL')
+
     def test_preview_requires_decoded_poster_and_playback(self):
         from remote_observations import gate_result, requirements
         preview = {'role': 'preview', 'poster_frame_time_code': '00:00:05:01'}
