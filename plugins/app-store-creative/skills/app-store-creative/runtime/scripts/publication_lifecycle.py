@@ -90,7 +90,24 @@ class PublicationOperations:
                 or proof.get('provenance_verified') is not True):
             raise ValueError('External publication retrieval proof is mismatched')
 
-    def plan_publication(self, delivery_id, archive_commit, remote_target, archive_remote=None):
+    def _archive_repository(self, name=None):
+        if name is None:
+            return self.paths.project
+        from configuration_layers import load
+        layers = load(self.paths.project, self.config_path)
+        repository = (layers.local_config or {}).get('archiveRepositories', {}).get(name)
+        if repository is None:
+            raise ValueError('Named archive repository has no host-local access configuration')
+        root = Path(repository['root'])
+        if root.resolve() != root or not root.is_dir():
+            raise ValueError('Archive repository is missing or symlinked')
+        result = subprocess.run(['git', '-C', str(root), 'rev-parse', '--show-toplevel'], capture_output=True, text=True)
+        if result.returncode or Path(result.stdout.strip()).resolve() != root:
+            raise ValueError('Archive repository must be an explicit Git worktree root')
+        return root
+
+    def plan_publication(self, delivery_id, archive_commit, remote_target, archive_remote=None,
+                         *, archive_repository=None, archive_path=None):
         from artifact_lifecycle import canonical, identifier
         from delivery_lifecycle import verify_archive
         with self.transaction():
@@ -99,13 +116,21 @@ class PublicationOperations:
             package = self.delivery_path(delivery)
             verify_archive(package, delivery['manifest_sha256'])
             manifest = json.loads((package / 'manifest.json').read_text())
-            original = Path(delivery['local_path'])
-            if not original.is_relative_to(self.paths.project):
-                raise ValueError('Original Git archive location must be inside the repository')
-            relative = committed_archive(self.paths.project, package, archive_commit, manifest,
-                                         original.relative_to(self.paths.project).as_posix())
+            repository = self._archive_repository(archive_repository)
+            if archive_repository is not None:
+                if archive_path is None:
+                    raise ValueError('Named archive repository requires an explicit archive path')
+                relative = committed_archive(repository, package, archive_commit, manifest, archive_path)
+            else:
+                if archive_path is not None:
+                    raise ValueError('Explicit archive path requires a named archive repository')
+                original = Path(delivery['local_path'])
+                if not original.is_relative_to(self.paths.project):
+                    raise ValueError('Original Git archive location must be inside the repository')
+                relative = committed_archive(repository, package, archive_commit, manifest,
+                                             original.relative_to(self.paths.project).as_posix())
             from delivery_lifecycle import verify_git_archive
-            retrieval = verify_git_archive(self.paths.project, archive_commit, relative, delivery['manifest_sha256'], archive_remote)
+            retrieval = verify_git_archive(repository, archive_commit, relative, delivery['manifest_sha256'], archive_remote)
             config = json.loads((package / 'recipe/config.json').read_text())
             from archive_policy import require_retrieval
             archive_policy = require_retrieval(config, retrieval)
@@ -121,6 +146,8 @@ class PublicationOperations:
                         'Obtain explicit upload approval for this plan hash', 'Execute through the official ASC plugin',
                         'Record processing, media and poster observations separately'],
                     'idempotency_key': hashlib.sha256(canonical({'delivery': delivery['manifest_sha256'], 'target': remote_target})).hexdigest()}
+            if archive_repository is not None:
+                body['archive_repository'] = archive_repository
             return self._record('publications', body, 'plan')
 
     def _verify_publication_archive(self, plan):
@@ -169,7 +196,7 @@ class PublicationOperations:
             package = self.delivery_path(delivery)
             verify_archive(package, plan['manifest_sha256'])
             manifest = json.loads((package / 'manifest.json').read_text())
-            committed_archive(self.paths.project, package, plan['archive_commit'],
+            committed_archive(self._archive_repository(plan.get('archive_repository')), package, plan['archive_commit'],
                               manifest, plan['archive_path'])
             config = json.loads((package / 'recipe/config.json').read_text())
             expected_assets = publication_assets(manifest, config, package, plan['archive_path'] + '/')

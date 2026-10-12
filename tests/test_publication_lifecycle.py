@@ -3,6 +3,8 @@ from pathlib import Path
 import hashlib
 import json
 import subprocess
+import shutil
+import tempfile
 import sys
 import unittest
 sys.path.insert(0, str(Path(__file__).parents[1] / 'plugins/app-store-creative/scripts'))
@@ -37,6 +39,52 @@ class PublicationLifecycleTests(unittest.TestCase):
         approval = self.store.approve_upload(plan['id'], 'owner', 'human:upload')
         self.assertEqual(approval['stage'], 'upload')
         self.assertEqual(approval['publication_id'], plan['id'])
+
+    def test_named_archive_repository_binds_copied_delivery_without_host_path_leak(self):
+        from configuration_layers import local_path_for
+        with tempfile.TemporaryDirectory() as directory:
+            repository = Path(directory).resolve()
+            archive_path = 'marketing/releases/approved'
+            shutil.copytree(self.store.delivery_path(self.delivery), repository / archive_path)
+            def git(*args):
+                return subprocess.check_output(['git', '-C', str(repository), *args], text=True).strip()
+            git('init', '--quiet')
+            git('add', 'marketing')
+            git('-c', 'user.name=Test', '-c', 'user.email=test@example.invalid',
+                'commit', '--quiet', '-m', 'test: archive approved delivery')
+            commit = git('rev-parse', 'HEAD')
+            config_path = self.root / 'creative.config.json'
+            config_path.write_text(json.dumps(self.config))
+            local_path_for(config_path).write_text(json.dumps({
+                'schema_version': 1, 'project_id': 'demo', 'storage': {},
+                'archiveRepositories': {'product': {'root': str(repository)}}}))
+            store = lifecycle.Lifecycle.from_configuration(self.root)
+            plan = store.plan_publication(self.delivery['id'], commit, self.target,
+                                          archive_repository='product', archive_path=archive_path)
+            self.assertEqual(plan['archive_repository'], 'product')
+            self.assertEqual(plan['archive_path'], archive_path)
+            self.assertTrue(plan['retrieval_proof']['retrieval_verified'])
+            self.assertNotIn(str(repository), json.dumps(plan))
+            handoff = store.export_publication(plan['id'], write=True)
+            self.assertEqual(handoff['upload_approval'], 'pending')
+            self.assertNotIn(str(repository), Path(handoff['handoff_path']).read_text())
+            with self.assertRaisesRegex(ValueError, 'archive|commit'):
+                store.plan_publication(self.delivery['id'], '0' * 40, self.target,
+                                       archive_repository='product', archive_path=archive_path)
+            for name, path in [('missing', archive_path), ('product', '../outside')]:
+                with self.assertRaises(ValueError):
+                    store.plan_publication(self.delivery['id'], commit, self.target,
+                                           archive_repository=name, archive_path=path)
+            # Rebinding a private name cannot authorize a different repository's bytes.
+            local_path_for(config_path).write_text(json.dumps({
+                'schema_version': 1, 'project_id': 'demo', 'storage': {},
+                'archiveRepositories': {'product': {'root': str(self.root)}}}))
+            with self.assertRaisesRegex(ValueError, 'Configuration layers changed'):
+                store.export_publication(plan['id'], write=True)
+            store = lifecycle.Lifecycle.from_configuration(self.root)
+            with self.assertRaisesRegex(ValueError, 'repository|archive'):
+                store.export_publication(plan['id'], write=True)
+            self.assertEqual(store._read('deliveries', self.delivery['id']), self.delivery)
 
     def test_handoff_preserves_approved_asset_order_instead_of_filename_order(self):
         from publication_lifecycle import publication_assets

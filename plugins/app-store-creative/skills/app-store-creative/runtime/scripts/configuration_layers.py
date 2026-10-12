@@ -90,7 +90,7 @@ def compose(root, project, local=None):
     overrides = {}
     if local is not None:
         if (not isinstance(local, dict) or not {'schema_version', 'project_id', 'storage'}.issubset(local)
-                or set(local) - {'schema_version', 'project_id', 'storage', 'mediaBackends'}
+                or set(local) - {'schema_version', 'project_id', 'storage', 'mediaBackends', 'archiveRepositories'}
                 or type(local['schema_version']) is not int or local['schema_version'] != 1):
             raise ValueError('Invalid host-local configuration schema')
         identity = project.get('project', {})
@@ -109,6 +109,14 @@ def compose(root, project, local=None):
                     or backend['provider'] != 'filesystem' or not isinstance(backend['root'], str)
                     or not Path(backend['root']).is_absolute()):
                 raise ValueError('Invalid named host-local media backend')
+        repositories = local.get('archiveRepositories', {})
+        if not isinstance(repositories, dict):
+            raise ValueError('Host-local archiveRepositories must be an object')
+        for name, repository in repositories.items():
+            if (not isinstance(name, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}', name)
+                    or not isinstance(repository, dict) or set(repository) != {'root'}
+                    or not isinstance(repository['root'], str) or not Path(repository['root']).is_absolute()):
+                raise ValueError('Invalid named host-local archive repository')
         overrides = local['storage']
         if not isinstance(overrides, dict) or set(overrides) - set(STORAGE_DEFAULTS):
             raise ValueError('Host-local configuration may only override storage roots')

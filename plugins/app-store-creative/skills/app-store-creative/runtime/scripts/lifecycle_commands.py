@@ -215,6 +215,8 @@ def add_commands(subparsers):
     plan.add_argument('--delivery-id', required=True)
     plan.add_argument('--archive-commit', required=True)
     plan.add_argument('--archive-remote')
+    plan.add_argument('--archive-repository')
+    plan.add_argument('--archive-path')
     plan.add_argument('--target', type=Path, required=True)
     external_plan = publication.add_parser('plan-external')
     external_plan.add_argument('--external-archive-id', required=True)
@@ -535,7 +537,8 @@ def execute(args):
             return core.plan_external_publication(args.external_archive_id, args.archive_commit,
                 args.archive_path, json.loads(local(args.target).read_text()), local(args.backend_root) if args.backend_root else None, args.archive_remote)
         if args.action == 'plan':
-            return core.plan_publication(args.delivery_id, args.archive_commit, json.loads(local(args.target).read_text()), args.archive_remote)
+            return core.plan_publication(args.delivery_id, args.archive_commit, json.loads(local(args.target).read_text()), args.archive_remote,
+                                         archive_repository=args.archive_repository, archive_path=args.archive_path)
         return core.publication_status(args.id, args.max_age_seconds)
     if args.command == 'approval':
         if args.action == 'record-upload':
