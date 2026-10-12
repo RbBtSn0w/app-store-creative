@@ -54,6 +54,27 @@ def safe_id(value):
     return value
 
 
+def dependency_closure(identities, load):
+    """Traverse dependencies without consuming the interpreter call stack."""
+    results = {}; pending = {}; active = set()
+    stack = [(identity, False) for identity in reversed(list(identities))]
+    while stack:
+        identity, exiting = stack.pop()
+        if exiting:
+            active.remove(identity)
+            results[identity] = pending.pop(identity)
+            continue
+        if identity in results:
+            continue
+        if identity in active:
+            raise ValueError('Artifact dependency cycle')
+        record = load(identity)
+        active.add(identity); pending[identity] = record
+        stack.append((identity, True))
+        stack.extend((parent, False) for parent in reversed(record['inputs']))
+    return results
+
+
 def overlaps(a, b):
     return a == b or a.is_relative_to(b) or b.is_relative_to(a)
 
