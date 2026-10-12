@@ -116,6 +116,20 @@ class DevToolsSocket:
         self.sock.close()
 
 
+def browser_identity(value):
+    """Keep only version facts returned by the owned live DevTools connection."""
+    import re
+    product = value.get('product') if isinstance(value, dict) else None
+    protocol = value.get('protocolVersion') if isinstance(value, dict) else None
+    javascript = value.get('jsVersion') if isinstance(value, dict) else None
+    if (not isinstance(product, str) or not re.fullmatch(r'(Chrome|HeadlessChrome|Chromium)/[0-9.]{1,80}', product)
+            or not isinstance(protocol, str) or not re.fullmatch(r'[0-9.]{1,32}', protocol)
+            or not isinstance(javascript, str) or not re.fullmatch(r'[A-Za-z0-9.+-]{1,80}', javascript)):
+        raise ValueError('Owned browser returned invalid version evidence')
+    return {'status': 'OBSERVED', 'source': 'owned-live-devtools', 'product': product,
+            'protocol_version': protocol, 'javascript_version': javascript}
+
+
 def render_native(cmd, profile: Path, output: Path, timeout_seconds):
     deadline = time.monotonic() + timeout_seconds
     app = next(parent for parent in Path(cmd[0]).parents if parent.suffix == '.app')
@@ -147,6 +161,7 @@ def render_native(cmd, profile: Path, output: Path, timeout_seconds):
     if client is None:
         raise TimeoutError('Chrome did not expose the owned render page')
     try:
+        identity = browser_identity(client.call('Browser.getVersion'))
         client.call('Page.enable')
         client.call('Emulation.setDeviceMetricsOverride', {'width': width, 'height': height, 'deviceScaleFactor': 1, 'mobile': False})
         client.call('Emulation.setDefaultBackgroundColorOverride', {'color': {'r': 255, 'g': 255, 'b': 255, 'a': 1}})
@@ -166,6 +181,7 @@ def render_native(cmd, profile: Path, output: Path, timeout_seconds):
                     output.write_bytes(base64.b64decode(screenshot['data'], validate=True))
                 result = subprocess.CompletedProcess(cmd, 0, dom, '')
                 result.geometry = geometry
+                result.browser_identity = identity
                 return result
             time.sleep(0.05)
         raise TimeoutError('Chrome page did not become ready before the render deadline')
