@@ -19,7 +19,9 @@ class RelocationStatusTests(unittest.TestCase):
         artifact, plan = self.prepared()
         self.assertEqual(self.store.relocated_object_status(plan['id'])['status'], 'INCOMPLETE')
         self.store.switch_relocation(plan['id'], 'owner', 'Move')
-        self.assertEqual(self.store.relocated_object_status(plan['id'])['status'], 'UNKNOWN')
+        before = self.records()
+        self.assertEqual(self.store.relocated_object_status(plan['id'])['status'], 'PASS')
+        self.assertEqual(self.records(), before)
         from artifact_lifecycle import Lifecycle
         import json
         target = Lifecycle(self.root, json.loads(self.store.config_path.read_text()))
@@ -33,6 +35,19 @@ class RelocationStatusTests(unittest.TestCase):
         (Path(plan['to']['objects']) / entry['path']).write_bytes(b'Changed object')
         self.assertEqual(self.store.relocation_status(plan['id'])['target_activation_status'], 'VERIFIED')
         self.assertEqual(self.store.relocated_object_status(plan['id'])['status'], 'FAIL')
+        self.assertEqual(self.records(), before)
+
+    def test_missing_target_lock_stays_unknown_without_query_writes(self):
+        from pathlib import Path
+        _, plan = self.prepared()
+        self.store.switch_relocation(plan['id'], 'fixture-owner', 'Move fixture')
+        lock = Path(plan['to']['workspace']) / 'write.lock'
+        lock.unlink()
+        before = self.records()
+        result = self.store.relocated_object_status(plan['id'])
+        self.assertEqual(result['status'], 'UNKNOWN')
+        self.assertFalse(result['object_integrity_verified'])
+        self.assertFalse(lock.exists())
         self.assertEqual(self.records(), before)
 
     def test_copied_object_inspection_rejects_changed_source_or_target_plan(self):
