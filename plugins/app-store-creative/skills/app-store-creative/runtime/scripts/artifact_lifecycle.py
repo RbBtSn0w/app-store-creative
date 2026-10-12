@@ -58,6 +58,10 @@ def overlaps(a, b):
     return a == b or a.is_relative_to(b) or b.is_relative_to(a)
 
 
+STORAGE_DEFAULTS = {'workspaceRoot': '.creative', 'objectRoot': '.creative/objects',
+                    'releaseRoot': 'creative-releases', 'publicationRoot': 'creative-publications'}
+
+
 @dataclass(frozen=True)
 class StoragePaths:
     project: Path
@@ -72,8 +76,7 @@ class StoragePaths:
         raw = config.get('storage', {})
         if not isinstance(raw, dict):
             raise ValueError('storage must be an object')
-        defaults = {'workspaceRoot': '.creative', 'objectRoot': '.creative/objects',
-                    'releaseRoot': 'creative-releases', 'publicationRoot': 'creative-publications'}
+        defaults = STORAGE_DEFAULTS
         unknown = set(raw) - set(defaults)
         if unknown:
             raise ValueError(f'Unknown storage fields: {sorted(unknown)}')
