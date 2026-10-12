@@ -6,14 +6,14 @@ import test_artifact_lifecycle as fixtures
 class IncidentTests(unittest.TestCase):
     setUp = fixtures.ArtifactLifecycleTests.setUp
 
-    def trial(self):
+    def trial(self, status="failed"):
         run = self.store.start_run({})
         attempt = self.store.start_attempt(run['id'], 'render', 'agent')
         source = self.root / 'input'; source.write_bytes(b'source')
         dependency = self.store.register(attempt['id'], source, 'source')
         source.write_bytes(b'rendered')
         artifact = self.store.register(attempt['id'], source, 'screenshot', inputs=[dependency['id']])
-        self.store.finish_attempt(attempt['id'], 'failed', reason='Wrong poster')
+        self.store.finish_attempt(attempt['id'], status, reason='Wrong poster' if status == 'failed' else None)
         return artifact, dependency
 
     def test_incident_protects_artifact_and_recursive_dependencies(self):
@@ -46,7 +46,7 @@ class IncidentTests(unittest.TestCase):
         self.assertEqual(list((self.store.paths.workspace / 'records/incidents').glob('*.json')), [])
 
     def test_discarded_candidate_is_protected_by_open_incident(self):
-        artifact, _ = self.trial()
+        artifact, _ = self.trial(status='succeeded')
         run = self.store.start_run({})
         attempt = self.store.start_attempt(run['id'], 'render', 'agent')
         source = self.root / 'candidate'; source.write_bytes(b'candidate')

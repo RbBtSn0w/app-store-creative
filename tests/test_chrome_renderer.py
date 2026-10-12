@@ -66,3 +66,20 @@ class ChromeTransportTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class BrowserIdentityTests(unittest.TestCase):
+    def test_owned_version_evidence_excludes_private_response_fields(self):
+        from chrome_renderer import browser_identity
+        result = browser_identity({'product': 'Chrome/141.0.7390.0', 'protocolVersion': '1.3',
+            'jsVersion': '14.1.146.2', 'userAgent': '/private/profile', 'revision': 'internal'})
+        self.assertEqual(result['source'], 'owned-live-devtools')
+        self.assertEqual(result['product'], 'Chrome/141.0.7390.0')
+        self.assertNotIn('userAgent', result)
+        self.assertNotIn('revision', result)
+
+    def test_missing_or_private_version_fields_do_not_become_identity(self):
+        from chrome_renderer import browser_identity
+        for product in (None, '/Users/private/browser', 'Chrome/unknown'):
+            with self.assertRaises(ValueError):
+                browser_identity({'product': product, 'protocolVersion': '1.3', 'jsVersion': '14.1'})
