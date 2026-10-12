@@ -23,3 +23,9 @@ archive verify-git可指定--remote origin，publication plan可指定--archive-
 独立取回命令共用300秒总预算，同时限制远端配置查询30秒、克隆/checkout/LFS命令各120秒。预算从取回入口开始计时，后续命令只使用剩余时间；超时拒绝生成发布计划，报告脱敏错误，并停止该命令所属的进程组。POSIX环境下每条命令建立独立会话，超时或执行器捕获到取消异常（例如KeyboardInterrupt）时向所属进程组发送SIGKILL并回收直接子进程。运行时尚未接管SIGTERM，外部直接终止宿主进程不能据此声称完成派生进程清理。主动脱离进程组的第三方进程不在该保证范围内。此预算约束外部命令等待，不声称文件系统校验或整个发布事务严格在300秒内完成。
 
 发布计划消费对Git、LFS及external统一要求`package_verified`、`recipe_verified`、`provenance_verified`及`retrieval_verified`均严格为布尔true。缺失、false或其他类型不能授权上传或生成实际交接文件，不为既有记录补写成功字段。该检查绑定本地验证结果，不能替代生产远端可用性及真实ASC验收。
+
+## 独立制作项目与产品归档仓库
+
+制作工作区与产品仓库分离时，在受保护的本机配置中声明 `archiveRepositories`，以稳定名称映射到仅含 `root` 的绝对 Git 工作树路径。共享配方和便携计划仅记录名称，不包含机器路径。
+
+发布计划同时传入 `--archive-repository <name>` 与 `--archive-path <repository-relative-package>`。内核逐项比较已提交清单文件或 LFS 指针与原批准封存包，并从指定远端独立取回精确提交。审批及交接再次解析名称并核对提交；缺失访问、配置变更、错误提交、越界路径均拒绝。原封存记录不会因归档位置改变而被重写。
