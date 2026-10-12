@@ -643,6 +643,10 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         def escape_pattern(value):
             return ''.join(('\\' + char) if char in '\\*?[]!#' else char for char in value)
         ignores = []
+        from configuration_layers import local_path_for
+        local_configuration = relative(local_path_for(self.config_path))
+        if local_configuration:
+            ignores.append('/' + escape_pattern(local_configuration))
         for path in (self.paths.workspace, self.paths.objects):
             if path == self.paths.objects and path.is_relative_to(self.paths.workspace):
                 continue

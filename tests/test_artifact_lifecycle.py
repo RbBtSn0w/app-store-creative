@@ -118,6 +118,21 @@ class ArtifactLifecycleTests(unittest.TestCase):
                 result = subprocess.run(['git', '-C', str(self.root), 'check-ignore', '--quiet', '--', str(formal)])
                 self.assertEqual(result.returncode, 1, 'Formal record and media must remain trackable')
 
+    def test_git_policy_protects_host_local_configuration_for_custom_recipe_paths(self):
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+        for name in ('creative.config.json', 'settings/custom [recipe].json'):
+            config_path = self.root / name
+            config_path.parent.mkdir(parents=True, exist_ok=True)
+            config_path.write_text(json.dumps(self.cfg))
+            core = lifecycle.Lifecycle.from_configuration(self.root, config_path)
+            policy = core.git_policy('lfs')
+            (self.root / '.gitignore').write_text('\n'.join(policy['gitignore']) + '\n')
+            local = config_path.with_name(config_path.stem + '.local' + config_path.suffix)
+            result = subprocess.run(['git', '-C', str(self.root), 'check-ignore', '--quiet', '--', str(local)])
+            self.assertEqual(result.returncode, 0, 'Host-local roots must not leak into Git')
+            result = subprocess.run(['git', '-C', str(self.root), 'check-ignore', '--quiet', '--', str(config_path)])
+            self.assertEqual(result.returncode, 1, 'Shared recipe must remain trackable')
+
     def test_object_storage_cannot_be_shared_without_reference_protection(self):
         run = self.store.start_run({})
         attempt = self.store.start_attempt(run['id'], 'capture', 'agent')
