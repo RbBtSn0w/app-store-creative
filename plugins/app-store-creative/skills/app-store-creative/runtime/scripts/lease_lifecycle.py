@@ -47,9 +47,10 @@ class LeaseOperations:
         lease = self._new_lease(identity, owner, lease_seconds, 1)
         data = self._record('attempts', {'id': identity, 'run_id': run_id,
             'stage': stage, 'owner': owner, 'retry_of': retry_of,
+            'implementation': self._implementation_identity,
             'lease_expires_at': lease['expires_at']}, 'started')
         work.mkdir(parents=True)
-        return {**data, 'lease_token': lease['lease_token']}
+        return {**data, 'lease_token': lease['lease_token'], 'work_path': str(work)}
 
     def renew_attempt(self, attempt_id, lease_token=None, lease_seconds=3600):
         duration(lease_seconds)

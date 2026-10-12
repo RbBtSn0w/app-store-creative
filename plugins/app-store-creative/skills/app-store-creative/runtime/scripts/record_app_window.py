@@ -10,7 +10,44 @@ import sys
 import tempfile
 from pathlib import Path
 
-from recording_adapters import macos_recording_plan
+from recording_adapters import macos_recording_plan, validate_recording_probe
+
+
+def compile_recorder(source, binary):
+    """Compile a pinned source and retain portable compiler/binary identities."""
+    import re
+    from media_tool_identity import MediaTools
+    xcrun = shutil.which('xcrun')
+    if xcrun is None:
+        raise ValueError('Xcode Command Line Tools with Swift are required')
+    resolved = subprocess.run([xcrun, '--find', 'swiftc'], check=True, capture_output=True,
+                              text=True, timeout=10).stdout.strip()
+    compiler = Path(resolved)
+    if not compiler.is_absolute() or not compiler.is_file():
+        raise ValueError('Swift compiler locator returned an invalid executable')
+    compiler_sha = MediaTools.digest(compiler)
+    version = subprocess.run([str(compiler), '--version'], check=True, capture_output=True,
+                             text=True, timeout=10).stdout
+    match = re.match(r'(?:Apple )?Swift version ([A-Za-z0-9_.+-]{1,80})', version)
+    if not match:
+        raise ValueError('Swift compiler version evidence is invalid')
+    source_sha = MediaTools.digest(source)
+    sdk = subprocess.run([xcrun, '--sdk', 'macosx', '--show-sdk-path'], check=True,
+                         capture_output=True, text=True, timeout=10).stdout.strip()
+    sdk_version = subprocess.run([xcrun, '--sdk', 'macosx', '--show-sdk-version'], check=True,
+                                 capture_output=True, text=True, timeout=10).stdout.strip()
+    architecture = platform.machine()
+    if architecture not in ('arm64', 'x86_64') or not Path(sdk).is_absolute() or not Path(sdk).is_dir():
+        raise ValueError('Recorder requires a supported architecture and macOS SDK')
+    if not re.fullmatch(r'[0-9.]{1,32}', sdk_version):
+        raise ValueError('Recorder SDK version evidence is invalid')
+    target = architecture + '-apple-macosx15.0'
+    command = [str(compiler), '-sdk', sdk, '-target', target, str(source), '-o', str(binary)]
+    subprocess.run(command, check=True, capture_output=True, timeout=120)
+    if MediaTools.digest(source) != source_sha or MediaTools.digest(compiler) != compiler_sha:
+        raise ValueError('Recorder source or compiler changed during compilation')
+    return command, {'name': 'swiftc', 'version': match[1], 'executable_sha256': compiler_sha,
+                     'sdk_version': sdk_version, 'target': target}, source_sha
 
 
 def main(argv=None):
@@ -43,41 +80,49 @@ def main(argv=None):
             raise ValueError('Xcode Command Line Tools with Swift are required')
         receipt = None
         if not args.list_windows:
-            if not shutil.which('ffprobe'): raise ValueError('ffprobe is required to verify the recording')
-            receipt = args.receipt or args.output.with_suffix('.receipt.json')
+            if not shutil.which('ffprobe') or not shutil.which('ffmpeg'):
+                raise ValueError('ffmpeg and ffprobe are required to normalize the recording')
+            receipt = (args.receipt or args.output.with_suffix('.receipt.json')).resolve()
             if receipt.resolve() == args.output.resolve(): raise ValueError('receipt and output must be distinct')
-            for path in (args.output, receipt):
+            native_output = args.output.with_name(args.output.stem + ".native.mov")
+            for path in (args.output, native_output, receipt):
                 if path.exists(): raise ValueError(f'refusing to overwrite existing artifact: {path}')
                 path.parent.mkdir(parents=True, exist_ok=True)
         helper_source = Path(__file__).with_suffix('.swift')
         with tempfile.TemporaryDirectory(prefix='creative-record-') as scratch:
             binary = Path(scratch) / 'record-app-window'
-            compile_command = ['xcrun', 'swiftc', str(helper_source), '-o', str(binary)]
-            subprocess.run(compile_command, check=True, capture_output=True)
+            compile_command, compiler_identity, source_sha = compile_recorder(helper_source, binary)
+            from media_tool_identity import MediaTools
+            binary_sha = MediaTools.digest(binary)
             if args.list_windows:
                 subprocess.run([str(binary), '--list', args.bundle_id], check=True)
                 return 0
             contract_path = Path(scratch) / 'plan.json'
-            contract_path.write_text(json.dumps(plan))
+            contract_path.write_text(json.dumps({**plan, "output": str(native_output.resolve())}))
+            tools = MediaTools()
             command = [str(binary), '--record', str(contract_path)]
             # Stream recording-start signal so a caller can begin its app-specific journey.
             subprocess.run(command, check=True, timeout=args.duration + 60)
-            probe = subprocess.run(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', str(args.output)],
-                                   check=True, capture_output=True, text=True)
-            media = json.loads(probe.stdout)
-            if float(media.get('format', {}).get('duration', 0)) <= 0 or not any(
-                    s.get('codec_type') == 'video' and s.get('codec_name') == 'h264' for s in media.get('streams', [])):
-                raise ValueError('recording is empty or has no H.264 video')
-            with args.output.open('rb') as source:
-                digest = hashlib.sha256()
-                for block in iter(lambda: source.read(1024 * 1024), b''):
-                    digest.update(block)
-                sha = digest.hexdigest()
+            from recording_normalization import normalize
+            normalization = normalize(plan, native_output, args.output, tools)
+            media = normalization['probe']
+            sha = normalization['output_sha256']
+            if MediaTools.digest(binary) != binary_sha or MediaTools.digest(helper_source) != source_sha:
+                raise ValueError('Recorder implementation changed during execution')
             result = {'schema_version': 1, 'producer': 'app-store-creative', 'kind': 'window-recording',
                       'plan': plan, 'command': command, 'compile_command': compile_command,
-                      'recorder_source_sha256': hashlib.sha256(helper_source.read_bytes()).hexdigest(),
+                      'recorder_source_sha256': source_sha,
+                      'execution_identity': {'compiler': compiler_identity, 'recorder_executable_sha256': binary_sha,
+                          'probe_tools': [item for item in tools.evidence if item['name'] == 'ffprobe'], 'environment': {'os': platform.system(),
+                              'os_version': platform.mac_ver()[0], 'architecture': platform.machine()}},
+                      'native_output': {'path': str(native_output.resolve()), 'sha256': normalization['native_sha256']},
+                      'normalization': normalization,
                       'output': {'path': str(args.output.resolve()), 'sha256': sha, 'probe': media}, 'uploaded': False}
-            receipt.write_text(json.dumps(result, indent=2) + '\n')
+            from safe_staging import staged_file
+            with staged_file(receipt.parent) as staged:
+                staged.stream.write((json.dumps(result, indent=2) + '\n').encode('utf-8'))
+                staged.sync()
+                staged.publish(receipt)
             print(json.dumps({'executed': True, 'receipt': str(receipt.resolve())})); return 0
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         print(str(error), file=sys.stderr)
