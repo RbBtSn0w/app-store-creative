@@ -90,6 +90,23 @@ class RelocationStatusTests(unittest.TestCase):
         self.assertEqual(result['recovery'], 'REVERSE_RELOCATION_REQUIRED')
         self.assertEqual(self.records(), before)
 
+    def test_completed_reverse_requires_no_recovery_and_leaves_records_unchanged(self):
+        from artifact_lifecycle import Lifecycle
+        _, forward = self.prepared()
+        self.store.switch_relocation(forward['id'], 'owner', 'Move')
+        moved = Lifecycle.from_configuration(self.root, self.store.config_path)
+        reverse = moved.plan_reverse_relocation(forward['id'])
+        moved.prepare_reverse_relocation(reverse['id'], 'owner', 'Return')
+        moved.switch_reverse_relocation(reverse['id'], 'owner', 'Return')
+        restored = Lifecycle.from_configuration(self.root, self.store.config_path)
+        before = self.records()
+        result = restored.relocation_status(reverse['id'])
+        self.assertEqual(result['status'], 'SWITCHED')
+        self.assertEqual(result['target_activation_status'], 'VERIFIED')
+        self.assertTrue(result['current_binding_writable'])
+        self.assertEqual(result['recovery'], 'NONE')
+        self.assertEqual(self.records(), before)
+
     def test_interrupted_switch_requires_explicit_recovery(self):
         artifact, plan = self.prepared()
         with patch('relocation_lifecycle.os.replace', side_effect=OSError('Configuration failed')):

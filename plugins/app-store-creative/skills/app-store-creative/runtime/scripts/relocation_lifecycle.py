@@ -489,7 +489,8 @@ class RelocationOperations:
             except (ValueError, OSError, KeyError, TypeError) as error:
                 target_status = 'FAIL'
                 target_errors.append(str(error))
-        recovery = ('REVERSE_RELOCATION_REQUIRED' if status == 'SWITCHED' else
+        recovery = ('REVERSE_RELOCATION_REQUIRED'
+                    if status == 'SWITCHED' and plan['operation'] == 'relocation-plan' else
                     'RESUME_OR_ROLLBACK' if status in ('SWITCHING', 'SWITCH_INTERRUPTED', 'ROLLING_BACK') else
                     'RECOVER_OR_CANCEL' if status in ('PREPARING', 'PREPARATION_FAILED') else 'NONE')
         return {'id': plan_id, 'status': status, 'from': plan['from'], 'to': plan['to'],
