@@ -1,0 +1,22 @@
+[
+  {
+    "project_id": "levelory",
+    "archive_commit": "4763378b868a02047448f48d1c5f1c4b8c3a3d17",
+    "archive_files": 49,
+    "unique_lfs_objects": 24,
+    "unique_lfs_bytes": 25035316,
+    "ordinary_git_file_bytes": 76580,
+    "scope": "One approved archive revision only; excludes other repository history and account billing",
+    "actual_invoice_cost": null
+  },
+  {
+    "project_id": "fubiao",
+    "archive_commit": "baef754e1614fe1dca8feb1adc3f1164f631ab8b",
+    "archive_files": 13,
+    "unique_lfs_objects": 4,
+    "unique_lfs_bytes": 5626937,
+    "ordinary_git_file_bytes": 12918,
+    "scope": "One approved archive revision only; excludes other repository history and account billing",
+    "actual_invoice_cost": null
+  }
+]

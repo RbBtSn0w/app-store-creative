@@ -1,0 +1,54 @@
+{
+  "publication_id": "6650e89aff2848a685c24da9108929ea",
+  "delivery_id": "3633bae4b5c3496e9d16e6b3ca63bff4",
+  "candidate_id": "15241b22207a4897a172cfe6adf7b047",
+  "design_approved": true,
+  "upload_approved": true,
+  "remote_gates_pass": 35,
+  "remote_gates_total": 35,
+  "reconciliation": {
+    "en": {
+      "count": 5,
+      "order": [
+        "01-history.png",
+        "02-quick-paste.png",
+        "03-filter.png",
+        "04-collections.png",
+        "05-settings.png"
+      ],
+      "checksums_match": true,
+      "old_resources_absent": true,
+      "processing_complete": true
+    },
+    "zh": {
+      "count": 5,
+      "order": [
+        "01-history.png",
+        "02-quick-paste.png",
+        "03-filter.png",
+        "04-collections.png",
+        "05-settings.png"
+      ],
+      "checksums_match": true,
+      "old_resources_absent": true,
+      "processing_complete": true
+    },
+    "preview": {
+      "count": 1,
+      "id": "d6000019-5275-8538-812a-1d497d198a42",
+      "poster_time_code": "00:00:19:00",
+      "poster_dimensions": [
+        1920,
+        1080
+      ],
+      "old_preview_absent": true,
+      "playback_verified_in_safari": true
+    }
+  },
+  "old_resources_deleted": 11,
+  "official_executor": "asc-cli",
+  "independent_packaged_cli_status": "PASS",
+  "studio_browser_status": "Remote media verified",
+  "review_submitted": false,
+  "pr_merged": false
+}
