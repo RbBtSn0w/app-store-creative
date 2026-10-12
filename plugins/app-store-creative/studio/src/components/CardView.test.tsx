@@ -61,3 +61,10 @@ it('keeps markup in user copy as literal text', () => {
   expect(markup).toContain('&lt;b&gt;Still text&lt;/b&gt;');
   expect(markup).not.toContain('<script>');
 });
+
+it('defaults desktop captures to native windows and preserves explicit compositions', () => {
+  expect(render(0, false)).toContain('data-native-window="true"');
+  const markup = renderToStaticMarkup(<CardView card={{id:'hero',headline:'Hello',screenshot:'/capture.png',layout:'phone_bottom'}}
+    index={0} target="mac_16_10" theme={{background:{type:'solid',colors:['#000']}}} isExport />);
+  expect(markup).not.toContain('data-native-window="true"');
+});
