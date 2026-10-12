@@ -288,7 +288,7 @@ export const App: React.FC = () => {
       </div>
       <section className="m-6 p-5 border border-white/10 rounded-xl">
         <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy || saving} onClick={refreshStatus}>Check current files</button></div>
-        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. No upload has occurred.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
+        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. See publication verification for upload status.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
         {!config.studio?.requireExportEvidence && <button disabled={busy || saving} onClick={() => {
           edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
           if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
