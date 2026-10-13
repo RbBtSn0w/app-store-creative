@@ -44,6 +44,12 @@ async function prepare(_config, {cwd, nextRelease}) {
     await mkdir(output, {recursive: true});
     execFileSync('python3', [join(cwd, '.github/package_plugin.py'), '--plugin-root', plugin,
       '--output', join(output, 'app-store-creative.zip')], {cwd, stdio: 'inherit'});
+    // Also stamp the repository's source manifests so @semantic-release/git can commit them
+    const sourcePlugin = join(cwd, 'plugins/app-store-creative');
+    for (const manifest of manifests) {
+      const path = join(sourcePlugin, manifest);
+      await writeFile(path, stampVersion(await readFile(path, 'utf8'), nextRelease.version));
+    }
   } finally {
     await rm(scratch, {recursive: true, force: true});
   }

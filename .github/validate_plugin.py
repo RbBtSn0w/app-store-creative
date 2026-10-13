@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 
@@ -11,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "app-store-creative"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
-EXPECTED_PLUGIN_VERSION = "0.3.0"
+CANONICAL = PLUGIN / ".agents" / ".plugin.json"
 
 
 def require(condition: bool, message: str) -> None:
@@ -22,7 +23,8 @@ def require(condition: bool, message: str) -> None:
 def main() -> None:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     require(data.get("name") == PLUGIN.name, "plugin name must match its directory")
-    require(data.get("version") == EXPECTED_PLUGIN_VERSION, "unexpected plugin version")
+    version = data.get("version")
+    require(bool(version and re.match(r"^\d+\.\d+\.\d+$", version)), "plugin version must be a stable semver string")
     require(data.get("author", {}).get("name") == "RbBtSn0w", "unexpected author")
     require(data.get("interface", {}).get("category") == "Creativity", "unexpected category")
     require(bool(data.get("interface", {}).get("capabilities")), "capabilities must not be empty")
@@ -62,12 +64,12 @@ def main() -> None:
                      "schemas/creative.config.schema.json", "assets/templates/creative.config.json",
                      "studio/dist/index.html"):
         require((runtime / required).is_file(), f"ADG skill payload missing {required}")
-    canonical = json.loads((PLUGIN / ".agents/.plugin.json").read_text())
-    require(canonical["version"] == EXPECTED_PLUGIN_VERSION, "stale canonical ADG version")
+    canonical = json.loads(CANONICAL.read_text(encoding="utf-8"))
+    require(canonical.get("version") == version, "stale canonical ADG version: must match manifest version")
     require(canonical.get("selectionDependencies", {}).get("skills", {}).get("skills") ==
             ["app-store-creative"], "specialist installs must include the runtime owner")
 
-    print(f"Validated {PLUGIN.relative_to(ROOT)} at version {EXPECTED_PLUGIN_VERSION}")
+    print(f"Validated {PLUGIN.relative_to(ROOT)} at version {version}")
 
 
 if __name__ == "__main__":

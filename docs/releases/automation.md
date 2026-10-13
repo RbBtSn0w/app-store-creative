@@ -20,11 +20,11 @@ build. Missing artifacts fail the release rather than falling back to source.
 The prepare hook copies that validated plugin into temporary staging, stamps both
 plugin manifests with the calculated version while preserving their other bytes,
 including whitespace and nested version properties, and runs the existing isolated
-package smoke checks. GitHub receives `app-store-creative.zip` and generated release
-notes. Source manifests describe the development snapshot; the release ZIP is the
-versioned installation artifact. GitHub's automatic source archives retain source
-manifest versions and are not the stamped distribution. No npm package, ADG update,
-or ASC operation is performed. No release commit is written back to main.
+package smoke checks. It also updates the repository's source manifests in place so
+`@semantic-release/git` commits and pushes the updated manifests back to `main` with
+`[skip ci]`. GitHub receives `app-store-creative.zip` and generated release notes.
+Both the source manifests on `main` and the release ZIP stay aligned with the released
+version. No npm package, ADG update, or ASC operation is performed.
 
 Only `contents: write` is granted to the release job. Issue creation, PR comments,
 and release labels are disabled. Repository rules must permit the Actions token
