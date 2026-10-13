@@ -33,7 +33,10 @@ class StagedFile:
         self.check_directory()
         self.sync()
         self.stream.seek(0)
-        sha = hashlib.file_digest(self.stream, 'sha256').hexdigest()
+        digest = hashlib.sha256()
+        for chunk in iter(lambda: self.stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+        sha = digest.hexdigest()
         return sha, os.fstat(self.stream.fileno()).st_size
 
     def publish(self, destination):

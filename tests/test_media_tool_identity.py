@@ -1,5 +1,6 @@
 """Portable media tool evidence binds pinned executables and detects replacement."""
 import json
+import hashlib
 from pathlib import Path
 import tempfile
 import unittest
@@ -30,3 +31,12 @@ class MediaToolIdentityTests(unittest.TestCase):
         with patch('media_tool_identity.shutil.which', return_value=None):
             with self.assertRaisesRegex(ValueError, 'unavailable'):
                 MediaTools()
+
+    def test_digest_does_not_require_python_311_file_digest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'binary'
+            path.write_bytes(b'portable media binary')
+            with patch('media_tool_identity.hashlib.file_digest', create=True,
+                       side_effect=AttributeError('Unavailable on Python 3.10')):
+                self.assertEqual(MediaTools.digest(path),
+                                 hashlib.sha256(path.read_bytes()).hexdigest())

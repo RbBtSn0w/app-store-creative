@@ -34,7 +34,10 @@ class MediaTools:
     @staticmethod
     def digest(path):
         with Path(path).open('rb') as source:
-            return hashlib.file_digest(source, 'sha256').hexdigest()
+            digest = hashlib.sha256()
+            for chunk in iter(lambda: source.read(1024 * 1024), b''):
+                digest.update(chunk)
+            return digest.hexdigest()
 
     def verify(self):
         for item in self.evidence:
