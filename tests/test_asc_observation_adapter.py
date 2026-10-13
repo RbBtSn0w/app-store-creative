@@ -52,7 +52,8 @@ class BoundAscAdapterTests(unittest.TestCase):
                  'evidence_reference': 'asc:read:fixture'}
         for key in ('localization_id', 'remote_id', 'evidence_reference'):
             for value in ('HTTP://example.invalid/private',
-                          'hTtPs://example.invalid/private', 'FILE:/private/fixture'):
+                          'hTtPs://example.invalid/private', 'FILE:/private/fixture',
+                          'asc:read:http://example.invalid/private', 'asc:read:file:/private/fixture'):
                 with self.subTest(field=key, value=value):
                     with self.assertRaisesRegex(ValueError, 'sanitized'):
                         preview_observations(plan, json.dumps(self.response()).encode(),
