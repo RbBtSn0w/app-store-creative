@@ -39,13 +39,17 @@ def inspect(core, plan):
             continue
         _manifest([item])
         final = changed[item['root']] / item['path']
-        key = next(key for key, root in groups.items() if final.is_relative_to(root))
+        key = next((key for key, root in groups.items() if final.is_relative_to(root)), None)
+        if key is None:
+            raise ValueError('Staging file has no verified group')
         manifests[key].append({**item, 'path': final.relative_to(groups[key]).as_posix()})
     if prepared is not None:
         lock = core._prepared_relocation_lock(plan, prepared)
         if lock is not None:
             path = Path(lock['path'])
-            key = next(key for key, root in staging.items() if path.is_relative_to(Path(root)))
+            key = next((key for key, root in staging.items() if path.is_relative_to(Path(root))), None)
+            if key is None:
+                raise ValueError('Staging lock has no verified group')
             manifests[key].append({**lock, 'path': path.relative_to(Path(staging[key])).as_posix()})
     locations = {key: Path(path) for key, path in staging.items()}
     backups = {}
@@ -93,7 +97,9 @@ def inspect(core, plan):
             row['status'] = 'PARTIAL'
         rows.append(row); inodes.update(blocks)
         if key in backups and backups[key] is not None:
-            old = next(entry for entry in switch['roots'] if entry['group'] == key)
+            old = next((entry for entry in switch['roots'] if entry['group'] == key), None)
+            if old is None:
+                raise ValueError('Staging backup has no verified switch group')
             descriptor = {'group': key, 'staging': str(backups[key]), 'destination_identity': old['destination_identity'],
                           'kind': 'pending-backup'}
             row, blocks = _inspect(core, identity, descriptor, _manifest(switch['backup_files'][key]))

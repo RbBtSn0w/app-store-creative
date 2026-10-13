@@ -40,8 +40,11 @@ def _state(core, cutoff, displaced=None):
         else:
             roots = _verified_roots(core, move)
             object_root = Path(move['to']['objects'])
-        root, manifest = next((root, manifest) for root, manifest in roots
-                              if root['staging'] == copy['path'] and root['group'] == copy['group'])
+        matched = next(((root, manifest) for root, manifest in roots
+                        if root['staging'] == copy['path'] and root['group'] == copy['group']), None)
+        if matched is None:
+            raise ValueError('Retained copy has no verified root')
+        root, manifest = matched
         original_root = Path(root.get('destination', root['staging']))
         for name, expected in sorted(manifest.items()):
             source = Path(copy['path']) / name
