@@ -10,7 +10,8 @@ def preview(root, config, current=None, config_path=None):
     check_config(config)
     paths = StoragePaths.resolve(root, config)
     raw = config.get('storage', {})
-    names = dict(zip(STORAGE_DEFAULTS, ('workspace', 'objects', 'releases', 'publications')))
+    names = {'workspaceRoot': 'workspace', 'objectRoot': 'objects',
+             'releaseRoot': 'releases', 'publicationRoot': 'publications'}
     roots = {}
     for key, label in names.items():
         configured = raw.get(key)
