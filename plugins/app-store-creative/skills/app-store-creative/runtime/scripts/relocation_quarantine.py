@@ -166,6 +166,12 @@ def resume(core, operation_id, actor, reason):
     _actor(actor, reason)
     with core.transaction():
         operation = core._read('maintenance', operation_id)
+        if operation.get('operation') != 'relocation-quarantine':
+            raise ValueError('Invalid relocation quarantine operation')
+        for suffix in ('preparation-cancelled', 'commit-intent', 'purge-intent'):
+            marker = core._path('maintenance', operation_id, suffix)
+            if marker.exists() or marker.is_symlink():
+                raise ValueError('Quarantine preparation is no longer resumable')
         result = _attempt(core, operation)
         if not core._path('maintenance', operation_id, 'preparation-resumed').exists():
             core._record('maintenance', {'id': operation_id, 'actor': actor, 'reason': reason}, 'preparation-resumed')
