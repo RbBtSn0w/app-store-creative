@@ -85,7 +85,7 @@
 
 | 范围 | 当前状态 | 权威证据 |
 | --- | --- | --- |
-| Python运行时静态审查 | 58/58模块；当前文件哈希绑定 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
+| 历史 Python 运行时静态审查 | 58/58 个历史模块；仅绑定清单原哈希，不覆盖后续修改 | [清单](evidence/ADR-002-runtime-review-inventory-c98edbc.json) |
 | 前端运行源码静态审查 | 46/46文件；另有1个测试专用夹具 | [清单](evidence/ADR-002-frontend-review-inventory.json) |
 | 测试差异审查 | 179/179文件；全部文件已审查并核对当前哈希；新增原生信号测试需要显式隔离窗口，默认CI跳过 | [清单](evidence/ADR-002-test-diff-review-inventory.json) |
 | 凭据模式筛查 | cc4b069的503个变更UTF-8文件已筛查，无模式命中；不是完整人工审查，不覆盖后续新增文件 | [证据](evidence/ADR-002-sensitive-screen-cc4b069.json) |
