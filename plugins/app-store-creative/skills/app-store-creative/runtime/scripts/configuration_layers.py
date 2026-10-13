@@ -201,7 +201,8 @@ def plan_storage_change(layers, storage):
     recipe_sha = configuration_identity(layers.config)
     if configuration_identity(effective) != recipe_sha:
         raise ValueError('Storage change must preserve the production recipe')
-    target_bytes = canonical(target_document)
+    target_bytes = (json.dumps(target_document, indent=2, sort_keys=True, ensure_ascii=False,
+                               allow_nan=False) + '\n').encode()
     target_sha = hashlib.sha256(target_bytes).hexdigest()
     target_revision = target_sha if layers.local_config is None else hashlib.sha256(
         canonical({'project':layers.project_sha256, 'local':target_sha})).hexdigest()
