@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import test_delivery_lifecycle
-from media_tool_identity import MediaTools
+from media_tool_identity import MediaTools, portable_probe
 
 
 class MediaToolIdentityTests(unittest.TestCase):
@@ -40,3 +40,10 @@ class MediaToolIdentityTests(unittest.TestCase):
                        side_effect=AttributeError('Unavailable on Python 3.10')):
                 self.assertEqual(MediaTools.digest(path),
                                  hashlib.sha256(path.read_bytes()).hexdigest())
+
+    def test_portable_probe_excludes_source_filename_and_tags(self):
+        result = portable_probe({'format': {'filename': '/private/customer/recording.mp4',
+                                           'duration': '20', 'tags': {'owner': 'private'}},
+                                 'streams': [{'codec_name': 'h264', 'width': 1920}]})
+        self.assertEqual(result['format'], {'duration': '20'})
+        self.assertEqual(result['streams'], [{'codec_name': 'h264', 'width': 1920}])

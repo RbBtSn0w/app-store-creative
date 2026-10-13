@@ -47,7 +47,7 @@ class MediaTools:
 
 def portable_probe(probe):
     """Export technical media facts without source-authored tags or side data."""
-    format_fields = {'filename', 'format_name', 'nb_streams', 'start_time',
+    format_fields = {'format_name', 'nb_streams', 'start_time',
                      'duration', 'size', 'bit_rate'}
     stream_fields = {'index', 'codec_name', 'codec_type', 'width', 'height',
                      'pix_fmt', 'sample_rate', 'channels', 'channel_layout',
