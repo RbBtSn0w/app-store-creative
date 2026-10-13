@@ -228,8 +228,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query)
                 if any(key not in ('limit', 'cursor') or len(values) != 1 for key, values in query.items()):
                     raise ValueError('Run list accepts one limit and one cursor')
-                core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                self._json(core.list_runs(int(query.get('limit', ['20'])[0]), query.get('cursor', [None])[0]))
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    self._json(core.list_runs(int(query.get('limit', ['20'])[0]), query.get('cursor', [None])[0]))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 400)
             return
@@ -237,8 +238,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             try:
                 from artifact_lifecycle import Lifecycle, safe_id
                 identity = safe_id(path.removeprefix('/api/runs/'))
-                core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                self._json(core.status(identity))
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    self._json(core.status(identity))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 404)
             return
@@ -272,8 +274,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query, keep_blank_values=True)
                 if any(key not in ('limit', 'cursor') or len(values) != 1 for key, values in query.items()):
                     raise ValueError('Publication list accepts one limit and one cursor')
-                core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                self._json(core.list_publications(int(query.get('limit', ['20'])[0]), query.get('cursor', [None])[0]))
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    self._json(core.list_publications(int(query.get('limit', ['20'])[0]), query.get('cursor', [None])[0]))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 400)
             return
@@ -283,8 +286,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Publication status does not accept query overrides')
                 identity = safe_id(path.removeprefix('/api/publications/'))
-                core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                self._json(core.publication_status(identity))
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    self._json(core.publication_status(identity))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 400)
             return
@@ -294,8 +298,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query)
                 if any(key not in ('limit', 'cursor') or len(values) != 1 for key, values in query.items()):
                     raise ValueError('Delivery list accepts one limit and one cursor')
-                core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                self._json(core.list_deliveries(int(query.get('limit', ['20'])[0]), query.get('cursor', [None])[0]))
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    self._json(core.list_deliveries(int(query.get('limit', ['20'])[0]), query.get('cursor', [None])[0]))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 400)
             return
@@ -303,8 +308,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             try:
                 from artifact_lifecycle import Lifecycle, safe_id
                 identity = safe_id(path.removeprefix('/api/deliveries/'))
-                core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                self._json(core.delivery_status(identity))
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    self._json(core.delivery_status(identity))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 404)
             return

@@ -34,3 +34,21 @@ class LayeredStudioInputTests(unittest.TestCase):
             self.request(ctx, '/api/deliveries')
         self.assertFalse((self.root/'.creative').exists())
         self.assertEqual((self.cfg.read_bytes(), local.read_bytes()), original)
+
+    def test_lifecycle_reads_hold_studio_write_lock_during_configuration_loading(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        import studio_contract
+        observed = []
+        fake = SimpleNamespace(list_runs=lambda *args: {}, status=lambda *args: {},
+                               list_deliveries=lambda *args: {}, delivery_status=lambda *args: {},
+                               list_publications=lambda *args: {}, publication_status=lambda *args: {})
+        def load(*args):
+            observed.append(studio_contract.WRITE_LOCK._is_owned())
+            return fake
+        with export_engine.LocalServerContext(self.root, self.cfg) as ctx:
+            with patch.object(Lifecycle, 'from_configuration', side_effect=load):
+                for path in ('/api/runs', '/api/runs/run', '/api/deliveries',
+                             '/api/deliveries/delivery', '/api/publications', '/api/publications/publication'):
+                    self.request(ctx, path)
+        self.assertEqual(observed, [True] * 6)
