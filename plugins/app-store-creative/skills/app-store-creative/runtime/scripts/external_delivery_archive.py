@@ -110,7 +110,8 @@ def restore_external(bundle, destination, backend, backend_root, expected_descri
         (staged / 'manifest.json').write_bytes(manifest_payload)
         result = verify_archive(staged, descriptor['manifest_sha256'])
         commit_directory(staged, destination); staged.mkdir()
-    return {**result, 'descriptor_sha256': expected_descriptor_sha256, 'external_retrieval_verified': True,
+    return {**result, 'provenance_verified': result.get('provenance_verified', False),
+            'descriptor_sha256': expected_descriptor_sha256, 'external_retrieval_verified': True,
             'restored_path': str(destination), 'remote_write': False}
 
 

@@ -18,6 +18,8 @@ class DeliveryLifecycleTests(unittest.TestCase):
         self.root = Path(self.tmp.name).resolve()
         self.config = {'project': {'id': 'demo', 'name': 'Demo', 'bundleId': 'example.demo', 'locales': ['en-US']},
                        'targets': ['mac_16_10'], 'cards': [{'id': 'hero', 'screenshot': 'source.png'}]}
+        if hasattr(self, 'archive_policy'):
+            self.config['archivePolicy'] = self.archive_policy
         self.store = lifecycle.Lifecycle(self.root, self.config)
         self.run = self.store.start_run({'version': '1.5', 'platform': 'MAC_OS'})
         a = self.store.start_attempt(self.run['id'], 'render', 'agent')
