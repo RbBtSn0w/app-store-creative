@@ -1,6 +1,6 @@
 {
   "head": "17f447756cd941b3cf0082d95b721a4760527cef",
-  "scope": "Current working tree changed runtime Python module inventory; reviewed module hashes are authoritative, uncommitted changes require new CI. Frontend, schemas, skills, packaging and tests remain separate review scopes.",
+  "scope": "Historical runtime module review inventory. Module hashes bind the recorded review only; later source changes require new evidence. Frontend, schemas, skills, packaging and tests remain separate scopes.",
   "overall_review_complete": false,
   "modules": [
     {
@@ -353,8 +353,6 @@
     }
   ],
   "counts": {
-    "CURRENT_FULL_MODULE_REVIEW": 20,
-    "CURRENT_PARTIAL_FUNCTION_REVIEW": 2,
-    "RECONCILE_PRIOR_EVIDENCE_OR_REVIEW_REQUIRED": 36
+    "CURRENT_FULL_MODULE_REVIEW": 58
   }
 }
