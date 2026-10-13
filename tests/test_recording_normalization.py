@@ -3,6 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import shutil
 import tempfile
 import unittest
 from media_tool_identity import MediaTools
@@ -12,12 +13,17 @@ class RecordingNormalizationTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
+        self.plan = {'width':320, 'height':180, 'fps':30, 'duration':2}
+        if self._testMethodName in ('test_invalid_or_private_tool_identity_rejected',
+                                    'test_native_tail_is_bounded_while_final_duration_stays_strict'):
+            return
+        if not (shutil.which('ffmpeg') and shutil.which('ffprobe')):
+            self.skipTest('Requires ffmpeg and ffprobe')
         self.tools = MediaTools()
         self.raw = self.root/'native.mov'
         subprocess.run([self.tools.paths['ffmpeg'], '-v', 'error', '-f', 'lavfi', '-i',
             'color=c=navy:s=320x180:r=24:d=2', '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
             '-an', str(self.raw)], check=True, capture_output=True)
-        self.plan = {'width':320, 'height':180, 'fps':30, 'duration':2}
 
     def test_normalized_media_preserves_native_take_and_binds_tools(self):
         from recording_normalization import normalize
