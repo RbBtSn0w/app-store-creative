@@ -15,9 +15,9 @@ def validate(value):
 
 
 def snapshot(directory=None):
-    root = Path(directory) if directory is not None else Path(__file__).resolve().parent
+    root = Path(directory).resolve() if directory is not None else Path(__file__).resolve().parent
     entries = []
-    for path in sorted(root.iterdir()):
+    for path in sorted(root.iterdir(), key=lambda item: item.name):
         if path.suffix not in ('.py', '.swift'):
             continue
         if path.resolve() != path or path.is_symlink() or not path.is_file():

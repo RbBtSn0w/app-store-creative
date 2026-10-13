@@ -27,3 +27,14 @@ class RuntimeIdentityTests(unittest.TestCase):
             (root / 'producer.py').symlink_to(source)
             with self.assertRaisesRegex(ValueError, 'regular'):
                 snapshot(root)
+
+    def test_relative_and_symlinked_directory_resolve_to_same_payload(self):
+        import os
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            source = root / 'sources'; source.mkdir()
+            (source / 'producer.py').write_text('implementation = 1')
+            alias = root / 'alias'; alias.symlink_to(source, target_is_directory=True)
+            self.assertEqual(snapshot(alias), snapshot(source))
+            relative = Path(os.path.relpath(source))
+            self.assertEqual(snapshot(relative), snapshot(source))
