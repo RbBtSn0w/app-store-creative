@@ -127,8 +127,9 @@ def verify(core, locked=False):
                 state = "INCOMPLETE"
             else:
                 body = _document(raw)
-                observed[name] = (hashlib.sha256(raw).hexdigest(), body.get("_commit_event_id"))
-                state = ("COMMITTED" if hashlib.sha256(raw).hexdigest() == ref["sha256"]
+                sha = hashlib.sha256(raw).hexdigest()
+                observed[name] = (sha, body.get("_commit_event_id"))
+                state = ("COMMITTED" if sha == ref["sha256"]
                          and body.get("id") == ref["id"] and type(body.get("schema_version")) is int
                          and body["schema_version"] == 1 and body.get("created_at") == event["created_at"]
                          and body.get("_commit_event_id") == event["id"] else "CHANGED")
@@ -149,7 +150,9 @@ def verify(core, locked=False):
             if path.parent != records / 'commit-abandonments':
                 continue
             decision = core._read('commit-abandonments', path.stem)
-            own_event = decision['_commit_event_id']
+            own_event = decision.get('_commit_event_id')
+            if not isinstance(own_event, str) or not own_event:
+                raise ValueError('Commit abandonment requires commit evidence')
             if own_event not in committed:
                 continue
             original_id = decision.get('event_id')
