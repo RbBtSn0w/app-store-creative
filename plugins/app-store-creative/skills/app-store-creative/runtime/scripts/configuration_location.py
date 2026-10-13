@@ -87,6 +87,8 @@ def relocate_configuration(core, destination, actor, reason):
         raise ValueError('Configuration destination must be absolute without aliases')
     target = destination / core.config_path.name
     source = str(core.config_path)
+    if target == core.config_path:
+        raise ValueError('Configuration destination must differ from the current configuration')
     record_path = core._path('configuration-locations',key(source))
     if record_path.exists():
         receipt = core._read('configuration-locations',key(source))
@@ -107,14 +109,14 @@ def relocate_configuration(core, destination, actor, reason):
             files.append((local_path_for(target),layers.local_bytes))
         for path,payload in files:
             if path.exists() or path.is_symlink():
-                if path == local_path_for(target) and path.stat().st_mode & 0o077:
+                if path == local_path_for(target) and path.lstat().st_mode & 0o077:
                     raise ValueError('Private configuration destination must be owner-only')
                 if _read_regular(path) != payload:
                     raise ValueError('Configuration destination contains different bytes')
                 continue
             with staged_file(path.parent) as staged:
                 staged.stream.write(payload); staged.sync(); staged.publish(path)
-            path.chmod(0o600)
+            path.chmod(0o600 if path == local_path_for(target) else core.config_path.stat().st_mode & 0o777)
         def verify_target():
             moved_layers = load(destination,target)
             if (moved_layers.project_sha256 != layers.project_sha256

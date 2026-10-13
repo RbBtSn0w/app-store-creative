@@ -163,3 +163,36 @@ class ConfigurationLocationMigrationTests(unittest.TestCase):
         returned = Lifecycle.from_configuration(target)
         returned.start_run({})
         returned.verify_artifact(artifact['id'])
+
+    def test_self_target_is_refused_without_retiring_current_authority(self):
+        from configuration_location import relocate_configuration
+        core = Lifecycle.from_configuration(self.root)
+        core.start_run({})
+        with self.assertRaisesRegex(ValueError, 'current configuration'):
+            relocate_configuration(core, self.root, 'fixture', 'Move configuration')
+        core.start_run({})
+
+    def test_shared_configuration_preserves_source_permissions(self):
+        core, target, _, migrate = self.prepared()
+        self.path.chmod(0o640)
+        core = Lifecycle.from_configuration(self.root)
+        migrate(core, target, 'fixture', 'Move configuration')
+        self.assertEqual((target / 'creative.config.json').stat().st_mode & 0o777, 0o640)
+
+    def test_malformed_workspace_authority_fails_with_value_error(self):
+        core = Lifecycle.from_configuration(self.root)
+        core.start_run({})
+        (core.paths.workspace / 'configuration-authority.json').write_text('{}')
+        with self.assertRaises(ValueError):
+            core.start_run({})
+
+    def test_broken_private_destination_symlink_fails_closed(self):
+        fixtures.ConfigurationLayersTests.write_local(self, mediaBackends={
+            'receipts': {'provider': 'filesystem', 'root': str(self.root / 'backend')}})
+        self.local.chmod(0o600)
+        core, target, _, migrate = self.prepared()
+        target.mkdir(parents=True, exist_ok=True)
+        (target / 'creative.config.local.json').symlink_to(target / 'missing')
+        with self.assertRaises(ValueError):
+            migrate(core, target, 'fixture', 'Move configuration')
+        core.start_run({})
