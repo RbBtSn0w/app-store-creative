@@ -1,0 +1,31 @@
+{
+  "scope": "Full current actual local-remote Git and LFS retrieval tests",
+  "files": [
+    {
+      "file": "tests/test_git_remote_retrieval.py",
+      "sha256": "3fb62d72be2280f173148f60632be5a461b3897777745cba33b9683125d98e17"
+    },
+    {
+      "file": "tests/test_git_lfs_retrieval.py",
+      "sha256": "978fe7900265dfa82365f73c30477992a68703603af1d0b16c6f2fcd1df06979"
+    }
+  ],
+  "assessment": [
+    "Actual bare remote push and independent retrieval prove exact commit; unpushed local commit rejected",
+    "Actual Git LFS push/fetch restores media before archive validation and publication approval/handoff; upload remains false",
+    "Missing remote LFS object, repository endpoint override or mismatched pointer refuses plan despite working media",
+    "Explicit configured remote required for LFS; publication retains retrieval scope",
+    "Injected fetch timeout refuses new plan"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 7.997,
+    "result": "passed_no_skips",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_git_remote_retrieval test_git_lfs_retrieval -q"
+  },
+  "limitations": [
+    "Actual Git/LFS transport uses disposable local bare remote rather than durable hosted backend",
+    "Timeout is injected and secret-sanitization assertions use strings absent from injected message; not an independent redaction proof",
+    "Fixture approvals and no actual ASC write; real products and permanent retrieval backend remain open"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "scope": "Full current design/upload commit integrity and human authorization contract tests",
+  "files": [
+    {
+      "file": "tests/test_approval_commit_integrity.py",
+      "sha256": "2dd6ce1d4bdbf10039fe6390b055bb38216b3efed8c2f565685a0cca869b8950"
+    },
+    {
+      "file": "tests/test_upload_approval_commit_integrity.py",
+      "sha256": "f0b52274d5be27f95d3e590de8fc77f17d492362aa406926eb57d289c9035667"
+    },
+    {
+      "file": "tests/test_human_approval_contract.py",
+      "sha256": "e95243751c9a889267bbdc033ae04e041d97e1c8d8c3faa15a1e2b3c01183b2f"
+    }
+  ],
+  "assessment": [
+    "Altered design approval or missing commit event cannot authorize sealing; damaged approval auditable and blocks cleanup without writes",
+    "Valid design approval survives current-format relocation and seals matching candidate",
+    "Altered/unreadable upload approval leaves pending status and refuses materialized handoff without rewriting diagnostics",
+    "Invalid human actor/reference rejected before approval write; invalid design record reported STALE",
+    "Fresh valid commits carrying wrong design/upload scope fail semantic binding independently of commit tamper"
+  ],
+  "verification": {
+    "tests": 13,
+    "seconds": 5.729,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_approval_commit_integrity test_upload_approval_commit_integrity test_human_approval_contract -q"
+  },
+  "limitations": [
+    "Authorization references are fixture data, not actual human release approval",
+    "Fresh wrong-scope upload test checks matcher directly; public handoff tamper tests cover altered commit binding separately",
+    "No actual ASC write, real product approval or browser acceptance"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "Complete two modified diffs against origin/main",
+  "files": {
+    "tests/test_chrome_renderer.py": {
+      "sha256": "a2d372ec65f77ae9b8e2eee80c8ae7a245b368f90e9eddd591ab80e009312a54",
+      "assessment": "New owned-browser evidence strips private response fields and rejects missing/private/non-numeric version identity; transport tests unchanged."
+    },
+    "tests/test_v2_workflow.py": {
+      "sha256": "2638baac51f43e7a06ddaee7e7bb42f05270feeae8b645a570f1454c944259e4",
+      "assessment": "Retired mutable release lock and publish/verify CLI tests removed. Readonly validator now returns assets without .creative; valid tRNS with CRC replaces malformed PNG; HTTP save uses ETag; preview contract tests mock owning producer execute while preserving all dimension assertions."
+    }
+  },
+  "limitations": [
+    "Preview contract mocking does not verify media generation",
+    "Combined initial remote-observation/Studio output was truncated; those full diff reviews remain pending",
+    "Retired CLI exit-code behavior is intentionally absent; managed CLI failure coverage must be verified separately"
+  ]
+}

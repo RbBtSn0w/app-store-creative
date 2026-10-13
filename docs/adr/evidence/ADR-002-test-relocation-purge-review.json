@@ -1,0 +1,31 @@
+{
+  "scope": "Full current fixture-only relocation purge planning and execution tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_purge_plan.py",
+      "sha256": "f515c04d290ac5642e337c6fe10f48f981cd0f290f26cb4d8de565f2e7d482d5"
+    },
+    {
+      "file": "tests/test_relocation_purge_execution.py",
+      "sha256": "391999a01a7581d7fc78222a2dbdcda4b485e29db1ea668b942e8ac14a549958"
+    }
+  ],
+  "assessment": [
+    "Exact redundant copies and independent active recovery pinned; unexpired quarantine, restored state, incidents including transitive dependencies and configured sources protect copies",
+    "Changed references, recovery inode or redirected file scope invalidate plan; dangling purge intent prevents replacement plan",
+    "Execution preserves metadata and active recovery, resumes only original plan; changed references stop remaining deletes",
+    "Partial deletion without checkpoint never becomes completed; completed receipt interruption remains PURGING until resumed",
+    "Foreign notes and reappeared owner bytes retained, changed completion byte count invalidates observation"
+  ],
+  "verification": {
+    "tests": 25,
+    "seconds": 22.633,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_purge_plan test_relocation_purge_execution -q"
+  },
+  "limitations": [
+    "Permanent removal only disposable test media; no real product deletion or approval implied",
+    "Injected I/O interruptions rather than actual process termination",
+    "Single-filesystem fixtures; real products, cross-volume and browser acceptance remain open"
+  ]
+}

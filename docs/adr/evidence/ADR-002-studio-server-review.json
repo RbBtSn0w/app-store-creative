@@ -1,0 +1,33 @@
+{
+  "scope": "Full studio_server.py static review",
+  "runtime_sha256": "23694fe841dc9525641c211cef73822f0f973eb34a1bdc73edb4017f4485514e",
+  "reviewed": [
+    "Loopback host/origin checks and bounded JSON request handling",
+    "GET configuration, status, candidate artifact and publication/maintenance observations",
+    "Shared lifecycle dispatch for approvals, sealing, maintenance and relocation",
+    "Layered configuration revision, identity/root preservation and managed backup",
+    "Production job exclusion and reviewed input revision",
+    "Asset serving boundaries and per-server isolated handler identity"
+  ],
+  "defect": "Configuration save could omit If-Match and bypass revision conflict checks",
+  "red": "Valid save without revision succeeded instead of rejecting and preserving configuration",
+  "green": {
+    "tests": 43,
+    "seconds": 19.377,
+    "result": "PASS",
+    "modules": [
+      "test_configuration_studio_save",
+      "test_v2_workflow",
+      "test_studio_release",
+      "test_configuration_studio_inputs",
+      "test_studio_approval_flow",
+      "test_studio_publications",
+      "test_studio_maintenance"
+    ]
+  },
+  "limitations": [
+    "No new actual browser workflow acceptance",
+    "Complete source CI and independent installed check remain required",
+    "Static route review does not prove every delegated lifecycle acceptance"
+  ]
+}

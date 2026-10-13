@@ -1,0 +1,32 @@
+{
+  "scope": "Full content and sensitive-information review of four operational documents; scoped implementation consistency checks",
+  "files": [
+    {
+      "path": "docs/git-archive-retrieval.md",
+      "sha256": "56049c0f0f0666de9313fef6a277e80245cbf25ee56d5a89a2c873e8d949d119"
+    },
+    {
+      "path": "docs/publication-observations.md",
+      "sha256": "0d29acaa50c24aa0ae03c17bf9fecfe9ef068c81ed3416004f4fa76888ddf27b"
+    },
+    {
+      "path": "docs/artifact-inventory.md",
+      "sha256": "06c515d20cf7d69681c298cb0c00a80f9a97f76a8852e8ba3f6b2f8bc1b19156"
+    },
+    {
+      "path": "docs/artifact-maintenance.md",
+      "sha256": "b872c17e93cbc4f96397e84f1ecf98a6b822ecae114d77b399461c44c43baf2f"
+    }
+  ],
+  "findings": [
+    "Updated obsolete ASC Preview adapter and Studio evidence UI descriptions",
+    "Aligned relocation retention and quarantine defaults with project artifactPolicy",
+    "Distinguished ordinary CAS maintenance from relocation-copy maintenance"
+  ],
+  "sensitive_content": "No credentials, signed remote URLs or private user content observed; paths and identities are examples or disposable proof references",
+  "limitations": [
+    "Does not rerun historical tests",
+    "Does not establish full repository sensitive-content coverage",
+    "Real product, durable backend, human approvals and ASC gates remain open"
+  ]
+}

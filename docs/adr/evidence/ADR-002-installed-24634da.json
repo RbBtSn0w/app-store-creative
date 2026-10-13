@@ -1,0 +1,9 @@
+{
+  "head": "24634da72213b0b46a18f3a44194c51bb771b8db",
+  "package_sha256": "c490b98dd1b42cd9bf482003114b5ae73d9c8da17ec2baacb09fd2d631bccc7f",
+  "source_equal_files": 240,
+  "mismatches": [],
+  "exit_code": 0,
+  "output": "..................................\n----------------------------------------------------------------------\nRan 34 tests in 10.762s\n\nOK\n",
+  "source_repo_in_pythonpath": false
+}

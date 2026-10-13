@@ -1,0 +1,31 @@
+{
+  "runtime_head": "c98edbc675305951f94968b61745b911b455819b",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/safe_staging.py",
+  "sha256": "ec48f134d6f480c6e26667f1603cc69d31c5b289ba819f38ff3c28a91300275f",
+  "scope": "Entire safe_staging module plus three current consumers; not full artifact_lifecycle review",
+  "checks": [
+    "Pinned parent descriptors and inode identity",
+    "Exclusive nonaliased staging file",
+    "Regular staged file identity rechecked before hard-link publication",
+    "Existing destination never overwritten",
+    "Cleanup only removes matching owned staging inode",
+    "Replaced parent or file preserves unknown owner bytes"
+  ],
+  "validation": [
+    {
+      "tests": 16,
+      "seconds": 1.112,
+      "result": "PASS",
+      "log_sha256": "a3f2b75c75fb29980d65371ff0a71ede7df05ea5f72f892c2018ebd9dc5b69f7"
+    },
+    {
+      "tests": 2,
+      "seconds": 0.002,
+      "result": "PASS",
+      "scope": "New direct staging-file substitution and existing destination regression",
+      "log_sha256": "6f283ee6225d2cef4c0127d95456a6f954c45141c92b97dd89016cb1c630e8f4"
+    }
+  ],
+  "new_findings": [],
+  "overall_review_complete": false
+}

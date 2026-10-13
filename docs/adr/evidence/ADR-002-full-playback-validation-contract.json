@@ -1,0 +1,36 @@
+{
+  "scope": "Full validation/workflow contract content review and independently extracted package smoke",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative-validator/references/validation.md",
+      "sha256": "695a5c5b8208d6301bc812873df0f4ed99e863179d410849eb3a7bf63cdf8d39"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/references/workflow-contract.md",
+      "sha256": "dc87de92a56f30184be1ef7fe4f968fdfa8a227abe707d21d782d2a5b958af82"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-preview-producer/SKILL.md",
+      "sha256": "bd7067d1827d323790ef2f17dbc1074edfc7d10b8559a90281a29df3031cea0c"
+    },
+    {
+      "path": "plugins/app-store-creative/skills/app-store-preview-producer/references/video-capture.md",
+      "sha256": "ab172f33d0448d068e14859917b6e5ead0dd85b6a39232ffe1d3cb6ccfc7dbda"
+    }
+  ],
+  "finding": "Acceptance snapshot alone does not cover complete playback transitions and pacing",
+  "fix": "Require complete playback and selected poster review in producer and validator; reviewed config/run snapshot is authority; remove obsolete v2 label",
+  "package_sha256": "dbe5ba0de54b0414a17407d5825212307edc90f9f883bab5f1521318c2fe78dc",
+  "package_smoke": "PASS",
+  "changed_payload_files": [
+    "app-store-creative/skills/app-store-preview-producer/SKILL.md",
+    "app-store-creative/skills/app-store-preview-producer/references/video-capture.md",
+    "app-store-creative/skills/app-store-creative-validator/references/validation.md"
+  ],
+  "sensitive_content": "Example concepts and source-relative links only; no credentials or private product content observed",
+  "limitations": [
+    "No human approval or complete video pacing review performed",
+    "Runtime payload unchanged; prior scoped runtime regressions preserved",
+    "Actual ADG install and real ASC acceptance remain open"
+  ]
+}

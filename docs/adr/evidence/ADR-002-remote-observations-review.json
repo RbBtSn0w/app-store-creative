@@ -1,0 +1,51 @@
+{
+  "scope": "Full remote_observations.py review",
+  "runtime_sha256": "ba59402eac4bcc4afde4ae8520e7c1edb67d0b23ec7355fa334091cdb14c7dd1",
+  "reviewed": [
+    "Gate-specific fact and source allowlists",
+    "Upload checksum, independent playback and exact poster time/dimension checks",
+    "Plan/target/artifact binding and same-scope supersession",
+    "Freshness and conflicting remote identity handling",
+    "Private raw retention with sanitized summary dependency",
+    "Portable locator hashes, backend version references and independent retrieval",
+    "Derived publication status versus evidence custody diagnostics",
+    "Append-only observation/approval export without raw evidence"
+  ],
+  "new_defects": [
+    {
+      "status": "FIXED",
+      "evidence": "ADR-002-observation-reference-privacy.json",
+      "issue": "Mixed-case URL/file schemes were accepted as sanitized references"
+    }
+  ],
+  "verification": [
+    {
+      "tests": 65,
+      "seconds": 106.469,
+      "result": "PASS",
+      "modules": [
+        "test_remote_observations",
+        "test_asc_observation_cli",
+        "test_external_reference_contract"
+      ]
+    },
+    {
+      "tests": 7,
+      "seconds": 0.03,
+      "result": "PASS",
+      "modules": [
+        "test_observation_evidence_retrieval"
+      ]
+    },
+    {
+      "tests": 4,
+      "seconds": 2.627,
+      "result": "PASS",
+      "evidence": "ADR-002-observation-reference-privacy.json"
+    }
+  ],
+  "limitations": [
+    "Fixture remote facts do not prove actual ASC playback/poster",
+    "Real durable backend and two product acceptance remain open"
+  ]
+}

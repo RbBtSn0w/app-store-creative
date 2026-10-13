@@ -1,0 +1,24 @@
+{
+  "source_commit": "fd860679d7590ce272b585d607ce2872f1a3979e",
+  "run_id": 38098578994,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38098578994",
+  "conclusion": "success",
+  "log_sha256": "fd9681502924dbd26cca9dc9812a0e288c8afee3c64c17642732f9d473d0061b",
+  "python": {
+    "run": 1045,
+    "skipped": 33,
+    "seconds": 483.169
+  },
+  "studio": {
+    "tests_passed": 98,
+    "files_passed": 33
+  },
+  "typecheck": "PASS",
+  "build": "PASS",
+  "complete_distribution_smoke": "PASS",
+  "limitations": [
+    "33 cross-filesystem cases skipped on CI; separate actual Levelory cross-volume evidence is scoped independently",
+    "Does not prove human approval, durable retrieval, actual ASC or installed plugin acceptance",
+    "Subsequent commits require final release gate verification"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "Full current archive manifest and provenance tests",
+  "files": [
+    {
+      "file": "tests/test_archive_manifest_contract.py",
+      "sha256": "66cc90d835f23d819011984fcd064e8b2561dd69ded4fb8fc0a4fa362d197b94"
+    },
+    {
+      "file": "tests/test_archive_provenance.py",
+      "sha256": "e1e90aac99b5466261827a742420f5c1666d93fb41a2ed5fa8e195ec6f8febad"
+    }
+  ],
+  "assessment": [
+    "Updated file hashes cannot bypass original approved recipe, reviewed configuration or approval semantics",
+    "Missing reviewed evidence never backfilled; archive policy must match sealed recipe and cannot silently externalize git policy",
+    "Typed manifest, asset/source namespace, uniqueness, role and identity coverage enforced",
+    "Imported snapshot alias semantics checked despite updated file hash; invalid archive rejected before restore directory creation",
+    "Incomplete/cyclic/failed/hash-mismatched provenance refused",
+    "1200-node dependency graph accepted without recursion and core closure uses same depth contract"
+  ],
+  "verification": {
+    "tests": 12,
+    "seconds": 1.712,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_archive_manifest_contract test_archive_provenance -q"
+  },
+  "limitations": [
+    "Fixture archive/renderer; actual long-term backend and real product sealing separate",
+    "These files do not directly assert every possible private field is absent; other portable evidence contracts apply"
+  ]
+}

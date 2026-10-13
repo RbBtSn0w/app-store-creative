@@ -1,0 +1,30 @@
+{
+  "scope": "Full current local owning-layer forward and reverse execution test review",
+  "files": [
+    {
+      "file": "tests/test_configuration_local_forward_execution.py",
+      "sha256": "c029ffe76a7834652bdc994e8849a698bfe37563137cc25f47b8004b6924a7d9"
+    },
+    {
+      "file": "tests/test_configuration_local_reverse_execution.py",
+      "sha256": "e9b6b1c9b00565b9063f636d3c22d3985e4ac4306168822aad866a752968e867"
+    }
+  ],
+  "assessment": [
+    "Completed forward switch preserves shared recipe bytes and local file mode, verifies original artifact and creates a new run",
+    "Three successive reverse switches preserve shared recipe and artifact access, with new runs at every active location",
+    "Actual public CLI forward and reverse operations in disposable Git repositories preserve untracked local configuration",
+    "Injected post-install directory synchronization failure supports resume and rollback; shared recipe drift refuses recovery"
+  ],
+  "verification": {
+    "tests": 9,
+    "seconds": 42.769,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_configuration_local_forward_execution test_configuration_local_reverse_execution -q"
+  },
+  "limitations": [
+    "Disposable single-filesystem fixtures rather than actual products or cross-volume movement",
+    "Injected synchronization interruption rather than process crash",
+    "No actual Studio browser or remote publication acceptance"
+  ]
+}

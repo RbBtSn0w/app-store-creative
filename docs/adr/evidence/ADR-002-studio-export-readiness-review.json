@@ -1,0 +1,19 @@
+{
+  "scope": "Full static review of export readiness, configured font and layout helpers",
+  "files": {
+    "ExportView.tsx": "04f0c6a032094745ede544d97b406a87643b2337b561a51dd439cbaa8bf2d152",
+    "fontReview.ts": "60a5b799221ad65214f3107a5b91b0de923acec547374022a831c6959fad4b62",
+    "layoutReview.ts": "579c1ca6a160f2402a83818dcb5b13e5b12623748a94ac76997edca3c21aa185"
+  },
+  "finding": "settle wrote ready after timeout independently of Promise.race; effect retained previous ready/error when inputs changed.",
+  "fix": "Reset ready/error on effect start; only the bounded promise success may set ready; late completion cannot overwrite timeout.",
+  "validation": [
+    "9 focused tests passed",
+    "TypeScript check and distributable build passed on Node 25",
+    "102 frontend tests across 34 files passed"
+  ],
+  "limitations": [
+    "Regression covers bounded promise behavior, not mounted browser effects",
+    "Real browser export and final installed workflow remain required"
+  ]
+}

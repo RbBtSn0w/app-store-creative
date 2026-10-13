@@ -1,0 +1,21 @@
+{
+  "scope": "Complete three modified test diffs against origin/main",
+  "files": {
+    "tests/test_artifact_handoff.py": {
+      "sha256": "2fc0ab2efc01a082108c2d9a3bb21a0e07eb50a6aff5e574e2e6089c1ba60da8",
+      "assessment": "Retired mutable release-lock/publish/doctor tests removed; readonly media probe and unavailable legacy commands added. Managed handoff/source invalidation/ordering replacement coverage requires owning-test review; not assumed equivalent."
+    },
+    "tests/test_input_lifecycle.py": {
+      "sha256": "54a4719a619d86da0a0eada9c9f36daff5e5939085c1df5983fc29943467718b",
+      "assessment": "Portable closure fixture declares mandatory archive/budget policy; injected registration failure must record terminal failed attempt through run status. Existing assertions retained."
+    },
+    "tests/test_runtime_distribution.py": {
+      "sha256": "f642ca32b767d5f536b9dc88c46d4ccf5896b06ae324ee339872e7b4646352d4",
+      "assessment": "Distribution requires current operation history and rejects obsolete runtime/templates; isolated shell managed storage probe leaves legacy state absent; nondefault locale template requires distinct capture. Does not prove complete installed real workflow."
+    }
+  },
+  "open_followups": [
+    "Verify managed tests retain immutable handoff, changed sources/config and ordered official ASC handoff requirements",
+    "Deleted test_workflow.py output was truncated; its complete deletion review is not claimed"
+  ]
+}

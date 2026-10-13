@@ -1,0 +1,22 @@
+{
+  "scope": "Full current publication retrieval proof tests",
+  "file": "tests/test_publication_retrieval_proof.py",
+  "sha256": "83e49188c11b27cb03164ba6c46036be9179bbd63b65dc18a9e4bc420e45471f",
+  "assessment": [
+    "Plan binds actual independent clone commit/path/manifest proof",
+    "Clone failure creates no publication plan",
+    "Tampered proof fails status and blocks upload approval/handoff without rewriting record",
+    "Fresh readable committed invalid provenance_verified values refused by proof semantic validation",
+    "Fresh committed plan cannot redeclare sealed Git archive as LFS even with matching modified proof mode"
+  ],
+  "verification": {
+    "tests": 7,
+    "seconds": 2.916,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_publication_retrieval_proof -q"
+  },
+  "limitations": [
+    "Disposable local Git archive; actual durable remote and product release separate",
+    "No actual ASC write"
+  ]
+}

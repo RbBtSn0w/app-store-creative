@@ -1,0 +1,19 @@
+{
+  "scope": "Full static review of production history and local release/delivery status helpers",
+  "files": {
+    "RunHistory.tsx": "3beceb286471e34e6b449121660cf0f5a6fd7af33ae75d419e9fc29f3a86cba6",
+    "releaseState.ts": "a795fa5be76c51c95520e48fee4c8af9325f02f0ffe8d9b0a27f6a970d2819cd",
+    "deliveryStatus.ts": "7aa9430efef8803ab62f01cda88ba7d1d5bf1c71c8ec25def06045465b4ff005"
+  },
+  "finding": "Run history trusted unvalidated page/detail responses; null entries and non-boolean eligibility could crash rendering or misrepresent selection eligibility.",
+  "fix": "Validate page and detail before state updates; existing error handling displays refusal.",
+  "validation": {
+    "red": "After extracting identity parsers without behavior changes, both malformed-response regressions failed because no error was thrown. Initial missing-export test setup failure is not behavior evidence.",
+    "green": "9 tests across RunHistory, releaseState and deliveryStatus passed; TypeScript check and distributable build passed on Node 25.",
+    "full_frontend": "100 tests across 33 files passed on Node 25; includes populated records, null outcomes and partial ineligible assets."
+  },
+  "remaining": [
+    "Latest CI and independent package acceptance",
+    "Actual browser malformed-response acceptance"
+  ]
+}

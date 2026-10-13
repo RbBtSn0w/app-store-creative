@@ -14,10 +14,17 @@ from test_v2_workflow import create_mock_png
 
 class DeliveryLifecycleTests(unittest.TestCase):
     def setUp(self):
+        DeliveryLifecycleTests.prepare(self, getattr(self, 'archive_policy', {'schema_version': 1, 'mediaMode': 'git'}))
+
+    def prepare(self, archive_policy, media_budget=1073741824):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name).resolve()
         self.config = {'project': {'id': 'demo', 'name': 'Demo', 'bundleId': 'example.demo', 'locales': ['en-US']},
                        'targets': ['mac_16_10'], 'cards': [{'id': 'hero', 'screenshot': 'source.png'}]}
+        if media_budget is not None:
+            self.config['artifactPolicy'] = {'schema_version': 1, 'mediaBudgetBytes': media_budget}
+        if archive_policy is not None:
+            self.config['archivePolicy'] = archive_policy
         self.store = lifecycle.Lifecycle(self.root, self.config)
         self.run = self.store.start_run({'version': '1.5', 'platform': 'MAC_OS'})
         a = self.store.start_attempt(self.run['id'], 'render', 'agent')
@@ -33,6 +40,24 @@ class DeliveryLifecycleTests(unittest.TestCase):
         self.assertEqual(validation['status'], 'PASS', validation.get('errors'))
         approval = self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human-message:approved')
         return validation, approval
+
+    def test_seal_requires_declared_archive_policy_before_writes(self):
+        self.prepare(None)
+        validation, approval = self.approved()
+        before = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        with self.assertRaisesRegex(ValueError, 'explicit archive policy'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        after = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        self.assertEqual(after, before)
+
+    def test_seal_requires_explicit_media_budget_before_writes(self):
+        self.prepare(self.config['archivePolicy'], media_budget=None)
+        validation, approval = self.approved()
+        before = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        with self.assertRaisesRegex(ValueError, 'explicit media budget'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        after = list(self.store.paths.releases.rglob('*')) if self.store.paths.releases.exists() else []
+        self.assertEqual(after, before)
 
     def test_approval_requires_real_media_validation(self):
         self.store.object_path(self.output['sha256']).write_bytes(b'broken')
@@ -54,6 +79,8 @@ class DeliveryLifecycleTests(unittest.TestCase):
     def test_sealed_package_restores_without_original_workspace(self):
         v, approval = self.approved()
         delivery = self.store.seal(self.candidate['id'], v['id'], approval['id'])
+        self.assertEqual(delivery['archive_policy'], self.config['archivePolicy'])
+        self.assertEqual(json.loads((Path(delivery['local_path']) / 'manifest.json').read_text())['archive_policy'], self.config['archivePolicy'])
         package = Path(delivery['local_path']); clone = self.root / 'independent-clone'
         shutil.copytree(package, clone)
         shutil.rmtree(self.store.paths.workspace)
@@ -122,6 +149,68 @@ class DeliveryLifecycleTests(unittest.TestCase):
         self.assertNotEqual(d['id'], second['id'])
         self.assertEqual((Path(d['local_path']) / 'manifest.json').read_bytes(), snapshot)
         self.assertEqual(second['parent_revision'], d['id'])
+
+    def test_poster_from_another_preview_fails_candidate_binding(self):
+        from unittest.mock import patch
+        attempt = self.store.start_attempt(self.run['id'], 'preview', 'agent')
+        video = self.root / 'preview.mp4'; video.write_bytes(b'fixture video')
+        first = self.store.register(attempt['id'], video, 'preview', inputs=[self.input['id']],
+                                    logical_path='preview/app_preview.mp4')
+        second = self.store.register(attempt['id'], video, 'preview', inputs=[self.input['id']],
+                                     logical_path='preview/app_preview.mp4')
+        poster = self.store.register(attempt['id'], self.root / 'source.png', 'poster',
+                                     inputs=[first['id']], logical_path='preview/poster.png')
+        self.store.finish_attempt(attempt['id'], 'succeeded')
+        candidate = self.store.select(self.run['id'], [self.output['id'], second['id'], poster['id']])
+        with patch('validator.run_validation', return_value={'errors':[], 'assets':[], 'source_hashes':{}}):
+            validation = self.store.validate_candidate(candidate['id'])
+        self.assertTrue(any('Poster must reference the selected preview' in error for error in validation['errors']))
+
+
+    def test_declared_required_poster_cannot_be_omitted_from_candidate(self):
+        from unittest.mock import patch
+        self.store.config['previewVideo'] = {'enabled':True, 'posterRequired':True}
+        run = self.store.start_run({})
+        attempt = self.store.start_attempt(run['id'], 'render', 'agent')
+        shot = self.store.register(attempt['id'], self.root / 'source.png', 'screenshot',
+                                   inputs=[self.input['id']], logical_path='en-US/mac_16_10/hero.png')
+        video = self.root / 'preview.mp4'; video.write_bytes(b'video fixture')
+        preview = self.store.register(attempt['id'], video, 'preview', inputs=[self.input['id']],
+                                      logical_path='preview/app_preview.mp4')
+        self.store.finish_attempt(attempt['id'], 'succeeded')
+        candidate = self.store.select(run['id'], [shot['id'], preview['id']])
+        with patch('validator.run_validation', return_value={'errors':[], 'assets':[], 'source_hashes':{}}):
+            validation = self.store.validate_candidate(candidate['id'])
+        self.assertEqual(validation['status'], 'FAIL')
+        self.assertTrue(any('Missing declared output: preview/poster.png' in error for error in validation['errors']))
+
+
+    def test_source_invalidation_preserves_approval_but_blocks_new_approval_and_seal(self):
+        validation, approval = self.approved()
+        original = self.store._path('approvals', approval['id']).read_bytes()
+        candidate = self.store.status(self.run['id'])['candidates'][0]
+        self.assertEqual(candidate['design_approvals'][0]['binding_status'], 'PASS')
+        self.store.config['cards'][0]['headline'] = 'Changed after approval'
+        candidate = self.store.status(self.run['id'])['candidates'][0]
+        self.assertEqual(candidate['design_approvals'][0]['binding_status'], 'STALE')
+        with self.assertRaisesRegex(ValueError, 'configuration'):
+            self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human:second-approval')
+        with self.assertRaisesRegex(ValueError, 'configuration'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        self.assertEqual(self.store._path('approvals', approval['id']).read_bytes(), original)
+
+
+    def test_discard_is_separate_from_source_validity_and_blocks_promotion(self):
+        validation, approval = self.approved()
+        self.store.discard_candidate(self.candidate['id'], 'owner', 'Choose another composition')
+        candidate = self.store.status(self.run['id'])['candidates'][0]
+        self.assertEqual(candidate['source_status'], 'PASS')
+        self.assertEqual(candidate['disposition']['reason'], 'Choose another composition')
+        self.assertEqual(candidate['design_approvals'][0]['binding_status'], 'STALE')
+        with self.assertRaisesRegex(ValueError, 'discarded'):
+            self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human:approval')
+        with self.assertRaisesRegex(ValueError, 'discarded'):
+            self.store.seal(self.candidate['id'], validation['id'], approval['id'])
 
 if __name__ == '__main__':
     unittest.main()

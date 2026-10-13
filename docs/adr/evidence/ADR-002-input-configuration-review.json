@@ -1,0 +1,26 @@
+{
+  "base_head": "ed8700d7d298f7b92ddaab52699f8553563619b8",
+  "scope": "Entire input_lifecycle, configuration_preparation and configuration_installation modules; relocation switch callers remain separate review scope",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py": "f9345b0866ae47f50503e7d88ab80af1e35e14f22378dc28449c23fee57bcc06",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_preparation.py": "2f4b98fc282c43b3b999226890950fe3eec813b78b204e960888ca9c430c9b7f",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_installation.py": "d04f1bbd61dad5ee2c3fcadbf0964491dd1723db54458e91fa1dabecb9fa2759"
+  },
+  "checks": [
+    "Managed import provenance, successful capture ancestry, immutable dispositions and live configuration binding",
+    "Preparation pins parent and staged inode, refuses unjournaled files, verifies owning-layer bytes and Git protection",
+    "Installation binds source/target authority and recovery inode evidence; preserves existing temporary owner files"
+  ],
+  "finding": {
+    "before": "Configuration backup registration failure left the attempt without an outcome.",
+    "red": "Injected registration failure produced outcome None.",
+    "fix": "Wrap backup preparation and registration in the same terminal failure recording used by capture import."
+  },
+  "validation": {
+    "tests": 44,
+    "seconds": 23.538,
+    "result": "PASS",
+    "log_sha256": "1eaff833176d9f6dd9a7d751266bfb2ed627197a380bf6daf3a7c53fd31329be"
+  },
+  "overall_review_complete": false
+}

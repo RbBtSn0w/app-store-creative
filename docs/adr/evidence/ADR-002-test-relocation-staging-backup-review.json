@@ -1,0 +1,33 @@
+{
+  "scope": "Full current staging and retained backup inventory tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_staging_inventory.py",
+      "sha256": "28584efe2e6ed9a9db0ee20c757d2da72ba877ebab3dcc52c604452b6a21ba90"
+    },
+    {
+      "file": "tests/test_relocation_backup_inventory.py",
+      "sha256": "f614bcfe3eaa5d33e569d849b9f0ac4ae328163038aad7e5a0b0537ba78b5baa"
+    }
+  ],
+  "assessment": [
+    "Prepared and retained backup inventory compares full filesystem bytes before and after observation",
+    "Unknown notes preserved and reported; same-byte directory replacement conflicts with pinned identity",
+    "Missing and aliased roots have unknown observed capacity rather than zero, external sentinel untouched",
+    "Interrupted forward publication and reverse exchange reported at actual pending target/backup locations",
+    "Replaced staging refuses switch before fencing; replaced published root refuses resume without switched receipt",
+    "Edited ownership marker/intent and injected scan denial refuse verified inventory",
+    "Actual CLI and restarted HTTP match core; foreign query path rejected"
+  ],
+  "verification": {
+    "tests": 17,
+    "seconds": 19.052,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_staging_inventory test_relocation_backup_inventory -q"
+  },
+  "limitations": [
+    "Sync/exchange/scan failures injected rather than actual crash or access control",
+    "Disposable single-filesystem fixtures; actual products and cross-volume acceptance separate",
+    "Actual browser workflow and permanent cleanup not exercised"
+  ]
+}

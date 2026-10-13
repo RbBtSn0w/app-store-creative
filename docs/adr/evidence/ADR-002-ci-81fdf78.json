@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "scope": "Full CI for current runtime source payload; not human approval, ADG installation or ASC media acceptance",
+  "source_commit": "81fdf780ef5e58873ae719ec39496e8201be8afb",
+  "run_id": 38152928618,
+  "url": "https://github.com/RbBtSn0w/app-store-creative/actions/runs/38152928618",
+  "conclusion": "SUCCESS",
+  "python": {
+    "tests_run": 1051,
+    "skipped": 34,
+    "duration_seconds": 319.516
+  },
+  "studio": {
+    "tests": 98,
+    "files": 33
+  },
+  "typecheck": "PASS",
+  "studio_build": "PASS",
+  "complete_distribution": "PASS",
+  "private_log_sha256": "f71c79df3b665f33fd8052ef71766a24f40d654156a729d953f16305a4c3a19b"
+}

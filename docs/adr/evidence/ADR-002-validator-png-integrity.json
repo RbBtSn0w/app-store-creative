@@ -1,0 +1,16 @@
+{
+  "scope": "PNG integrity boundary in candidate validator",
+  "runtime_sha256": "28f4e890f6e42dbca03d8226efa1571e08827b80daf9e130ca91f9e7fce893d6",
+  "defect": "Header-only metadata accepted incomplete and corrupt PNG files",
+  "red": "Two regression tests executed; four corrupt/truncated host cases failed because ValueError was not raised",
+  "green": {
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_validator_png_integrity test_v2_workflow test_poster_validation test_production_lifecycle",
+    "tests": 26,
+    "result": "PASS",
+    "seconds": 2.638
+  },
+  "limitations": [
+    "Not proof of ASC poster fault root cause",
+    "Latest full CI and real product acceptance remain required"
+  ]
+}

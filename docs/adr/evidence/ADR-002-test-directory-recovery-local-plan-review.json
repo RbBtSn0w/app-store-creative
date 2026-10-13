@@ -1,0 +1,36 @@
+{
+  "scope": "Full current directory exchange, retry/revert and local owning-document relocation plan tests",
+  "files": [
+    {
+      "file": "tests/test_directory_change_recovery.py",
+      "sha256": "fcf530fe178f2e974d1c063103d40c87f2f6a6088722a360773e409ca137a9c7"
+    },
+    {
+      "file": "tests/test_directory_exchange.py",
+      "sha256": "12563d09bbdc85a30d8331a8afc2e89479ee19d8a6a1c58c99bc53100078db8e"
+    },
+    {
+      "file": "tests/test_configuration_local_relocation_plan.py",
+      "sha256": "4af17c985054becbde2f6e2572c18e3d842e2e570e036b5fe7d95389ef4e61d0"
+    }
+  ],
+  "assessment": [
+    "Actual native atomic directory exchange preserves both original directory identities and bytes and reports parent synchronization",
+    "Repeated apply/revert after injected fsync failure preserves operation direction; absent-root publication is retryable and reversible",
+    "Symlink, non-directory, overlapping roots and replaced directory identities refuse mutation; injected pre-native-call replacement preserves concurrent owner note",
+    "Local relocation plan binds owning local document hash; preparation preserves both configuration files and does not activate target",
+    "Git policy identifies exact local configuration and installation/restoration staging paths; byte snapshot unchanged after policy observation"
+  ],
+  "verification": {
+    "tests": 17,
+    "seconds": 0.802,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_directory_change_recovery test_directory_exchange test_configuration_local_relocation_plan -q"
+  },
+  "limitations": [
+    "Same-filesystem disposable fixtures; no actual cross-volume, power loss or real product acceptance",
+    "Sync and native permission failures are injected; no independent permission-restricted identity",
+    "Plan preparation does not prove completed local configuration activation; covered separately",
+    "Identity replacement refusal assertions preserve selected files rather than a complete tree snapshot"
+  ]
+}

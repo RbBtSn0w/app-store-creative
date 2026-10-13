@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "scope": "ASC adapter reference normalization regression; not remote ASC media acceptance",
+  "finding": "Adapter accepted mixed-case HTTP, HTTPS and FILE prefixes that the downstream observation store already rejects.",
+  "red": {
+    "test": "test_asc_observation_adapter.BoundAscAdapterTests.test_machine_and_url_references_are_rejected_case_insensitively",
+    "failures": 9,
+    "reason": "Missing early sanitized-reference rejection; remote/reference fields yielded observations."
+  },
+  "green": {
+    "tests": 24,
+    "result": "PASS",
+    "duration_seconds": 1.73
+  },
+  "prior_head_ci": {
+    "commit": "717051cfc43b6ef11aeed8da9c38e44a583dddc3",
+    "run_id": 38152422209,
+    "conclusion": "SUCCESS"
+  },
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py": "2a44ed58ef16c0a7087de09c7b438e781f394b831241549c86160cc7734ac783",
+    "tests/test_asc_observation_adapter.py": "fba5d237b305e380aabbbb263d072a6a7e6e23c204056a3045c6b4b3de2bc80b"
+  },
+  "remote_writes_performed": false
+}

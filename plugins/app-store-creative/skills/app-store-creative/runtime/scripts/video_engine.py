@@ -2,16 +2,11 @@
 """App Preview video generation engine for App Store Creative v2.0."""
 
 import json
-import shutil
-import subprocess
 import sys
+import subprocess
+import produce_app_preview
 from pathlib import Path
 from typing import Any, Dict, Optional
-
-try:
-    from produce_app_preview import build_command, validate_output
-except ImportError:
-    from .produce_app_preview import build_command, validate_output
 
 
 def produce_preview_from_config(
@@ -36,9 +31,6 @@ def produce_preview_from_config(
     src_path = repo_root / src_rel
     if not src_path.exists():
         raise FileNotFoundError(f"Source video not found: {src_path}")
-
-    if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
-        raise RuntimeError("ffmpeg and ffprobe must be installed to produce App Previews.")
 
     duration = float(preview_cfg.get("duration", 20))
     fps = float(preview_cfg.get("fps", 30))
@@ -73,14 +65,15 @@ def produce_preview_from_config(
         ],
     }
 
-    print(f"🎬 Producing App Preview video ({width}x{height} @ {fps}fps, {duration}s)...")
-    cmd = build_command(contract, target_out)
+    print(f"🎬 Producing App Preview video ({width}x{height} @ {fps}fps, {duration}s)...", file=sys.stderr)
+    receipt = target_out.with_suffix('.receipt.json')
+    frames = target_out.with_suffix('.frames.png')
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
-        err_msg = e.stderr or e.stdout or str(e)
-        raise RuntimeError(f"FFmpeg failed to produce App Preview: {err_msg}") from e
-
-    probe = validate_output(target_out, contract)
-    print(f"✅ App Preview produced: {target_out} ({target_out.stat().st_size / 1024 / 1024:.2f} MB)")
-    return {"path": str(target_out), "probe": probe}
+        result = produce_app_preview.execute(contract, target_out, receipt, frames)
+    except subprocess.CalledProcessError as error:
+        diagnostic = error.stderr or error.stdout or 'No encoder diagnostic output'
+        if isinstance(diagnostic, bytes):
+            diagnostic = diagnostic.decode('utf-8', errors='replace')
+        raise RuntimeError(f'App Preview encoder failed ({error.returncode}): {diagnostic[-4096:]}') from error
+    return {"path": str(target_out), "probe": result["output"]["probe"],
+            "receipt_path": str(receipt), "frames_path": str(frames)}

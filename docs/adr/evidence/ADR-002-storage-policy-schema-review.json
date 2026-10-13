@@ -1,0 +1,32 @@
+{
+  "scope": "Full static review of creative.config schema; storage/policy sections compared with runtime, remaining media fields compared with current documented production contract. Not exhaustive schema-to-renderer conformance.",
+  "schema_sha256": "326fa4517799ad47226e90ece56f89f8d0fc2a2893c12bcd0845a0196388ac2b",
+  "findings": [
+    {
+      "resolution": "Connected track description now limits cross-card sharing to background and decorations."
+    },
+    {
+      "resolution": "Poster timecode description now states local extraction use and conditional requirement, separate from remote ASC acceptance."
+    }
+  ],
+  "review_notes": [
+    "Four root names match the runtime: workspaceRoot, objectRoot, releaseRoot and publicationRoot. Relative placement is project-root based; external placement requires absolute paths.",
+    "Archive mode enum, named external backend requirement and Git/LFS backend prohibition match archive_policy.resolve.",
+    "Budget and retention fields are nonnegative integers; formal delivery additionally requires explicit budget and archive policy in its original run snapshot.",
+    "Runtime exact Python integer checks remain authoritative for rejecting boolean or floating-point representations; JSON Schema alone does not prove record or lifecycle validity."
+  ],
+  "verification": {
+    "tests": [
+      "test_artifact_policy",
+      "test_archive_policy_configuration",
+      "test_storage_configuration_preview"
+    ],
+    "count": 17,
+    "seconds": 3.304,
+    "result": "PASS"
+  },
+  "remaining": [
+    "Exhaustive schema-to-renderer conformance",
+    "Actual product matrix"
+  ]
+}

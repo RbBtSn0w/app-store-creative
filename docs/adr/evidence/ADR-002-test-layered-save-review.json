@@ -1,0 +1,21 @@
+{
+  "scope": "Full current layered Studio save tests",
+  "file": "tests/test_configuration_studio_save.py",
+  "sha256": "4d5ea7b9514fa4c91cb341a019b14beaf75a4a23381581110879160c2d2c1fc4",
+  "assessment": [
+    "Missing If-Match returns 428 before configuration/workspace writes",
+    "Modified or newly created local configuration invalidates shared editor ETag with 409",
+    "Shared save preserves local document and uses effective override roots without creating dormant shared root",
+    "Changing active effective release root refused with 400 and preserves shared bytes"
+  ],
+  "verification": {
+    "tests": 4,
+    "seconds": 2.5,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -m unittest test_configuration_studio_save -q"
+  },
+  "limitations": [
+    "Actual local HTTP service, not browser input or save-inflight UI test",
+    "Real product directory matrix remains unaccepted"
+  ]
+}

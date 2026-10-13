@@ -1,0 +1,42 @@
+{
+  "scope": "Actual read-only directory preview in existing isolated Studio fixture; not save-in-flight, final installed package or real product acceptance",
+  "url": "http://127.0.0.1:3110/",
+  "fixture": "/private/tmp/creative-policy-browser-fixture",
+  "listener_observed": {
+    "pid": 67087,
+    "port": 3110
+  },
+  "interaction": "Clicked Preview directories through CUA; verified resulting accessibility state; edited releaseRoot to review-archives, preview showed migration conflict, Save project refused and preserved draft",
+  "observed": {
+    "workspace": "/private/tmp/creative-policy-browser-fixture/.creative",
+    "objects": "/private/tmp/creative-policy-browser-fixture/.creative/objects",
+    "releases": "/private/tmp/creative-policy-browser-fixture/creative-releases",
+    "publications": "/private/tmp/creative-policy-browser-fixture/creative-publications",
+    "sources": [
+      "Default",
+      "Derived from working directory",
+      "Default",
+      "Default"
+    ],
+    "message": "Resolved for this draft. Saving checks the paths again."
+  },
+  "writes_requested": true,
+  "remaining": [
+    "Save-in-flight controls",
+    "Custom-root successful save in a fresh fixture",
+    "Runtime process implementation binding",
+    "Real product acceptance"
+  ],
+  "save_attempt": {
+    "result": "REFUSED_RELOCATION_REQUIRED",
+    "saved_config_changed": false,
+    "target_directory_created": false,
+    "draft_preserved": true
+  },
+  "reload_observation": {
+    "new_tab_saved_config": "PASS: Release archives field blank and no Unsaved changes indicator",
+    "in_page_reload": "UNPROVEN: custom confirm was accepted but subsequent page state remained unchanged",
+    "static_cause_candidate": "App also registers beforeunload for dirty drafts; a second navigation confirmation can interrupt reload",
+    "production_defect_proven": false
+  }
+}

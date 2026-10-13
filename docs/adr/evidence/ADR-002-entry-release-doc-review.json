@@ -1,0 +1,26 @@
+{
+  "scope": "Full content review of README and proposed 0.3.0 release notes; no installed acceptance claim",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "ca690ba94d2ee930200a6815a6e459f8de7dbcaa58e31575d704d7d242bfcc7e"
+    },
+    {
+      "path": "docs/releases/0.3.0.md",
+      "sha256": "b1dd5b61acd789641995a68cc5bf57d03cce59d66783f5577c54a1b6c5455e4c"
+    }
+  ],
+  "findings": [
+    "Clarified Python 3.11 minimum and host-local named filesystem backend contract",
+    "Bound release-note CI summary to fd86067; later commits remain independently gated"
+  ],
+  "sensitive_content": "Only example paths/identities and public repository links; no credentials, signed URLs or private user content observed",
+  "verification": {
+    "plugin_structure": "PASS at 0.3.0",
+    "diff_check": "PASS"
+  },
+  "limitations": [
+    "Document review does not prove real product, durable storage, ASC or actual installed workflow acceptance",
+    "Current head CI pending"
+  ]
+}

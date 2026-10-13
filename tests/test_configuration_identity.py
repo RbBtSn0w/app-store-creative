@@ -8,6 +8,21 @@ from artifact_lifecycle import Lifecycle
 class ConfigurationIdentityTests(unittest.TestCase):
     setUp = fixtures.ArtifactLifecycleTests.setUp
 
+    def test_storage_change_plan_preserves_readable_shared_json(self):
+        import base64
+        import json
+        from configuration_layers import load, plan_storage_change
+        config_path = self.root / 'creative.config.json'
+        config_path.write_text(json.dumps(self.cfg, indent=2) + '\n')
+        layers = load(self.root, config_path)
+        plan = plan_storage_change(layers, {'workspaceRoot': 'new work',
+                                         'releaseRoot': 'archives',
+                                         'publicationRoot': 'handoffs'})
+        payload = base64.b64decode(plan['target_bytes_base64'])
+        self.assertTrue(payload.endswith(b'\n'))
+        self.assertIn(b'\n  "', payload)
+        self.assertEqual(json.loads(payload)['storage']['workspaceRoot'], 'new work')
+
     def test_storage_changes_preserve_content_identity(self):
         first = self.store.start_run({})
         cfg = copy.deepcopy(self.cfg)

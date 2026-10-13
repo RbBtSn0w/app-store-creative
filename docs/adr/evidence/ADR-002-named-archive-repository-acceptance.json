@@ -1,0 +1,37 @@
+{
+  "owning_pr": 16,
+  "source_fix_commit": "5e41392",
+  "regression": {
+    "expected_red": "Host-local configuration rejects archiveRepositories",
+    "publication_tests": 20,
+    "configuration_tests": 91,
+    "git_retrieval_tests": 10
+  },
+  "real_product": {
+    "project_id": "levelory",
+    "delivery_id": "3633bae4b5c3496e9d16e6b3ca63bff4",
+    "publication_id": "6650e89aff2848a685c24da9108929ea",
+    "archive_commit": "4763378b868a02047448f48d1c5f1c4b8c3a3d17",
+    "archive_repository": "levelory",
+    "archive_path": "marketing/Creative/releases/levelory/MAC_OS/1.5/3633bae4b5c3496e9d16e6b3ca63bff4",
+    "manifest_sha256": "cb819b7b3d4b6b60ea68e7297e470b0697b22ac65b9eedfb8ee997543d55cd1b",
+    "retrieval_proof": {
+      "package_verified": true,
+      "recipe_verified": true,
+      "provenance_verified": true,
+      "manifest_sha256": "cb819b7b3d4b6b60ea68e7297e470b0697b22ac65b9eedfb8ee997543d55cd1b",
+      "assets_count": 12,
+      "files_count": 49,
+      "retrieval_verified": true,
+      "archive_commit": "4763378b868a02047448f48d1c5f1c4b8c3a3d17",
+      "archive_path": "marketing/Creative/releases/levelory/MAC_OS/1.5/3633bae4b5c3496e9d16e6b3ca63bff4",
+      "media_mode": "lfs",
+      "source_scope": "configured-remote",
+      "remote_name": "origin",
+      "proof": "Independent clone with no local object sharing; detached commit checkout"
+    },
+    "assets_count": 12,
+    "upload_approval": "pending",
+    "remote_write": false
+  }
+}

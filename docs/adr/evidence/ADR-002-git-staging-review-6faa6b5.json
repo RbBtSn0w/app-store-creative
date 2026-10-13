@@ -1,0 +1,26 @@
+{
+  "head": "6faa6b5eceade889d89e8d4709c7d036e2f3fd58",
+  "reviewed_files": [
+    {
+      "path": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_git_policy.py",
+      "sha256": "108ea3552622f93ef521c46e1a03d523ede0f738b7990b15437ff4cf57771e7d",
+      "scope": "Entire module; relocation_git_policy caller inspected but whole relocation module remains unreviewed"
+    }
+  ],
+  "checks": [
+    "Git environment index/worktree identity overrides removed",
+    "Repository discovery failures fail closed",
+    "Suggested rules do not alter user rules/index",
+    "Actual tracked index entries and negated ignore rules checked before staging",
+    "Separate target repositories require their own ignore rules",
+    "Prepared retries recheck live rules"
+  ],
+  "validation": {
+    "tests": 9,
+    "seconds": 1.72,
+    "result": "PASS",
+    "log_sha256": "f6dc989aa84dab4f812ec7385c7d8c68076ee450cff6168755b4b5eadb21530e"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

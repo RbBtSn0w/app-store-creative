@@ -1,0 +1,23 @@
+{
+  "source_commit": "ec69c26d9556aa5f11fd309f4e0758386ca2cffc",
+  "root": "/private/tmp/creative-ec69c26-installed-lq72sta8",
+  "source_runtime_used": false,
+  "package_sha256": "fc1dc102c5f04ab62c670b2ee9ef1dc0137e3d6e17eab0d530b180e9afd56f16",
+  "returncode": 0,
+  "log_sha256": "d8919120a8d3ce3a8dcb5678feacdcaf1fd37afadb9ef7cec3188b503a31bda5",
+  "modules": [
+    "test_validator_png_integrity",
+    "test_export_server_cleanup",
+    "test_v2_workflow",
+    "test_poster_validation",
+    "test_production_lifecycle",
+    "test_studio_release",
+    "test_studio_atomic_json",
+    "test_safe_staging",
+    "test_preview_production",
+    "test_relocation_recovery_lock",
+    "test_attempt_audit_contract",
+    "test_configuration_studio_save"
+  ],
+  "scope": "Current independent package smoke and 59 isolated runtime regressions; not complete installed real-product acceptance"
+}

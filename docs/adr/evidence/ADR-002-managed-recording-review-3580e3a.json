@@ -1,0 +1,23 @@
+{
+  "head": "3580e3adcc1e4c79295f077601ad345d49ef0b18",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py",
+  "sha256": "66b3a6cf67958707a4a3d86ebdbf0c5b69a31714345e23e20a10286bf33437e0",
+  "scope": "Entire managed_recording module; native recorder executor remains separately reviewed",
+  "checks": [
+    "Plan validated before starting execution",
+    "Recorder execution inside lease and terminal failure handler",
+    "Native and normalized bytes bound to receipt hashes",
+    "Original native capture retained as ancestor",
+    "Probe/tool/compiler identities validated and private paths replaced or hashed",
+    "Failed native/normalized outputs retained partial",
+    "Success never grants human approval"
+  ],
+  "validation": {
+    "tests": 7,
+    "seconds": 16.589,
+    "result": "PASS",
+    "log_sha256": "68ee66a54bec699d041169fb33470f309cda64c50e5d1422cde2349b9a24defe"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

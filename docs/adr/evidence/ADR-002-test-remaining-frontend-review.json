@@ -1,0 +1,21 @@
+{
+  "scope": "Complete remaining three frontend test diffs against origin/main",
+  "files": {
+    "plugins/app-store-creative/studio/src/RelocationPurgeReview.test.tsx": {
+      "sha256": "19e1ad70315bb01015e441f22f4d79c7ff782edc38c75568d43781040bae8c21",
+      "assessment": "Saved interrupted purge must be explicitly reviewed before dispatch; initial static markup only, not actual authorized deletion."
+    },
+    "plugins/app-store-creative/studio/src/components/CardView.test.tsx": {
+      "sha256": "8884033180f34276aae3ed13c5f72cdd327d08637127ce6d4bc12182c56d764c",
+      "assessment": "Added regression verifies default native Mac composition while preserving explicit non-native layout; existing copy escaping tests retained."
+    },
+    "plugins/app-store-creative/studio/src/copyFormulas.test.ts": {
+      "sha256": null,
+      "assessment": "Deleted four data-shape tests belong only to removed unused copy template module; no lifecycle verification removed."
+    }
+  },
+  "finding": "No weakened lifecycle assertion or new skip found; removed tests have removed production ownership",
+  "limitations": [
+    "Actual interactive purge review and physical render acceptance remain open"
+  ]
+}

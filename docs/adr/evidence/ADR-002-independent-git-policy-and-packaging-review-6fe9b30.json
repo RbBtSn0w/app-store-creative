@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "source_commit": "6fe9b30be3be174c0e6edf69816f0ee634ee9e11",
+  "scope": "Independent unpacked Git policy regression and full CI/package-script privacy review; not complete repository sensitive review or ADG install",
+  "package": {
+    "payload_files_compared": 245,
+    "mismatches": 0,
+    "sha256": "a1a8068becac32ba1242026a4b61cdf6ebdfda8c149f5deb8ffaf10daf8f0489"
+  },
+  "independent_tests": {
+    "tests_run": 45,
+    "duration_seconds": 5.147,
+    "status": "PASS"
+  },
+  "real_product_policy": {
+    "applied": false,
+    "gitattributes": [
+      "Marketing/Creative/releases/**/media/** filter=lfs diff=lfs merge=lfs -text"
+    ],
+    "gitignore": [
+      "/.creative/workspace/",
+      "/.creative/objects/",
+      "/Marketing/Creative/releases/.relocation-owner.json",
+      "/.creative/publications/.relocation-owner.json"
+    ],
+    "media_mode": "lfs",
+    "tracked_roots": [
+      "Marketing/Creative/releases",
+      ".creative/publications"
+    ]
+  },
+  "reviewed_files": {
+    ".github/workflows/ci.yml": "eb8e0a009feec3471edff332cce8bc85f80ecb9cf7a2ac8f5b52fd68dd61472f",
+    ".github/package_plugin.py": "b2cace4101c56c3789259f6736d78b75b2ac11a9d1ecf2dc1b142cff8a0b1ad8",
+    ".github/validate_plugin.py": "ef3addaff1e9fcccd2a196e1b338b532e21d1d4b201cb9d1b8e87ec76190ae2a",
+    "docs/git-archive-retrieval.md": "56049c0f0f0666de9313fef6a277e80245cbf25ee56d5a89a2c873e8d949d119",
+    "docs/artifact-maintenance.md": "446565ea674f298fbb9a6375fb7a606696ded4412ecc47b042f2b8a2f0d376ab",
+    "docs/artifact-operations.md": "63eba00c371c3b44989d99df443e27bf5f51dde83dd716d12e79ecda11ea5e78"
+  },
+  "manual_assessment": [
+    "CI contents permission read; no remote ASC execution or app review submission",
+    "Package probe uses owned temporary fixture state; no automatic product Git writes",
+    "Current CI and package scripts contain no actual credential or private user samples",
+    "Inherited process environment is not copied into the package; this does not certify arbitrary user-supplied plugin roots",
+    "Full Git retrieval guide read: generic paths and explicit remote scopes only; no credentials, private user samples, or upload authorization inferred from retrieval evidence."
+  ],
+  "documentation_contract": {
+    "file": "docs/artifact-maintenance.md",
+    "all_command_blocks_preserved": true,
+    "command_blocks": 12,
+    "change": "Historical trial narratives removed; current acceptance authority remains ADR implementation status",
+    "privacy_review": "Full original content plus complete current diff read; generic command paths only, no actual credential or private user sample."
+  },
+  "operational_guide_review": {
+    "file": "docs/artifact-operations.md",
+    "full_current_content_reviewed": true,
+    "all_command_blocks_preserved": true,
+    "command_blocks": 13,
+    "scope": "Full original guide and current diff; stable operational/consent contracts retained, historical trial narratives removed. No actual credential or private user sample observed."
+  },
+  "ci": {
+    "run_id": 38151690549,
+    "status": "SUCCESS",
+    "python_tests": 1050,
+    "python_skipped": 34,
+    "python_duration_seconds": 480.217,
+    "studio_tests": 98,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "distribution": "PASS",
+    "log_sha256": "1d407dd9ad44788cd38643dba82ac4ae1cece5a8bd58cd7ae5fe7e316a8ed44b"
+  }
+}

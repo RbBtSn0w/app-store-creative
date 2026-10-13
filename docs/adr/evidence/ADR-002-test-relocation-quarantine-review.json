@@ -1,0 +1,36 @@
+{
+  "scope": "Full current relocation quarantine preparation, commit and inventory tests",
+  "files": [
+    {
+      "file": "tests/test_relocation_quarantine_preparation.py",
+      "sha256": "974e3afae4cdc33e7fa236989340fc5199f8196d13b82ded9c89a269a5c941f2"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_commit.py",
+      "sha256": "4094488c6a360cdc4fe1fc307fc3892d937e5b2785f1dec1595613d3cf2974e5"
+    },
+    {
+      "file": "tests/test_relocation_quarantine_inventory.py",
+      "sha256": "e31a49a3c199635ce968b3e1b7d33369855f091005ad2609335f73372f1f7cd1"
+    }
+  ],
+  "assessment": [
+    "Preparation persists verified copy before source removal, preserves partial payload and refuses replaced inode, aliased root, foreign file or changed configuration",
+    "Complete payload resumes after injected synchronization interruption without rewriting; directory alias during creation leaves unmanaged target untouched",
+    "Commit and restore preserve source inode; stale references and reserved-name collision protect source; restoration does not overwrite foreign bytes",
+    "Interrupted commit/restore resume; partial multi-file commit can restore after reference changes and reenable reverse relocation",
+    "Inventory verifies private copy bytes, inode and proof; unknown/missing/unreadable roots never become verified zero capacity",
+    "Actual CLI and twice restarted HTTP inventory match without mutating observed files"
+  ],
+  "verification": {
+    "tests": 35,
+    "seconds": 31.909,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_relocation_quarantine_preparation test_relocation_quarantine_commit test_relocation_quarantine_inventory -q"
+  },
+  "limitations": [
+    "Injected I/O and permission failures rather than real crash or filesystem access control",
+    "Disposable single-filesystem fixtures; actual cross-volume and products separate",
+    "No permanent purge and no actual browser workflow acceptance"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "primary_customer": "levelory",
+  "iteration_scope": "Validate Levelory as the first complete creative-workflow customer, repair reusable plugin defects, and replay the same workflow",
+  "maintenance": {
+    "status": "PASS",
+    "primary_customer": "levelory",
+    "cleanup_plan_id": "88a95be80fb145d9971dad82e6599454",
+    "quarantine_operation_id": "2f15c3b4857c46a9b4c1c4da15bf60e7",
+    "objects_quarantined_and_restored": 30,
+    "bytes_quarantined_and_restored": 21960164,
+    "approved_delivery_before_during_after": "PASS",
+    "publication_before_during_after": "PASS",
+    "history": "PASS",
+    "permanent_delete": false,
+    "cross_filesystem": false,
+    "scope": "Actual Levelory trial and diagnostic objects; approved candidate closure protected; all isolated bytes restored"
+  },
+  "relocation": {
+    "status": "PASS",
+    "forward_id": "a996200431764cdcb15a59cd1c587ffc",
+    "reverse_id": "114254052b5e428d84c2f18553b1d635",
+    "effective_roots_restored": true,
+    "archive_repository_access_preserved": true,
+    "delivery": "PASS",
+    "publication": "PASS",
+    "history": "PASS",
+    "local_configuration_bytes_restored": false,
+    "local_configuration_behavior": "Explicit original root overrides after reverse, matching owning-layer configuration contract",
+    "cross_filesystem": false,
+    "source_copies_preserved": true
+  },
+  "secondary_customer_evidence": {
+    "status": "PASS",
+    "project_id": "fubiao",
+    "delivery_id": "963318daa21d4718b2038a18fd8c0ca3",
+    "diagnostic_run_id": "d7d258e0cb8843288177d81012b23bff",
+    "diagnostic_attempt_id": "3fb3c15d60ba438295f4b2e728a0668a",
+    "cleanup_plan_id": "9ce006888a7f448a943579996e5a441a",
+    "quarantine_operation_id": "eb8eec35e3244e0a819c006e7fd76a38",
+    "diagnostic_objects": 3,
+    "quarantined_objects_verified_absent": true,
+    "restored_bytes_verified": true,
+    "approved_delivery_before_during_after": "PASS",
+    "manifest_sha256": "f97c87307a077d84c4106ecdfdbfb40664199f15ec5ffa7333d047fedf189cd7",
+    "history": "PASS",
+    "permanent_delete": false,
+    "scope": "Real consuming workspace lifecycle exercise using three explicitly diagnostic owned files; not new product UI captures"
+  },
+  "current_source_recovery_tests": {
+    "process_crash_tests": 19,
+    "local_reverse_tests": 4,
+    "all_passed": true
+  },
+  "adg_install_verified": false,
+  "main_merged": false
+}

@@ -4,13 +4,13 @@
 
 Use the official ASC plugin and resolve IDs from a fresh remote read. Confirm app, version, platform, localization, screenshot display type, and preview set. Compare the upload plan hash with the upload approval. Refuse CI or an expired/mismatched approval.
 
-The local engine `upload` command is a dry-run gate and performs no ASC mutation. After it passes, translate only the approved plan operations through the official ASC plugin.
+Use `publication status` to inspect the bound plan and approval, then `publication export --id <publication-id> --confirm` to prepare the managed handoff. These commands perform no ASC mutation. After verifying the exact upload approval and fresh remote target, execute only the approved plan through the official ASC plugin.
 
 ## Partial failure
 
 1. Stop broad retries.
 2. Read remote state again and identify exactly which locale and media items succeeded.
-3. Preserve local promoted assets and hashes; do not regenerate them during recovery.
+3. Preserve sealed delivery assets and hashes; do not regenerate them during recovery.
 4. Repair the smallest failing boundary, such as one locale, ordering operation, or preview set.
 5. Rebuild the plan if remote state changed; obtain a new upload approval when plan content changes.
 6. Retry only unresolved operations, then run a fresh audit.
@@ -47,8 +47,9 @@ After delivery, inspect the current preview resource through official ASC:
   do not retry the upload or regenerate the approved material for that reason.
 
 Preserve the preview ID and poll that same asset with bounded, spaced reads.
-Report delivery, video processing, and poster-image readiness separately. Do not
-close the creative release while required playback readiness remains unverified.
+Report delivery, video processing, and poster-image readiness separately. Inspecting
+the approved video interval does not prove that the remote poster image loads. Do not
+close the creative release while required playback or poster readiness remains unverified.
 Apple notes that preview processing can take up to 24 hours:
 https://developer.apple.com/help/app-store-connect/manage-app-information/upload-app-previews-and-screenshots
 

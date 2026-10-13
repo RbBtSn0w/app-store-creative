@@ -1,0 +1,31 @@
+{
+  "scope": "Full current named test-file review",
+  "files": [
+    {
+      "file": "tests/test_forward_source_inventory.py",
+      "sha256": "fe9ad25f1a4195a3706ba090248db32348500940325b0559317c147165b58eb0"
+    },
+    {
+      "file": "tests/test_retention_dependency_contract.py",
+      "sha256": "729cd6cad7ad8848289e551c9d936f0e50bd7533671e26137c50b3248f8daf71"
+    }
+  ],
+  "assessment": [
+    "Forward source inventory binds directory identity and full-tree evidence; extra owner note is retained and same-byte replacement reports conflict",
+    "Returned active paths are not reported as verified redundant copies; returned artifact verifies and new run succeeds",
+    "Tampered source manifest prevents activation; injected unreadable source tree refuses switch before fencing",
+    "Tampered artifact commit blocks retention plan; separate dependency_closure test directly rejects a cycle"
+  ],
+  "verification": {
+    "tests_discovered": 9,
+    "tests_passed": 9,
+    "tests_skipped": 0,
+    "seconds": 4.694,
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_forward_source_inventory test_retention_dependency_contract"
+  },
+  "limitations": [
+    "Unreadable source scan and configuration sync interruption injected",
+    "Retention end-to-end cycle test fails commit integrity first; separate pure validator cycle test does not prove a freshly committed cyclic lifecycle graph",
+    "Same filesystem disposable fixtures; no real products"
+  ]
+}

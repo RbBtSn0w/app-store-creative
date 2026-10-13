@@ -21,8 +21,8 @@ describe('release state truthfulness', () => {
     expect(releaseState({ ...base, verified: true, busy: true, exporting: true })).toBe('Exporting');
     expect(releaseState({ ...base, verified: true })).toBe('Verified locally');
   });
-  it('keeps legacy file checks distinct from a reviewed render release', () => {
-    expect(releaseState({ ...base, legacyChecked: true })).toBe('Files checked');
+  it('distinguishes candidate policy checks from rendering evidence verification', () => {
+    expect(releaseState({ ...base, policyChecked: true })).toBe('Candidate checks passed');
   });
 
 });

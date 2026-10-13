@@ -1,0 +1,22 @@
+{
+  "head": "5bcf5e2330f67882957ea6c110f36eed7cbd7835",
+  "modules": [
+    "test_filesystem_permission_acceptance",
+    "test_maintenance_relocation_coordination",
+    "test_relocation_fences",
+    "test_relocation_concurrency",
+    "test_configuration_layer_changes",
+    "test_directory_exchange",
+    "test_relocation_configuration_resume",
+    "test_relocation_config_durability",
+    "test_configuration_rollback_identity"
+  ],
+  "tests_run": 50,
+  "failures": 0,
+  "errors": 0,
+  "skipped": [],
+  "success": true,
+  "elapsed_seconds": 23.278478917025495,
+  "log_sha256": "c485dd7413ee8d7718c463b66471c08876c1d59662bd2a26377ead682a78ae01",
+  "scope": "Owned temporary storage; OS permissions, path identity changes, relocation fences and maintenance coordination. Does not close real-product or browser purge acceptance."
+}

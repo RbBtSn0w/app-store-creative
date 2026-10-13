@@ -1,0 +1,77 @@
+{
+  "scope": "Fresh screenshot-only real Levelory input production under provisional archive policy; effective budget was absent",
+  "source_commit": "e12bde5",
+  "project_id": "levelory",
+  "run_id": "3b7ddbe96a144602972615a87a4e9c13",
+  "attempt_id": "2de5619fcfde4e00ab85133f83779c34",
+  "candidate_id": "252428f54ab04c61a4bfd35bd78f37ad",
+  "screenshots": 10,
+  "locales": [
+    "en-US",
+    "zh-Hans"
+  ],
+  "validation_status": "PASS",
+  "history_status": "PASS",
+  "approval_id": null,
+  "delivery_id": null,
+  "archive_policy": {
+    "schema_version": 1,
+    "mediaMode": "lfs"
+  },
+  "media_budget_bytes": null,
+  "assets": [
+    {
+      "name": "en-US/mac_16_10/01-history.png",
+      "sha256": "41138fb67ca55a1211e5aacc13b45e23e7aa49d9cc3e54911c70820c639fe9d0"
+    },
+    {
+      "name": "en-US/mac_16_10/02-quick-paste.png",
+      "sha256": "4750a5438dd27ea4fd9aa2792b4d435b7470d7aa0847234e005110391c89d889"
+    },
+    {
+      "name": "en-US/mac_16_10/03-filter.png",
+      "sha256": "89e8f3f1be199694f3381aebce3d0bc4be4e0b6833551b9f735165d3c0cfe8c8"
+    },
+    {
+      "name": "en-US/mac_16_10/04-collections.png",
+      "sha256": "0a1c6ae1148d9f6e10a6bade499d5acda709ed2ff5da4ab754f8b3cd2d27369a"
+    },
+    {
+      "name": "en-US/mac_16_10/05-settings.png",
+      "sha256": "1f1873b44c98f71c7df1f1c38a36979d4ea2cc9508af7c0185739fc207776467"
+    },
+    {
+      "name": "zh-Hans/mac_16_10/01-history.png",
+      "sha256": "d7b32843f22d76d762163a37cc86c24517bb7e538ad36221540c986180ad90f3"
+    },
+    {
+      "name": "zh-Hans/mac_16_10/02-quick-paste.png",
+      "sha256": "48db4dfd31f7766f629c2973be3ab9933d9a9a9b312730fe2aad5e5ef4ed5f78"
+    },
+    {
+      "name": "zh-Hans/mac_16_10/03-filter.png",
+      "sha256": "7f4cc1bf99df0d816e7b8db6b0fb46f9378fea6b87487fd680f7e976ac73a3f9"
+    },
+    {
+      "name": "zh-Hans/mac_16_10/04-collections.png",
+      "sha256": "3bf15693f71c53a30df0f20eaa73ae67e6bb7c9e9bd870a44587170495ef39da"
+    },
+    {
+      "name": "zh-Hans/mac_16_10/05-settings.png",
+      "sha256": "f4a24594a89c9fddd14d85c82ae2d97553787279067c98d5fefd6a7e7743a020"
+    }
+  ],
+  "observations": [
+    "Fresh import records bind ten previously captured actual product UI inputs",
+    "Sandbox process inspection failure retained as failed attempt; authorized retry creates separate successful attempt",
+    "Visual inspection of Chinese filter screenshot shows Search Clips and Copy Result remaining English",
+    "Post-production budget inspection revealed incorrectly named retentionPolicy ignored; candidate has no explicit effective budget"
+  ],
+  "limitations": [
+    "Provisional local LFS policy/budget, not chosen durable project backend or remote persistence",
+    "Reuses actual earlier UI captures; no fresh application capture and no localization correction",
+    "Screenshot-only; video/poster excluded from this new candidate",
+    "No actual human approval, seal, independent remote retrieval or ASC upload",
+    "Candidate must not be approved or sealed as budget-bound; corrected configuration requires a fresh run"
+  ]
+}

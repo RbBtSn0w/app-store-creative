@@ -1,0 +1,206 @@
+{
+  "scope": "Argument parsing only for complete single-line managed CLI examples; optional bracket notation, multiline snippets and actual execution are excluded",
+  "checked": 33,
+  "failures": [],
+  "examples": [
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "line": 29,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "line": 52,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "line": 53,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "line": 54,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md",
+      "line": 60,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-preview-producer/SKILL.md",
+      "line": 27,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-preview-producer/SKILL.md",
+      "line": 37,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md",
+      "line": 19,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md",
+      "line": 20,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md",
+      "line": 21,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 15,
+      "status": "HELP",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 16,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 37,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 38,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 39,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 40,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 41,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 42,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/SKILL.md",
+      "line": 43,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md",
+      "line": 12,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md",
+      "line": 13,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md",
+      "line": 14,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md",
+      "line": 8,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md",
+      "line": 9,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md",
+      "line": 17,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md",
+      "line": 18,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 42,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 43,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 59,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 60,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 61,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 62,
+      "status": "PASS",
+      "error": ""
+    },
+    {
+      "file": "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md",
+      "line": 63,
+      "status": "PASS",
+      "error": ""
+    }
+  ],
+  "parser_sha256": "a9821e24e487a0bc3eaef5e4a53430400136e6f6e1ea2bdcc5aea0093cddc4e8"
+}

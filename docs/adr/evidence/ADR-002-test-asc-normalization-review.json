@@ -1,0 +1,31 @@
+{
+  "scope": "Full current ASC response adapter and normalization CLI tests",
+  "files": [
+    {
+      "file": "tests/test_asc_observation_adapter.py",
+      "sha256": "f6d15c00db240b5dbecfb8e978a65cbf23a801f56bb4a2bdb91e6e5480382a64"
+    },
+    {
+      "file": "tests/test_asc_observation_cli.py",
+      "sha256": "072772417b24d9afc3ce13d9f64845e39543b1fe609307ec72af015910a6d680"
+    }
+  ],
+  "assessment": [
+    "COMPLETE processing and matching upload checksum do not imply playback; zero-size poster explicitly fails while positive dimensions alone do not prove image load",
+    "Foreign localization, duplicate remote id, target/artifact scope rejected; missing remote id reports absence only",
+    "Actual normalization CLI preserves full fixture filesystem snapshot and declares remote_write false",
+    "Normalized observations bind raw response hash and exact plan hash, accepted by observation core with poster FAIL separate from upload/processing PASS",
+    "FIFO evidence/response rejected without blocking or creating lifecycle workspace"
+  ],
+  "verification": {
+    "tests": 10,
+    "seconds": 0.451,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_asc_observation_adapter test_asc_observation_cli -q"
+  },
+  "limitations": [
+    "Synthetic ASC responses; no actual remote read/write or current poster diagnosis",
+    "Private evidence redaction not asserted by these files; separate privacy contract required",
+    "FIFO tests use short two-second startup deadline; no induced slow-launch acceptance"
+  ]
+}

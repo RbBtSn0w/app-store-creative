@@ -1,0 +1,33 @@
+{
+  "scope": "Full current reverse switch and rollback test review",
+  "files": [
+    {
+      "file": "tests/test_reverse_relocation_switch.py",
+      "sha256": "201a9fea4d22c6e35dfe4c6f1ca10727e36da404dba79397f14c66cf757ddbd9"
+    },
+    {
+      "file": "tests/test_reverse_relocation_rollback.py",
+      "sha256": "6c6052c6978b4bc8f10f1e91a1879f6bef26744b52fd74baafeef8cc84deadf4"
+    }
+  ],
+  "assessment": [
+    "Return to occupied original roots preserves new runs/media, retained backups and explicit active storage binding; old source remains fenced",
+    "Object-only return preserves shared workspace and added object; completed recovery readonly for JSON records",
+    "Interrupted exchange, intent, fence receipt and configuration sync resume without swapping twice; inactive target cannot start runs",
+    "Changed preserved copy, target configuration or activation binding refuses execution without unapproved target creation",
+    "Rollback restores source config/runs/artifacts, preserves staging, retries interruption and permits fresh reverse plan",
+    "Activated reverse rejects rollback; foreign fence, edited config or modified backup refuses directory restoration",
+    "Public CLI switch/resume/rollback verifies explicit source authority"
+  ],
+  "verification": {
+    "tests": 23,
+    "seconds": 36.33,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_reverse_relocation_switch test_reverse_relocation_rollback -q"
+  },
+  "limitations": [
+    "Injected interruption rather than process termination; process-death matrix reviewed separately",
+    "Readonly completed recovery snapshot covers JSON records rather than every media file",
+    "Disposable same-filesystem fixtures; real products, cross-volume and browser acceptance remain open"
+  ]
+}

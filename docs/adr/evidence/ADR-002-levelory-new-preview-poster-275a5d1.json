@@ -1,0 +1,58 @@
+{
+  "scope": "Actual fresh managed encoding and poster extraction from previously captured real Levelory window",
+  "source_commit": "275a5d1",
+  "preview": {
+    "approval_granted": false,
+    "artifact_ids": [
+      "ce4dd874e4dc4cd9a7a9a743f6854950",
+      "d96eb3ba43b04cb9a366fdf413b864df",
+      "7d95b6aec2d343c6856bced6d42dc277"
+    ],
+    "attempt_id": "a697dd02c5644a08aadf190ecfa01515",
+    "preview_artifact_id": "ce4dd874e4dc4cd9a7a9a743f6854950",
+    "run_id": "cac53501dec547448bc995c6b8812d3a",
+    "status": "succeeded"
+  },
+  "poster": {
+    "approval_granted": false,
+    "attempt_id": "a1fc4a03d6a14dfea36dd1fe9b242d0b",
+    "evidence_artifact_id": "915a874b6f744cc6aa26c099b33c7dd8",
+    "poster_artifact_id": "f742e1bcabf44ac4bf8b1526ce04db33",
+    "run_id": "cac53501dec547448bc995c6b8812d3a",
+    "status": "succeeded"
+  },
+  "import_mapping": {
+    "4e379d920b53413085866dc1c34ec874": "cc6fc6667cf64448ab8254660be52459",
+    "e666aabf4e6040d98e6efd16652683f9": "8a37dc24f5cb42b691dc3886f62553a8",
+    "56e24ce497da4152844e96f88a641e33": "591e38af2242428d90d9e8b9778877c6",
+    "930326e6598345f7be77c90314a308a3": "6b7a330aef554cf29dd17df9ac027fb8"
+  },
+  "preview_dependency_count": 9,
+  "history_status": "PASS",
+  "limitations": [
+    "Earlier actual recording reused with dependencies preserved, not a new app capture",
+    "Current run screenshot configuration disables preview matrix; outputs not yet combined into an approved full release candidate",
+    "No human approval, seal, durable remote retrieval or ASC verification",
+    "Visual check is representative-frame inspection, not complete video playback acceptance"
+  ],
+  "media_check": {
+    "duration_seconds": 20.0,
+    "video": [
+      {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "30/1",
+        "pix_fmt": "yuv420p"
+      }
+    ],
+    "audio_codecs": [
+      "aac"
+    ]
+  },
+  "visual_observations": [
+    "Six-frame contact sheet shows actual filter mode activation, filter menu, uppercase selection and before/after result",
+    "Selected 17-second poster shows uppercase result with unclipped English sidebar label",
+    "Contact sheet alone does not prove every intermediate frame or full pacing"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "Full current Studio HTTP maintenance and reverse recovery tests",
+  "files": [
+    {
+      "file": "tests/test_studio_reverse_recovery.py",
+      "sha256": "3a88efaacfebe071a081b996eca78f4324300f2889d0cc981149c0fe99205c06"
+    },
+    {
+      "file": "tests/test_studio_relocation_maintenance.py",
+      "sha256": "3742737520eae97e442da7fca60bb192f408fe134ba399936dda5804160e34d9"
+    }
+  ],
+  "assessment": [
+    "HTTP reverse recovery rejects forward endpoint, then resumes/rolls back using explicit source and preserves artifacts/runs",
+    "HTTP plan/prepare/commit/restore keeps active object valid and reports exact source files and phases",
+    "Wrong confirmation, blank actor, unknown/query workspace override or invalid retention rejects while retaining source bytes",
+    "Preparation resume preserves copy inode; cancellation blocks later commit; partial-copy resume refuses overwrite",
+    "Fixture-only purge requires expired retention and exact PURGE confirmation; active recovery copy retained",
+    "Interrupted fixture deletion reloads exact plan after server restart, rejects replacement plan and resumes remaining deletion"
+  ],
+  "verification": {
+    "tests": 8,
+    "seconds": 13.033,
+    "result": "passed",
+    "command": "PYTHONPATH=tests:plugins/app-store-creative/scripts python3 -W error::ResourceWarning -m unittest test_studio_reverse_recovery test_studio_relocation_maintenance -q"
+  },
+  "limitations": [
+    "HTTP service only, not actual browser interaction",
+    "Disposable test purge does not grant real product deletion approval",
+    "Injected I/O failures and same-filesystem fixtures; real products and cross-volume acceptance remain open"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "base_head": "2e5384e",
+  "reviewed_file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_contract.py",
+  "sha256": "8aa06352e44f9fabb5f56a435ca05cca2d80660f2b49d70b99583715d93e19b7",
+  "scope": "Entire Studio contract module; server, frontend and publication acceptance remain separate scopes",
+  "finding": {
+    "red": "Failed config replacement deleted a substituted owner temporary file.",
+    "fix": "Pin temporary inode and verify before replacement; cleanup only the matching created file."
+  },
+  "checks": [
+    "Stable card/project/locale identifiers and explicit localization inheritance",
+    "Managed input snapshot hash and regular-file mapping verified",
+    "Ordinary local sources constrained to project root",
+    "PNG checksums, bounded pixel/scanline decompression and JPEG decode bounds inspected",
+    "Configuration writes preserve owner replacements on error"
+  ],
+  "validation": {
+    "tests": 21,
+    "seconds": 5.245,
+    "result": "PASS",
+    "log_sha256": "a7af89592f854bad2b150b35501b6143e26fdbf33ebaa5a15c0c63ea22ded788",
+    "scope": "Temporary cleanup, status inputs, Studio saves/imports and managed input lifecycle"
+  },
+  "overall_review_complete": false
+}

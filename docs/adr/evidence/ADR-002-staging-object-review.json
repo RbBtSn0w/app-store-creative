@@ -1,0 +1,24 @@
+{
+  "base_head": "dfe3ba7",
+  "files": {
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py": "594df0ee5784673b188619526cda86f3c2bc242e598198f03a9b3551440ffb56",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_object_observations.py": "d67264e58f7cbd697ce5543153d3036b47e5adb9eb89b35c47f78e3deea64e2c"
+  },
+  "scope": "Entire staging inventory and relocated object observations; full relocation executors remain separate scope",
+  "checks": [
+    "Missing existing target read lock remains UNKNOWN without creating state",
+    "Object byte integrity independent of target activation proof",
+    "Target plan and copied object hashes rechecked under existing read lock",
+    "Staging phase, ownership marker and pinned directory inode verified",
+    "Published pending targets and exchange backups observed at actual locations",
+    "Unknown bytes and same-byte directory replacements remain visible and block recovery"
+  ],
+  "validation": {
+    "tests": 42,
+    "seconds": 58.387,
+    "result": "PASS",
+    "log_sha256": "5507f83e64d158a117e3f5fc828dbb72f8fd93730f5b9bec1cc0988c552cbe32"
+  },
+  "new_findings": [],
+  "overall_review_complete": false
+}

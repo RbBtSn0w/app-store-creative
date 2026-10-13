@@ -1,0 +1,31 @@
+{
+  "scope": "Full lifecycle_commands.py static review",
+  "runtime_sha256": "a9821e24e487a0bc3eaef5e4a53430400136e6f6e1ea2bdcc5aea0093cddc4e8",
+  "reviewed": [
+    "All command parsers and action-specific confirmations",
+    "Shared Lifecycle.from_configuration dispatch",
+    "Relative project/config/input paths and explicit absolute external backend contract",
+    "Lease tokens, artifact dependencies, retry identities and approval references",
+    "Read-only archive/observation adapters and separated remote-write authorization",
+    "Forward/reverse recovery source selection and cleanup delegated core operations"
+  ],
+  "new_defects": [],
+  "verification": {
+    "tests": 22,
+    "seconds": 10.528,
+    "result": "PASS",
+    "modules": [
+      "test_configuration_cli",
+      "test_asc_observation_cli",
+      "test_relocation_recovery_cli",
+      "test_relocation_switch_cli",
+      "test_external_publication",
+      "test_external_reference_contract",
+      "test_studio_maintenance"
+    ]
+  },
+  "limitations": [
+    "Not every delegated operation receives new execution evidence here",
+    "No real ASC upload or real product acceptance"
+  ]
+}
