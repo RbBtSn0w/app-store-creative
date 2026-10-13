@@ -3,6 +3,20 @@ import { readHistory } from './historyRequest';
 import { PublicationHandoff } from './PublicationHandoff';
 
 type Plan = { id: string; created_at: string; delivery_id: string; target: { app_id: string; version_id: string; platform: string } };
+export function parsePublicationPlans(value: unknown): { publications: Plan[]; next_cursor: string | null } {
+  const data = value as { publications?: unknown; next_cursor?: unknown } | null;
+  if (!data || !Array.isArray(data.publications) ||
+      !(data.next_cursor === null || typeof data.next_cursor === 'string')) throw new Error('Invalid publication response');
+  for (const item of data.publications) {
+    const row = item as Plan | null;
+    if (!row || typeof row.id !== 'string' || !row.id || typeof row.delivery_id !== 'string' || !row.delivery_id ||
+        typeof row.created_at !== 'string' || !Number.isFinite(Date.parse(row.created_at)) || !row.target ||
+        ![row.target.app_id, row.target.version_id, row.target.platform].every(value => typeof value === 'string' && value.length > 0)) {
+      throw new Error('Invalid publication plan');
+    }
+  }
+  return data as { publications: Plan[]; next_cursor: string | null };
+}
 type Custody = { records: { evidence_id: string; observation_id: string; producer_succeeded: boolean }[]; versions: { id: string; reference: { backend: string; version: string } }[]; errors: string[] };
 type Detail = { evidence_custody?: Custody; status: string; remote_verified: boolean; archive_verified?: boolean; retrieval_verified?: boolean;
   upload_approval?: string; gates: { artifact_id: string; gate: string; status: string }[] };
@@ -44,8 +58,7 @@ export function PublicationHistory() {
     const request = ++generation.current; setBusy(true); setError(''); setDetail(null);
     if (!more) { setPlans([]); setCursor(null); setLoaded(false); setSelected(''); }
     try {
-      const data = await readHistory<{publications: Plan[]; next_cursor: string | null}>('/api/publications?limit=20' + (more && cursor ? '&cursor=' + encodeURIComponent(cursor) : ''), 'publication plans');
-      if (!Array.isArray(data.publications)) throw new Error('Invalid publication response');
+      const data = parsePublicationPlans(await readHistory<unknown>('/api/publications?limit=20' + (more && cursor ? '&cursor=' + encodeURIComponent(cursor) : ''), 'publication plans'));
       if (request === generation.current) { setPlans(current => more ? [...current, ...data.publications] : data.publications); setCursor(data.next_cursor); setLoaded(true); }
     } catch (failure) { if (request === generation.current) setError((failure as Error).message); }
     finally { if (request === generation.current) setBusy(false); }
