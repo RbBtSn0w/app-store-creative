@@ -1,0 +1,11 @@
+{
+  "name": "app-store-creative-release",
+  "private": true,
+  "scripts": {
+    "release": "semantic-release",
+    "test:release": "node --test .github/release.test.cjs"
+  },
+  "devDependencies": {
+    "semantic-release": "25.0.9"
+  }
+}

@@ -1,5 +1,8 @@
 # App Store Creative
 
+GitHub release automation and versioned plugin ZIP installation are documented in
+[Automated GitHub releases](docs/releases/automation.md).
+
 App Store Creative prepares App Store screenshots, preview videos, posters, and their provenance through one local artifact lifecycle. CLI, Studio, and agents share immutable records, leased production attempts, content-addressed media, candidate validation, human approvals, and sealed delivery archives. The official ASC plugin owns App Store Connect authentication and remote execution.
 
 The unified redesign is under development on `feat/unified-artifact-lifecycle-v2`; it is not a completed release. See [implementation status](docs/adr/ADR-002-implementation-status.md) and the [delivery closure audit](docs/adr/ADR-002-delivery-closure.md) for remaining gates. The new contract has no historical compatibility requirement. Old task commands, release manifests, and standalone validation/publication writes are removed; existing consumer files are not automatically migrated or deleted.
