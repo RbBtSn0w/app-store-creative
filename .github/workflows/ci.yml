@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -47,3 +51,54 @@ jobs:
 
       - name: Smoke-test complete plugin distribution
         run: python3 .github/package_plugin.py --output /tmp/app-store-creative.zip
+
+      - name: Setup release Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Validate release tooling
+        run: |
+          npm ci --ignore-scripts
+          npm run test:release
+
+      - name: Preserve validated distribution
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: validated-plugin-${{ github.sha }}
+          path: /tmp/app-store-creative.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --ignore-scripts
+      - name: Retrieve validated distribution
+        uses: actions/download-artifact@v4
+        with:
+          name: validated-plugin-${{ github.sha }}
+          path: .build/validated
+      - name: Extract validated distribution
+        run: python3 -m zipfile -e .build/validated/app-store-creative.zip .build/validated
+      - name: Publish plugin release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release
