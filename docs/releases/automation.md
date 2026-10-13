@@ -18,7 +18,8 @@ Actions artifact named for the triggering SHA. The release job downloads that
 artifact from the same workflow run instead of using the checkout's tracked Studio
 build. Missing artifacts fail the release rather than falling back to source.
 The prepare hook copies that validated plugin into temporary staging, stamps both
-plugin manifests with the calculated version, and runs the existing isolated
+plugin manifests with the calculated version while preserving their other bytes,
+including whitespace and nested version properties, and runs the existing isolated
 package smoke checks. GitHub receives `app-store-creative.zip` and generated release
 notes. Source manifests describe the development snapshot; the release ZIP is the
 versioned installation artifact. GitHub's automatic source archives retain source
@@ -28,6 +29,8 @@ or ASC operation is performed. No release commit is written back to main.
 Only `contents: write` is granted to the release job. Issue creation, PR comments,
 and release labels are disabled. Repository rules must permit the Actions token
 to create release tags; no branch-protection bypass is configured.
+The release checkout does not persist credentials, release tooling installs with
+lifecycle scripts disabled, and only the publish step receives `GITHUB_TOKEN`.
 
 Dependency audit at integration reported 12 transitive advisories (10 high,
 2 moderate) even with semantic-release 25.0.9. Compatible `npm audit fix` did not
@@ -40,7 +43,7 @@ releases. The locked toolchain is not claimed to be vulnerability-free.
 Local verification:
 
 ```sh
-npm ci
+npm ci --ignore-scripts
 npm run test:release
 npm run release -- --dry-run
 ```

@@ -51,7 +51,7 @@ test('release staging stamps both manifests and preserves source and runtime', a
     for (const path of ['.agents', '.codex-plugin', 'node_modules']) {
       await mkdir(join(source, path), {recursive: true});
     }
-    const original = JSON.stringify({name: 'app-store-creative', version: '0.3.0'});
+    const original = '{\n\t"metadata": {"version": "unchanged"},\n\t"name": "app-store-creative",\n\t"version"  :  "0.3.0"\n}\n\n';
     for (const path of ['.agents/.plugin.json', '.codex-plugin/plugin.json']) {
       await writeFile(join(source, path), original);
     }
@@ -61,6 +61,7 @@ test('release staging stamps both manifests and preserves source and runtime', a
     await stagePlugin(source, destination, '1.2.3');
     for (const path of ['.agents/.plugin.json', '.codex-plugin/plugin.json']) {
       assert.equal(JSON.parse(await readFile(join(destination, path))).version, '1.2.3');
+      assert.equal(await readFile(join(destination, path), 'utf8'), original.replace('"0.3.0"', '"1.2.3"'));
       assert.equal(await readFile(join(source, path), 'utf8'), original);
     }
     assert.deepEqual(await readFile(join(destination, 'runtime.py')), await readFile(join(source, 'runtime.py')));
