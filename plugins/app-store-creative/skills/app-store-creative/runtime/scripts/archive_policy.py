@@ -3,6 +3,8 @@ import re
 
 
 def resolve(config, *, required=False):
+    if not isinstance(config, dict):
+        raise ValueError('Archive configuration must be an object')
     if 'archivePolicy' not in config:
         if required:
             raise ValueError('An explicit archive policy is required')
