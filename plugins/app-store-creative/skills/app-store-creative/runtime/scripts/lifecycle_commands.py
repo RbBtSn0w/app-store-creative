@@ -345,11 +345,11 @@ def execute(args):
     if args.command == 'archive' and args.action == 'verify-external-git':
         from external_delivery_archive import verify_external_git
         return verify_external_git(root, args.commit, args.path, args.expected_sha256,
-                                   args.backend, args.backend_root, args.remote)
+                                   args.backend, local(args.backend_root), args.remote)
     if args.command == 'archive' and args.action == 'restore-external':
         from external_delivery_archive import restore_external
         return restore_external(local(args.path), local(args.destination), args.backend,
-                                args.backend_root, args.expected_sha256)
+                                local(args.backend_root), args.expected_sha256)
     if args.command == 'archive' and args.action == 'externalize':
         core = Lifecycle.from_configuration(root, local(args.config or Path('creative.config.json')))
         return core.export_external_delivery(args.delivery_id, args.backend, args.backend_root)

@@ -67,7 +67,7 @@ class ExternalDeliveryArchiveTests(unittest.TestCase):
         shutil.rmtree(delivery['local_path']);shutil.rmtree(self.store.paths.workspace)
         restored=subprocess.run([sys.executable,str(cli),'archive','restore-external','--repo',str(clone),
             '--path','bundle','--destination','restored','--expected-sha256',saved['descriptor_sha256'],
-            '--backend','team','--backend-root',str(self.root/'backend'),'--confirm','RESTORE'],
+            '--backend','team','--backend-root','../backend','--confirm','RESTORE'],
             check=True,capture_output=True,text=True)
         self.assertTrue(json.loads(restored.stdout)['external_retrieval_verified'])
         self.assertEqual(verify_archive(clone/'restored')['manifest_sha256'],delivery['manifest_sha256'])
