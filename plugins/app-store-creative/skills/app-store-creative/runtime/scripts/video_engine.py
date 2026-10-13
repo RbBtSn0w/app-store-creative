@@ -3,6 +3,7 @@
 
 import json
 import sys
+import subprocess
 import produce_app_preview
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -67,6 +68,12 @@ def produce_preview_from_config(
     print(f"🎬 Producing App Preview video ({width}x{height} @ {fps}fps, {duration}s)...", file=sys.stderr)
     receipt = target_out.with_suffix('.receipt.json')
     frames = target_out.with_suffix('.frames.png')
-    result = produce_app_preview.execute(contract, target_out, receipt, frames)
+    try:
+        result = produce_app_preview.execute(contract, target_out, receipt, frames)
+    except subprocess.CalledProcessError as error:
+        diagnostic = error.stderr or error.stdout or 'No encoder diagnostic output'
+        if isinstance(diagnostic, bytes):
+            diagnostic = diagnostic.decode('utf-8', errors='replace')
+        raise RuntimeError(f'App Preview encoder failed ({error.returncode}): {diagnostic[-4096:]}') from error
     return {"path": str(target_out), "probe": result["output"]["probe"],
             "receipt_path": str(receipt), "frames_path": str(frames)}

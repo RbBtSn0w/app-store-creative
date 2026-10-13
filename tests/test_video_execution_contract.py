@@ -142,3 +142,15 @@ class VideoExecutionContractTests(unittest.TestCase):
                 self.assertEqual(details['failure_type'], type(failure).__name__)
                 self.assertEqual(details['status'], status)
                 self.assertEqual(list((core.paths.workspace / 'records/candidates').glob('*.json')), [])
+
+    def test_encoder_failure_preserves_bounded_diagnostic_message(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'capture.mov').write_bytes(b'fixture')
+            (root/'creative.config.json').write_text(json.dumps({'previewVideo': {
+                'enabled': True, 'source': 'capture.mov'}}))
+            error = subprocess.CalledProcessError(1, ['ffmpeg'], stderr=b'encoder rejected invalid pixel format')
+            with mock.patch('produce_app_preview.execute', side_effect=error):
+                with self.assertRaisesRegex(RuntimeError, 'invalid pixel format'):
+                    video_engine.produce_preview_from_config(root)
