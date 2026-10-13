@@ -42,6 +42,7 @@ class StagedFile:
     def publish(self, destination):
         destination = Path(destination)
         self.check_directory()
+        self.sync()
         current = os.stat(self.name, dir_fd=self.descriptor, follow_symlinks=False)
         if not stat.S_ISREG(current.st_mode) or identity(current) != self.file_identity:
             raise ValueError('Staged file identity changed')

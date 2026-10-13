@@ -45,3 +45,12 @@ class SafeStagingTests(unittest.TestCase):
                     digest, size = staged.inspect()
                 self.assertEqual(digest, hashlib.sha256(b'portable staged bytes').hexdigest())
                 self.assertEqual(size, len(b'portable staged bytes'))
+
+    def test_publish_flushes_buffered_bytes_without_explicit_sync(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            destination = root / 'published'
+            with staged_file(root) as staged:
+                staged.stream.write(b'buffered producer bytes')
+                staged.publish(destination)
+                self.assertEqual(destination.read_bytes(), b'buffered producer bytes')
