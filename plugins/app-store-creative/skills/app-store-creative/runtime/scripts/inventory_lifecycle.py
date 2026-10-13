@@ -2,26 +2,46 @@
 import os
 from pathlib import Path
 import re
+import stat
 
 
-def files_without_links(root):
+def files_without_links(root, strict=False):
     files, links = [], []
-    if root.is_symlink():
-        return [], [root]
-    if not root.exists():
-        return files, links
-    for directory, children, names in os.walk(root, followlinks=False):
+    if strict:
+        try:
+            info = root.lstat()
+        except FileNotFoundError:
+            return files, links
+        if stat.S_ISLNK(info.st_mode):
+            return [], [root]
+        if not stat.S_ISDIR(info.st_mode):
+            raise NotADirectoryError(str(root))
+    else:
+        if root.is_symlink():
+            return [], [root]
+        if not root.exists():
+            return files, links
+    def scan_error(error):
+        if strict:
+            raise error
+    for directory, children, names in os.walk(root, followlinks=False, onerror=scan_error):
         base = Path(directory)
         for name in list(children):
             path = base / name
-            if path.is_symlink():
+            linked = stat.S_ISLNK(path.lstat().st_mode) if strict else path.is_symlink()
+            if linked:
                 links.append(path); children.remove(name)
         for name in names:
             path = base / name
-            if path.is_symlink():
+            info = path.lstat() if strict else None
+            linked = stat.S_ISLNK(info.st_mode) if strict else path.is_symlink()
+            regular = stat.S_ISREG(info.st_mode) if strict else path.is_file()
+            if linked:
                 links.append(path)
-            elif path.is_file():
+            elif regular:
                 files.append(path)
+            elif strict:
+                raise ValueError('Unsupported storage entry: ' + str(path))
     return files, links
 
 
