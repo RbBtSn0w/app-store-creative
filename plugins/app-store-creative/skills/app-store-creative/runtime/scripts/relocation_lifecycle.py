@@ -39,7 +39,7 @@ class RelocationOperations:
             raise ValueError('Relocation destination is inactive; switch recovery is required') from error
         if (activation.get('to') != binding or switched.get('to') != binding
                 or switched.get('status') != 'SWITCHED'
-                or switched.get('config_path') != str(self.config_path)
+                or not self._configuration_authority_matches(switched.get('config_path'))
                 or switched.get('project_id') != self.config.get('project', {}).get('id')
                 or hashlib.sha256(canonical(switched)).hexdigest() != activation.get('switch_sha256')):
             raise ValueError('Relocation destination is inactive; activation evidence does not match')
@@ -105,6 +105,10 @@ class RelocationOperations:
             'project_id': self.config.get('project', {}).get('id'),
             'prepared_sha256': hashlib.sha256(canonical(prepared)).hexdigest()}, plan_id)
 
+    def _configuration_authority_matches(self, path):
+        from configuration_location import authority_matches
+        return authority_matches(self, path)
+
     def resolve_storage_binding(self, binding):
         """Resolve immutable historical bindings through verified switch receipts."""
         from artifact_lifecycle import canonical
@@ -129,7 +133,7 @@ class RelocationOperations:
                     or switched.get('status') != 'SWITCHED'
                     or switched.get('from') != binding or switched.get('to') != edge.get('to')
                     or switched.get('project_id') != self.config.get('project', {}).get('id')
-                    or switched.get('config_path') != str(self.config_path)
+                    or not self._configuration_authority_matches(switched.get('config_path'))
                     or hashlib.sha256(canonical(switched)).hexdigest() != edge.get('switch_sha256')):
                 raise ValueError('Storage binding evidence does not match')
             binding = edge['to']
@@ -915,7 +919,7 @@ class RelocationOperations:
                 field = 'to' if category == 'storage-activations' else 'from'
                 if (old.get('status') != 'SWITCHED' or old.get(field) != binding
                         or previous.get(field) != binding or previous.get('to') != old.get('to')
-                        or old.get('config_path') != str(self.config_path)
+                        or not self._configuration_authority_matches(old.get('config_path'))
                         or old.get('project_id') != self.config.get('project', {}).get('id')
                         or hashlib.sha256(canonical(old)).hexdigest() != previous.get('switch_sha256')):
                     raise ValueError('Relocation previous control receipt differs')
