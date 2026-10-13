@@ -37,3 +37,13 @@ it('preserves budget on invalid input but accepts intentional clearing and valid
   handler({ target: { value: '1000', valueAsNumber: 1000, validity: { badInput: false } } });
   expect(change).toHaveBeenLastCalledWith(1000);
 });
+
+it('shows an inline error for an invalid external backend', () => {
+  for (const backend of ['', 'file:/private', 'a'.repeat(65)]) {
+    const html = renderToStaticMarkup(<ArchivePolicySettings policy={{schema_version:1, mediaMode:'external', backend}} onChange={() => {}} />);
+    expect(html).toContain('Enter a valid backend name before saving');
+    expect(html).toContain('role="alert"');
+  }
+  const html = renderToStaticMarkup(<ArchivePolicySettings policy={{schema_version:1, mediaMode:'external', backend:'team'}} onChange={() => {}} />);
+  expect(html).not.toContain('role="alert"');
+});

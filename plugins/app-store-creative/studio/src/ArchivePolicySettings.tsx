@@ -32,6 +32,7 @@ export function ArchivePolicySettings({ policy, onChange, budget, onBudgetChange
     {policy?.mediaMode === 'external' && <>
       <label>Backend name<input disabled={disabled} required pattern="[A-Za-z0-9][A-Za-z0-9_.-]{0,63}" value={policy.backend}
         onChange={event => onChange({ ...policy, backend: event.target.value })} /></label>
+      {!/^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/.test(policy.backend) && <p role="alert">Enter a valid backend name before saving.</p>}
       <p className="text-sm text-white/60">Use the shared name of an existing backend. Its access location is configured privately on this computer.</p>
     </>}
   </section>;
