@@ -43,16 +43,17 @@ def record(core, run_id, bundle_id, window_id, duration, width, height, fps, log
                 raise ValueError('Normalization is not bound to native and normalized bytes')
             from recording_adapters import validate_native_recording_probe, validate_normalization_tools
             validate_native_recording_probe(plan, normalization['native_probe'])
+            normalization_tools = validate_normalization_tools(normalization['tools'])
+            execution_identity = validate_execution_identity(raw.get('execution_identity'))
+            validate_recording_probe(plan, raw['output']['probe'])
             native_artifact = core.register(attempt['id'], native_output, 'capture',
                 logical_path=str(Path(logical_path).with_suffix('.native.mov')))
             native_probe = portable_probe(normalization['native_probe'])
             native_probe.get('format', {}).pop('filename', None)
             portable_normalization = {'native_sha256': normalization['native_sha256'],
                 'output_sha256': normalization['output_sha256'], 'native_probe': native_probe,
-                'tools': validate_normalization_tools(normalization['tools']),
+                'tools': normalization_tools,
                 'command_sha256': hashlib.sha256(canonical(normalization['command'])).hexdigest()}
-            execution_identity = validate_execution_identity(raw.get('execution_identity'))
-            validate_recording_probe(plan, raw['output']['probe'])
             portable_path='recipe/inputs/'+logical_path
             probe=portable_probe(raw['output']['probe'])
             if 'filename' in probe.get('format',{}):
