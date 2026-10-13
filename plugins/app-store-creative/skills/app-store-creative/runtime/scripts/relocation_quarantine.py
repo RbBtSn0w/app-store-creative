@@ -171,7 +171,7 @@ def resume(core, operation_id, actor, reason):
         for suffix in ('preparation-cancelled', 'commit-intent', 'purge-intent'):
             marker = core._path('maintenance', operation_id, suffix)
             if marker.exists() or marker.is_symlink():
-                raise ValueError('Quarantine preparation is no longer resumable')
+                raise ValueError('Quarantine preparation is cancelled or no longer resumable')
         result = _attempt(core, operation)
         if not core._path('maintenance', operation_id, 'preparation-resumed').exists():
             core._record('maintenance', {'id': operation_id, 'actor': actor, 'reason': reason}, 'preparation-resumed')
