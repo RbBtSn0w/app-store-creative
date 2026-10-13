@@ -111,3 +111,14 @@ class CaptureArtifactImportTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     core.import_capture_artifact(artifact['id'], 'fixture')
                 self.assertEqual(set((core.paths.workspace/'records/runs').glob('*.json')), before)
+
+    def test_unfinished_acquisition_has_domain_error_without_new_run(self):
+        core = Lifecycle.from_configuration(self.root, self.cfg)
+        run = core.start_run({'stage': 'capture'})
+        attempt = core.start_attempt(run['id'], 'capture', 'fixture')
+        artifact = core.register(attempt['id'], self.root/'capture.png', 'capture',
+                                 logical_path='acquisition/capture.png')
+        before = set((core.paths.workspace/'records/runs').glob('*.json'))
+        with self.assertRaisesRegex(ValueError, 'did not succeed'):
+            core.import_capture_artifact(artifact['id'], 'fixture')
+        self.assertEqual(set((core.paths.workspace/'records/runs').glob('*.json')), before)

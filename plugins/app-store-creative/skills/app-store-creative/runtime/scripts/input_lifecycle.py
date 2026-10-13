@@ -26,6 +26,9 @@ class InputOperations:
             raise ValueError('Input requires a complete capture artifact')
         if not artifact.get('logical_path'):
             raise ValueError('Capture import requires an archival logical path')
+        outcome_path = self._path('attempts', artifact['attempt_id'], 'outcome')
+        if not outcome_path.exists() and not outcome_path.is_symlink():
+            raise ValueError('Capture acquisition did not succeed')
         outcome = self._read('attempts', artifact['attempt_id'], 'outcome')
         if outcome['status'] != 'succeeded':
             raise ValueError('Capture acquisition did not succeed')
