@@ -171,6 +171,8 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         self._assert_paths()
         self._check_storage_write_fence()
         self._check_storage_activation()
+        from configuration_location import check_source_write_fence, authority_matches
+        check_source_write_fence(self)
         self._live_configuration()
         self.paths.workspace.mkdir(parents=True, exist_ok=True)
         owner = self.paths.workspace / 'owner.json'
@@ -193,17 +195,24 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                 raise ValueError('Workspace lock identity changed')
             self._check_storage_write_fence()
             self._check_storage_activation()
+            check_source_write_fence(self)
             self._live_configuration()
             from configuration_layers import _read_regular
             identity = {'project': str(self.paths.project), 'project_id': self.config.get('project', {}).get('id')}
             if owner.exists():
-                if json.loads(_read_regular(owner)) != identity:
+                recorded_owner = json.loads(_read_regular(owner))
+                recorded_authority = json.loads(_read_regular(authority)) if authority.exists() else {}
+                if (recorded_owner != identity and (
+                        recorded_owner.get('project_id') != identity['project_id']
+                        or not authority_matches(self, recorded_authority.get('config_path'),
+                                                 recorded_owner.get('project')))):
                     raise ValueError('Workspace is owned by another project')
             else:
                 self._write_path(owner, identity)
             configuration = {'config_path': str(self.config_path)}
             if authority.exists():
-                if json.loads(_read_regular(authority)) != configuration:
+                if (json.loads(_read_regular(authority)) != configuration
+                        and not authority_matches(self, json.loads(_read_regular(authority))['config_path'])):
                     raise ValueError('Workspace belongs to another configuration authority')
             else:
                 self._write_path(authority, configuration)

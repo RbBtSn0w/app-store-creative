@@ -362,3 +362,22 @@ Use `publication plan --archive-repository <name> --archive-path <repository-rel
 ## Derived App Preview posters
 
 A selected poster PNG is an approved visual reference in the sealed delivery, not an independently uploaded ASC resource. Its publication requirement is a browser, media-probe, or human-review media observation of the remote poster against that reference. The preview itself still requires separate upload, processing, playback, and poster gates; the poster gate checks the approved time code, positive dimensions, and actual visual acceptance. API dimensions alone do not prove image loading, and no poster-file upload checksum may be fabricated.
+
+## Configuration Location Transfer
+
+After storage relocation, copying configuration files to another project directory
+alone does not transfer authority. Use `storage relocate-configuration --destination
+<absolute-directory> --actor <human> --reason <reason> --confirm RELOCATE` from the
+current owning configuration. The command publishes exact shared/private bytes,
+requires unchanged effective storage roots, then commits a byte-bound transfer
+receipt and event in the active workspace. Historical relocation records stay
+unchanged. Destination access verifies that receipt, current project identity,
+configuration hashes and root binding. The old configuration is fenced for writes;
+repeated execution verifies the same destination without overwriting differences.
+Interrupted publication before the receipt retains the old authority; rerun from
+that source with the same destination. No file or prior recovery copy is deleted.
+The transfer follows subsequent committed storage switch evidence to verify the
+resulting configuration bytes. New forward and reverse plans issued from the
+activated destination remain usable. Plans prepared before configuration transfer
+retain their original authority and are not rewritten; finish or cancel pending
+operations before transfer, then issue fresh plans from the destination.

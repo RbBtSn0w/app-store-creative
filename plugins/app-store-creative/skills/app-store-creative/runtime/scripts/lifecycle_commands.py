@@ -50,6 +50,11 @@ def add_commands(subparsers):
     poster.add_argument('--retry-of')
     poster.add_argument('--confirm', choices=['EXTRACT'], required=True)
     storage = group('storage')
+    relocate_config = storage.add_parser('relocate-configuration')
+    relocate_config.add_argument('--destination', type=Path, required=True)
+    relocate_config.add_argument('--actor', required=True)
+    relocate_config.add_argument('--reason', required=True)
+    relocate_config.add_argument('--confirm', choices=['RELOCATE'], required=True)
     reverse_switch = storage.add_parser('switch-reverse-relocate')
     reverse_switch.add_argument('--id', required=True)
     reverse_switch.add_argument('--actor', required=True)
@@ -395,6 +400,9 @@ def execute(args):
         from managed_preview import produce
         return produce(core, args.run_id, local(args.contract), args.logical_path, args.owner)
     if args.command == 'storage':
+        if args.action == 'relocate-configuration':
+            from configuration_location import relocate_configuration
+            return relocate_configuration(core, args.destination, args.actor, args.reason)
         if args.action == 'switch-reverse-relocate':
             return core.switch_reverse_relocation(args.id, args.actor, args.reason)
         if args.action == 'prepare-reverse-relocate':
