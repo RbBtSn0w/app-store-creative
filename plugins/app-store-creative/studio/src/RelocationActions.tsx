@@ -44,8 +44,8 @@ export function RelocationActions({ onStorageChange }: { onStorageChange: () => 
       <ul>{Object.entries(plan.from).map(([key, value]) => <li key={key}>{key}: {value} → {plan.to[key]}</li>)}</ul>
       <ul>{plan.files.map((file, index) => <li key={index}>{file.root}/{file.path} · {file.size_bytes} bytes · <code>{file.sha256}</code></li>)}</ul>
       <button disabled={busy || uncertain} onClick={() => void run('verify')}>Verify relocation plan</button>
-      <label>Relocation operator<input value={actor} onChange={event => setActor(event.target.value)} /></label>
-      <label>Relocation reason<input value={reason} onChange={event => setReason(event.target.value)} /></label>
+      <label>Relocation operator<input value={actor} onChange={event => { setActor(event.target.value); setReviewed(false); }} /></label>
+      <label>Relocation reason<input value={reason} onChange={event => { setReason(event.target.value); setReviewed(false); }} /></label>
       <label><input type="checkbox" checked={reviewed} onChange={event => setReviewed(event.target.checked)} />I reviewed all directories and files.</label>
       <label>Type PREPARE or SWITCH<input value={confirmation} onChange={event => setConfirmation(event.target.value)} /></label>
       <button disabled={!maintenanceAllowed(busy, uncertain, reviewed, actor, reason) || confirmation !== 'PREPARE'} onClick={() => void run('prepare')}>Prepare verified copies</button>
