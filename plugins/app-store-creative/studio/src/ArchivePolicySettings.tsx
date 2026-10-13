@@ -22,7 +22,12 @@ export function ArchivePolicySettings({ policy, onChange, budget, onBudgetChange
       <option value="external">External media storage</option>
     </select></label>
     <label>Media budget (bytes)<input disabled={disabled} type="number" min="0" step="1" value={budget ?? ''}
-      onChange={event => onBudgetChange?.(event.target.value === '' ? undefined : event.target.valueAsNumber)} /></label>
+      onChange={event => {
+        if (event.target.validity.badInput) return;
+        if (event.target.value === '') return onBudgetChange?.(undefined);
+        const value = event.target.valueAsNumber;
+        if (Number.isSafeInteger(value) && value >= 0) onBudgetChange?.(value);
+      }} /></label>
     <p className="text-sm text-white/60">Leave empty for exploration. Declare a budget before producing a release run. Budget warnings do not delete files or enable paid storage.</p>
     {policy?.mediaMode === 'external' && <>
       <label>Backend name<input disabled={disabled} required pattern="[A-Za-z0-9][A-Za-z0-9_.-]{0,63}" value={policy.backend}
