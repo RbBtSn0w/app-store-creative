@@ -1,5 +1,5 @@
 import { expect, it, vi, afterEach } from 'vitest';
-import { changeStorageRoot, parseStoragePreview, loadStoragePreview, storageSaveConflict } from './storagePreview';
+import { changeStorageRoot, parseStoragePreview, loadStoragePreview, storageSaveConflict, assertCurrentSave } from './storagePreview';
 import type { CreativeConfig } from './types';
 
 import { specimen } from './storagePreview.fixture';
@@ -45,4 +45,20 @@ it('accepts protected host-local source labels', () => {
   const report = specimen();
   const value = {...report, roots:{...report.roots, workspaceRoot:{...report.roots.workspaceRoot, source:'local'}}};
   expect(parseStoragePreview(value).roots.workspaceRoot.source).toBe('local');
+});
+
+it('rejects stale saves after a pending directory preview resolves', async () => {
+  for (const change of ['storage', 'draft']) {
+    let complete!: () => void;
+    const pending = new Promise<void>(resolve => { complete = resolve; });
+    const current = { storageChanged: false, version: 1 };
+    const write = vi.fn();
+    const saving = pending.then(() => { assertCurrentSave(current, 1); write(); });
+    const result = expect(saving).rejects.toThrow(/requested|Changes arrived/);
+    if (change === 'storage') current.storageChanged = true;
+    else current.version = 2;
+    complete(); await result;
+    expect(write).not.toHaveBeenCalled();
+  }
+  expect(() => assertCurrentSave({storageChanged:false, version:1}, 1)).not.toThrow();
 });

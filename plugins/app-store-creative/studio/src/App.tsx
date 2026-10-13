@@ -22,7 +22,7 @@ import { CandidateApproval } from './CandidateApproval';
 import { CandidatePreviewMedia } from './CandidatePreviewMedia';
 import { StorageSettings } from './StorageSettings';
 import { ArchivePolicySettings } from './ArchivePolicySettings';
-import { loadStoragePreview, storageSaveConflict, type StoragePreview } from './storagePreview';
+import { loadStoragePreview, storageSaveConflict, assertCurrentSave, type StoragePreview } from './storagePreview';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -136,6 +136,7 @@ export const App: React.FC = () => {
     const snapshot = state.current, startedAt = version.current;
     setSaving(true); setError('');
     const job = previewDirectories(snapshot).then(report => {
+      assertCurrentSave({storageChanged: storageChanged.current, version: version.current}, startedAt);
       const conflict = storageSaveConflict(report);
       if (conflict) throw new Error(conflict);
       return request('/api/config', snapshot, revision.current);

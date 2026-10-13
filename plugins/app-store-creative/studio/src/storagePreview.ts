@@ -54,3 +54,8 @@ export async function loadStoragePreview(config: CreativeConfig): Promise<Storag
     throw error;
   } finally { clearTimeout(timer); }
 }
+
+export function assertCurrentSave(current: {storageChanged: boolean; version: number}, expectedVersion: number): void {
+  if (current.storageChanged) throw new Error('Storage switching was requested. Reload the project after checking relocation status.');
+  if (current.version !== expectedVersion) throw new Error('Changes arrived while saving. Review and save again.');
+}
