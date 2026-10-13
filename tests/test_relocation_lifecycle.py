@@ -150,3 +150,18 @@ class RelocationTests(unittest.TestCase):
         prepared = self.store.prepare_relocation(plan['id'], actor='owner', reason='Move objects')
         self.assertEqual(set(prepared['staging']), {'objects'})
         self.assertFalse((self.root / 'nested work/newobjects').exists())
+
+    def test_prepared_workspace_lock_is_private_under_permissive_umask(self):
+        import os
+        import stat
+        self.source()
+        plan = self.store.plan_relocation(self.targets())
+        previous = os.umask(0)
+        try:
+            prepared = self.store.prepare_relocation(plan['id'], actor='owner', reason='Move')
+        finally:
+            os.umask(previous)
+        locks = [Path(item['path']) for item in prepared['staged_files']
+                 if Path(item['path']).name == 'write.lock']
+        self.assertEqual(len(locks), 1)
+        self.assertEqual(stat.S_IMODE(locks[0].stat().st_mode), 0o600)

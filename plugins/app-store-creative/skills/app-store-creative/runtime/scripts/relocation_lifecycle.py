@@ -733,7 +733,8 @@ class RelocationOperations:
                     lock = workspace / 'write.lock'
                     # Locks are host-local coordination, never copied from the source.
                     # Prepare one before activation so the first query stays read-only.
-                    with lock.open('xb') as stream:
+                    descriptor = os.open(lock, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+                    with os.fdopen(descriptor, 'wb') as stream:
                         stream.flush()
                         os.fsync(stream.fileno())
                     staged_files.append({'path': str(lock), 'size_bytes': 0, 'sha256': digest(lock)})
