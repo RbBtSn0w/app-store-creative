@@ -2,12 +2,20 @@ import { useEffect, useState } from 'react';
 import { readHistory } from './historyRequest';
 
 async function action(path: string, data: unknown) {
-  const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data), signal: AbortSignal.timeout(20000) });
-  const body = await response.json();
-  if (!response.ok) throw new Error(body.error || 'Action failed');
-  return body;
+  try {
+    const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data), signal: AbortSignal.timeout(20000) });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || 'Action failed');
+    return body;
+  } catch (error) {
+    if (error instanceof DOMException && ['TimeoutError', 'AbortError'].includes(error.name)) {
+      throw new Error('Request timed out. Check saved candidate, approval and delivery records before retrying; the action may have completed.');
+    }
+    throw error;
+  }
 }
+
 export function CandidateApproval({ candidateId }: { candidateId: string }) {
   const [validation, setValidation] = useState<{id: string; status: string; errors?: string[]} | null>(null);
   const [approvalId, setApprovalId] = useState('');

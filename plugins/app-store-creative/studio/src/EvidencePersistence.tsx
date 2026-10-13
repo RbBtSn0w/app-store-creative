@@ -17,6 +17,7 @@ export function EvidencePersistence() {
     try {
       const response = await fetch('/api/publications/persist-evidence', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(20000),
         body: JSON.stringify({ evidence_id: id.trim(), backend: backend.trim(), confirm: 'PERSIST' }),
       });
       const value = await response.json();

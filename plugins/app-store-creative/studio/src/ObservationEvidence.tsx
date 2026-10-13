@@ -18,7 +18,7 @@ export function ObservationEvidence() {
         reader.readAsDataURL(file);
       });
       const response = await fetch('/api/publications/retain-evidence', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ observation_id: id.trim(), actor: actor.trim(), confirm: 'RETAIN', evidence_base64: encoded }) });
+        body: JSON.stringify({ observation_id: id.trim(), actor: actor.trim(), confirm: 'RETAIN', evidence_base64: encoded }), signal: AbortSignal.timeout(20000) });
       const value = await response.json();
       if (!response.ok) throw new Error(value.error || 'Evidence retention failed');
       if (value.observation_id !== id.trim() || !/^[0-9a-f]{32}$/.test(value.id)) throw new Error('Unexpected retention response');

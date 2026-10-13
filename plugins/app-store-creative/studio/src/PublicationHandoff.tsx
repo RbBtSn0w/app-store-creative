@@ -9,7 +9,7 @@ export function PublicationHandoff({ id, onSaved }: { id: string; onSaved: () =>
   async function load() {
     setBusy(true); setError(''); setPreview(null); setReviewed(false);
     try {
-      const response = await fetch('/api/publication-handoff/' + encodeURIComponent(id), { cache: 'no-store' });
+      const response = await fetch('/api/publication-handoff/' + encodeURIComponent(id), { cache: 'no-store', signal: AbortSignal.timeout(20000) });
       const value = await response.json();
       if (!response.ok) throw new Error(value.error || 'Handoff review failed');
       setPreview(parseHandoffPreview(value, id)); setUnresolved(false); setMessage('Review loaded. No upload has been performed.');
@@ -20,7 +20,7 @@ export function PublicationHandoff({ id, onSaved }: { id: string; onSaved: () =>
     if (!preview || !maintenanceAllowed(busy, unresolved, reviewed, approve ? actor : 'export', approve ? authorization : 'export')) return;
     setBusy(true); setReviewed(false); setError('');
     try {
-      const response = await fetch(approve ? '/api/publications/approve-upload' : '/api/publications/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(approve ? { publication_id: id, actor: actor.trim(), authorization_reference: authorization.trim(), confirm: 'UPLOAD' } : { publication_id: id, confirm: 'EXPORT' }) });
+      const response = await fetch(approve ? '/api/publications/approve-upload' : '/api/publications/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(approve ? { publication_id: id, actor: actor.trim(), authorization_reference: authorization.trim(), confirm: 'UPLOAD' } : { publication_id: id, confirm: 'EXPORT' }), signal: AbortSignal.timeout(20000) });
       const value = await response.json();
       if (!response.ok) throw new Error(value.error || 'Publication coordination failed');
       setMessage(approve ? 'Upload approval recorded for this plan. Reload review before exporting.' : 'Local handoff exported. Upload approval: ' + value.upload_approval + '. ASC must execute and verify the upload separately.');
