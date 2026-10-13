@@ -39,3 +39,26 @@ class StagingLayoutValidationTests(unittest.TestCase):
                  patch.object(relocation_retention, '_verified_roots', return_value=[]):
                 with self.assertRaisesRegex(ValueError, 'verified root'):
                     relocation_retention._state(core, datetime.now(timezone.utc))
+
+    def test_cancelled_missing_staging_is_omitted_but_partial_cancel_is_retained(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            groups = {'workspace': root/'destination'}
+            staging = {'workspace': str(root/'missing-stage')}
+            core = SimpleNamespace(config_path=root/'config.json',
+                                   _relocation_layout=lambda plan: ({}, groups, staging))
+            plan = {'id': 'move', 'config_path': str(core.config_path), 'files': []}
+            for phase in ('CANCELLED', 'CANCELLED_PARTIAL'):
+                def record(core, identity, suffix):
+                    if suffix == 'prepare-intent':
+                        return {'groups': {k: str(v) for k,v in groups.items()}, 'staging': staging}
+                    if suffix == 'cancelled': return {'status': phase}
+                    if suffix == 'staging-root-workspace':
+                        return {'group': 'workspace', 'path': staging['workspace'], 'directory_identity': [0,0]}
+                    return None
+                with patch.object(staging_inventory, '_record', side_effect=record), \
+                     patch('relocation_inventory._manifest', return_value={}), \
+                     patch('relocation_inventory._inspect', return_value=({'status': 'MISSING'}, {})):
+                    rows, _ = staging_inventory.inspect(core, plan)
+                self.assertEqual(len(rows), 0 if phase == 'CANCELLED' else 1)

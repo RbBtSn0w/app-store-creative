@@ -95,7 +95,8 @@ def inspect(core, plan):
         row['phase'] = phase
         if row['status'] == 'CHANGED' and row['missing_files'] and not any(row[field] for field in ('extra_files', 'changed_files', 'unsafe_links')):
             row['status'] = 'PARTIAL'
-        rows.append(row); inodes.update(blocks)
+        if not (phase == 'CANCELLED' and row['status'] == 'MISSING'):
+            rows.append(row); inodes.update(blocks)
         if key in backups and backups[key] is not None:
             old = next((entry for entry in switch['roots'] if entry['group'] == key), None)
             if old is None:
