@@ -1,5 +1,9 @@
 """Archive declarations fail consistently before reading invalid containers."""
 import unittest
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parents[1] /
+                       "plugins/app-store-creative/skills/app-store-creative/runtime/scripts"))
 from archive_policy import resolve
 
 

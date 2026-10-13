@@ -1,5 +1,9 @@
 """Native cadence is an upper limit; normalized video remains constant-rate."""
 import unittest
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parents[1] /
+                       "plugins/app-store-creative/skills/app-store-creative/runtime/scripts"))
 from recording_adapters import (validate_native_recording_probe,
                                 validate_recording_probe, RecordingContractError)
 
