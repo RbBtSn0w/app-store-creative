@@ -318,52 +318,57 @@ def switch(core, plan_id, actor, reason):
     if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
         raise ValueError('Reverse switch requires actor and reason')
     with core.transaction():
-        core._verify_reverse_relocation_locked(plan_id)
-        plan = core._read('relocations', plan_id)
-        prepared = core._read('relocations', plan_id, 'prepared')
-        core._verify_prepared_relocation(prepared)
-        if core._path('relocations', plan_id, 'switch-intent').exists():
-            raise ValueError('Reverse switch already started; use explicit recovery')
-        authority = _configuration_authority(core, plan)
-        target_config = authority['effective_config']
-        from configuration_preparation import prepare_storage_change, _RelocationConfigurationCore
-        configuration_prepared = prepare_storage_change(_RelocationConfigurationCore(core),
-            plan['configuration_change'], plan_id, actor, reason)
-        if Path(configuration_prepared['staged_path']).read_bytes() != authority['target_bytes']:
-            raise ValueError('Reverse prepared configuration differs from target')
-        receipt = {'schema_version': 1, 'id': plan_id, 'created_at': now(), 'status': 'SWITCHED',
-                   'from': plan['from'], 'to': plan['to'], 'reverse_of': plan['forward_id'],
-                   'config_path': str(core.config_path), 'project_id': core.config.get('project', {}).get('id'),
-                   'actor': actor, 'reason': reason, 'source_deleted': False,
-                   'preserved_backups': [root['staging'] for root in prepared['exchange_roots'] if root['operation'] == 'EXCHANGE']}
-        from quarantine_locations import capture_backups
-        backup_locations = capture_backups(plan, prepared)
-        receipt['backup_quarantine_locations_sha256'] = _hash(backup_locations)
-        source_key, target_key = _hash(plan['from']), _hash(plan['to'])
-        forward_fence = core._read('storage-fences', target_key, plan['forward_id'])
-        common = {'schema_version': 1, 'created_at': receipt['created_at']}
-        activation = {**common, 'id': target_key, 'to': plan['to'], 'relocation_id': plan_id, 'switch_sha256': _hash(receipt)}
-        edge = {**common, 'id': source_key, 'from': plan['from'], 'to': plan['to'], 'relocation_id': plan_id, 'switch_sha256': _hash(receipt)}
-        release = {**common, 'id': target_key, 'reverse_id': plan_id, 'forward_id': plan['forward_id'],
-                   'fence_sha256': _hash(forward_fence), 'reverse_switch_sha256': _hash(receipt)}
-        backup_files = {root['group']: _tree(Path(root['destination'])) for root in prepared['exchange_roots'] if root['operation'] == 'EXCHANGE'}
-        changes = core._relocation_control_changes(plan, receipt)
-        intent = {'id': plan_id, 'actor': actor, 'reason': reason, 'plan_sha256': _hash(plan),
-                  'storage_controls': changes, 'configuration_prepared': configuration_prepared,
-                  'prepared_sha256': _hash(prepared), 'roots': prepared['exchange_roots'],
-                  'backup_files': backup_files, 'backup_quarantine_locations': backup_locations, 'target_config': target_config,
-                  'source_config_base64': base64.b64encode(_configuration_target(core, plan).read_bytes()).decode('ascii'),
-                  'source_config_mode': _configuration_target(core, plan).stat().st_mode & 0o777,
-                  'receipt': receipt, 'activation': activation, 'edge': edge, 'release': release}
-        # Persist the intent before fencing or changing any directory.
-        stored = core._record('relocations', intent, 'switch-intent')
-        _sync_ancestors(core._path('relocations', plan_id, 'switch-intent').parent, core.paths.workspace)
-        fence = core._fence_relocation_locked(plan_id)
-        stored['fence_sha256'] = _hash(fence)
-        core._record('relocations', {'id': plan_id, 'fence_sha256': stored['fence_sha256']}, 'reverse-fence')
-        _sync_ancestors(core._path('storage-fences', source_key, plan_id).parent, core.paths.workspace)
-        _sync_ancestors(core._path('relocations', plan_id, 'reverse-fence').parent, core.paths.workspace)
-        return _execute(core, plan, stored)
+        try:
+            core._verify_reverse_relocation_locked(plan_id)
+            plan = core._read('relocations', plan_id)
+            prepared = core._read('relocations', plan_id, 'prepared')
+            core._verify_prepared_relocation(prepared)
+            if core._path('relocations', plan_id, 'switch-intent').exists():
+                raise ValueError('Reverse switch already started; use explicit recovery')
+            authority = _configuration_authority(core, plan)
+            target_config = authority['effective_config']
+            from configuration_preparation import prepare_storage_change, _RelocationConfigurationCore
+            configuration_prepared = prepare_storage_change(_RelocationConfigurationCore(core),
+                plan['configuration_change'], plan_id, actor, reason)
+            if Path(configuration_prepared['staged_path']).read_bytes() != authority['target_bytes']:
+                raise ValueError('Reverse prepared configuration differs from target')
+            receipt = {'schema_version': 1, 'id': plan_id, 'created_at': now(), 'status': 'SWITCHED',
+                       'from': plan['from'], 'to': plan['to'], 'reverse_of': plan['forward_id'],
+                       'config_path': str(core.config_path), 'project_id': core.config.get('project', {}).get('id'),
+                       'actor': actor, 'reason': reason, 'source_deleted': False,
+                       'preserved_backups': [root['staging'] for root in prepared['exchange_roots'] if root['operation'] == 'EXCHANGE']}
+            from quarantine_locations import capture_backups
+            backup_locations = capture_backups(plan, prepared)
+            receipt['backup_quarantine_locations_sha256'] = _hash(backup_locations)
+            source_key, target_key = _hash(plan['from']), _hash(plan['to'])
+            forward_fence = core._read('storage-fences', target_key, plan['forward_id'])
+            common = {'schema_version': 1, 'created_at': receipt['created_at']}
+            activation = {**common, 'id': target_key, 'to': plan['to'], 'relocation_id': plan_id, 'switch_sha256': _hash(receipt)}
+            edge = {**common, 'id': source_key, 'from': plan['from'], 'to': plan['to'], 'relocation_id': plan_id, 'switch_sha256': _hash(receipt)}
+            release = {**common, 'id': target_key, 'reverse_id': plan_id, 'forward_id': plan['forward_id'],
+                       'fence_sha256': _hash(forward_fence), 'reverse_switch_sha256': _hash(receipt)}
+            backup_files = {root['group']: _tree(Path(root['destination'])) for root in prepared['exchange_roots'] if root['operation'] == 'EXCHANGE'}
+            changes = core._relocation_control_changes(plan, receipt)
+            intent = {'id': plan_id, 'actor': actor, 'reason': reason, 'plan_sha256': _hash(plan),
+                      'storage_controls': changes, 'configuration_prepared': configuration_prepared,
+                      'prepared_sha256': _hash(prepared), 'roots': prepared['exchange_roots'],
+                      'backup_files': backup_files, 'backup_quarantine_locations': backup_locations, 'target_config': target_config,
+                      'source_config_base64': base64.b64encode(_configuration_target(core, plan).read_bytes()).decode('ascii'),
+                      'source_config_mode': _configuration_target(core, plan).stat().st_mode & 0o777,
+                      'receipt': receipt, 'activation': activation, 'edge': edge, 'release': release}
+            # Persist the intent before fencing or changing any directory.
+            stored = core._record('relocations', intent, 'switch-intent')
+            _sync_ancestors(core._path('relocations', plan_id, 'switch-intent').parent, core.paths.workspace)
+            fence = core._fence_relocation_locked(plan_id)
+            stored['fence_sha256'] = _hash(fence)
+            core._record('relocations', {'id': plan_id, 'fence_sha256': stored['fence_sha256']}, 'reverse-fence')
+            _sync_ancestors(core._path('storage-fences', source_key, plan_id).parent, core.paths.workspace)
+            _sync_ancestors(core._path('relocations', plan_id, 'reverse-fence').parent, core.paths.workspace)
+            return _execute(core, plan, stored)
+
+        except BaseException as error:
+            record_interruption(core, plan_id, error)
+            raise
 
 
 def resume(core, plan_id, actor, reason):
@@ -371,49 +376,54 @@ def resume(core, plan_id, actor, reason):
         raise ValueError('Reverse recovery requires actor and reason')
     from relocation_lifecycle import recovery_lock
     with recovery_lock(core):
-        plan = core._read('relocations', plan_id)
-        if plan.get('operation') != 'reverse-relocation-plan' or plan['from'] != core.paths.binding():
-            raise ValueError('Reverse recovery source scope changed')
-        intent = core._read('relocations', plan_id, 'switch-intent')
-        _validate_intent(core, plan, intent)
-        rollback_path = core._path('relocations', plan_id, 'rollback-intent')
-        if rollback_path.exists() or rollback_path.is_symlink():
-            core._read('relocations', plan_id, 'rollback-intent')
-            raise ValueError('Reverse rollback already started; continue rollback')
-        completed = core._path('relocations', plan_id, 'switched')
-        if completed.exists() or completed.is_symlink():
-            from artifact_lifecycle import Lifecycle
-            receipt = core._read('relocations', plan_id, 'switched')
-            target = Lifecycle(core.paths.project, intent['target_config'], core.config_path)
-            if receipt != intent['receipt'] or target._read('relocations', plan_id, 'switched') != receipt:
-                raise ValueError('Completed reverse switch receipt differs')
-            target._check_storage_activation()
-            target._check_storage_write_fence()
-            status = core.relocation_status(plan_id)
-            if status['target_activation_status'] != 'VERIFIED':
-                raise ValueError('Completed reverse resume target control activation verification failed: ' + '; '.join(status['target_activation_errors']))
-            return receipt
-        _verify_configuration_state(core, plan, intent)
-        source_key = _hash(plan['from'])
-        fence_path = core._path('storage-fences', source_key, plan_id)
-        if not fence_path.exists() and not fence_path.is_symlink():
-            core._verify_reverse_relocation_locked(plan_id)
-            core._verify_prepared_relocation(core._read('relocations', plan_id, 'prepared'))
-            core._fence_relocation_locked(plan_id)
-        fence = core._read('storage-fences', source_key, plan_id)
-        if (fence.get('from') != plan['from'] or fence.get('relocation_id') != plan_id
-                or fence.get('config_path') != str(core.config_path)
-                or fence.get('project_id') != core.config.get('project', {}).get('id')
-                or fence.get('prepared_sha256') != intent['prepared_sha256']):
-            raise ValueError('Reverse recovery fence scope changed')
-        proof_path = core._path('relocations', plan_id, 'reverse-fence')
-        if not proof_path.exists() and not proof_path.is_symlink():
-            core._record('relocations', {'id': plan_id, 'fence_sha256': _hash(fence)}, 'reverse-fence')
-        intent['fence_sha256'] = core._read('relocations', plan_id, 'reverse-fence')['fence_sha256']
-        _sync_ancestors(core._path('relocations', plan_id, 'switch-intent').parent, core.paths.workspace)
-        _sync_ancestors(fence_path.parent, core.paths.workspace)
-        _sync_ancestors(proof_path.parent, core.paths.workspace)
-        return _execute(core, plan, intent)
+        try:
+            plan = core._read('relocations', plan_id)
+            if plan.get('operation') != 'reverse-relocation-plan' or plan['from'] != core.paths.binding():
+                raise ValueError('Reverse recovery source scope changed')
+            intent = core._read('relocations', plan_id, 'switch-intent')
+            _validate_intent(core, plan, intent)
+            rollback_path = core._path('relocations', plan_id, 'rollback-intent')
+            if rollback_path.exists() or rollback_path.is_symlink():
+                core._read('relocations', plan_id, 'rollback-intent')
+                raise ValueError('Reverse rollback already started; continue rollback')
+            completed = core._path('relocations', plan_id, 'switched')
+            if completed.exists() or completed.is_symlink():
+                from artifact_lifecycle import Lifecycle
+                receipt = core._read('relocations', plan_id, 'switched')
+                target = Lifecycle(core.paths.project, intent['target_config'], core.config_path)
+                if receipt != intent['receipt'] or target._read('relocations', plan_id, 'switched') != receipt:
+                    raise ValueError('Completed reverse switch receipt differs')
+                target._check_storage_activation()
+                target._check_storage_write_fence()
+                status = core.relocation_status(plan_id)
+                if status['target_activation_status'] != 'VERIFIED':
+                    raise ValueError('Completed reverse resume target control activation verification failed: ' + '; '.join(status['target_activation_errors']))
+                return receipt
+            _verify_configuration_state(core, plan, intent)
+            source_key = _hash(plan['from'])
+            fence_path = core._path('storage-fences', source_key, plan_id)
+            if not fence_path.exists() and not fence_path.is_symlink():
+                core._verify_reverse_relocation_locked(plan_id)
+                core._verify_prepared_relocation(core._read('relocations', plan_id, 'prepared'))
+                core._fence_relocation_locked(plan_id)
+            fence = core._read('storage-fences', source_key, plan_id)
+            if (fence.get('from') != plan['from'] or fence.get('relocation_id') != plan_id
+                    or fence.get('config_path') != str(core.config_path)
+                    or fence.get('project_id') != core.config.get('project', {}).get('id')
+                    or fence.get('prepared_sha256') != intent['prepared_sha256']):
+                raise ValueError('Reverse recovery fence scope changed')
+            proof_path = core._path('relocations', plan_id, 'reverse-fence')
+            if not proof_path.exists() and not proof_path.is_symlink():
+                core._record('relocations', {'id': plan_id, 'fence_sha256': _hash(fence)}, 'reverse-fence')
+            intent['fence_sha256'] = core._read('relocations', plan_id, 'reverse-fence')['fence_sha256']
+            _sync_ancestors(core._path('relocations', plan_id, 'switch-intent').parent, core.paths.workspace)
+            _sync_ancestors(fence_path.parent, core.paths.workspace)
+            _sync_ancestors(proof_path.parent, core.paths.workspace)
+            return _execute(core, plan, intent)
+
+        except BaseException as error:
+            record_interruption(core, plan_id, error)
+            raise
 
 
 def _verify_rollback_configuration_state(core, plan, intent):

@@ -361,28 +361,16 @@ class RelocationOperations:
                 'scope': 'Occupied original roots verified; execution is a separate operation'})
 
     def switch_reverse_relocation(self, plan_id, actor, reason):
-        from reverse_relocation import switch, record_interruption
-        try:
-            return switch(self, plan_id, actor, reason)
-        except BaseException as error:
-            record_interruption(self, plan_id, error)
-            raise
+        from reverse_relocation import switch
+        return switch(self, plan_id, actor, reason)
 
     def resume_reverse_relocation(self, plan_id, actor, reason):
-        from reverse_relocation import resume, record_interruption
-        try:
-            return resume(self, plan_id, actor, reason)
-        except BaseException as error:
-            record_interruption(self, plan_id, error)
-            raise
+        from reverse_relocation import resume
+        return resume(self, plan_id, actor, reason)
 
     def rollback_reverse_relocation(self, plan_id, actor, reason):
-        from reverse_relocation import rollback, record_interruption
-        try:
-            return rollback(self, plan_id, actor, reason)
-        except BaseException as error:
-            record_interruption(self, plan_id, error)
-            raise
+        from reverse_relocation import rollback
+        return rollback(self, plan_id, actor, reason)
 
     def _verify_reverse_relocation_locked(self, plan_id):
         plan = self._read('relocations', plan_id)
