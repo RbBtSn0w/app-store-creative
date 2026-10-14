@@ -69,9 +69,10 @@ export const App: React.FC = () => {
   const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[]; candidate_id?: string | null; run_id?: string;
     validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } | null }>({});
   const [workspaceMode, setWorkspaceMode] = useState<'canvas' | 'lifecycle'>('canvas');
+  const [canvasNarrowTab, setCanvasNarrowTab] = useState<'cards' | 'canvas' | 'inspector'>('canvas');
   const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
-  const [critiqueNotes, setCritiqueNotes] = useState('');
+  const [critiqueNotesByCard, setCritiqueNotesByCard] = useState<Record<string, string>>({});
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
   const [syncingCritique, setSyncingCritique] = useState(false);
   const [critiqueNotice, setCritiqueNotice] = useState('');
@@ -108,6 +109,18 @@ export const App: React.FC = () => {
       } else if (!exporting) { setConfig(initialProject()); setCreating(true); }
       else setError('No project is configured');
     }).catch(reason => setError(reason.message)).finally(() => setLoading(false));
+
+    request('/api/critique').then(({ body }) => {
+      if (!body || typeof body !== 'object') return;
+      const directives = (body as { directives?: Record<string, { notes?: string }> }).directives || {};
+      const initialNotes: Record<string, string> = {};
+      for (const [cardId, item] of Object.entries(directives)) {
+        if (item && typeof item.notes === 'string') {
+          initialNotes[cardId] = item.notes;
+        }
+      }
+      setCritiqueNotesByCard(initialNotes);
+    }).catch(() => {});
   }, []);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current) { event.preventDefault(); event.returnValue = ''; } };
@@ -241,6 +254,7 @@ export const App: React.FC = () => {
     if (!active) return;
     setSyncingCritique(true); setCritiqueNotice('');
     try {
+      const note = critiqueNotesByCard[active.id] || '';
       const payload = {
         card_id: active.id,
         role: getCardRole(config.cards.findIndex(c => c.id === active.id)),
@@ -254,7 +268,7 @@ export const App: React.FC = () => {
           stylePreset: config.theme.stylePreset,
           angle: config.theme.background?.angle ?? 135,
         },
-        notes: critiqueNotes,
+        notes: note,
         timestamp: new Date().toISOString(),
       };
       await request('/api/critique', payload);
@@ -269,6 +283,7 @@ export const App: React.FC = () => {
   const copyCritiqueMarkdown = () => {
     if (!active) return;
     const role = getCardRole(config.cards.findIndex(c => c.id === active.id));
+    const note = critiqueNotesByCard[active.id] || '';
     const md = `### [Creative Review Directive] Card: ${active.id} (Arc Role: ${role})
 - Target: ${target} | Locale: ${locale}
 - 3D Transforms:
@@ -282,7 +297,7 @@ export const App: React.FC = () => {
   - Subheadline: "${resolved?.subheadline || ''}"
 - Layout: ${resolved?.layout || 'default'}
 - Theme: Preset=${config.theme.stylePreset || 'default'}, Angle=${config.theme.background?.angle ?? 135}°
-- Critique Notes: "${critiqueNotes || 'No custom notes'}"
+- Critique Notes: "${note || 'No custom notes'}"
 - Workflow Action: Ingest parameters into creative.config.json, rerun offline headless verification, and regenerate preview artifact.`;
     void navigator.clipboard.writeText(md).then(() => {
       setCritiqueNotice('✓ Markdown directive copied to clipboard');
@@ -344,8 +359,10 @@ export const App: React.FC = () => {
           <button disabled={saving || !config.targets.length} className="primary" type="submit">Create project</button>
         </fieldset>
       </form>
-    ) : workspaceMode === 'lifecycle' ? (
-      <div className="space-y-6 p-6 max-w-6xl mx-auto">
+    ) : (
+      <>
+        {/* Workspace: Lifecycle & Governance */}
+        <div className="space-y-6 p-6 max-w-6xl mx-auto" style={{ display: workspaceMode === 'lifecycle' ? 'block' : 'none' }}>
         {/* Sub-Tabs Segmented Control */}
         <div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-4 gap-4">
           <div>
@@ -451,8 +468,9 @@ export const App: React.FC = () => {
           </div>
         )}
       </div>
-    ) : (
-      <>
+
+      {/* Workspace: Canvas & Review */}
+      <div style={{ display: workspaceMode === 'canvas' ? 'block' : 'none' }}>
         {/* Design Toolbar Bar */}
         <fieldset disabled={busy || saving} className="flex flex-wrap gap-4 px-6 py-3 border-b border-white/10 bg-white/5 items-center">
           <label className="text-xs font-medium flex items-center gap-1.5">
@@ -480,10 +498,35 @@ export const App: React.FC = () => {
           </label>
         </fieldset>
 
+        {/* Narrow Viewport (Sidecar / Mobile) Tab Switcher */}
+        <div className="flex lg:hidden border-b border-white/10 bg-[#0C0F17] px-4 py-2 gap-2 text-xs">
+          <button
+            type="button"
+            className={`flex-1 py-1.5 rounded-lg font-medium transition ${canvasNarrowTab === 'cards' ? 'bg-indigo-600 text-white shadow-sm' : 'text-white/60 hover:text-white bg-white/5'}`}
+            onClick={() => setCanvasNarrowTab('cards')}
+          >
+            📑 Cards ({config.cards.length})
+          </button>
+          <button
+            type="button"
+            className={`flex-1 py-1.5 rounded-lg font-medium transition ${canvasNarrowTab === 'canvas' ? 'bg-indigo-600 text-white shadow-sm' : 'text-white/60 hover:text-white bg-white/5'}`}
+            onClick={() => setCanvasNarrowTab('canvas')}
+          >
+            🎨 Canvas
+          </button>
+          <button
+            type="button"
+            className={`flex-1 py-1.5 rounded-lg font-medium transition ${canvasNarrowTab === 'inspector' ? 'bg-indigo-600 text-white shadow-sm' : 'text-white/60 hover:text-white bg-white/5'}`}
+            onClick={() => setCanvasNarrowTab('inspector')}
+          >
+            ⚙️ Inspector
+          </button>
+        </div>
+
         {/* 3-Column Studio Canvas */}
         <div className="grid lg:grid-cols-[260px_minmax(0,1fr)_340px] gap-0 min-h-[calc(100vh-140px)]">
           {/* Left Deck Rail */}
-          <aside className="p-4 space-y-3 border-r border-white/10 bg-[#0C0F17]/50">
+          <aside className={`p-4 space-y-3 border-r border-white/10 bg-[#0C0F17]/50 ${canvasNarrowTab === 'cards' ? 'block' : 'hidden'} lg:block`}>
             <div className="flex justify-between items-center">
               <h2 className="font-semibold text-sm">Screenshots · {config.cards.length}</h2>
               <span className="text-[10px] text-white/40 font-mono">5-Slide Arc</span>
@@ -492,7 +535,7 @@ export const App: React.FC = () => {
             <button className="w-full text-xs" disabled={busy || saving} onClick={() => { const id = `card-${crypto.randomUUID().slice(0, 8)}`; edit(current => ({ ...current, cards: [...current.cards, { id, headline: 'Your headline', layout: 'pure_text' }] })); setSelected(id); }}>Add text card</button>
             <ol className="space-y-1.5">{config.cards.map((card, index) => (
               <li key={card.id}>
-                <button type="button" className={`w-full text-left p-2.5 rounded-xl border text-xs flex flex-col gap-1 transition ${selected === card.id ? 'border-indigo-400 bg-indigo-500/15 shadow-sm ring-1 ring-indigo-400/30' : 'border-white/10 hover:border-white/20 bg-white/5'}`} onClick={() => setSelected(card.id)}>
+                <button type="button" className={`w-full text-left p-2.5 rounded-xl border text-xs flex flex-col gap-1 transition ${selected === card.id ? 'border-indigo-400 bg-indigo-500/15 shadow-sm ring-1 ring-indigo-400/30' : 'border-white/10 hover:border-white/20 bg-white/5'}`} onClick={() => { setSelected(card.id); setCanvasNarrowTab('canvas'); }}>
                   <div className="flex justify-between items-center text-white/50 text-[10px] font-mono">
                     <span>CARD {String(index + 1).padStart(2, '0')}</span>
                     <span className="uppercase text-indigo-300 bg-indigo-500/20 px-1 rounded text-[9px] border border-indigo-500/30">{getCardRole(index)}</span>
@@ -505,7 +548,7 @@ export const App: React.FC = () => {
           </aside>
 
           {/* Center Stage Preview Area */}
-          <section className="overflow-auto p-8 min-h-[500px] flex items-center justify-start bg-gradient-to-b from-black/20 to-black/60 relative" aria-label="Screenshot previews"
+          <section className={`overflow-auto p-8 min-h-[500px] flex items-center justify-start bg-gradient-to-b from-black/20 to-black/60 relative ${canvasNarrowTab === 'canvas' ? 'flex' : 'hidden'} lg:flex`} aria-label="Screenshot previews"
             onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); if (!busy && !saving) void importFiles(event.dataTransfer.files); }}>
             {!config.cards.length ? (
               <div className="p-12 text-center border border-dashed border-white/20 rounded-2xl max-w-md m-auto">
@@ -530,7 +573,7 @@ export const App: React.FC = () => {
           </section>
 
           {/* Right Inspector Panel */}
-          <aside className="p-4 border-l border-white/10 bg-[#0C0F17]/50 flex flex-col overflow-y-auto">
+          <aside className={`p-4 border-l border-white/10 bg-[#0C0F17]/50 flex flex-col overflow-y-auto ${canvasNarrowTab === 'inspector' ? 'flex' : 'hidden'} lg:flex`}>
             {active && resolved ? (
               <fieldset disabled={busy || saving} className="space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-white/10">
@@ -727,7 +770,11 @@ export const App: React.FC = () => {
                       <p className="text-[10px] text-white/50">Write review notes for autonomous Agent digestion</p>
                     </div>
                     <textarea rows={3} placeholder="E.g. Tilt window 3° right, adjust headline to focus on clipboard speed..."
-                      value={critiqueNotes} onChange={e => setCritiqueNotes(e.target.value)} className="w-full text-xs" />
+                      value={active ? (critiqueNotesByCard[active.id] || '') : ''}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (active) setCritiqueNotesByCard(prev => ({ ...prev, [active.id]: val }));
+                      }} className="w-full text-xs" />
                     <div className="flex flex-col gap-2 pt-1">
                       <button type="button" className="primary text-xs flex items-center justify-center gap-1.5"
                         disabled={syncingCritique} onClick={syncCritique}>
@@ -749,7 +796,8 @@ export const App: React.FC = () => {
             )}
           </aside>
         </div>
-      </>
-    )}
-  </main>;
+      </div>
+    </>
+  )}
+</main>;
 };
