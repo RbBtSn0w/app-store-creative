@@ -674,8 +674,9 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     directives = existing.get('directives', {})
                     if not isinstance(directives, dict):
                         directives = {}
-                    card_id = payload.get('card_id')
+                    card_id = payload.get('card_id') or payload.get('cardId')
                     if card_id:
+                        payload['card_id'] = card_id
                         directives[card_id] = payload
                         existing['directives'] = directives
                         existing['latest'] = payload

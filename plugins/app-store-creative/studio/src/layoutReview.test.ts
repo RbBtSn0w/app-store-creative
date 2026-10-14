@@ -17,4 +17,7 @@ describe('preview and export layout review', () => {
   it('accepts side-by-side copy and device regardless of vertical alignment', () => {
     expect(layoutIssues(bounds, [copy], { ...copy, right: 150 }, { left: 160, top: 30, right: 380, bottom: 320 })).toEqual([]);
   });
+  it('ignores subpixel contact / slight 3D bounding box projection under 4px', () => {
+    expect(layoutIssues(bounds, [copy], copy, { left: 30, top: 118, right: 370, bottom: 830 })).toEqual([]);
+  });
 });
