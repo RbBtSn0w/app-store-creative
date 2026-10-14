@@ -69,6 +69,7 @@ export const App: React.FC = () => {
   const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[]; candidate_id?: string | null; run_id?: string;
     validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } | null }>({});
   const [workspaceMode, setWorkspaceMode] = useState<'canvas' | 'lifecycle'>('canvas');
+  const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
   const [critiqueNotes, setCritiqueNotes] = useState('');
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
@@ -344,49 +345,111 @@ export const App: React.FC = () => {
         </fieldset>
       </form>
     ) : workspaceMode === 'lifecycle' ? (
-      <div className="space-y-6 p-6">
-        <ArchivePolicySettings policy={config.archivePolicy} budget={config.artifactPolicy?.mediaBudgetBytes} disabled={busy || saving}
-          onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))}
-          onBudgetChange={budget => edit(current => {
-            const policy = { ...current.artifactPolicy, schema_version: 1 as const };
-            if (budget === undefined) delete policy.mediaBudgetBytes;
-            else policy.mediaBudgetBytes = budget;
-            return { ...current, artifactPolicy: policy };
-          })} />
-        <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
-          checking={checkingStorage} disabled={busy || saving}
-          onCheck={() => { void previewDirectories().catch(() => {}); }} />
-        <section className="p-5 border border-white/10 rounded-xl bg-white/5">
-          <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy || saving} onClick={refreshStatus}>Check current files</button></div>
-          <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. See publication verification for upload status.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
-          {!config.studio?.requireExportEvidence && <button disabled={busy || saving} onClick={() => {
-            edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
-            if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
-          }}>Require rendering evidence</button>}
-          {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto">{errors.map((finding, index) => <li key={index}>{finding}</li>)}</ul>}
-          {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
-            <ul className="grid gap-2 my-3 text-sm">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
-              const name = `${language}/${device}/${card.id}.png`;
-              return Object.hasOwn(status.validation!.assets, name) ? <li key={name}><a className="text-indigo-200 underline" target="_blank" rel="noreferrer"
-                href={'/api/artifacts/' + encodeURIComponent(status.candidate_id || '') + '/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
-            })))}</ul>}
-          {!dirty && status.candidate_id && status.validation?.assets &&
-            <CandidatePreviewMedia candidateId={status.candidate_id} assets={status.validation.assets} />}
-          {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
-        </section>
-        {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
-        <RunHistory />
-        <DeliveryHistory />
-        <PublicationHistory />
-        <ObservationEvidence />
-        <InventoryView />
-        <MediaBudgetPanel />
-        <MaintenancePanel />
-        <RelocationMaintenance />
-        <RelocationActions onStorageChange={() => { storageChanged.current = true; setError('Storage switching was requested. Check relocation status, then reload before saving or exporting.'); }} />
-        <RelocationStatusPanel />
-        <RelocationRecovery onStorageChange={() => { storageChanged.current = true; setError('Recovery was requested. Check operation status, then reload before saving or exporting.'); }} />
-        <OperationHistory />
+      <div className="space-y-6 p-6 max-w-6xl mx-auto">
+        {/* Sub-Tabs Segmented Control */}
+        <div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-4 gap-4">
+          <div>
+            <h2 className="text-lg font-semibold text-white">Lifecycle & Asset Governance</h2>
+            <p className="text-xs text-white/50">Candidate approval, release history, storage engine policies, and audit trails.</p>
+          </div>
+          <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 text-xs">
+            <button
+              type="button"
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg font-medium transition ${
+                lifecycleTab === 'approval'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-white/60 hover:text-white'
+              }`}
+              onClick={() => setLifecycleTab('approval')}
+            >
+              <span>🎯 Release Approval & History</span>
+            </button>
+            <button
+              type="button"
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg font-medium transition ${
+                lifecycleTab === 'governance'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-white/60 hover:text-white'
+              }`}
+              onClick={() => setLifecycleTab('governance')}
+            >
+              <span>⚙️ Storage & Governance</span>
+            </button>
+          </div>
+        </div>
+
+        {lifecycleTab === 'approval' ? (
+          <div className="space-y-6">
+            <section className="p-5 border border-white/10 rounded-xl bg-white/5" aria-label="Release review">
+              <div className="flex justify-between items-center gap-4">
+                <div>
+                  <h3 className="font-semibold text-base text-white">Release Candidate Review</h3>
+                  <p className="text-xs text-white/50">Zero-network Apple Store verification and rendering evidence.</p>
+                </div>
+                <button disabled={busy || saving} onClick={refreshStatus} className="text-xs">Check current files</button>
+              </div>
+              <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. See publication verification for upload status.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
+              {!config.studio?.requireExportEvidence && <button disabled={busy || saving} onClick={() => {
+                edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
+                if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
+              }}>Require rendering evidence</button>}
+              {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto bg-amber-950/20 p-3 rounded-lg border border-amber-500/20 my-3">{errors.map((finding, index) => <li key={index}>⚠️ {finding}</li>)}</ul>}
+              {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
+                <ul className="grid grid-cols-2 md:grid-cols-3 gap-2 my-3 text-xs">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
+                  const name = `${language}/${device}/${card.id}.png`;
+                  return Object.hasOwn(status.validation!.assets, name) ? <li key={name} className="truncate"><a className="text-indigo-200 hover:text-indigo-100 underline" target="_blank" rel="noreferrer"
+                    href={'/api/artifacts/' + encodeURIComponent(status.candidate_id || '') + '/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
+                })))}</ul>}
+              {!dirty && status.candidate_id && status.validation?.assets &&
+                <CandidatePreviewMedia candidateId={status.candidate_id} assets={status.validation.assets} />}
+              {verified && <p className="text-sm text-emerald-300 mt-3 font-medium">✓ Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
+            </section>
+            {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
+            <div className="pt-4 border-t border-white/10">
+              <h3 className="text-sm font-semibold text-white/70 mb-4 uppercase tracking-wider font-mono">Audit Trails & Publication Receipts</h3>
+              <div className="space-y-6">
+                <RunHistory />
+                <DeliveryHistory />
+                <PublicationHistory />
+                <ObservationEvidence />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <ArchivePolicySettings policy={config.archivePolicy} budget={config.artifactPolicy?.mediaBudgetBytes} disabled={busy || saving}
+              onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))}
+              onBudgetChange={budget => edit(current => {
+                const policy = { ...current.artifactPolicy, schema_version: 1 as const };
+                if (budget === undefined) delete policy.mediaBudgetBytes;
+                else policy.mediaBudgetBytes = budget;
+                return { ...current, artifactPolicy: policy };
+              })} />
+            <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
+              checking={checkingStorage} disabled={busy || saving}
+              onCheck={() => { void previewDirectories().catch(() => {}); }} />
+            <div className="grid md:grid-cols-2 gap-6">
+              <MediaBudgetPanel />
+              <InventoryView />
+            </div>
+            <div className="pt-6 border-t border-white/10">
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold text-amber-300 flex items-center gap-1.5">
+                  <span>⚠️ Maintenance, Relocation & Recovery</span>
+                </h3>
+                <p className="text-xs text-white/50">Storage backend migration, fences, and quarantine disaster recovery actions.</p>
+              </div>
+              <div className="space-y-6">
+                <MaintenancePanel />
+                <RelocationMaintenance />
+                <RelocationActions onStorageChange={() => { storageChanged.current = true; setError('Storage switching was requested. Check relocation status, then reload before saving or exporting.'); }} />
+                <RelocationStatusPanel />
+                <RelocationRecovery onStorageChange={() => { storageChanged.current = true; setError('Recovery was requested. Check operation status, then reload before saving or exporting.'); }} />
+                <OperationHistory />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     ) : (
       <>
