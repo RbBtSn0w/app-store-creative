@@ -12,5 +12,12 @@ module.exports = {
       failTitle: false,
       releasedLabels: false,
     }],
+    ['@semantic-release/git', {
+      assets: [
+        'plugins/app-store-creative/.codex-plugin/plugin.json',
+        'plugins/app-store-creative/.agents/.plugin.json',
+      ],
+      message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
+    }],
   ],
 };

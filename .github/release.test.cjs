@@ -25,10 +25,18 @@ test('semantic-release loads only the intended lifecycle plugins', async () => {
   assert.deepEqual(options.branches, ['main']);
   assert.equal(options.tagFormat, 'v${version}');
   assert.equal(typeof plugins.prepare, 'function');
-  assert.equal(options.plugins.some(plugin => plugin === '@semantic-release/npm'), false);
-  const github = options.plugins.find(plugin => Array.isArray(plugin))[1];
+  const githubPlugin = options.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === '@semantic-release/github');
+  assert.ok(githubPlugin, 'expected @semantic-release/github to be configured');
+  const github = githubPlugin[1];
   assert.equal(github.successComment, false);
   assert.equal(github.failTitle, false);
+  const gitPlugin = options.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === '@semantic-release/git');
+  assert.ok(gitPlugin, 'expected @semantic-release/git to be configured');
+  const git = gitPlugin[1];
+  assert.deepEqual(git.assets, [
+    'plugins/app-store-creative/.codex-plugin/plugin.json',
+    'plugins/app-store-creative/.agents/.plugin.json',
+  ]);
 });
 
 test('commit analysis follows the documented release policy', async () => {
