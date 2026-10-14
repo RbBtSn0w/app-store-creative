@@ -73,8 +73,8 @@ def apply_critique(
         }
 
     # 3. Load & validate existing config
-    with open(cfg_file, "r", encoding="utf-8") as f:
-        config = json.load(f)
+    initial_bytes = cfg_file.read_bytes()
+    config = json.loads(initial_bytes.decode("utf-8"))
 
     studio_contract.check_config(config)
     default_locale = config.get("project", {}).get("defaultLocale", "en-US")
@@ -89,7 +89,9 @@ def apply_critique(
 
         target = item.get("target")
         locale = item.get("locale") or default_locale
-        patch = item.get("patch") if isinstance(item.get("patch"), dict) else item
+        patch = item.get("patch")
+        if not isinstance(patch, dict):
+            continue
 
         matching_card = next((c for c in config.get("cards", []) if c.get("id") == card_id), None)
         if not matching_card:
@@ -113,7 +115,8 @@ def apply_critique(
                 "y": float(offset.get("y", 0)),
             }
 
-            if target and "variants" in matching_card and target in matching_card["variants"]:
+            if target:
+                matching_card.setdefault("variants", {}).setdefault(target, {})
                 matching_card["variants"][target].setdefault("deviceOffset", {})
                 matching_card["variants"][target]["deviceOffset"].update(normalized_offset)
             else:
@@ -124,18 +127,14 @@ def apply_critique(
         if "headline" in patch and isinstance(patch["headline"], str):
             h = patch["headline"]
             if locale == default_locale:
-                if target and "variants" in matching_card and target in matching_card["variants"]:
+                if target:
+                    matching_card.setdefault("variants", {}).setdefault(target, {})
                     matching_card["variants"][target]["headline"] = h
                 else:
                     matching_card["headline"] = h
             else:
-                if (
-                    target
-                    and "variants" in matching_card
-                    and target in matching_card["variants"]
-                    and "localizations" in matching_card["variants"][target]
-                    and locale in matching_card["variants"][target]["localizations"]
-                ):
+                if target:
+                    matching_card.setdefault("variants", {}).setdefault(target, {}).setdefault("localizations", {}).setdefault(locale, {})
                     matching_card["variants"][target]["localizations"][locale]["headline"] = h
                 else:
                     config.setdefault("localizations", {}).setdefault(locale, {}).setdefault(card_id, {})
@@ -145,18 +144,14 @@ def apply_critique(
         if "subheadline" in patch and isinstance(patch["subheadline"], str):
             sh = patch["subheadline"]
             if locale == default_locale:
-                if target and "variants" in matching_card and target in matching_card["variants"]:
+                if target:
+                    matching_card.setdefault("variants", {}).setdefault(target, {})
                     matching_card["variants"][target]["subheadline"] = sh
                 else:
                     matching_card["subheadline"] = sh
             else:
-                if (
-                    target
-                    and "variants" in matching_card
-                    and target in matching_card["variants"]
-                    and "localizations" in matching_card["variants"][target]
-                    and locale in matching_card["variants"][target]["localizations"]
-                ):
+                if target:
+                    matching_card.setdefault("variants", {}).setdefault(target, {}).setdefault("localizations", {}).setdefault(locale, {})
                     matching_card["variants"][target]["localizations"][locale]["subheadline"] = sh
                 else:
                     config.setdefault("localizations", {}).setdefault(locale, {}).setdefault(card_id, {})
@@ -164,7 +159,8 @@ def apply_critique(
 
         # 4d. Update Layout
         if "layout" in patch and isinstance(patch["layout"], str):
-            if target and "variants" in matching_card and target in matching_card["variants"]:
+            if target:
+                matching_card.setdefault("variants", {}).setdefault(target, {})
                 matching_card["variants"][target]["layout"] = patch["layout"]
             else:
                 matching_card["layout"] = patch["layout"]
@@ -175,9 +171,15 @@ def apply_critique(
     # 5. Validate resulting configuration
     studio_contract.check_config(config)
 
+    directives_sync_warning = None
+
     # 6. Atomically persist changes
     with studio_contract.WRITE_LOCK:
+        current_bytes = cfg_file.read_bytes() if cfg_file.exists() else b""
+        if studio_contract.digest(current_bytes) != studio_contract.digest(initial_bytes):
+            raise ValueError("Configuration changed concurrently on disk; aborting apply-critique to prevent lost updates")
         studio_contract.atomic_json(cfg_file, config)
+
         # 6b. Keep .creative/review-directives.json synchronized
         try:
             directives_path = repo / ".creative" / "review-directives.json"
@@ -186,10 +188,10 @@ def apply_critique(
             if directives_path.is_file():
                 try:
                     existing_data = json.loads(directives_path.read_text(encoding="utf-8"))
-                except Exception:
-                    existing_data = {}
+                except Exception as e:
+                    raise ValueError(f"Failed to read existing review-directives.json: {e}")
             if not isinstance(existing_data, dict):
-                existing_data = {}
+                raise ValueError("Existing review-directives.json must be a JSON object")
             persisted_directives = existing_data.get("directives", {})
             if not isinstance(persisted_directives, dict):
                 persisted_directives = {}
@@ -200,12 +202,15 @@ def apply_critique(
                     existing_data["latest"] = item
             existing_data["directives"] = persisted_directives
             studio_contract.atomic_json(directives_path, existing_data)
-        except Exception:
-            pass
+        except Exception as e:
+            directives_sync_warning = str(e)
 
-    return {
+    res = {
         "status": "ok",
         "updated_cards": updated_card_ids,
         "config_path": str(cfg_file),
         "directives_applied": len(updated_card_ids),
     }
+    if directives_sync_warning:
+        res["directives_sync_warning"] = directives_sync_warning
+    return res

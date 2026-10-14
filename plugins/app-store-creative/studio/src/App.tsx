@@ -74,8 +74,8 @@ export const App: React.FC = () => {
   const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
   const [critiqueNotesByCard, setCritiqueNotesByCard] = useState<Record<string, string>>({});
-  const [critiqueDirty, setCritiqueDirty] = useState(false);
-  const critiqueDirtyRef = useRef(false); critiqueDirtyRef.current = critiqueDirty;
+  const [dirtyCritiqueCards, setDirtyCritiqueCards] = useState<Record<string, boolean>>({});
+  const dirtyCritiqueCardsRef = useRef<Record<string, boolean>>({}); dirtyCritiqueCardsRef.current = dirtyCritiqueCards;
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
   const [syncingCritique, setSyncingCritique] = useState(false);
   const [critiqueNotice, setCritiqueNotice] = useState('');
@@ -126,7 +126,7 @@ export const App: React.FC = () => {
     }).catch(() => {});
   }, []);
   useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current || critiqueDirtyRef.current) { event.preventDefault(); event.returnValue = ''; } };
+    const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current || Object.values(dirtyCritiqueCardsRef.current).some(Boolean)) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn); return () => window.removeEventListener('beforeunload', warn);
   }, []);
   useEffect(() => {
@@ -276,7 +276,7 @@ export const App: React.FC = () => {
         timestamp: new Date().toISOString(),
       };
       await request('/api/critique', payload);
-      setCritiqueDirty(false);
+      setDirtyCritiqueCards(prev => ({ ...prev, [active.id]: false }));
       setCritiqueNotice('✓ Directives saved to .creative/review-directives.json');
     } catch (reason) {
       setError((reason as Error).message);
@@ -306,6 +306,8 @@ export const App: React.FC = () => {
 - Workflow Action: Ingest parameters into creative.config.json, rerun offline headless verification, and regenerate preview artifact.`;
     void navigator.clipboard.writeText(md).then(() => {
       setCritiqueNotice('✓ Markdown directive copied to clipboard');
+    }).catch(reason => {
+      setError(`Could not copy directive: ${(reason as Error).message}`);
     });
   };
 
@@ -790,7 +792,7 @@ export const App: React.FC = () => {
                         const val = e.target.value;
                         if (active) {
                           setCritiqueNotesByCard(prev => ({ ...prev, [active.id]: val }));
-                          setCritiqueDirty(true);
+                          setDirtyCritiqueCards(prev => ({ ...prev, [active.id]: true }));
                         }
                       }} className="w-full text-xs" />
                     <div className="flex flex-col gap-2 pt-1">

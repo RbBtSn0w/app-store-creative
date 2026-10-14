@@ -68,6 +68,7 @@ describe('reviewed target and locale assignments', () => {
     });
     const macCard = resolveCard(edited, edited.cards[0], 'mac_16_10', 'en-US');
     expect(macCard.deviceOffset).toEqual({ x: 0, y: 20, scale: 1.08, rotate: 2 });
+    expect(edited.cards[0].variants?.mac_16_10?.deviceOffset).toEqual({ rotate: 2, scale: 1.08 });
   });
   it('updates customBackground on the card', () => {
     const edited = updateVariant(config, 'hero', 'mac_16_10', 'en-US', {

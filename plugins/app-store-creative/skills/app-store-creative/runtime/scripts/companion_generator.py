@@ -47,6 +47,195 @@ def svg_placeholder(card_id: str, headline: str, width: int = 1440, height: int 
     return f"data:image/svg+xml;base64,{encoded}"
 
 
+OFFLINE_COMPANION_CSS = r"""
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background-color: #0A0D14; color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+body { padding: 1rem; -webkit-font-smoothing: antialiased; }
+.max-w-6xl { max-width: 72rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+.space-y-2\.5 > * + * { margin-top: 0.625rem; }
+.space-y-2 > * + * { margin-top: 0.5rem; }
+.space-y-1 > * + * { margin-top: 0.25rem; }
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.flex-1 { flex: 1 1 0%; }
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 1024px) {
+  .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .lg\:col-span-7 { grid-column: span 7 / span 7; }
+  .lg\:col-span-5 { grid-column: span 5 / span 5; }
+}
+.gap-1 { gap: 0.25rem; }
+.gap-1\.5 { gap: 0.375rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-2\.5 { gap: 0.625rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-5 { gap: 1.25rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.px-1\.5 { padding-left: 0.375rem; padding-right: 0.375rem; }
+.px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+.px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
+.py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+.py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+.pb-2 { padding-bottom: 0.5rem; }
+.pb-3 { padding-bottom: 0.75rem; }
+.pt-1 { padding-top: 0.25rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mt-1 { margin-top: 0.25rem; }
+.my-1 { margin-top: 0.25rem; margin-bottom: 0.25rem; }
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+.max-w-full { max-width: 100%; }
+.max-w-lg { max-width: 32rem; }
+.min-h-0 { min-height: 0; }
+.w-2 { width: 0.5rem; }
+.h-2 { height: 0.5rem; }
+.w-1\.5 { width: 0.375rem; }
+.h-1\.5 { height: 0.375rem; }
+.w-80 { width: 20rem; }
+.h-80 { height: 20rem; }
+.w-96 { width: 24rem; }
+.h-96 { height: 24rem; }
+.aspect-\[16\/10\] { aspect-ratio: 16 / 10; }
+.aspect-\[9\/19\.5\] { aspect-ratio: 9 / 19.5; }
+.max-h-\[380px\] { max-height: 380px; }
+.max-h-\[500px\] { max-height: 500px; }
+.rounded { border-radius: 0.25rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-full { border-radius: 9999px; }
+.border { border-width: 1px; border-style: solid; }
+.border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+.border-white\/10 { border-color: rgba(255, 255, 255, 0.1); }
+.border-white\/15 { border-color: rgba(255, 255, 255, 0.15); }
+.border-white\/20 { border-color: rgba(255, 255, 255, 0.2); }
+.border-emerald-500\/30 { border-color: rgba(16, 185, 129, 0.3); }
+.border-emerald-500\/40 { border-color: rgba(16, 185, 129, 0.4); }
+.border-emerald-500\/50 { border-color: rgba(16, 185, 129, 0.5); }
+.border-indigo-500 { border-color: rgb(99, 102, 241); }
+.border-indigo-500\/30 { border-color: rgba(99, 102, 241, 0.3); }
+.border-indigo-500\/50 { border-color: rgba(99, 102, 241, 0.5); }
+.border-transparent { border-color: transparent; }
+.bg-\[\#0A0D14\] { background-color: #0A0D14; }
+.bg-\[\#121624\] { background-color: #121624; }
+.bg-\[\#1A1F2C\] { background-color: #1A1F2C; }
+.bg-white\/5 { background-color: rgba(255, 255, 255, 0.05); }
+.bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
+.bg-emerald-500\/20 { background-color: rgba(16, 185, 129, 0.2); }
+.bg-emerald-600 { background-color: rgb(5, 150, 105); }
+.bg-emerald-600:hover { background-color: rgb(16, 185, 129); }
+.bg-emerald-600\/30 { background-color: rgba(5, 150, 105, 0.3); }
+.bg-emerald-600\/40 { background-color: rgba(5, 150, 105, 0.4); }
+.bg-emerald-400 { background-color: rgb(52, 211, 153); }
+.bg-indigo-600 { background-color: rgb(79, 70, 229); }
+.bg-indigo-600:hover { background-color: rgb(99, 102, 241); }
+.bg-indigo-600\/20 { background-color: rgba(79, 70, 229, 0.2); }
+.bg-indigo-500\/20 { background-color: rgba(99, 102, 241, 0.2); }
+.bg-indigo-500\/30 { background-color: rgba(99, 102, 241, 0.3); }
+.bg-indigo-500\/15 { background-color: rgba(99, 102, 241, 0.15); }
+.bg-fuchsia-500\/15 { background-color: rgba(217, 70, 239, 0.15); }
+.text-white { color: #ffffff; }
+.text-white\/40 { color: rgba(255, 255, 255, 0.4); }
+.text-white\/50 { color: rgba(255, 255, 255, 0.5); }
+.text-white\/60 { color: rgba(255, 255, 255, 0.6); }
+.text-white\/70 { color: rgba(255, 255, 255, 0.7); }
+.text-white\/75 { color: rgba(255, 255, 255, 0.75); }
+.text-white\/80 { color: rgba(255, 255, 255, 0.8); }
+.text-indigo-300 { color: rgb(165, 180, 252); }
+.text-emerald-200 { color: rgb(167, 243, 208); }
+.text-emerald-300 { color: rgb(110, 231, 183); }
+.text-emerald-400 { color: rgb(52, 211, 153); }
+.text-\[10px\] { font-size: 10px; }
+.text-\[11px\] { font-size: 11px; }
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+@media (min-width: 640px) { .sm\:text-2xl { font-size: 1.5rem; line-height: 2rem; } }
+.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.uppercase { text-transform: uppercase; }
+.tracking-wider { letter-spacing: 0.05em; }
+.tracking-widest { letter-spacing: 0.1em; }
+.tracking-tight { letter-spacing: -0.025em; }
+.leading-tight { line-height: 1.25; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+.shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+.shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.top-5 { top: 1.25rem; }
+.right-5 { right: 1.25rem; }
+.-top-16 { top: -4rem; }
+.-right-16 { right: -4rem; }
+.-bottom-20 { bottom: -5rem; }
+.-left-20 { left: -5rem; }
+.overflow-hidden { overflow: hidden; }
+.pointer-events-none { pointer-events: none; }
+.cursor-pointer { cursor: pointer; }
+.select-none { user-select: none; -webkit-user-select: none; }
+.blur-3xl { filter: blur(64px); }
+.hidden { display: none !important; }
+.block { display: block; }
+.transition { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+.transition-transform { transition-property: transform; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+.duration-150 { transition-duration: 150ms; }
+.duration-500 { transition-duration: 500ms; }
+.ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+button { cursor: pointer; font-family: inherit; }
+input, textarea { font-family: inherit; }
+.focus\:outline-none:focus { outline: none; }
+.focus\:border-indigo-500:focus { border-color: rgb(99, 102, 241); }
+.accent-indigo-500 { accent-color: rgb(99, 102, 241); }
+.object-contain { object-fit: contain; }
+.glass-surface {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+}
+.dark-glass-surface {
+  background: rgba(15, 18, 28, 0.85);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+.native-window-shadow {
+  box-shadow: 0 45px 90px -20px rgba(0, 0, 0, 0.65), 0 20px 40px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+.floating-badge {
+  animation: gentle-float 4.5s ease-in-out infinite alternate;
+}
+@keyframes gentle-float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-6px) rotate(-1deg); }
+}
+"""
+
+
 def generate_companion(
     repo_root: Path,
     config_path: Path | None = None,
@@ -65,7 +254,7 @@ def generate_companion(
 
     studio_contract.check_config(config)
 
-    targets = config.get("targets", ["mac_16_10"])
+    targets = config.get("targets", ["iphone_6_9"])
     chosen_target = target or targets[0]
     default_locale = config.get("project", {}).get("defaultLocale", "en-US")
     chosen_locale = locale or default_locale
@@ -136,32 +325,8 @@ def generate_companion(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{html.escape(project_name)} - 伴随式调优面板 (Companion)</title>
-  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
-    .glass-surface {{
-      background: rgba(255, 255, 255, 0.65);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.45);
-      box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
-    }}
-    .dark-glass-surface {{
-      background: rgba(15, 18, 28, 0.85);
-      backdrop-filter: blur(32px) saturate(180%);
-      -webkit-backdrop-filter: blur(32px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-    }}
-    .native-window-shadow {{
-      box-shadow: 0 45px 90px -20px rgba(0, 0, 0, 0.65), 0 20px 40px -15px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.15);
-    }}
-    .floating-badge {{
-      animation: gentle-float 4.5s ease-in-out infinite alternate;
-    }}
-    @keyframes gentle-float {{
-      0% {{ transform: translateY(0px) rotate(0deg); }}
-      100% {{ transform: translateY(-6px) rotate(-1deg); }}
-    }}
+{OFFLINE_COMPANION_CSS}
   </style>
 </head>
 <body class="bg-[#0A0D14] text-slate-100 antialiased p-4">
@@ -291,16 +456,16 @@ def generate_companion(
               <div>
                 <div class="flex justify-between text-white/70 mb-1">
                   <span>Offset X</span>
-                  <span id="val-x" class="font-mono text-indigo-300">0px</span>
+                  <span id="val-offset-x" class="font-mono text-indigo-300">0px</span>
                 </div>
-                <input id="slider-x" type="range" min="-80" max="80" step="1" value="0" oninput="update3D()" class="w-full cursor-pointer accent-indigo-500" />
+                <input id="slider-offset-x" type="range" min="-80" max="80" step="1" value="0" oninput="update3D()" class="w-full cursor-pointer accent-indigo-500" />
               </div>
               <div>
                 <div class="flex justify-between text-white/70 mb-1">
                   <span>Offset Y</span>
-                  <span id="val-y" class="font-mono text-indigo-300">0px</span>
+                  <span id="val-offset-y" class="font-mono text-indigo-300">0px</span>
                 </div>
-                <input id="slider-y" type="range" min="-80" max="80" step="1" value="0" oninput="update3D()" class="w-full cursor-pointer accent-indigo-500" />
+                <input id="slider-offset-y" type="range" min="-80" max="80" step="1" value="0" oninput="update3D()" class="w-full cursor-pointer accent-indigo-500" />
               </div>
             </div>
           </div>
@@ -364,13 +529,30 @@ def generate_companion(
 
     function renderNav() {{
       const nav = document.getElementById('cards-nav');
-      nav.innerHTML = cards.map((c, idx) => `
-        <button onclick="selectCard(${{idx}})" id="card-btn-${{idx}}" class="px-3 py-1.5 rounded-xl border text-xs font-medium transition flex items-center gap-2 ${{idx === currentIdx ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm' : 'bg-white/5 border-white/10 text-white/60 hover:text-white'}}">
-          <span class="font-mono text-[10px] text-indigo-300">CARD 0${{idx+1}}</span>
-          <span class="text-[10px] text-white/40 uppercase font-mono">(${{c.role}})</span>
-          <span class="truncate max-w-[110px]">${{c.headline}}</span>
-        </button>
-      `).join('');
+      nav.innerHTML = '';
+      cards.forEach((c, idx) => {{
+        const btn = document.createElement('button');
+        btn.id = `card-btn-${{idx}}`;
+        btn.className = `px-3 py-1.5 rounded-xl border text-xs font-medium transition flex items-center gap-2 ${{idx === currentIdx ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm' : 'bg-white/5 border-white/10 text-white/60 hover:text-white'}}`;
+        btn.onclick = () => selectCard(idx);
+
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'font-mono text-[10px] text-indigo-300';
+        badgeSpan.textContent = `CARD 0${{idx + 1}}`;
+
+        const roleSpan = document.createElement('span');
+        roleSpan.className = 'text-[10px] text-white/40 uppercase font-mono';
+        roleSpan.textContent = `(${{c.role}})`;
+
+        const headlineSpan = document.createElement('span');
+        headlineSpan.className = 'truncate max-w-[110px] text-white/80';
+        headlineSpan.textContent = c.headline;
+
+        btn.appendChild(badgeSpan);
+        btn.appendChild(roleSpan);
+        btn.appendChild(headlineSpan);
+        nav.appendChild(btn);
+      }});
     }}
 
     function selectCard(idx) {{
@@ -391,8 +573,8 @@ def generate_companion(
       document.getElementById('slider-yaw').value = card.rotateY;
       document.getElementById('slider-roll').value = card.rotate;
       document.getElementById('slider-scale').value = card.scale;
-      document.getElementById('slider-x').value = card.x;
-      document.getElementById('slider-y').value = card.y;
+      document.getElementById('slider-offset-x').value = card.x;
+      document.getElementById('slider-offset-y').value = card.y;
 
       update3D();
     }}
@@ -402,15 +584,15 @@ def generate_companion(
       const ry = parseFloat(document.getElementById('slider-yaw').value);
       const r = parseFloat(document.getElementById('slider-roll').value);
       const s = parseFloat(document.getElementById('slider-scale').value);
-      const x = parseFloat(document.getElementById('slider-x').value);
-      const y = parseFloat(document.getElementById('slider-y').value);
+      const x = parseFloat(document.getElementById('slider-offset-x').value);
+      const y = parseFloat(document.getElementById('slider-offset-y').value);
 
       document.getElementById('val-pitch').innerText = `${{rx}}°`;
       document.getElementById('val-yaw').innerText = `${{ry}}°`;
       document.getElementById('val-roll').innerText = `${{r}}°`;
       document.getElementById('val-scale').innerText = `${{s.toFixed(2)}}x`;
-      document.getElementById('val-x').innerText = `${{x}}px`;
-      document.getElementById('val-y').innerText = `${{y}}px`;
+      document.getElementById('val-offset-x').innerText = `${{x}}px`;
+      document.getElementById('val-offset-y').innerText = `${{y}}px`;
 
       const win = document.getElementById('stage-window');
       win.style.transform = `translate3d(${{x}}px, ${{y}}px, 0) scale(${{s}}) rotate(${{r}}deg) rotateX(${{rx}}deg) rotateY(${{ry}}deg)`;
@@ -430,8 +612,8 @@ def generate_companion(
       const ry = parseFloat(document.getElementById('slider-yaw').value);
       const r = parseFloat(document.getElementById('slider-roll').value);
       const s = parseFloat(document.getElementById('slider-scale').value);
-      const x = parseFloat(document.getElementById('slider-x').value);
-      const y = parseFloat(document.getElementById('slider-y').value);
+      const x = parseFloat(document.getElementById('slider-offset-x').value);
+      const y = parseFloat(document.getElementById('slider-offset-y').value);
 
       const isHero = rx === 4 && ry === 0 && r === 0 && Math.abs(s - 1.03) < 0.005 && x === 0 && y === 25;
       const isInward = Math.abs(ry) >= 6 && rx === 4 && Math.abs(s - 1.02) < 0.005;
@@ -455,23 +637,23 @@ def generate_companion(
         document.getElementById('slider-yaw').value = 0;
         document.getElementById('slider-roll').value = 0;
         document.getElementById('slider-scale').value = 1.03;
-        document.getElementById('slider-x').value = 0;
-        document.getElementById('slider-y').value = 25;
+        document.getElementById('slider-offset-x').value = 0;
+        document.getElementById('slider-offset-y').value = 25;
       }} else if (type === 'inward') {{
         const isRight = card.layout.includes('right');
         document.getElementById('slider-pitch').value = 4;
         document.getElementById('slider-yaw').value = isRight ? -8 : 8;
         document.getElementById('slider-roll').value = isRight ? 2 : -2;
         document.getElementById('slider-scale').value = 1.02;
-        document.getElementById('slider-x').value = 0;
-        document.getElementById('slider-y').value = 0;
+        document.getElementById('slider-offset-x').value = 0;
+        document.getElementById('slider-offset-y').value = 0;
       }} else if (type === 'flat') {{
         document.getElementById('slider-pitch').value = 0;
         document.getElementById('slider-yaw').value = 0;
         document.getElementById('slider-roll').value = 0;
         document.getElementById('slider-scale').value = 1.0;
-        document.getElementById('slider-x').value = 0;
-        document.getElementById('slider-y').value = 0;
+        document.getElementById('slider-offset-x').value = 0;
+        document.getElementById('slider-offset-y').value = 0;
       }}
       update3D();
     }}
@@ -483,8 +665,8 @@ def generate_companion(
       document.getElementById('slider-yaw').value = orig.rotateY;
       document.getElementById('slider-roll').value = orig.rotate;
       document.getElementById('slider-scale').value = orig.scale;
-      document.getElementById('slider-x').value = orig.x;
-      document.getElementById('slider-y').value = orig.y;
+      document.getElementById('slider-offset-x').value = orig.x;
+      document.getElementById('slider-offset-y').value = orig.y;
       update3D();
     }}
 

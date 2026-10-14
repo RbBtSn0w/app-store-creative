@@ -144,6 +144,34 @@ class TestCompanionGenerator(unittest.TestCase):
         self.assertNotIn("Evil</script>", html_out)
         self.assertIn("Evil<\\/script>", html_out)
 
+    def test_generate_companion_omitted_targets_defaults_to_iphone_6_9(self):
+        # When targets is not declared, match studio_contract default iphone_6_9
+        no_targets_config = dict(self.config_data)
+        del no_targets_config["targets"]
+        cfg_path = self.root / "no_targets.config.json"
+        cfg_path.write_text(json.dumps(no_targets_config))
+        result = companion_generator.generate_companion(repo_root=self.root, config_path=cfg_path)
+        self.assertEqual(result["target"], "iphone_6_9")
+
+    def test_generate_companion_is_offline_and_uses_offset_ids(self):
+        result = companion_generator.generate_companion(repo_root=self.root)
+        self.assertEqual(result["status"], "ok")
+        out_file = self.root / ".creative" / "companion.html"
+        content = out_file.read_text(encoding="utf-8")
+
+        # Zero-server offline requirement: no remote scripts
+        self.assertNotIn("tailwindcss.min.js", content)
+        self.assertNotIn("gstatic.com", content)
+
+        # Unique offset IDs to prevent yaw/y ambiguity
+        self.assertIn('id="slider-offset-y"', content)
+        self.assertIn('id="val-offset-y"', content)
+        self.assertIn('id="slider-yaw"', content)
+        self.assertIn('document.getElementById(\'slider-offset-y\')', content)
+
+        # Safe nav building via createElement and textContent
+        self.assertIn("headlineSpan.textContent = c.headline;", content)
+
 
 if __name__ == "__main__":
     unittest.main()

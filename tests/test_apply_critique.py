@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import unittest.mock
 
 SCRIPTS_DIR = Path(__file__).parents[1] / "plugins/app-store-creative/skills/app-store-creative/runtime/scripts"
 if str(SCRIPTS_DIR) not in sys.path:
@@ -103,12 +104,16 @@ class TestApplyCritique(unittest.TestCase):
 
         updated_config = json.loads(self.config_path.read_text())
         hero_card = updated_config["cards"][0]
-        self.assertEqual(hero_card["headline"], "Tilted Hero Headline")
-        self.assertEqual(hero_card["deviceOffset"]["rotateX"], 4.0)
-        self.assertEqual(hero_card["deviceOffset"]["rotateY"], 2.0)
-        self.assertEqual(hero_card["deviceOffset"]["scale"], 1.05)
-        self.assertEqual(hero_card["deviceOffset"]["x"], 10.0)
-        self.assertEqual(hero_card["deviceOffset"]["y"], 20.0)
+        # Root headline is preserved; variant receives target-scoped override
+        self.assertEqual(hero_card["headline"], "Original Headline")
+        self.assertIn("mac_16_10", hero_card["variants"])
+        mac_variant = hero_card["variants"]["mac_16_10"]
+        self.assertEqual(mac_variant["headline"], "Tilted Hero Headline")
+        self.assertEqual(mac_variant["deviceOffset"]["rotateX"], 4.0)
+        self.assertEqual(mac_variant["deviceOffset"]["rotateY"], 2.0)
+        self.assertEqual(mac_variant["deviceOffset"]["scale"], 1.05)
+        self.assertEqual(mac_variant["deviceOffset"]["x"], 10.0)
+        self.assertEqual(mac_variant["deviceOffset"]["y"], 20.0)
 
     def test_apply_critique_from_json_string(self):
         directives_json = json.dumps({
@@ -239,7 +244,42 @@ class TestApplyCritique(unittest.TestCase):
             )
             self.assertEqual(result["status"], "ok")
             updated = json.loads(self.config_path.read_text())
-            self.assertEqual(updated["cards"][0]["headline"], "Stdin Headline")
+    def test_apply_critique_skips_flat_items_without_patch(self):
+        # A flat directive without explicit patch should be skipped, preventing inadvertent overwrite
+        payload = json.dumps({
+            "card_id": "01-hero",
+            "headline": "Overwritten Headline",
+            "notes": "Just some review notes",
+        })
+        result = apply_critique.apply_critique(
+            repo_root=self.root,
+            directives_json=payload,
+        )
+        self.assertEqual(result["status"], "ok")
+        self.assertEqual(result["directives_applied"], 0)
+        updated = json.loads(self.config_path.read_text())
+        self.assertEqual(updated["cards"][0]["headline"], "Original Headline")
+
+    def test_apply_critique_concurrent_mutation_rejected(self):
+        # If the file on disk changes concurrently between read and write, raise ValueError
+        payload = json.dumps({
+            "card_id": "01-hero",
+            "patch": {"headline": "Race Condition"}
+        })
+        # Simulate race condition by modifying file right after read
+        orig_check = apply_critique.studio_contract.check_config
+
+        def mutate_config_before_persist(cfg):
+            orig_check(cfg)
+            self.config_path.write_text(json.dumps({"mutated": True}))
+
+        with unittest.mock.patch("apply_critique.studio_contract.check_config", side_effect=mutate_config_before_persist):
+            with self.assertRaises(ValueError) as ctx:
+                apply_critique.apply_critique(
+                    repo_root=self.root,
+                    directives_json=payload,
+                )
+            self.assertIn("concurrently", str(ctx.exception))
 
 
 if __name__ == "__main__":

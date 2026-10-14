@@ -11,7 +11,7 @@ export function localizedFields(config: CreativeConfig, card: CardConfig, target
 export function resolveCard(config: CreativeConfig, card: CardConfig, target: TargetDevice, locale: string): CardConfig {
   const { localizations: _, ...variant } = card.variants?.[target] || {};
   const localized = localizedFields(config, card, target, locale);
-  const deviceOffset = variant.deviceOffset || card.deviceOffset
+  const deviceOffset = (variant.deviceOffset || card.deviceOffset)
     ? { ...(card.deviceOffset || {}), ...(variant.deviceOffset || {}) }
     : undefined;
   return { ...card, ...variant,
@@ -37,7 +37,7 @@ export function updateVariant(config: CreativeConfig, id: string, target: Target
     const existingDefault = locale === (config.project.defaultLocale || 'en-US') &&
       Object.keys(localizedFields(config, card, target, locale)).length > 0;
     const updatedOffset = deviceOffset
-      ? { ...(variant.deviceOffset || card.deviceOffset || {}), ...deviceOffset }
+      ? { ...(variant.deviceOffset || {}), ...deviceOffset }
       : variant.deviceOffset;
     const updated = locale === (config.project.defaultLocale || 'en-US')
       ? { ...variant, ...capture, ...(layout ? { layout } : {}), ...(updatedOffset ? { deviceOffset: updatedOffset } : {}), ...(existingDefault ? {

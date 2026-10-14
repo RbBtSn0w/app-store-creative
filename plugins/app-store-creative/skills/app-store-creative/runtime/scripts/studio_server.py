@@ -667,10 +667,10 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                         try:
                             with open(directives_path, 'r', encoding='utf-8') as f:
                                 existing = json.load(f)
-                        except Exception:
-                            existing = {}
+                        except Exception as e:
+                            raise ValueError(f"Failed to read existing review-directives.json: {e}")
                     if not isinstance(existing, dict):
-                        existing = {}
+                        raise ValueError("Existing review-directives.json must be a JSON object")
                     directives = existing.get('directives', {})
                     if not isinstance(directives, dict):
                         directives = {}
@@ -681,7 +681,15 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     payload['card_id'] = card_id
 
                     # Normalize notes and directive bidirectionally
-                    note_text = payload.get('notes') or payload.get('directive') or ''
+                    raw_notes = payload.get('notes')
+                    if raw_notes is None:
+                        raw_notes = payload.get('directive')
+                    if raw_notes is None:
+                        note_text = ''
+                    elif isinstance(raw_notes, str):
+                        note_text = raw_notes.strip()
+                    else:
+                        raise ValueError('Critique notes/directive must be a string')
                     payload['notes'] = note_text
                     payload['directive'] = note_text
 
