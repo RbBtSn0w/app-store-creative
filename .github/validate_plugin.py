@@ -24,7 +24,10 @@ def main() -> None:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     require(data.get("name") == PLUGIN.name, "plugin name must match its directory")
     version = data.get("version")
-    require(bool(version and re.match(r"^\d+\.\d+\.\d+$", version)), "plugin version must be a stable semver string")
+    stable_version = isinstance(version, str) and bool(
+        re.fullmatch(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)", version)
+    )
+    require(stable_version, "plugin version must be a stable semver string")
     require(data.get("author", {}).get("name") == "RbBtSn0w", "unexpected author")
     require(data.get("interface", {}).get("category") == "Creativity", "unexpected category")
     require(bool(data.get("interface", {}).get("capabilities")), "capabilities must not be empty")
