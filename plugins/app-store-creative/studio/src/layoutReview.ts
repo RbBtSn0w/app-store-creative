@@ -1,4 +1,20 @@
+import type { CardOffset } from './types';
+
 export type Region = Pick<DOMRect, 'left' | 'top' | 'right' | 'bottom'>;
+
+export function classifyPose(cur?: Partial<CardOffset>): 'hero' | 'gaze' | 'grounded' | 'flat' | 'custom' {
+  if (!cur) return 'flat';
+  const rx = cur.rotateX ?? 0;
+  const ry = cur.rotateY ?? 0;
+  const r = cur.rotate ?? 0;
+  const s = cur.scale ?? 1.0;
+
+  if (rx === 4 && ry === 0 && r === 0 && Math.abs(s - 1.05) < 0.02) return 'hero';
+  if (rx === 4 && (ry === 8 || ry === -8 || ry === 6 || ry === -6)) return 'gaze';
+  if (rx === 0 && ry === 0 && r === 0 && Math.abs(s - 0.95) < 0.02) return 'grounded';
+  if (rx === 0 && ry === 0 && r === 0 && Math.abs(s - 1.0) < 0.02) return 'flat';
+  return 'custom';
+}
 
 export function layoutIssues(bounds: Region, texts: Region[], copy?: Region, device?: Region): string[] {
   const findings: string[] = [];

@@ -24,6 +24,7 @@ import { CandidatePreviewMedia } from './CandidatePreviewMedia';
 import { StorageSettings } from './StorageSettings';
 import { ArchivePolicySettings } from './ArchivePolicySettings';
 import { loadStoragePreview, storageSaveConflict, assertCurrentSave, type StoragePreview } from './storagePreview';
+import { classifyPose } from './layoutReview';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -73,6 +74,8 @@ export const App: React.FC = () => {
   const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
   const [critiqueNotesByCard, setCritiqueNotesByCard] = useState<Record<string, string>>({});
+  const [critiqueDirty, setCritiqueDirty] = useState(false);
+  const critiqueDirtyRef = useRef(false); critiqueDirtyRef.current = critiqueDirty;
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
   const [syncingCritique, setSyncingCritique] = useState(false);
   const [critiqueNotice, setCritiqueNotice] = useState('');
@@ -123,7 +126,7 @@ export const App: React.FC = () => {
     }).catch(() => {});
   }, []);
   useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current) { event.preventDefault(); event.returnValue = ''; } };
+    const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current || critiqueDirtyRef.current) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn); return () => window.removeEventListener('beforeunload', warn);
   }, []);
   useEffect(() => {
@@ -273,6 +276,7 @@ export const App: React.FC = () => {
         timestamp: new Date().toISOString(),
       };
       await request('/api/critique', payload);
+      setCritiqueDirty(false);
       setCritiqueNotice('✓ Directives saved to .creative/review-directives.json');
     } catch (reason) {
       setError((reason as Error).message);
@@ -662,10 +666,10 @@ export const App: React.FC = () => {
                       <button type="button" className="text-[10px] text-white/40 hover:text-white" onClick={() => applyPresetPose('flat')}>Reset</button>
                     </div>
                     {(() => {
-                      const cur = resolved?.deviceOffset || {};
-                      const isHero = cur.rotateX === 4 && cur.rotateY === 0 && (cur.rotate ?? 0) === 0;
-                      const isGaze = cur.rotateX === 4 && (cur.rotateY === 8 || cur.rotateY === -8 || cur.rotateY === 6 || cur.rotateY === -6);
-                      const isGrounded = (cur.rotateX ?? 0) === 0 && (cur.rotateY ?? 0) === 0 && (cur.rotate ?? 0) === 0;
+                      const pose = classifyPose(resolved?.deviceOffset);
+                      const isHero = pose === 'hero';
+                      const isGaze = pose === 'gaze';
+                      const isGrounded = pose === 'grounded';
                       const activeCls = "py-1 px-1.5 text-[11px] rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-medium";
                       const inactiveCls = "py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10 text-white/70";
                       return (
@@ -730,7 +734,7 @@ export const App: React.FC = () => {
                           <span>Offset X</span>
                           <span className="font-mono text-indigo-300">{resolved.deviceOffset?.x ?? 0}px</span>
                         </div>
-                        <input type="range" min="-100" max="100" step="2" value={resolved.deviceOffset?.x ?? 0}
+                        <input type="range" min="-100" max="100" step="1" value={resolved.deviceOffset?.x ?? 0}
                           onChange={e => updateOffset({ x: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
                       </div>
                       <div>
@@ -738,7 +742,7 @@ export const App: React.FC = () => {
                           <span>Offset Y</span>
                           <span className="font-mono text-indigo-300">{resolved.deviceOffset?.y ?? 0}px</span>
                         </div>
-                        <input type="range" min="-100" max="100" step="2" value={resolved.deviceOffset?.y ?? 0}
+                        <input type="range" min="-100" max="100" step="1" value={resolved.deviceOffset?.y ?? 0}
                           onChange={e => updateOffset({ y: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
                       </div>
                     </div>
@@ -784,12 +788,15 @@ export const App: React.FC = () => {
                       value={active ? (critiqueNotesByCard[active.id] || '') : ''}
                       onChange={e => {
                         const val = e.target.value;
-                        if (active) setCritiqueNotesByCard(prev => ({ ...prev, [active.id]: val }));
+                        if (active) {
+                          setCritiqueNotesByCard(prev => ({ ...prev, [active.id]: val }));
+                          setCritiqueDirty(true);
+                        }
                       }} className="w-full text-xs" />
                     <div className="flex flex-col gap-2 pt-1">
                       <button type="button" className="primary text-xs flex items-center justify-center gap-1.5"
                         disabled={syncingCritique} onClick={syncCritique}>
-                        <span>⚡ Sync Directives to Agent Mailbox</span>
+                        <span>⚡ Sync Directives to Agent</span>
                       </button>
                       <button type="button" className="text-xs flex items-center justify-center gap-1.5"
                         onClick={copyCritiqueMarkdown}>
