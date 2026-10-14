@@ -51,10 +51,10 @@ Use `deviceOffset` alongside `layout` to establish cohesive 3D perspective acros
 
 | Parameter | Recommended Range | Purpose & Visual Role |
 | :--- | :--- | :--- |
-| `scale` | `1.03` ~ `1.08` | Hero focal punch: breaks canvas boundaries, creates primary pop. |
-| `rotate` | `-3°` ~ `+3°` | Dynamic tilt: breaks rigid orthogonal grid, introduces kinetic feel. |
-| `rotateX` | `4°` ~ `12°` | Pitch angle: gives desktop/tabletop display perspective. |
-| `rotateY` | `-8°` ~ `+8°` | Yaw angle: directs viewer gaze towards or away from marketing copy. |
+| `scale` | `1.0` ~ `1.08` | Focal scale (`1.0` grounded baseline up to `1.08` hero punch). |
+| `rotate` | `-3` ~ `+3` | Dynamic tilt in degrees: breaks rigid orthogonal grid, introduces kinetic feel. |
+| `rotateX` | `4` ~ `12` | Pitch angle in degrees: gives desktop/tabletop display perspective. |
+| `rotateY` | `-8` ~ `+8` | Yaw angle in degrees: directs viewer gaze towards or away from marketing copy. |
 | `x` / `y` | `-30` ~ `+50` | Center-of-mass balancing: accommodates long headlines or bleed. |
 
 #### Recommended 5-Slide 3D Spatial Arc (Production Standard):
@@ -62,7 +62,7 @@ Use `deviceOffset` alongside `layout` to establish cohesive 3D perspective acros
 2. **Slide 2 (Core Action)**: `mac_native_left` + `scale: 1.02`, `rotate: -2`, `rotateY: 8` (Inward yaw towards copy).
 3. **Slide 3 (Depth / Proof)**: `mac_native_right` + `scale: 1.02`, `rotate: 2`, `rotateY: -8` (Counter-angle balance).
 4. **Slide 4 (Superpower / Grid)**: `mac_native_hero` + `scale: 1.04`, `y: -10` (Elevated feature showcase).
-5. **Slide 5 (Trust / Base)**: Centered or `mac_native_hero` + `scale: 1.0`, `rotateX: 6`, `y: 15` (Solid, grounded foundation).
+5. **Slide 5 (Trust / Base)**: `mac_native_hero` + `scale: 1.0`, `rotateX: 6`, `y: 15` (Solid, grounded foundation).
 
 #### Background Flow & Ambient Lighting:
 - Configure `theme.background.angle` (`145°` ~ `160°`) with `connectedTrack: true` so the gradient light sweeps continuously from the top-left of Slide 1 to the bottom-right of Slide 5.
@@ -89,7 +89,7 @@ the surrounding marketing copy does not localize the product UI.
 | "Workout Log and Timer" | "Crush Every Workout" |
 | "AI Chatbot Assistant" | "Supercharge Your Workflow" |
 
-### 3. 18 Curated Visual Style Presets
+### 4. 18 Curated Visual Style Presets
 
 Apply any of the 18 pre-configured visual style presets under `theme.stylePreset`:
 
