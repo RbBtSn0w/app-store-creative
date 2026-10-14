@@ -1,0 +1,15 @@
+{
+  "display_name": "App Store Creative Studio",
+  "description": "Interactive App Store screenshot composition and audit studio",
+  "has_web_ui": true,
+  "command": "python3 skills/app-store-creative/runtime/scripts/app_store_creative.py studio --port 3100",
+  "ui_config": {
+    "views": [
+      {
+        "title": "Creative Studio",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
+        "path": "/"
+      }
+    ]
+  }
+}
