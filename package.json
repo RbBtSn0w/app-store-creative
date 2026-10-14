@@ -1,6 +1,9 @@
 {
   "name": "app-store-creative-release",
   "private": true,
+  "workspaces": [
+    ".github/stubs/@semantic-release/npm"
+  ],
   "scripts": {
     "release": "semantic-release",
     "test:release": "node --test .github/release.test.cjs"
