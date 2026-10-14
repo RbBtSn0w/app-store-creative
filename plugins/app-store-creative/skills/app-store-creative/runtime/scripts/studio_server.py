@@ -155,6 +155,18 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             import export_engine
             self._json({"status": "ok", "version": "2.0.0", "chrome": bool(export_engine.find_chrome_binary())})
             return
+        if path == "/api/critique":
+            directives_path = self.repo_root / ".creative" / "review-directives.json"
+            if directives_path.exists():
+                try:
+                    with open(directives_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    self._json(data)
+                except Exception as error:
+                    self._json({"error": str(error)}, 500)
+            else:
+                self._json({"directives": {}, "latest": None})
+            return
         if path.startswith('/api/history/maintenance/'):
             try:
                 from artifact_lifecycle import Lifecycle, safe_id
@@ -642,6 +654,35 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     contract.atomic_json(self.config_path, payload)
                     updated = load(self.repo_root, self.config_path)
                     self._json({"ok": True}, etag='"' + updated.revision + '"')
+                return
+            if path == '/api/critique':
+                if not isinstance(payload, dict):
+                    raise ValueError('Critique payload must be a JSON object')
+                with contract.WRITE_LOCK:
+                    directives_dir = self.repo_root / ".creative"
+                    directives_dir.mkdir(parents=True, exist_ok=True)
+                    directives_path = directives_dir / "review-directives.json"
+                    existing = {}
+                    if directives_path.exists():
+                        try:
+                            with open(directives_path, 'r', encoding='utf-8') as f:
+                                existing = json.load(f)
+                        except Exception:
+                            existing = {}
+                    if not isinstance(existing, dict):
+                        existing = {}
+                    directives = existing.get('directives', {})
+                    if not isinstance(directives, dict):
+                        directives = {}
+                    card_id = payload.get('card_id')
+                    if card_id:
+                        directives[card_id] = payload
+                        existing['directives'] = directives
+                        existing['latest'] = payload
+                    else:
+                        existing = payload
+                    contract.atomic_json(directives_path, existing)
+                self._json({"ok": True, "path": ".creative/review-directives.json", "card_id": card_id})
                 return
             if path == '/api/assets':
                 data = base64.b64decode(payload.get('data', ''), validate=True)
