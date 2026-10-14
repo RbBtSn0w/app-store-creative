@@ -675,13 +675,19 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                     if not isinstance(directives, dict):
                         directives = {}
                     card_id = payload.get('card_id') or payload.get('cardId')
-                    if card_id:
-                        payload['card_id'] = card_id
-                        directives[card_id] = payload
-                        existing['directives'] = directives
-                        existing['latest'] = payload
-                    else:
-                        existing = payload
+                    if not card_id or not isinstance(card_id, str) or not card_id.strip():
+                        raise ValueError('Critique payload requires a non-empty string card_id')
+                    card_id = card_id.strip()
+                    payload['card_id'] = card_id
+
+                    # Normalize notes and directive bidirectionally
+                    note_text = payload.get('notes') or payload.get('directive') or ''
+                    payload['notes'] = note_text
+                    payload['directive'] = note_text
+
+                    directives[card_id] = payload
+                    existing['directives'] = directives
+                    existing['latest'] = payload
                     contract.atomic_json(directives_path, existing)
                 self._json({"ok": True, "path": ".creative/review-directives.json", "card_id": card_id})
                 return

@@ -258,7 +258,45 @@ class TestV2Workflow(unittest.TestCase):
             self.assertTrue(directives_file.exists())
             directives_data = json.loads(directives_file.read_text())
             self.assertEqual(directives_data["directives"]["01-hero"]["notes"], "Slight tilt towards headlines")
+            self.assertEqual(directives_data["directives"]["01-hero"]["directive"], "Slight tilt towards headlines")
             self.assertEqual(directives_data["latest"]["card_id"], "01-hero")
+
+            # 6b. Test sending directive instead of notes & multi-card persistence
+            card2_payload = {
+                "card_id": "02-action",
+                "target": "mac_16_10",
+                "directive": "Inward yaw towards center"
+            }
+            card2_post = urllib.request.Request(
+                f"http://127.0.0.1:{ctx.port}/api/critique",
+                data=json.dumps(card2_payload).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            with urllib.request.urlopen(card2_post) as resp:
+                self.assertEqual(resp.status, 200)
+
+            directives_data2 = json.loads(directives_file.read_text())
+            self.assertIn("01-hero", directives_data2["directives"])
+            self.assertIn("02-action", directives_data2["directives"])
+            self.assertEqual(directives_data2["directives"]["02-action"]["notes"], "Inward yaw towards center")
+            self.assertEqual(directives_data2["directives"]["02-action"]["directive"], "Inward yaw towards center")
+
+            # 6c. Test missing card_id rejected with 400 and does NOT wipe existing directives
+            invalid_critique = urllib.request.Request(
+                f"http://127.0.0.1:{ctx.port}/api/critique",
+                data=json.dumps({"notes": "Malformed without card_id"}).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST"
+            )
+            with self.assertRaises(urllib.error.HTTPError) as cm:
+                urllib.request.urlopen(invalid_critique)
+            self.assertEqual(cm.exception.code, 400)
+
+            # Ensure directives still intact
+            directives_data3 = json.loads(directives_file.read_text())
+            self.assertIn("01-hero", directives_data3["directives"])
+            self.assertIn("02-action", directives_data3["directives"])
 
     def test_resolve_card_merges_device_offset(self):
         import studio_contract
