@@ -76,4 +76,22 @@ describe('reviewed target and locale assignments', () => {
     });
     expect(edited.cards[0].customBackground).toEqual({ type: 'gradient', colors: ['#000', '#fff'], angle: 90 });
   });
+  it('resolves variant headline and subheadline when specified', () => {
+    const withVariantCopy: CreativeConfig = {
+      ...config,
+      cards: [{
+        ...config.cards[0],
+        variants: {
+          mac_16_10: {
+            headline: 'Mac Hero Headline',
+            subheadline: 'Mac Hero Subheadline',
+          },
+        },
+      }],
+    };
+    const resolved = resolveCard(withVariantCopy, withVariantCopy.cards[0], 'mac_16_10', 'en-US');
+    expect(resolved.headline).toBe('Mac Hero Headline');
+    expect(resolved.subheadline).toBe('Mac Hero Subheadline');
+  });
 });
+

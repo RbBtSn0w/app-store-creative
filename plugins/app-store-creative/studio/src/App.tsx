@@ -74,6 +74,7 @@ export const App: React.FC = () => {
   const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
   const [critiqueNotesByCard, setCritiqueNotesByCard] = useState<Record<string, string>>({});
+  const critiqueNotesByCardRef = useRef<Record<string, string>>({}); critiqueNotesByCardRef.current = critiqueNotesByCard;
   const [dirtyCritiqueCards, setDirtyCritiqueCards] = useState<Record<string, boolean>>({});
   const dirtyCritiqueCardsRef = useRef<Record<string, boolean>>({}); dirtyCritiqueCardsRef.current = dirtyCritiqueCards;
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
@@ -276,7 +277,12 @@ export const App: React.FC = () => {
         timestamp: new Date().toISOString(),
       };
       await request('/api/critique', payload);
-      setDirtyCritiqueCards(prev => ({ ...prev, [active.id]: false }));
+      setDirtyCritiqueCards(prev => {
+        if (critiqueNotesByCardRef.current[active.id] !== note) {
+          return prev;
+        }
+        return { ...prev, [active.id]: false };
+      });
       setCritiqueNotice('✓ Directives saved to .creative/review-directives.json');
     } catch (reason) {
       setError((reason as Error).message);

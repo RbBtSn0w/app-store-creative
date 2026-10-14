@@ -106,20 +106,23 @@ def apply_critique(
             ):
                 raise ValueError(f"Card '{card_id}' deviceOffset requires finite numeric values")
 
-            normalized_offset = {
-                "rotateX": float(offset.get("rotateX", 0)),
-                "rotateY": float(offset.get("rotateY", 0)),
-                "rotate": float(offset.get("rotate", 0)),
-                "scale": float(offset.get("scale", 1.0)),
-                "x": float(offset.get("x", 0)),
-                "y": float(offset.get("y", 0)),
-            }
-
             if target:
+                valid_keys = {"rotateX", "rotateY", "rotate", "scale", "x", "y"}
+                supplied_offset = {
+                    k: float(v) for k, v in offset.items() if k in valid_keys
+                }
                 matching_card.setdefault("variants", {}).setdefault(target, {})
                 matching_card["variants"][target].setdefault("deviceOffset", {})
-                matching_card["variants"][target]["deviceOffset"].update(normalized_offset)
+                matching_card["variants"][target]["deviceOffset"].update(supplied_offset)
             else:
+                normalized_offset = {
+                    "rotateX": float(offset.get("rotateX", 0)),
+                    "rotateY": float(offset.get("rotateY", 0)),
+                    "rotate": float(offset.get("rotate", 0)),
+                    "scale": float(offset.get("scale", 1.0)),
+                    "x": float(offset.get("x", 0)),
+                    "y": float(offset.get("y", 0)),
+                }
                 matching_card.setdefault("deviceOffset", {})
                 matching_card["deviceOffset"].update(normalized_offset)
 

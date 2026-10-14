@@ -15,8 +15,8 @@ export function resolveCard(config: CreativeConfig, card: CardConfig, target: Ta
     ? { ...(card.deviceOffset || {}), ...(variant.deviceOffset || {}) }
     : undefined;
   return { ...card, ...variant,
-    headline: localized.headline ?? card.headline,
-    subheadline: localized.subheadline ?? card.subheadline,
+    headline: localized.headline ?? variant.headline ?? card.headline,
+    subheadline: localized.subheadline ?? variant.subheadline ?? card.subheadline,
     screenshot: localized.screenshot ?? variant.screenshot ?? card.screenshot,
     deviceOffset };
 }

@@ -281,6 +281,30 @@ class TestApplyCritique(unittest.TestCase):
                 )
             self.assertIn("concurrently", str(ctx.exception))
 
+    def test_apply_critique_target_offset_preserves_card_baseline(self):
+        # Card has baseline deviceOffset with x=40, y=20
+        # Target directive supplies only rotateX=5.0
+        # The variant must only contain rotateX=5.0 and not default x/y to 0
+        payload = json.dumps({
+            "card_id": "01-hero",
+            "target": "mac_16_10",
+            "patch": {
+                "deviceOffset": {
+                    "rotateX": 5.0
+                }
+            }
+        })
+        result = apply_critique.apply_critique(
+            repo_root=self.root,
+            directives_json=payload,
+        )
+        self.assertEqual(result["status"], "ok")
+        updated = json.loads(self.config_path.read_text())
+        variant_offset = updated["cards"][0]["variants"]["mac_16_10"]["deviceOffset"]
+        self.assertEqual(variant_offset, {"rotateX": 5.0})
+        self.assertNotIn("x", variant_offset)
+        self.assertNotIn("y", variant_offset)
+
 
 if __name__ == "__main__":
     unittest.main()
