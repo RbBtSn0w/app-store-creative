@@ -29,7 +29,11 @@ test('semantic-release loads only the intended lifecycle plugins', async () => {
   assert.ok(githubPlugin, 'expected @semantic-release/github to be configured');
   const github = githubPlugin[1];
   assert.equal(github.successComment, false);
-  assert.equal(github.failTitle, false);
+  assert.equal(
+    options.plugins.some(plugin => (Array.isArray(plugin) ? plugin[0] : plugin) === '@semantic-release/npm'),
+    false,
+    'expected @semantic-release/npm to not be loaded'
+  );
   const gitPlugin = options.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === '@semantic-release/git');
   assert.ok(gitPlugin, 'expected @semantic-release/git to be configured');
   const git = gitPlugin[1];
