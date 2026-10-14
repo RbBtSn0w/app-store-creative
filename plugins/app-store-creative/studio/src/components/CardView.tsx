@@ -60,13 +60,23 @@ export const CardView: React.FC<CardViewProps> = ({
     ? STYLE_PRESETS[theme.stylePreset as StylePresetId]
     : undefined;
 
+  const rawPresetBg = preset?.theme.background;
+  const mergedBg = rawPresetBg
+    ? {
+        ...rawPresetBg,
+        ...(theme.background || {}),
+        colors: theme.background?.colors?.length ? theme.background.colors : rawPresetBg.colors,
+        angle: theme.background?.angle ?? rawPresetBg.angle,
+      }
+    : (theme.background || { type: 'gradient', colors: ['#0A0E1A', '#311042'] });
+
   const resolvedTheme: ThemeConfig = {
     ...theme,
     headlineColor: preset?.theme.headlineColor || theme.headlineColor || '#FFFFFF',
     subheadlineColor: preset?.theme.subheadlineColor || theme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
     bezelStyle: preset?.theme.bezelStyle || theme.bezelStyle || 'natural',
     shadow: preset?.theme.shadow || theme.shadow || 'dramatic',
-    background: card.customBackground || preset?.theme.background || theme.background || { type: 'gradient', colors: ['#0A0E1A', '#311042'] },
+    background: card.customBackground || mergedBg,
   };
 
   // Compute background style
@@ -185,21 +195,36 @@ export const CardView: React.FC<CardViewProps> = ({
         >
           {headline}
         </h2>
-        {subheadline && (
+        {(subheadline || (!isExport && !!onUpdateText)) && (
           <p
             contentEditable={!isExport && !!onUpdateText}
             suppressContentEditableWarning
-            onBlur={(e) => onUpdateText?.('subheadline', e.currentTarget.textContent || '')}
+            onFocus={(e) => {
+              if (!subheadline && e.currentTarget.textContent === 'Add subheadline...') {
+                e.currentTarget.textContent = '';
+              }
+            }}
+            onBlur={(e) => {
+              const val = e.currentTarget.textContent?.trim() || '';
+              if (!val && !isExport && !!onUpdateText) {
+                e.currentTarget.textContent = 'Add subheadline...';
+                onUpdateText?.('subheadline', '');
+              } else {
+                onUpdateText?.('subheadline', val);
+              }
+            }}
             className={`text-sm font-medium tracking-normal leading-snug drop-shadow-sm outline-none focus:ring-1 focus:ring-blue-400 rounded px-1 ${
+              !subheadline ? 'opacity-40 italic cursor-pointer' : ''
+            } ${
               isFeatureGraphic ? 'max-w-[320px]' : isMac ? 'max-w-[420px]' : 'max-w-[280px]'
             }`}
             style={{
               color: resolvedTheme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
               fontFamily: resolvedTheme.fontFamily,
-            overflowWrap: 'anywhere',
+              overflowWrap: 'anywhere',
             }}
           >
-            {subheadline}
+            {subheadline || (!isExport && !!onUpdateText ? 'Add subheadline...' : '')}
           </p>
         )}
       </div>

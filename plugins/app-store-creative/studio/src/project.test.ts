@@ -45,5 +45,53 @@ describe('reviewed target and locale assignments', () => {
     expect(second.cards[0].variants?.mac_16_10).not.toHaveProperty('headline');
     expect(resolveCard(second, second.cards[0], 'mac_16_10', 'en-US').headline).toBe('Latest edit');
   });
+  it('updates deviceOffset scoped to target without polluting other targets', () => {
+    const edited = updateVariant(config, 'hero', 'iphone_6_9', 'en-US', {
+      deviceOffset: { scale: 1.05, rotate: -5, rotateX: 10 },
+    });
+    const phoneCard = resolveCard(edited, edited.cards[0], 'iphone_6_9', 'en-US');
+    const macCard = resolveCard(edited, edited.cards[0], 'mac_16_10', 'en-US');
 
+    expect(phoneCard.deviceOffset).toEqual({ scale: 1.05, rotate: -5, rotateX: 10 });
+    expect(macCard.deviceOffset).toBeUndefined();
+  });
+  it('merges card-level baseline offset with target-specific variant offset', () => {
+    const withBase: CreativeConfig = {
+      ...config,
+      cards: [{
+        ...config.cards[0],
+        deviceOffset: { x: 0, y: 20, scale: 1.0 },
+      }],
+    };
+    const edited = updateVariant(withBase, 'hero', 'mac_16_10', 'en-US', {
+      deviceOffset: { rotate: 2, scale: 1.08 },
+    });
+    const macCard = resolveCard(edited, edited.cards[0], 'mac_16_10', 'en-US');
+    expect(macCard.deviceOffset).toEqual({ x: 0, y: 20, scale: 1.08, rotate: 2 });
+    expect(edited.cards[0].variants?.mac_16_10?.deviceOffset).toEqual({ rotate: 2, scale: 1.08 });
+  });
+  it('updates customBackground on the card', () => {
+    const edited = updateVariant(config, 'hero', 'mac_16_10', 'en-US', {
+      customBackground: { type: 'gradient', colors: ['#000', '#fff'], angle: 90 },
+    });
+    expect(edited.cards[0].customBackground).toEqual({ type: 'gradient', colors: ['#000', '#fff'], angle: 90 });
+  });
+  it('resolves variant headline and subheadline when specified', () => {
+    const withVariantCopy: CreativeConfig = {
+      ...config,
+      cards: [{
+        ...config.cards[0],
+        variants: {
+          mac_16_10: {
+            headline: 'Mac Hero Headline',
+            subheadline: 'Mac Hero Subheadline',
+          },
+        },
+      }],
+    };
+    const resolved = resolveCard(withVariantCopy, withVariantCopy.cards[0], 'mac_16_10', 'en-US');
+    expect(resolved.headline).toBe('Mac Hero Headline');
+    expect(resolved.subheadline).toBe('Mac Hero Subheadline');
+  });
 });
+

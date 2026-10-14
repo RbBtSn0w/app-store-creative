@@ -68,3 +68,31 @@ it('defaults desktop captures to native windows and preserves explicit compositi
     index={0} target="mac_16_10" theme={{background:{type:'solid',colors:['#000']}}} isExport />);
   expect(markup).not.toContain('data-native-window="true"');
 });
+
+it('allows user background angle to override preset background angle', () => {
+  const markup = renderToStaticMarkup(
+    <CardView
+      card={{ id: 'angle-test', headline: 'Custom Angle' }}
+      index={0}
+      target="mac_16_10"
+      theme={{ stylePreset: 'liquid_glass', background: { type: 'gradient', angle: 45 } }}
+      isExport
+    />
+  );
+  expect(markup).toContain('linear-gradient(45deg');
+});
+
+it('renders editable subheadline placeholder in interactive mode with onUpdateText', () => {
+  const markup = renderToStaticMarkup(
+    <CardView
+      card={{ id: 'placeholder-test', headline: 'Headline Only' }}
+      index={0}
+      target="mac_16_10"
+      theme={{ background: { type: 'solid', colors: ['#000'] } }}
+      onUpdateText={() => {}}
+    />
+  );
+  expect(markup).toContain('Add subheadline...');
+  expect(markup).toContain('contentEditable="true"');
+});
+

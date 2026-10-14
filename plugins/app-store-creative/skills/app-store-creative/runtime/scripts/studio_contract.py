@@ -146,6 +146,8 @@ def resolve_card(config, card, target, locale):
                  **variant.get('localizations', {}).get(locale, {})}
     result = {**card, **{k: v for k, v in variant.items() if k != 'localizations'}}
     result.update({k: v for k, v in localized.items() if k in ('headline', 'subheadline', 'screenshot')})
+    if 'deviceOffset' in card or 'deviceOffset' in variant:
+        result['deviceOffset'] = {**card.get('deviceOffset', {}), **variant.get('deviceOffset', {})}
     return result, localized
 
 

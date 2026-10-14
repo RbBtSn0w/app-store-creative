@@ -319,6 +319,14 @@
             "additionalProperties": {
               "type": "object",
               "properties": {
+                "headline": {
+                  "type": "string",
+                  "description": "Optional default-locale target headline override"
+                },
+                "subheadline": {
+                  "type": "string",
+                  "description": "Optional default-locale target subheadline override"
+                },
                 "screenshot": {
                   "type": "string",
                   "description": "Relative path to raw source screenshot image"
