@@ -108,6 +108,8 @@ export interface LocalizedCard {
 }
 
 export interface CardVariant {
+  headline?: string;
+  subheadline?: string;
   screenshot?: string;
   layout?: CardConfig['layout'];
   deviceOffset?: CardOffset;
