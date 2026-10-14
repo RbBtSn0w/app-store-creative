@@ -16,6 +16,8 @@ _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 
+import apply_critique
+import companion_generator
 import lifecycle_commands
 import production_lifecycle
 import studio_server
@@ -34,6 +36,28 @@ def run(args):
         cfg = project_path(getattr(args, "config", None))
         studio_server.run_studio_server(port=args.port, repo_root=root, config_path=cfg)
         return {"status": "ok", "message": f"Studio stopped on port {args.port}"}
+
+    if args.command == "companion":
+        cfg = project_path(getattr(args, "config", None))
+        out = project_path(getattr(args, "output", None))
+        return companion_generator.generate_companion(
+            repo_root=root,
+            config_path=cfg,
+            output_path=out,
+            target=getattr(args, "target", None),
+            locale=getattr(args, "locale", None),
+        )
+
+    if args.command == "apply-critique":
+        cfg = project_path(getattr(args, "config", None))
+        d_file = project_path(getattr(args, "file", None))
+        d_json = getattr(args, "json", None)
+        return apply_critique.apply_critique(
+            repo_root=root,
+            config_path=cfg,
+            directives_file=d_file,
+            directives_json=d_json,
+        )
 
     if args.command == "export":
         if getattr(args, 'output_dir', None):
@@ -61,6 +85,17 @@ def build_parser():
         dev = cmd(name)
         dev.add_argument("--config", type=Path, help="Path to creative.config.json")
         dev.add_argument("--port", type=int, default=3100, help="Local studio port (default 3100)")
+
+    comp = cmd("companion")
+    comp.add_argument("--config", type=Path, help="Path to creative.config.json")
+    comp.add_argument("--output", type=Path, help="Output path for companion HTML (default .creative/companion.html)")
+    comp.add_argument("--target", type=str, help="Specific target to preview (e.g. mac_16_10)")
+    comp.add_argument("--locale", type=str, help="Specific locale to preview (e.g. en-US)")
+
+    crit = cmd("apply-critique")
+    crit.add_argument("--config", type=Path, help="Path to creative.config.json")
+    crit.add_argument("--file", type=Path, help="Path to review-directives.json (default .creative/review-directives.json)")
+    crit.add_argument("--json", type=str, help="Direct JSON string containing directives")
 
     exp = cmd("export")
     exp.add_argument("--config", type=Path, help="Path to creative.config.json")
