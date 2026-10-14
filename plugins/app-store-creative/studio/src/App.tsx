@@ -505,19 +505,22 @@ export const App: React.FC = () => {
           </aside>
 
           {/* Center Stage Preview Area */}
-          <section className="overflow-auto p-8 min-h-[500px] flex items-center justify-center bg-gradient-to-b from-black/20 to-black/60 relative" aria-label="Screenshot previews"
+          <section className="overflow-auto p-8 min-h-[500px] flex items-center justify-start bg-gradient-to-b from-black/20 to-black/60 relative" aria-label="Screenshot previews"
             onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); if (!busy && !saving) void importFiles(event.dataTransfer.files); }}>
             {!config.cards.length ? (
-              <div className="p-12 text-center border border-dashed border-white/20 rounded-2xl max-w-md">
+              <div className="p-12 text-center border border-dashed border-white/20 rounded-2xl max-w-md m-auto">
                 <h2 className="text-xl mb-3 font-semibold">Bring your real app screens</h2>
                 <p className="text-white/60 text-sm">Drop PNG or JPEG captures here. Select the intended target and language before importing.</p>
               </div>
             ) : (
-              <div className="flex gap-8 items-start py-4">
+              <div className="flex gap-8 items-start py-4 m-auto">
                 {config.cards.map((card, index) => (
-                  <div key={card.id} className="shrink-0 cursor-pointer transition-transform duration-200 hover:scale-[1.01]" onClick={() => setSelected(card.id)}>
+                  <div key={card.id} className={`shrink-0 cursor-pointer transition-all duration-200 hover:scale-[1.01] rounded-2xl ${
+                    selected === card.id ? 'ring-2 ring-blue-500 shadow-2xl shadow-blue-500/20' : 'ring-1 ring-white/10'
+                  }`} onClick={() => setSelected(card.id)}>
                     <CardView card={resolveCard(config, card, target, locale)} index={index} totalCards={config.cards.length}
                       target={target} theme={config.theme} locale={locale} connected={config.connectedTrack}
+                      onUpdateText={(field, value) => edit(current => updateVariant(current, card.id, target, locale, { [field]: value }))}
                       onReview={findings => { const key = `${target}/${locale}/${card.id}`, value = findings.join('. ');
                         setLayoutFindings(current => current[key] === value ? current : { ...current, [key]: value }); }} />
                   </div>

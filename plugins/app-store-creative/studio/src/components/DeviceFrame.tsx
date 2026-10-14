@@ -70,7 +70,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
     return (
       <div data-device-frame data-native-window="true"
         className={`relative select-none ${getShadow()} ${className}`}
-        style={{ transform: transform3d, transformOrigin: 'center center' }}>
+        style={{ transform: transform3d, transformOrigin: 'center center', transformStyle: 'preserve-3d' }}>
         <img src={screenshot} alt="Mac App Screenshot" className="block object-contain"
           style={{ width: 'auto', height: 'auto', maxWidth, maxHeight }} />
       </div>
