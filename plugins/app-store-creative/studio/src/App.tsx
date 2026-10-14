@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CardView } from './components/CardView';
-import { CreativeConfig, TargetDevice, TARGET_DIMENSIONS, CardConfig } from './types';
+import { CreativeConfig, TargetDevice, TARGET_DIMENSIONS, CardConfig, CardOffset } from './types';
 import { defaultCardLayout, localizedFields, resolveCard, updateVariant } from './project';
 import { releaseState } from './releaseState';
 import { ExportView } from './ExportView';
 import { STYLE_PRESETS } from './stylePresets';
 import { downloadDraft } from './downloadDraft';
+import { COPY_FORMULAS } from './copyFormulas';
 import { RunHistory } from './RunHistory';
 import { DeliveryHistory } from './DeliveryHistory';
 import { InventoryView } from './InventoryView';
@@ -67,6 +68,13 @@ export const App: React.FC = () => {
   const [notice, setNotice] = useState('');
   const [status, setStatus] = useState<{ running?: boolean; completed?: number; total?: number; configRevision?: string; inputErrors?: string[]; candidate_id?: string | null; run_id?: string;
     validation?: { status: string; errors: string[]; assets_count: number; assets: Record<string, unknown> } | null }>({});
+  const [workspaceMode, setWorkspaceMode] = useState<'canvas' | 'lifecycle'>('canvas');
+  const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
+  const [critiqueNotes, setCritiqueNotes] = useState('');
+  const [showCopyIdeas, setShowCopyIdeas] = useState(false);
+  const [syncingCritique, setSyncingCritique] = useState(false);
+  const [critiqueNotice, setCritiqueNotice] = useState('');
+
   const state = useRef(config); state.current = config;
   const revision = useRef<string | undefined>(undefined);
   const version = useRef(0);
@@ -75,6 +83,10 @@ export const App: React.FC = () => {
   const storageChanged = useRef(false);
   const params = new URLSearchParams(window.location.search);
   const exporting = params.get('export') === 'true';
+
+  const arcRoles = ['Hero', 'Mechanism', 'Depth', 'Ecosystem', 'CTA'];
+  const getCardRole = (idx: number) => arcRoles[idx] || 'Feature';
+
   const refreshStatus = useCallback(async () => {
     const reviewedRevision = revision.current;
     try { const { body } = await request('/api/status');
@@ -190,6 +202,7 @@ export const App: React.FC = () => {
   if (!config) return <main className="p-10" role="alert">{error || 'Could not open the project'} <button onClick={() => location.reload()}>Retry</button></main>;
   if (exporting) return <ExportView config={config} id={params.get('card') || ''}
     target={(params.get('target') || 'iphone_6_9') as TargetDevice} locale={params.get('locale') || 'en-US'} />;
+
   const active = config.cards.find(card => card.id === selected);
   const resolved = active ? resolveCard(config, active, target, locale) : undefined;
   const fields = active ? localizedFields(config, active, target, locale) : {};
@@ -207,117 +220,470 @@ export const App: React.FC = () => {
     (busy && status.total ? ` · ${status.completed || 0}/${status.total}` : '');
   const mutate = (change: Parameters<typeof updateVariant>[4]) => { if (active) edit(current => updateVariant(current, active.id, target, locale, change)); };
 
+  const updateOffset = (partial: Partial<CardOffset>) => {
+    mutate({ deviceOffset: { ...(resolved?.deviceOffset || {}), ...partial } });
+  };
+
+  const applyPresetPose = (pose: 'hero' | 'gaze' | 'grounded' | 'flat') => {
+    if (pose === 'hero') {
+      updateOffset({ scale: 1.05, rotate: 0, rotateX: 4, rotateY: 0, x: 0, y: 15 });
+    } else if (pose === 'gaze') {
+      updateOffset({ scale: 1.02, rotate: -2, rotateX: 4, rotateY: 6, x: -10, y: 20 });
+    } else if (pose === 'grounded') {
+      updateOffset({ scale: 0.95, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: 0 });
+    } else if (pose === 'flat') {
+      updateOffset({ scale: 1.0, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: 0 });
+    }
+  };
+
+  const syncCritique = async () => {
+    if (!active) return;
+    setSyncingCritique(true); setCritiqueNotice('');
+    try {
+      const payload = {
+        card_id: active.id,
+        role: getCardRole(config.cards.findIndex(c => c.id === active.id)),
+        target,
+        locale,
+        headline: resolved?.headline || '',
+        subheadline: resolved?.subheadline || '',
+        layout: resolved?.layout,
+        deviceOffset: resolved?.deviceOffset || {},
+        theme: {
+          stylePreset: config.theme.stylePreset,
+          angle: config.theme.background?.angle ?? 135,
+        },
+        notes: critiqueNotes,
+        timestamp: new Date().toISOString(),
+      };
+      await request('/api/critique', payload);
+      setCritiqueNotice('✓ Directives saved to .creative/review-directives.json');
+    } catch (reason) {
+      setError((reason as Error).message);
+    } finally {
+      setSyncingCritique(false);
+    }
+  };
+
+  const copyCritiqueMarkdown = () => {
+    if (!active) return;
+    const role = getCardRole(config.cards.findIndex(c => c.id === active.id));
+    const md = `### [Creative Review Directive] Card: ${active.id} (Arc Role: ${role})
+- Target: ${target} | Locale: ${locale}
+- 3D Transforms:
+  - Pitch (rotateX): ${resolved?.deviceOffset?.rotateX ?? 0}°
+  - Yaw (rotateY): ${resolved?.deviceOffset?.rotateY ?? 0}°
+  - Roll (rotate): ${resolved?.deviceOffset?.rotate ?? 0}°
+  - Scale: ${resolved?.deviceOffset?.scale ?? 1.0}
+  - Offset: (${resolved?.deviceOffset?.x ?? 0}px, ${resolved?.deviceOffset?.y ?? 0}px)
+- Copy:
+  - Headline: "${resolved?.headline || ''}"
+  - Subheadline: "${resolved?.subheadline || ''}"
+- Layout: ${resolved?.layout || 'default'}
+- Theme: Preset=${config.theme.stylePreset || 'default'}, Angle=${config.theme.background?.angle ?? 135}°
+- Critique Notes: "${critiqueNotes || 'No custom notes'}"
+- Workflow Action: Ingest parameters into creative.config.json, rerun offline headless verification, and regenerate preview artifact.`;
+    void navigator.clipboard.writeText(md).then(() => {
+      setCritiqueNotice('✓ Markdown directive copied to clipboard');
+    });
+  };
+
   return <main className="min-h-screen">
-    <header className="border-b border-white/10 px-6 py-5 flex flex-wrap gap-4 justify-between items-center">
-      <div><p className="text-xs uppercase tracking-widest text-indigo-300">App Store Creative</p>
-        <h1 className="text-xl font-semibold">{config.project.name || 'Your first screenshot set'}</h1>
-        <p role="status" className={verified ? 'text-emerald-300 text-sm' : 'text-white/60 text-sm'}>{stateLabel}</p></div>
-      {!creating && <div className="flex flex-wrap gap-2">
-        <button disabled={busy || saving} onClick={() => save().catch(reason => setError(reason.message))}>{saving ? 'Saving…' : 'Save project'}</button>
-        <button disabled={busy || saving || !config.cards.length} onClick={() => exportProject('selected')}>Export selected set</button>
-        <button className="primary" disabled={busy || saving || !config.cards.length} onClick={() => exportProject('all')}>Export full matrix</button>
-      </div>}
+    <header className="border-b border-white/10 px-6 py-4 flex flex-wrap gap-4 justify-between items-center bg-[#0F121C]/80 backdrop-blur-md sticky top-0 z-50">
+      <div>
+        <div className="flex items-center gap-2">
+          <p className="text-xs uppercase tracking-widest text-indigo-300 font-mono">App Store Creative Studio</p>
+          <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v3.0</span>
+        </div>
+        <h1 className="text-xl font-semibold mt-0.5">{config.project.name || 'Your first screenshot set'}</h1>
+        <p role="status" className={verified ? 'text-emerald-300 text-xs' : 'text-white/60 text-xs'}>{stateLabel}</p>
+      </div>
+
+      {!creating && (
+        <div className="flex items-center gap-3">
+          {/* Dual-Mode Workspace Switcher */}
+          <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 text-xs">
+            <button type="button" className={`px-3 py-1.5 rounded-lg font-medium transition ${workspaceMode === 'canvas' ? 'bg-indigo-600 text-white shadow' : 'text-white/60 hover:text-white'}`}
+              onClick={() => setWorkspaceMode('canvas')}>
+              🎨 Canvas & Review
+            </button>
+            <button type="button" className={`px-3 py-1.5 rounded-lg font-medium transition ${workspaceMode === 'lifecycle' ? 'bg-indigo-600 text-white shadow' : 'text-white/60 hover:text-white'}`}
+              onClick={() => setWorkspaceMode('lifecycle')}>
+              📋 Lifecycle & Audit
+            </button>
+          </div>
+
+          <div className="flex gap-2">
+            <button disabled={busy || saving} onClick={() => save().catch(reason => setError(reason.message))}>{saving ? 'Saving…' : 'Save project'}</button>
+            <button disabled={busy || saving || !config.cards.length} onClick={() => exportProject('selected')}>Export selected set</button>
+            <button className="primary" disabled={busy || saving || !config.cards.length} onClick={() => exportProject('all')}>Export full matrix</button>
+          </div>
+        </div>
+      )}
     </header>
+
     {error && <section role="alert" className="mx-6 mt-4 p-4 bg-red-950/40 border border-red-400/30 rounded-xl whitespace-pre-wrap">
       {error}<div className="flex gap-3 mt-2"><button onClick={recoverDraft}>Download current draft</button>
         <button onClick={() => { if (!dirty || confirm('Reload the project? Download your draft first to preserve unsaved changes.')) location.reload(); }}>Reload project</button></div></section>}
     {notice && <p role="status" className="mx-6 mt-4 text-indigo-200">{notice}</p>}
-    <ArchivePolicySettings policy={config.archivePolicy} budget={config.artifactPolicy?.mediaBudgetBytes} disabled={busy || saving}
-      onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))}
-      onBudgetChange={budget => edit(current => {
-        const policy = { ...current.artifactPolicy, schema_version: 1 as const };
-        if (budget === undefined) delete policy.mediaBudgetBytes;
-        else policy.mediaBudgetBytes = budget;
-        return { ...current, artifactPolicy: policy };
-      })} />
-    <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
-      checking={checkingStorage} disabled={busy || saving}
-      onCheck={() => { void previewDirectories().catch(() => {}); }} />
-    {creating ? <form className="max-w-xl mx-auto p-8 space-y-5" onSubmit={async event => {
-      event.preventDefault(); try { await save(); setTarget(state.current!.targets[0]); setLocale(state.current!.project.defaultLocale || 'en-US'); setCreating(false); } catch (reason) { setError((reason as Error).message); }
-    }}><fieldset disabled={saving} className="space-y-5"><h2 className="text-2xl font-semibold">Start with your real app</h2>
-      <p className="text-white/60">Choose where your screenshots will appear, then bring your real captures. Everything stays in this project.</p>
-      <label>Project ID<input required pattern="[A-Za-z0-9][A-Za-z0-9_-]*" value={config.project.id} onChange={event => edit(current => ({ ...current, project: { ...current.project, id: event.target.value } }))} /></label>
-      <label>App name<input required value={config.project.name} onChange={event => edit(current => ({ ...current, project: { ...current.project, name: event.target.value } }))} /></label>
-      <label>Bundle ID<input required value={config.project.bundleId} onChange={event => edit(current => ({ ...current, project: { ...current.project, bundleId: event.target.value } }))} /></label>
-      <label>Languages (comma separated)<input required defaultValue={(config.project.locales || [defaultLocale]).join(', ')} onChange={event => { const locales = [...new Set(event.target.value.split(',').map(value => value.trim()).filter(Boolean))]; edit(current => ({ ...current, project: { ...current.project, locales, defaultLocale: locales[0] || 'en-US' } })); }} /></label>
-      <fieldset><legend>Targets</legend><div className="grid grid-cols-2 gap-2 mt-2">{Object.entries(TARGET_DIMENSIONS).map(([id, dimensions]) => <label className="flex gap-2 items-center" key={id}>
-        <input type="checkbox" checked={config.targets.includes(id as TargetDevice)} onChange={event => edit(current => ({ ...current, targets: event.target.checked ? [...current.targets, id as TargetDevice] : current.targets.filter(value => value !== id) }))} />{dimensions.displayName}</label>)}</div></fieldset>
-      <button disabled={saving || !config.targets.length} className="primary" type="submit">Create project</button></fieldset>
-    </form> : <>
-      <fieldset disabled={busy || saving} className="flex flex-wrap gap-4 px-6 py-4 border-b border-white/10">
-        <label>Target<select value={target} onChange={event => setTarget(event.target.value as TargetDevice)}>{config.targets.map(id => <option key={id} value={id}>{TARGET_DIMENSIONS[id]?.displayName || id}</option>)}</select></label>
-        <label>Language<select value={locale} onChange={event => setLocale(event.target.value)}>{(config.project.locales || ['en-US']).map(value => <option key={value}>{value}</option>)}</select></label>
-        <label>Visual style<select value={config.theme.stylePreset || ''} onChange={event => edit(current => ({ ...current, theme: { ...current.theme, stylePreset: event.target.value } }))}>
-          <option value="">Project theme</option>{Object.entries(STYLE_PRESETS).map(([id, preset]) => <option key={id} value={id}>{preset.name}</option>)}</select></label>
-        <label className="flex items-center gap-2"><input type="checkbox" checked={!!config.connectedTrack} onChange={event => edit(current => ({ ...current, connectedTrack: event.target.checked }))} />Connected background</label>
-      </fieldset>
-      <div className="grid lg:grid-cols-[260px_minmax(0,1fr)_320px] gap-0">
-        <aside className="p-5 space-y-3 border-r border-white/10">
-          <h2 className="font-semibold">Screenshots · {config.cards.length}</h2>
-          <label className="upload">Add real captures<input type="file" accept="image/png,image/jpeg" multiple disabled={busy || saving} onChange={event => { if (event.target.files) void importFiles(event.target.files); event.target.value = ''; }} /></label>
-          <button disabled={busy || saving} onClick={() => { const id = `card-${crypto.randomUUID().slice(0, 8)}`; edit(current => ({ ...current, cards: [...current.cards, { id, headline: 'Your headline', layout: 'pure_text' }] })); setSelected(id); }}>Add text card</button>
-          <ol className="space-y-2">{config.cards.map((card, index) => <li key={card.id}>
-            <button className={`w-full text-left ${selected === card.id ? 'border-indigo-400 bg-indigo-500/15' : ''}`} onClick={() => setSelected(card.id)}>{index + 1}. {resolveCard(config, card, target, locale).headline || 'Untitled'}</button>
-          </li>)}</ol>
-          <p className="text-xs text-white/50">{total} outputs declared. Each language and target needs reviewed copy and real source captures.</p>
-        </aside>
-        <section className="overflow-auto p-8 min-h-[500px]" aria-label="Screenshot previews"
-          onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); if (!busy && !saving) void importFiles(event.dataTransfer.files); }}>
-          {!config.cards.length ? <div className="p-12 text-center border border-dashed border-white/20 rounded-2xl">
-            <h2 className="text-xl mb-3">Bring your real app screens</h2><p className="text-white/60">Drop PNG or JPEG captures here. Select the intended target and language before importing.</p>
-          </div> : <div className="flex gap-6 items-start">{config.cards.map((card, index) => <div key={card.id} className="shrink-0 cursor-pointer" onClick={() => setSelected(card.id)}>
-            <CardView card={resolveCard(config, card, target, locale)} index={index} totalCards={config.cards.length}
-              target={target} theme={config.theme} locale={locale} connected={config.connectedTrack}
-              onReview={findings => { const key = `${target}/${locale}/${card.id}`, value = findings.join('. ');
-                setLayoutFindings(current => current[key] === value ? current : { ...current, [key]: value }); }} />
-          </div>)}</div>}
+
+    {creating ? (
+      <form className="max-w-xl mx-auto p-8 space-y-5" onSubmit={async event => {
+        event.preventDefault(); try { await save(); setTarget(state.current!.targets[0]); setLocale(state.current!.project.defaultLocale || 'en-US'); setCreating(false); } catch (reason) { setError((reason as Error).message); }
+      }}>
+        <fieldset disabled={saving} className="space-y-5">
+          <h2 className="text-2xl font-semibold">Start with your real app</h2>
+          <p className="text-white/60">Choose where your screenshots will appear, then bring your real captures. Everything stays in this project.</p>
+          <label>Project ID<input required pattern="[A-Za-z0-9][A-Za-z0-9_-]*" value={config.project.id} onChange={event => edit(current => ({ ...current, project: { ...current.project, id: event.target.value } }))} /></label>
+          <label>App name<input required value={config.project.name} onChange={event => edit(current => ({ ...current, project: { ...current.project, name: event.target.value } }))} /></label>
+          <label>Bundle ID<input required value={config.project.bundleId} onChange={event => edit(current => ({ ...current, project: { ...current.project, bundleId: event.target.value } }))} /></label>
+          <label>Languages (comma separated)<input required defaultValue={(config.project.locales || [defaultLocale]).join(', ')} onChange={event => { const locales = [...new Set(event.target.value.split(',').map(value => value.trim()).filter(Boolean))]; edit(current => ({ ...current, project: { ...current.project, locales, defaultLocale: locales[0] || 'en-US' } })); }} /></label>
+          <fieldset><legend>Targets</legend><div className="grid grid-cols-2 gap-2 mt-2">{Object.entries(TARGET_DIMENSIONS).map(([id, dimensions]) => <label className="flex gap-2 items-center" key={id}>
+            <input type="checkbox" checked={config.targets.includes(id as TargetDevice)} onChange={event => edit(current => ({ ...current, targets: event.target.checked ? [...current.targets, id as TargetDevice] : current.targets.filter(value => value !== id) }))} />{dimensions.displayName}</label>)}</div></fieldset>
+          <button disabled={saving || !config.targets.length} className="primary" type="submit">Create project</button>
+        </fieldset>
+      </form>
+    ) : workspaceMode === 'lifecycle' ? (
+      <div className="space-y-6 p-6">
+        <ArchivePolicySettings policy={config.archivePolicy} budget={config.artifactPolicy?.mediaBudgetBytes} disabled={busy || saving}
+          onChange={policy => edit(current => ({ ...current, archivePolicy: policy }))}
+          onBudgetChange={budget => edit(current => {
+            const policy = { ...current.artifactPolicy, schema_version: 1 as const };
+            if (budget === undefined) delete policy.mediaBudgetBytes;
+            else policy.mediaBudgetBytes = budget;
+            return { ...current, artifactPolicy: policy };
+          })} />
+        <StorageSettings config={config} onChange={edit} report={storagePreview} error={storageError}
+          checking={checkingStorage} disabled={busy || saving}
+          onCheck={() => { void previewDirectories().catch(() => {}); }} />
+        <section className="p-5 border border-white/10 rounded-xl bg-white/5">
+          <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy || saving} onClick={refreshStatus}>Check current files</button></div>
+          <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. See publication verification for upload status.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
+          {!config.studio?.requireExportEvidence && <button disabled={busy || saving} onClick={() => {
+            edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
+            if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
+          }}>Require rendering evidence</button>}
+          {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto">{errors.map((finding, index) => <li key={index}>{finding}</li>)}</ul>}
+          {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
+            <ul className="grid gap-2 my-3 text-sm">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
+              const name = `${language}/${device}/${card.id}.png`;
+              return Object.hasOwn(status.validation!.assets, name) ? <li key={name}><a className="text-indigo-200 underline" target="_blank" rel="noreferrer"
+                href={'/api/artifacts/' + encodeURIComponent(status.candidate_id || '') + '/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
+            })))}</ul>}
+          {!dirty && status.candidate_id && status.validation?.assets &&
+            <CandidatePreviewMedia candidateId={status.candidate_id} assets={status.validation.assets} />}
+          {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
         </section>
-        <aside className="p-5 border-l border-white/10">{active && resolved ? <fieldset disabled={busy || saving} className="space-y-4">
-          <h2 className="font-semibold">Edit selected screenshot</h2><p className="text-sm text-white/50">{TARGET_DIMENSIONS[target]?.displayName} · {locale}</p>
-          {inherited && <div className="p-3 bg-amber-950/40 border border-amber-300/20 rounded-xl text-sm">Copy or capture inherits the default language.
-            <label className="flex gap-2 mt-2"><input type="checkbox" checked={!!fields.inheritDefault} onChange={event => mutate({ inheritDefault: event.target.checked })} />I reviewed the inherited content</label></div>}
-          <label>Headline<textarea value={resolved.headline} onChange={event => mutate({ headline: event.target.value })} /></label>
-          <label>Subheadline<textarea value={resolved.subheadline || ''} onChange={event => mutate({ subheadline: event.target.value })} /></label>
-          <label>Composition<select value={resolved.layout || defaultCardLayout(target)} onChange={event => mutate({ layout: event.target.value as CardConfig['layout'] })}>{layouts.map(value => <option key={value} value={value}>{layoutName(value)}</option>)}</select></label>
-          {resolved.screenshot ? <img className="max-h-32 mx-auto rounded object-contain" src={resolved.screenshot} alt="Assigned real capture" /> : <p className="text-amber-200 text-sm">{resolved.layout === 'pure_text' ? 'Text-only composition. No capture is needed.' : 'No capture assigned to this composition.'}</p>}
-          <label className="upload">Replace capture for {locale}<input type="file" accept="image/png,image/jpeg" onChange={event => { if (event.target.files) void importFiles(event.target.files, true); event.target.value = ''; }} /></label>
-          <div className="flex gap-2"><button disabled={config.cards[0]?.id === active.id} onClick={() => edit(current => { const cards = [...current.cards]; const index = cards.findIndex(card => card.id === active.id); [cards[index - 1], cards[index]] = [cards[index], cards[index - 1]]; return { ...current, cards }; })}>Move earlier</button>
-            <button disabled={config.cards.at(-1)?.id === active.id} onClick={() => edit(current => { const cards = [...current.cards]; const index = cards.findIndex(card => card.id === active.id); [cards[index + 1], cards[index]] = [cards[index], cards[index + 1]]; return { ...current, cards }; })}>Move later</button></div>
-          <button onClick={() => { if (confirm('Remove this screenshot from the set? Its imported capture remains available in the project.')) { edit(current => ({ ...current, cards: current.cards.filter(card => card.id !== active.id) })); setSelected(''); } }}>Remove screenshot</button>
-        </fieldset> : <p className="text-white/50">Select a screenshot to adjust its copy and assignments.</p>}</aside>
+        {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
+        <RunHistory />
+        <DeliveryHistory />
+        <PublicationHistory />
+        <ObservationEvidence />
+        <InventoryView />
+        <MediaBudgetPanel />
+        <MaintenancePanel />
+        <RelocationMaintenance />
+        <RelocationActions onStorageChange={() => { storageChanged.current = true; setError('Storage switching was requested. Check relocation status, then reload before saving or exporting.'); }} />
+        <RelocationStatusPanel />
+        <RelocationRecovery onStorageChange={() => { storageChanged.current = true; setError('Recovery was requested. Check operation status, then reload before saving or exporting.'); }} />
+        <OperationHistory />
       </div>
-      <section className="m-6 p-5 border border-white/10 rounded-xl">
-        <div className="flex justify-between gap-4"><h2 className="font-semibold">Release review</h2><button disabled={busy || saving} onClick={refreshStatus}>Check current files</button></div>
-        <p className="text-sm text-white/60 my-3">{verified ? 'All declared assets passed local checks. See publication verification for upload status.' : policyChecked ? 'Candidate checks passed under this project’s policy. Rendering evidence is not required by the current policy.' : 'Export and verify the full matrix before preparing a store handoff.'} Each export is saved as a separate production attempt in the configured workspace.</p>
-        {!config.studio?.requireExportEvidence && <button disabled={busy || saving} onClick={() => {
-          edit(current => ({ ...current, project: { ...current.project, id: current.project.id || 'my-app' }, studio: { ...current.studio, requireExportEvidence: true } }));
-          if (!config.project.id || !config.project.name || !config.project.bundleId) setCreating(true);
-        }}>Require rendering evidence</button>}
-        {!dirty && errors.length > 0 && <ul className="text-sm text-amber-200 space-y-1 max-h-52 overflow-auto">{errors.map((finding, index) => <li key={index}>{finding}</li>)}</ul>}
-        {!dirty && status.candidate_id && status.validation?.assets && Object.keys(status.validation.assets).length > 0 &&
-          <ul className="grid gap-2 my-3 text-sm">{(config.project.locales || [defaultLocale]).flatMap(language => config.targets.flatMap(device => config.cards.map(card => {
-            const name = `${language}/${device}/${card.id}.png`;
-            return Object.hasOwn(status.validation!.assets, name) ? <li key={name}><a className="text-indigo-200 underline" target="_blank" rel="noreferrer"
-              href={'/api/artifacts/' + encodeURIComponent(status.candidate_id || '') + '/' + name.split('/').map(encodeURIComponent).join('/')}>{language} · {TARGET_DIMENSIONS[device]?.displayName} · {card.id}</a></li> : null;
-          })))}</ul>}
-        {!dirty && status.candidate_id && status.validation?.assets &&
-          <CandidatePreviewMedia candidateId={status.candidate_id} assets={status.validation.assets} />}
-        {verified && <p className="text-sm text-indigo-200">Next: ask your ASC agent to prepare the handoff, review these assets, and request separate upload approval.</p>}
-      </section>
-      {!dirty && status.candidate_id && <CandidateApproval key={status.candidate_id} candidateId={status.candidate_id} />}
-      <RunHistory />
-      <DeliveryHistory />
-      <PublicationHistory />
-      <ObservationEvidence />
-      <InventoryView />
-      <MediaBudgetPanel />
-      <MaintenancePanel />
-      <RelocationMaintenance />
-          <RelocationActions onStorageChange={() => { storageChanged.current = true; setError('Storage switching was requested. Check relocation status, then reload before saving or exporting.'); }} />
-      <RelocationStatusPanel />
-      <RelocationRecovery onStorageChange={() => { storageChanged.current = true; setError('Recovery was requested. Check operation status, then reload before saving or exporting.'); }} />
-      <OperationHistory />
-    </>}
+    ) : (
+      <>
+        {/* Design Toolbar Bar */}
+        <fieldset disabled={busy || saving} className="flex flex-wrap gap-4 px-6 py-3 border-b border-white/10 bg-white/5 items-center">
+          <label className="text-xs font-medium flex items-center gap-1.5">
+            <span className="text-white/60">Target:</span>
+            <select value={target} onChange={event => setTarget(event.target.value as TargetDevice)} className="text-xs bg-[#1A1F2C] border border-white/15 rounded-lg px-2 py-1">
+              {config.targets.map(id => <option key={id} value={id}>{TARGET_DIMENSIONS[id]?.displayName || id}</option>)}
+            </select>
+          </label>
+          <label className="text-xs font-medium flex items-center gap-1.5">
+            <span className="text-white/60">Language:</span>
+            <select value={locale} onChange={event => setLocale(event.target.value)} className="text-xs bg-[#1A1F2C] border border-white/15 rounded-lg px-2 py-1">
+              {(config.project.locales || ['en-US']).map(value => <option key={value}>{value}</option>)}
+            </select>
+          </label>
+          <label className="text-xs font-medium flex items-center gap-1.5">
+            <span className="text-white/60">Visual style:</span>
+            <select value={config.theme.stylePreset || ''} onChange={event => edit(current => ({ ...current, theme: { ...current.theme, stylePreset: event.target.value } }))} className="text-xs bg-[#1A1F2C] border border-white/15 rounded-lg px-2 py-1">
+              <option value="">Project theme</option>
+              {Object.entries(STYLE_PRESETS).map(([id, preset]) => <option key={id} value={id}>{preset.name}</option>)}
+            </select>
+          </label>
+          <label className="flex items-center gap-2 text-xs text-white/80 cursor-pointer ml-auto">
+            <input type="checkbox" checked={!!config.connectedTrack} onChange={event => edit(current => ({ ...current, connectedTrack: event.target.checked }))} />
+            Connected panorama track
+          </label>
+        </fieldset>
+
+        {/* 3-Column Studio Canvas */}
+        <div className="grid lg:grid-cols-[260px_minmax(0,1fr)_340px] gap-0 min-h-[calc(100vh-140px)]">
+          {/* Left Deck Rail */}
+          <aside className="p-4 space-y-3 border-r border-white/10 bg-[#0C0F17]/50">
+            <div className="flex justify-between items-center">
+              <h2 className="font-semibold text-sm">Screenshots · {config.cards.length}</h2>
+              <span className="text-[10px] text-white/40 font-mono">5-Slide Arc</span>
+            </div>
+            <label className="upload text-xs block text-center py-2">Add real captures<input type="file" accept="image/png,image/jpeg" multiple disabled={busy || saving} onChange={event => { if (event.target.files) void importFiles(event.target.files); event.target.value = ''; }} /></label>
+            <button className="w-full text-xs" disabled={busy || saving} onClick={() => { const id = `card-${crypto.randomUUID().slice(0, 8)}`; edit(current => ({ ...current, cards: [...current.cards, { id, headline: 'Your headline', layout: 'pure_text' }] })); setSelected(id); }}>Add text card</button>
+            <ol className="space-y-1.5">{config.cards.map((card, index) => (
+              <li key={card.id}>
+                <button type="button" className={`w-full text-left p-2.5 rounded-xl border text-xs flex flex-col gap-1 transition ${selected === card.id ? 'border-indigo-400 bg-indigo-500/15 shadow-sm ring-1 ring-indigo-400/30' : 'border-white/10 hover:border-white/20 bg-white/5'}`} onClick={() => setSelected(card.id)}>
+                  <div className="flex justify-between items-center text-white/50 text-[10px] font-mono">
+                    <span>CARD {String(index + 1).padStart(2, '0')}</span>
+                    <span className="uppercase text-indigo-300 bg-indigo-500/20 px-1 rounded text-[9px] border border-indigo-500/30">{getCardRole(index)}</span>
+                  </div>
+                  <div className="font-medium text-white truncate">{resolveCard(config, card, target, locale).headline || 'Untitled'}</div>
+                </button>
+              </li>
+            ))}</ol>
+            <p className="text-[11px] text-white/40">{total} outputs declared. Each language and target needs reviewed copy and real source captures.</p>
+          </aside>
+
+          {/* Center Stage Preview Area */}
+          <section className="overflow-auto p-8 min-h-[500px] flex items-center justify-center bg-gradient-to-b from-black/20 to-black/60 relative" aria-label="Screenshot previews"
+            onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); if (!busy && !saving) void importFiles(event.dataTransfer.files); }}>
+            {!config.cards.length ? (
+              <div className="p-12 text-center border border-dashed border-white/20 rounded-2xl max-w-md">
+                <h2 className="text-xl mb-3 font-semibold">Bring your real app screens</h2>
+                <p className="text-white/60 text-sm">Drop PNG or JPEG captures here. Select the intended target and language before importing.</p>
+              </div>
+            ) : (
+              <div className="flex gap-8 items-start py-4">
+                {config.cards.map((card, index) => (
+                  <div key={card.id} className="shrink-0 cursor-pointer transition-transform duration-200 hover:scale-[1.01]" onClick={() => setSelected(card.id)}>
+                    <CardView card={resolveCard(config, card, target, locale)} index={index} totalCards={config.cards.length}
+                      target={target} theme={config.theme} locale={locale} connected={config.connectedTrack}
+                      onReview={findings => { const key = `${target}/${locale}/${card.id}`, value = findings.join('. ');
+                        setLayoutFindings(current => current[key] === value ? current : { ...current, [key]: value }); }} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Right Inspector Panel */}
+          <aside className="p-4 border-l border-white/10 bg-[#0C0F17]/50 flex flex-col overflow-y-auto">
+            {active && resolved ? (
+              <fieldset disabled={busy || saving} className="space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                  <div>
+                    <h2 className="font-semibold text-sm">Inspector</h2>
+                    <p className="text-[11px] text-white/50">{TARGET_DIMENSIONS[target]?.displayName} · {locale}</p>
+                  </div>
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                    {getCardRole(config.cards.findIndex(c => c.id === active.id))}
+                  </span>
+                </div>
+
+                {/* 4 Tabs */}
+                <div className="flex border-b border-white/10 text-xs gap-1">
+                  <button type="button" className={`flex-1 py-1.5 border-b-2 font-medium transition ${inspectorTab === 'copy' ? 'border-indigo-500 text-indigo-300' : 'border-transparent text-white/60 hover:text-white'}`}
+                    onClick={() => setInspectorTab('copy')}>Copy</button>
+                  <button type="button" className={`flex-1 py-1.5 border-b-2 font-medium transition ${inspectorTab === 'spatial' ? 'border-indigo-500 text-indigo-300' : 'border-transparent text-white/60 hover:text-white'}`}
+                    onClick={() => setInspectorTab('spatial')}>3D Spatial</button>
+                  <button type="button" className={`flex-1 py-1.5 border-b-2 font-medium transition ${inspectorTab === 'ambiance' ? 'border-indigo-500 text-indigo-300' : 'border-transparent text-white/60 hover:text-white'}`}
+                    onClick={() => setInspectorTab('ambiance')}>Ambiance</button>
+                  <button type="button" className={`flex-1 py-1.5 border-b-2 font-medium transition ${inspectorTab === 'review' ? 'border-indigo-500 text-indigo-300' : 'border-transparent text-white/60 hover:text-white'}`}
+                    onClick={() => setInspectorTab('review')}>Review</button>
+                </div>
+
+                {/* TAB 1: COPY */}
+                {inspectorTab === 'copy' && (
+                  <div className="space-y-3">
+                    {inherited && (
+                      <div className="p-2.5 bg-amber-950/40 border border-amber-300/20 rounded-xl text-xs">
+                        Copy or capture inherits the default language.
+                        <label className="flex gap-2 mt-1.5"><input type="checkbox" checked={!!fields.inheritDefault} onChange={event => mutate({ inheritDefault: event.target.checked })} />I reviewed the inherited content</label>
+                      </div>
+                    )}
+                    <div className="space-y-1">
+                      <div className="flex justify-between items-center">
+                        <label className="text-xs font-medium text-white/80">Headline</label>
+                        <button type="button" className="text-[11px] text-amber-300 hover:text-amber-200" onClick={() => setShowCopyIdeas(!showCopyIdeas)}>💡 Copy Ideas</button>
+                      </div>
+                      {showCopyIdeas && (
+                        <div className="p-2 bg-[#141824] border border-indigo-500/30 rounded-xl max-h-48 overflow-y-auto space-y-1.5 text-xs shadow-xl">
+                          <div className="text-[10px] uppercase font-mono text-white/40">Marketing Playbook Formulas</div>
+                          {COPY_FORMULAS.map((f, i) => (
+                            <div key={i} className="p-1.5 rounded hover:bg-white/10 cursor-pointer transition"
+                              onClick={() => { mutate({ headline: f.headline, subheadline: f.subheadline }); setShowCopyIdeas(false); }}>
+                              <div className="font-semibold text-white flex justify-between">
+                                <span>{f.headline}</span>
+                                <span className="text-[9px] text-indigo-300">{f.role}</span>
+                              </div>
+                              <div className="text-[11px] text-white/60 line-clamp-1">{f.subheadline}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <textarea rows={2} value={resolved.headline} onChange={event => mutate({ headline: event.target.value })} className="w-full text-xs" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-white/80">Subheadline</label>
+                      <textarea rows={2} value={resolved.subheadline || ''} onChange={event => mutate({ subheadline: event.target.value })} className="w-full text-xs" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-white/80">Composition</label>
+                      <select value={resolved.layout || defaultCardLayout(target)} onChange={event => mutate({ layout: event.target.value as CardConfig['layout'] })} className="w-full text-xs">
+                        {layouts.map(value => <option key={value} value={value}>{layoutName(value)}</option>)}
+                      </select>
+                    </div>
+                    {resolved.screenshot ? (
+                      <img className="max-h-24 mx-auto rounded object-contain border border-white/10" src={resolved.screenshot} alt="Assigned real capture" />
+                    ) : (
+                      <p className="text-amber-200 text-xs">{resolved.layout === 'pure_text' ? 'Text-only composition.' : 'No capture assigned.'}</p>
+                    )}
+                    <label className="upload text-xs block text-center">Replace capture for {locale}<input type="file" accept="image/png,image/jpeg" onChange={event => { if (event.target.files) void importFiles(event.target.files, true); event.target.value = ''; }} /></label>
+                    <div className="flex gap-2">
+                      <button type="button" className="flex-1 text-xs" disabled={config.cards[0]?.id === active.id} onClick={() => edit(current => { const cards = [...current.cards]; const index = cards.findIndex(c => c.id === active.id); [cards[index - 1], cards[index]] = [cards[index], cards[index - 1]]; return { ...current, cards }; })}>Move earlier</button>
+                      <button type="button" className="flex-1 text-xs" disabled={config.cards.at(-1)?.id === active.id} onClick={() => edit(current => { const cards = [...current.cards]; const index = cards.findIndex(c => c.id === active.id); [cards[index + 1], cards[index]] = [cards[index], cards[index + 1]]; return { ...current, cards }; })}>Move later</button>
+                    </div>
+                    <button type="button" className="w-full text-xs text-red-300 hover:text-red-200" onClick={() => { if (confirm('Remove this screenshot from the set?')) { edit(current => ({ ...current, cards: current.cards.filter(c => c.id !== active.id) })); setSelected(''); } }}>Remove screenshot</button>
+                  </div>
+                )}
+
+                {/* TAB 2: 3D SPATIAL & PERSPECTIVE */}
+                {inspectorTab === 'spatial' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-white/80">Pose Presets</span>
+                      <button type="button" className="text-[10px] text-white/40 hover:text-white" onClick={() => applyPresetPose('flat')}>Reset</button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5 text-xs">
+                      <button type="button" className="py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10" onClick={() => applyPresetPose('hero')}>Hero 3D</button>
+                      <button type="button" className="py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10" onClick={() => applyPresetPose('gaze')}>Inward Yaw</button>
+                      <button type="button" className="py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10" onClick={() => applyPresetPose('grounded')}>Grounded</button>
+                    </div>
+
+                    {layoutFindings[`${target}/${locale}/${active.id}`] && (
+                      <div className="p-2 rounded bg-amber-950/40 border border-amber-500/30 text-[11px] text-amber-200">
+                        ⚠️ {layoutFindings[`${target}/${locale}/${active.id}`]}
+                      </div>
+                    )}
+
+                    {/* Pitch / rotateX */}
+                    <div>
+                      <div className="flex justify-between text-xs text-white/70">
+                        <span>Pitch / 俯仰 (rotateX)</span>
+                        <span className="font-mono text-indigo-300">{resolved.deviceOffset?.rotateX ?? 0}°</span>
+                      </div>
+                      <input type="range" min="-15" max="25" step="1" value={resolved.deviceOffset?.rotateX ?? 0}
+                        onChange={e => updateOffset({ rotateX: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
+                    </div>
+
+                    {/* Yaw / 偏航 (rotateY) */}
+                    <div>
+                      <div className="flex justify-between text-xs text-white/70">
+                        <span>Yaw / 偏航 (rotateY)</span>
+                        <span className="font-mono text-indigo-300">{resolved.deviceOffset?.rotateY ?? 0}°</span>
+                      </div>
+                      <input type="range" min="-20" max="20" step="1" value={resolved.deviceOffset?.rotateY ?? 0}
+                        onChange={e => updateOffset({ rotateY: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
+                    </div>
+
+                    {/* Roll / 平面旋转 (rotate) */}
+                    <div>
+                      <div className="flex justify-between text-xs text-white/70">
+                        <span>Roll / 旋转 (rotate)</span>
+                        <span className="font-mono text-indigo-300">{resolved.deviceOffset?.rotate ?? 0}°</span>
+                      </div>
+                      <input type="range" min="-15" max="15" step="0.5" value={resolved.deviceOffset?.rotate ?? 0}
+                        onChange={e => updateOffset({ rotate: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
+                    </div>
+
+                    {/* Scale / 缩放 */}
+                    <div>
+                      <div className="flex justify-between text-xs text-white/70">
+                        <span>Scale / 比例</span>
+                        <span className="font-mono text-indigo-300">{(resolved.deviceOffset?.scale ?? 1.0).toFixed(2)}x</span>
+                      </div>
+                      <input type="range" min="0.70" max="1.30" step="0.01" value={resolved.deviceOffset?.scale ?? 1.0}
+                        onChange={e => updateOffset({ scale: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
+                    </div>
+
+                    {/* X and Y Offsets */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <div className="flex justify-between text-xs text-white/70">
+                          <span>Offset X</span>
+                          <span className="font-mono text-indigo-300">{resolved.deviceOffset?.x ?? 0}px</span>
+                        </div>
+                        <input type="range" min="-100" max="100" step="2" value={resolved.deviceOffset?.x ?? 0}
+                          onChange={e => updateOffset({ x: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs text-white/70">
+                          <span>Offset Y</span>
+                          <span className="font-mono text-indigo-300">{resolved.deviceOffset?.y ?? 0}px</span>
+                        </div>
+                        <input type="range" min="-100" max="100" step="2" value={resolved.deviceOffset?.y ?? 0}
+                          onChange={e => updateOffset({ y: Number(e.target.value) })} className="w-full cursor-pointer accent-indigo-500" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 3: AMBIANCE & LIGHTING */}
+                {inspectorTab === 'ambiance' && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-medium text-white/80">Visual Theme Preset</label>
+                      <select value={config.theme.stylePreset || ''} onChange={event => edit(current => ({ ...current, theme: { ...current.theme, stylePreset: event.target.value } }))} className="w-full text-xs">
+                        <option value="">Project theme</option>
+                        {Object.entries(STYLE_PRESETS).map(([id, preset]) => <option key={id} value={id}>{preset.name}</option>)}
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs text-white/70">
+                        <span>Gradient Lighting Angle</span>
+                        <span className="font-mono text-indigo-300">{config.theme.background?.angle ?? 135}°</span>
+                      </div>
+                      <input type="range" min="0" max="360" step="5" value={config.theme.background?.angle ?? 135}
+                        onChange={e => edit(current => ({ ...current, theme: { ...current.theme, background: { ...current.theme.background, angle: Number(e.target.value) } } }))}
+                        className="w-full cursor-pointer accent-indigo-500" />
+                    </div>
+
+                    <label className="flex items-center gap-2 text-xs text-white/80 cursor-pointer pt-2">
+                      <input type="checkbox" checked={!!config.connectedTrack} onChange={event => edit(current => ({ ...current, connectedTrack: event.target.checked }))} />
+                      Connected Panorama Track
+                    </label>
+                  </div>
+                )}
+
+                {/* TAB 4: AGENT REVIEW LOOP */}
+                {inspectorTab === 'review' && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs font-medium text-white/80">Human Critique & Directive</label>
+                      <p className="text-[10px] text-white/50">Write review notes for autonomous Agent digestion</p>
+                    </div>
+                    <textarea rows={3} placeholder="E.g. Tilt window 3° right, adjust headline to focus on clipboard speed..."
+                      value={critiqueNotes} onChange={e => setCritiqueNotes(e.target.value)} className="w-full text-xs" />
+                    <div className="flex flex-col gap-2 pt-1">
+                      <button type="button" className="primary text-xs flex items-center justify-center gap-1.5"
+                        disabled={syncingCritique} onClick={syncCritique}>
+                        <span>⚡ Sync Directives to Agent Mailbox</span>
+                      </button>
+                      <button type="button" className="text-xs flex items-center justify-center gap-1.5"
+                        onClick={copyCritiqueMarkdown}>
+                        <span>📋 Copy Markdown Directive</span>
+                      </button>
+                    </div>
+                    {critiqueNotice && (
+                      <p role="status" className="text-xs text-emerald-300">{critiqueNotice}</p>
+                    )}
+                  </div>
+                )}
+              </fieldset>
+            ) : (
+              <p className="text-white/50 text-xs">Select a screenshot to adjust its copy, 3D spatial properties, or agent critique.</p>
+            )}
+          </aside>
+        </div>
+      </>
+    )}
   </main>;
 };
