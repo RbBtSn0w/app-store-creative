@@ -41,13 +41,44 @@ These layouts preserve the captured window's proportions without adding an
 artificial display bezel. Use side layouts for narrow floating panels and
 alternate composition across the deck. Other layouts keep their existing frames.
 
+### 2. 3D Perspective, Spatial Dynamics, and Layout Rhythms
+
+Never output flat, zero-offset default cards when generating or recommending creative
+configurations. Screen advertisements require deliberate physical depth, focal hierarchy,
+and spatial dynamic tension.
+
+Use `deviceOffset` alongside `layout` to establish cohesive 3D perspective across the deck:
+
+| Parameter | Recommended Range | Purpose & Visual Role |
+| :--- | :--- | :--- |
+| `scale` | `1.0` ~ `1.08` | Focal scale (`1.0` grounded baseline up to `1.08` hero punch). |
+| `rotate` | `-3` ~ `+3` | Dynamic tilt in degrees: breaks rigid orthogonal grid, introduces kinetic feel. |
+| `rotateX` | `4` ~ `12` | Pitch angle in degrees: gives desktop/tabletop display perspective. |
+| `rotateY` | `-8` ~ `+8` | Yaw angle in degrees: directs viewer gaze towards or away from marketing copy. |
+| `x` / `y` | `-30` ~ `+50` | Center-of-mass balancing: accommodates long headlines or bleed. |
+
+#### Recommended 5-Slide 3D Spatial Arc (Production Standard):
+1. **Slide 1 (Hero)**: `mac_native_hero` + `scale: 1.06`, `rotateX: 4` (Bold, centered, eye-level anchor).
+2. **Slide 2 (Core Action)**: `mac_native_left` + `scale: 1.02`, `rotate: -2`, `rotateY: 8` (Inward yaw towards copy).
+3. **Slide 3 (Depth / Proof)**: `mac_native_right` + `scale: 1.02`, `rotate: 2`, `rotateY: -8` (Counter-angle balance).
+4. **Slide 4 (Superpower / Grid)**: `mac_native_hero` + `scale: 1.04`, `y: -10` (Elevated feature showcase).
+5. **Slide 5 (Trust / Base)**: `mac_native_hero` + `scale: 1.0`, `rotateX: 6`, `y: 15` (Solid, grounded foundation).
+
+#### Background Flow & Ambient Lighting:
+- Configure `theme.background.angle` (`145°` ~ `160°`) with `connectedTrack: true` so the gradient light sweeps continuously from the top-left of Slide 1 to the bottom-right of Slide 5.
+- Use `theme.shadow: "dramatic"` to cast high-elevation ambient occlusion drop shadows whenever 3D tilt is applied.
+
+When presenting creative proposals or conducting `/grill-me`, always present distinct
+spatial rhythm choices (e.g. Kinetic 3D Perspective vs. Clean Minimal Editorial) with explicit
+scale, tilt, and layout definitions rather than bare preset names.
+
 Localized product captures can be declared with
 `localizations[locale][cardId].screenshot`, alongside headline and subheadline.
 The locale-specific path takes precedence over `cards[].screenshot` in both
 Studio and headless export. Use real captures in that language; translating only
 the surrounding marketing copy does not localize the product UI.
 
-### 2. Weak vs. Better Headline Conversion
+### 3. Weak vs. Better Headline Conversion
 
 | Weak (Documents Technical UI) | Better (Sells Outcome / Feeling) |
 | :--- | :--- |
@@ -58,7 +89,7 @@ the surrounding marketing copy does not localize the product UI.
 | "Workout Log and Timer" | "Crush Every Workout" |
 | "AI Chatbot Assistant" | "Supercharge Your Workflow" |
 
-### 3. 18 Curated Visual Style Presets
+### 4. 18 Curated Visual Style Presets
 
 Apply any of the 18 pre-configured visual style presets under `theme.stylePreset`:
 
