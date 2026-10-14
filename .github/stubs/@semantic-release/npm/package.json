@@ -1,0 +1,6 @@
+{
+  "name": "@semantic-release/npm",
+  "version": "13.2.0",
+  "description": "In-tree stub module for @semantic-release/npm",
+  "private": true
+}
