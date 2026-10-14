@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Validate plugin package
         run: python3 .github/validate_plugin.py
@@ -35,7 +35,7 @@ jobs:
         run: python3 -m unittest discover -s tests -p 'test_*.py'
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: 'npm'
@@ -53,7 +53,7 @@ jobs:
         run: python3 .github/package_plugin.py --output /tmp/app-store-creative.zip
 
       - name: Setup release Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -66,7 +66,7 @@ jobs:
 
       - name: Preserve validated distribution
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: validated-plugin-${{ github.sha }}
           path: /tmp/app-store-creative.zip
@@ -81,18 +81,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --ignore-scripts
       - name: Retrieve validated distribution
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: validated-plugin-${{ github.sha }}
           path: .build/validated
