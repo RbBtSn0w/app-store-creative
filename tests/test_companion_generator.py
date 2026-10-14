@@ -115,6 +115,35 @@ class TestCompanionGenerator(unittest.TestCase):
         self.assertTrue(custom_out.is_file())
         self.assertIn("Hero Title", custom_out.read_text(encoding="utf-8"))
 
+    def test_empty_cards_rejected(self):
+        empty_config = dict(self.config_data)
+        empty_config["cards"] = []
+        cfg_path = self.root / "empty.config.json"
+        cfg_path.write_text(json.dumps(empty_config))
+        with self.assertRaises(ValueError) as ctx:
+            companion_generator.generate_companion(repo_root=self.root, config_path=cfg_path)
+        self.assertIn("cards", str(ctx.exception))
+
+    def test_script_tag_escaping(self):
+        xss_config = dict(self.config_data)
+        xss_config["cards"] = [
+            {
+                "id": "01-xss",
+                "headline": "Evil</script><script>alert(1)</script>",
+                "subheadline": "Subtitle",
+                "layout": "mac_native_hero",
+            }
+        ]
+        cfg_path = self.root / "xss.config.json"
+        cfg_path.write_text(json.dumps(xss_config))
+        out_path = self.root / "xss.html"
+        result = companion_generator.generate_companion(repo_root=self.root, config_path=cfg_path, output_path=out_path)
+        self.assertEqual(result["status"], "ok")
+        html_out = out_path.read_text(encoding="utf-8")
+        # Ensure </script> is escaped inside the embedded JSON
+        self.assertNotIn("Evil</script>", html_out)
+        self.assertIn("Evil<\\/script>", html_out)
+
 
 if __name__ == "__main__":
     unittest.main()

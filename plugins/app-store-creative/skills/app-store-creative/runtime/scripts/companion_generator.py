@@ -75,6 +75,8 @@ def generate_companion(
 
     cards_data = []
     raw_cards = config.get("cards", [])
+    if not raw_cards or not isinstance(raw_cards, list):
+        raise ValueError("Configuration must declare a nonempty 'cards' array")
     for idx, raw_card in enumerate(raw_cards):
         resolved, localized = studio_contract.resolve_card(config, raw_card, chosen_target, chosen_locale)
         card_id = raw_card["id"]
@@ -126,7 +128,7 @@ def generate_companion(
     out_file = (output_path if output_path and Path(output_path).is_absolute() else repo / (output_path or ".creative/companion.html")).resolve()
     out_file.parent.mkdir(parents=True, exist_ok=True)
 
-    cards_json = json.dumps(cards_data, ensure_ascii=False)
+    cards_json = json.dumps(cards_data, ensure_ascii=False).replace("</", "<\\/")
 
     html_content = f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -557,6 +559,16 @@ def generate_companion(
       }};
     }}
 
+    let statusTimeout = null;
+    function showStatus(msg) {{
+      const statusP = document.getElementById('sync-status');
+      if (!statusP) return;
+      statusP.innerText = msg;
+      statusP.classList.remove('hidden');
+      if (statusTimeout) clearTimeout(statusTimeout);
+      statusTimeout = setTimeout(() => statusP.classList.add('hidden'), 4000);
+    }}
+
     function downloadDirectivesJson() {{
       const fullDirectives = buildAllDirectivesFile();
       const blob = new Blob([JSON.stringify(fullDirectives, null, 2)], {{ type: 'application/json' }});
@@ -569,15 +581,11 @@ def generate_companion(
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      const statusP = document.getElementById('sync-status');
-      statusP.innerText = '✓ review-directives.json 已下载！可由 Agent 运行 apply-critique 直接吸收。';
-      statusP.classList.remove('hidden');
-      setTimeout(() => statusP.classList.add('hidden'), 4000);
+      showStatus('✓ review-directives.json 已下载！可由 Agent 运行 apply-critique 直接吸收。');
     }}
 
     async function syncDirectivesToAgent() {{
       const payload = buildCurrentDirectivesPayload();
-      const statusP = document.getElementById('sync-status');
 
       try {{
         const res = await fetch('http://localhost:3100/api/critique', {{
@@ -586,17 +594,14 @@ def generate_companion(
           body: JSON.stringify(payload)
         }});
         if (res.ok) {{
-          statusP.innerText = '✓ 审阅指令已实时写入 Agent 协同指令 (.creative/review-directives.json)！';
-          statusP.classList.remove('hidden');
-          setTimeout(() => statusP.classList.add('hidden'), 4000);
+          showStatus('✓ 审阅指令已实时写入 Agent 协同指令 (.creative/review-directives.json)！');
           return;
         }} else {{
           throw new Error('API 响应失败');
         }}
       }} catch (err) {{
         // Zero-server fallback: copy markdown to clipboard
-        statusP.innerText = '✓ 零服务模式：审阅指令已复制到剪贴板！直接在 Agent 对话中粘贴即可。';
-        statusP.classList.remove('hidden');
+        showStatus('✓ 零服务模式：审阅指令已复制到剪贴板！直接在 Agent 对话中粘贴即可。');
         copyDirectiveMarkdown();
       }}
     }}
@@ -606,12 +611,19 @@ def generate_companion(
       const directive = document.getElementById('input-directive').value;
       const md = `### Human Review Directive\\n- Target: ${{target}} | ${{locale}} | ${{card.id}} (Role: ${{card.role}})\\n- Spatial: Pitch=${{card.rotateX}}°, Yaw=${{card.rotateY}}°, Roll=${{card.rotate}}°, Scale=${{card.scale.toFixed(2)}}x, Offset=(${{card.x}}px, ${{card.y}}px)\\n- Headline: "${{card.headline}}"\\n- Subheadline: "${{card.subheadline}}"\\n- Directive: ${{directive || 'Approved current visual pose'}}`;
       navigator.clipboard.writeText(md).then(() => {{
-        const statusP = document.getElementById('sync-status');
-        statusP.innerText = '✓ 审阅指令 Markdown 已复制到剪贴板！';
-        statusP.classList.remove('hidden');
-        setTimeout(() => statusP.classList.add('hidden'), 3000);
+        showStatus('✓ 审阅指令 Markdown 已复制到剪贴板！');
       }}).catch(() => {{}});
     }}
+
+    // Keyboard navigation: Left/Right Arrow
+    document.addEventListener('keydown', (e) => {{
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {{
+        selectCard((currentIdx + 1) % cards.length);
+      }} else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {{
+        selectCard((currentIdx - 1 + cards.length) % cards.length);
+      }}
+    }});
 
     // Init
     selectCard(0);

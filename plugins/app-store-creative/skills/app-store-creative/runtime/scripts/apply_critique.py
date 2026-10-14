@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
+import sys
 from typing import Any
 
 import studio_contract
@@ -22,18 +23,29 @@ def apply_critique(
     if not cfg_file.is_file():
         raise FileNotFoundError(f"Configuration file not found: {cfg_file}")
 
-    # 1. Parse directives input
+    # 1. Parse directives input (supporting direct JSON string, file path, or stdin via '-')
     if directives_json is not None:
+        if directives_json.strip() == "-":
+            raw_str = sys.stdin.read()
+        else:
+            raw_str = directives_json
         try:
-            raw = json.loads(directives_json)
+            raw = json.loads(raw_str)
         except Exception as e:
             raise ValueError(f"Invalid JSON in directives string: {e}") from e
     else:
-        d_file = (directives_file if directives_file and Path(directives_file).is_absolute() else repo / (directives_file or ".creative/review-directives.json")).resolve()
-        if not d_file.is_file():
-            raise FileNotFoundError(f"Review directives file not found: {d_file}")
-        with open(d_file, "r", encoding="utf-8") as f:
-            raw = json.load(f)
+        if directives_file and str(directives_file).strip() == "-":
+            raw_str = sys.stdin.read()
+            try:
+                raw = json.loads(raw_str)
+            except Exception as e:
+                raise ValueError(f"Invalid JSON from stdin: {e}") from e
+        else:
+            d_file = (directives_file if directives_file and Path(directives_file).is_absolute() else repo / (directives_file or ".creative/review-directives.json")).resolve()
+            if not d_file.is_file():
+                raise FileNotFoundError(f"Review directives file not found: {d_file}")
+            with open(d_file, "r", encoding="utf-8") as f:
+                raw = json.load(f)
 
     # 2. Normalize directive list
     directive_list: list[dict[str, Any]] = []
@@ -108,7 +120,7 @@ def apply_critique(
                 matching_card.setdefault("deviceOffset", {})
                 matching_card["deviceOffset"].update(normalized_offset)
 
-        # 4b. Update Headline
+        # 4b. Update Headline (with variant localization precedence)
         if "headline" in patch and isinstance(patch["headline"], str):
             h = patch["headline"]
             if locale == default_locale:
@@ -117,10 +129,19 @@ def apply_critique(
                 else:
                     matching_card["headline"] = h
             else:
-                config.setdefault("localizations", {}).setdefault(locale, {}).setdefault(card_id, {})
-                config["localizations"][locale][card_id]["headline"] = h
+                if (
+                    target
+                    and "variants" in matching_card
+                    and target in matching_card["variants"]
+                    and "localizations" in matching_card["variants"][target]
+                    and locale in matching_card["variants"][target]["localizations"]
+                ):
+                    matching_card["variants"][target]["localizations"][locale]["headline"] = h
+                else:
+                    config.setdefault("localizations", {}).setdefault(locale, {}).setdefault(card_id, {})
+                    config["localizations"][locale][card_id]["headline"] = h
 
-        # 4c. Update Subheadline
+        # 4c. Update Subheadline (with variant localization precedence)
         if "subheadline" in patch and isinstance(patch["subheadline"], str):
             sh = patch["subheadline"]
             if locale == default_locale:
@@ -129,8 +150,17 @@ def apply_critique(
                 else:
                     matching_card["subheadline"] = sh
             else:
-                config.setdefault("localizations", {}).setdefault(locale, {}).setdefault(card_id, {})
-                config["localizations"][locale][card_id]["subheadline"] = sh
+                if (
+                    target
+                    and "variants" in matching_card
+                    and target in matching_card["variants"]
+                    and "localizations" in matching_card["variants"][target]
+                    and locale in matching_card["variants"][target]["localizations"]
+                ):
+                    matching_card["variants"][target]["localizations"][locale]["subheadline"] = sh
+                else:
+                    config.setdefault("localizations", {}).setdefault(locale, {}).setdefault(card_id, {})
+                    config["localizations"][locale][card_id]["subheadline"] = sh
 
         # 4d. Update Layout
         if "layout" in patch and isinstance(patch["layout"], str):
@@ -148,6 +178,30 @@ def apply_critique(
     # 6. Atomically persist changes
     with studio_contract.WRITE_LOCK:
         studio_contract.atomic_json(cfg_file, config)
+        # 6b. Keep .creative/review-directives.json synchronized
+        try:
+            directives_path = repo / ".creative" / "review-directives.json"
+            directives_path.parent.mkdir(parents=True, exist_ok=True)
+            existing_data = {}
+            if directives_path.is_file():
+                try:
+                    existing_data = json.loads(directives_path.read_text(encoding="utf-8"))
+                except Exception:
+                    existing_data = {}
+            if not isinstance(existing_data, dict):
+                existing_data = {}
+            persisted_directives = existing_data.get("directives", {})
+            if not isinstance(persisted_directives, dict):
+                persisted_directives = {}
+            for item in directive_list:
+                cid = item.get("card_id") or item.get("cardId")
+                if cid and isinstance(cid, str):
+                    persisted_directives[cid.strip()] = item
+                    existing_data["latest"] = item
+            existing_data["directives"] = persisted_directives
+            studio_contract.atomic_json(directives_path, existing_data)
+        except Exception:
+            pass
 
     return {
         "status": "ok",

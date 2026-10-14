@@ -185,6 +185,62 @@ class TestApplyCritique(unittest.TestCase):
         updated_config = json.loads(self.config_path.read_text())
         self.assertEqual(updated_config["cards"][0]["headline"], "CLI Ingested Headline")
 
+    def test_apply_critique_variant_localized_override(self):
+        # Configure a card that has target-specific variant localizations
+        variant_config = dict(self.config_data)
+        variant_config["cards"][0]["variants"] = {
+            "mac_16_10": {
+                "localizations": {
+                    "zh-Hans": {
+                        "headline": "Mac专属初始中文标题"
+                    }
+                }
+            }
+        }
+        cfg_path = self.root / "variant.config.json"
+        cfg_path.write_text(json.dumps(variant_config, indent=2))
+
+        directives_json = json.dumps({
+            "target": "mac_16_10",
+            "locale": "zh-Hans",
+            "card_id": "01-hero",
+            "patch": {
+                "headline": "Mac专属优化中文标题"
+            }
+        })
+
+        result = apply_critique.apply_critique(
+            repo_root=self.root,
+            config_path=cfg_path,
+            directives_json=directives_json,
+        )
+        self.assertEqual(result["status"], "ok")
+
+        updated = json.loads(cfg_path.read_text())
+        # Variant-specific localization must be updated to prevent shadowing
+        self.assertEqual(
+            updated["cards"][0]["variants"]["mac_16_10"]["localizations"]["zh-Hans"]["headline"],
+            "Mac专属优化中文标题",
+        )
+
+    def test_apply_critique_stdin(self):
+        import io
+        from unittest.mock import patch
+
+        payload = json.dumps({
+            "card_id": "01-hero",
+            "patch": {"headline": "Stdin Headline"}
+        })
+
+        with patch("sys.stdin", io.StringIO(payload)):
+            result = apply_critique.apply_critique(
+                repo_root=self.root,
+                directives_json="-",
+            )
+            self.assertEqual(result["status"], "ok")
+            updated = json.loads(self.config_path.read_text())
+            self.assertEqual(updated["cards"][0]["headline"], "Stdin Headline")
+
 
 if __name__ == "__main__":
     unittest.main()
