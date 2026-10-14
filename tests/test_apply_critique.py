@@ -305,6 +305,35 @@ class TestApplyCritique(unittest.TestCase):
         self.assertNotIn("x", variant_offset)
         self.assertNotIn("y", variant_offset)
 
+    def test_apply_critique_card_offset_preserves_omitted_fields(self):
+        # Card 01-hero has deviceOffset in setUp: rotateX=0, rotateY=0, scale=1.0, x=0, y=0
+        # First set x=40, y=20 on the card
+        updated_cfg = json.loads(self.config_path.read_text())
+        updated_cfg["cards"][0]["deviceOffset"] = {"x": 40.0, "y": 20.0, "scale": 1.05}
+        self.config_path.write_text(json.dumps(updated_cfg, indent=2))
+
+        # Directive updates only rotateX without target
+        payload = json.dumps({
+            "card_id": "01-hero",
+            "patch": {
+                "deviceOffset": {
+                    "rotateX": 8.0
+                }
+            }
+        })
+        result = apply_critique.apply_critique(
+            repo_root=self.root,
+            directives_json=payload,
+        )
+        self.assertEqual(result["status"], "ok")
+        saved = json.loads(self.config_path.read_text())
+        offset = saved["cards"][0]["deviceOffset"]
+        self.assertEqual(offset["rotateX"], 8.0)
+        self.assertEqual(offset["x"], 40.0)
+        self.assertEqual(offset["y"], 20.0)
+        self.assertEqual(offset["scale"], 1.05)
+
 
 if __name__ == "__main__":
     unittest.main()
+

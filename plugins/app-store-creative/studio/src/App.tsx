@@ -74,9 +74,9 @@ export const App: React.FC = () => {
   const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
   const [critiqueNotesByCard, setCritiqueNotesByCard] = useState<Record<string, string>>({});
-  const critiqueNotesByCardRef = useRef<Record<string, string>>({}); critiqueNotesByCardRef.current = critiqueNotesByCard;
+  const critiqueNotesByCardRef = useRef<Record<string, string>>({});
   const [dirtyCritiqueCards, setDirtyCritiqueCards] = useState<Record<string, boolean>>({});
-  const dirtyCritiqueCardsRef = useRef<Record<string, boolean>>({}); dirtyCritiqueCardsRef.current = dirtyCritiqueCards;
+  const dirtyCritiqueCardsRef = useRef<Record<string, boolean>>({});
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
   const [syncingCritique, setSyncingCritique] = useState(false);
   const [critiqueNotice, setCritiqueNotice] = useState('');
@@ -123,9 +123,13 @@ export const App: React.FC = () => {
           initialNotes[cardId] = item.notes;
         }
       }
+      critiqueNotesByCardRef.current = initialNotes;
       setCritiqueNotesByCard(initialNotes);
     }).catch(() => {});
   }, []);
+  useEffect(() => {
+    dirtyCritiqueCardsRef.current = dirtyCritiqueCards;
+  }, [dirtyCritiqueCards]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current || Object.values(dirtyCritiqueCardsRef.current).some(Boolean)) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn); return () => window.removeEventListener('beforeunload', warn);
@@ -797,6 +801,7 @@ export const App: React.FC = () => {
                       onChange={e => {
                         const val = e.target.value;
                         if (active) {
+                          critiqueNotesByCardRef.current = { ...critiqueNotesByCardRef.current, [active.id]: val };
                           setCritiqueNotesByCard(prev => ({ ...prev, [active.id]: val }));
                           setDirtyCritiqueCards(prev => ({ ...prev, [active.id]: true }));
                         }
