@@ -242,7 +242,8 @@ export const App: React.FC = () => {
     if (pose === 'hero') {
       updateOffset({ scale: 1.05, rotate: 0, rotateX: 4, rotateY: 0, x: 0, y: 15 });
     } else if (pose === 'gaze') {
-      updateOffset({ scale: 1.02, rotate: -2, rotateX: 4, rotateY: 6, x: -10, y: 20 });
+      const isRight = resolved?.layout === 'mac_native_right';
+      updateOffset({ scale: 1.02, rotate: isRight ? 2 : -2, rotateX: 4, rotateY: isRight ? -8 : 8, x: isRight ? 10 : -10, y: 0 });
     } else if (pose === 'grounded') {
       updateOffset({ scale: 0.95, rotate: 0, rotateX: 0, rotateY: 0, x: 0, y: 0 });
     } else if (pose === 'flat') {
@@ -660,11 +661,21 @@ export const App: React.FC = () => {
                       <span className="text-xs font-medium text-white/80">Pose Presets</span>
                       <button type="button" className="text-[10px] text-white/40 hover:text-white" onClick={() => applyPresetPose('flat')}>Reset</button>
                     </div>
-                    <div className="grid grid-cols-3 gap-1.5 text-xs">
-                      <button type="button" className="py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10" onClick={() => applyPresetPose('hero')}>Hero 3D</button>
-                      <button type="button" className="py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10" onClick={() => applyPresetPose('gaze')}>Inward Yaw</button>
-                      <button type="button" className="py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10" onClick={() => applyPresetPose('grounded')}>Grounded</button>
-                    </div>
+                    {(() => {
+                      const cur = resolved?.deviceOffset || {};
+                      const isHero = cur.rotateX === 4 && cur.rotateY === 0 && (cur.rotate ?? 0) === 0;
+                      const isGaze = cur.rotateX === 4 && (cur.rotateY === 8 || cur.rotateY === -8 || cur.rotateY === 6 || cur.rotateY === -6);
+                      const isGrounded = (cur.rotateX ?? 0) === 0 && (cur.rotateY ?? 0) === 0 && (cur.rotate ?? 0) === 0;
+                      const activeCls = "py-1 px-1.5 text-[11px] rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-medium";
+                      const inactiveCls = "py-1 px-1.5 text-[11px] rounded bg-white/5 hover:bg-white/10 border border-white/10 text-white/70";
+                      return (
+                        <div className="grid grid-cols-3 gap-1.5 text-xs">
+                          <button type="button" className={isHero ? activeCls : inactiveCls} onClick={() => applyPresetPose('hero')}>Hero 3D</button>
+                          <button type="button" className={isGaze ? activeCls : inactiveCls} onClick={() => applyPresetPose('gaze')}>Inward Yaw</button>
+                          <button type="button" className={isGrounded ? activeCls : inactiveCls} onClick={() => applyPresetPose('grounded')}>Grounded</button>
+                        </div>
+                      );
+                    })()}
 
                     {layoutFindings[`${target}/${locale}/${active.id}`] && (
                       <div className="p-2 rounded bg-amber-950/40 border border-amber-500/30 text-[11px] text-amber-200">
