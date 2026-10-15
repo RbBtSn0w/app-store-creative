@@ -94,15 +94,37 @@ class TargetScalingTests(unittest.TestCase):
         self.assertEqual(scale, 4.0)
         self.assertEqual(phys_w, 2880)
         self.assertEqual(phys_h, 1800)
+        self.assertEqual(round(base_w * scale), phys_w)
+        self.assertEqual(round(base_h * scale), phys_h)
 
-    def test_iphone_scaling_matches_proportional_physical_dimensions(self):
+    def test_iphone_scaling_matches_exact_physical_dimensions(self):
         from export_engine import get_target_scaling
         base_w, base_h, scale, phys_w, phys_h = get_target_scaling('iphone_6_9')
-        self.assertEqual(base_w, 400)
-        self.assertEqual(base_h, 869)
-        self.assertAlmostEqual(scale, 3.3, places=2)
+        self.assertEqual(base_w, 440)
+        self.assertEqual(base_h, 956)
+        self.assertEqual(scale, 3.0)
         self.assertEqual(phys_w, 1320)
         self.assertEqual(phys_h, 2868)
+        self.assertEqual(round(base_w * scale), phys_w)
+        self.assertEqual(round(base_h * scale), phys_h)
+
+    def test_ipad_12_9_scaling_avoids_rounding_drift(self):
+        from export_engine import get_target_scaling
+        base_w, base_h, scale, phys_w, phys_h = get_target_scaling('ipad_12_9')
+        self.assertEqual(base_w, 512)
+        self.assertEqual(base_h, 683)
+        self.assertEqual(scale, 4.0)
+        self.assertEqual(phys_w, 2048)
+        self.assertEqual(phys_h, 2732)
+        self.assertEqual(round(base_w * scale), phys_w)
+        self.assertEqual(round(base_h * scale), phys_h)
+
+    def test_all_defined_targets_reproduce_exact_physical_dimensions(self):
+        from export_engine import get_target_scaling, TARGET_SPECS
+        for target, spec in TARGET_SPECS.items():
+            base_w, base_h, scale, phys_w, phys_h = get_target_scaling(target)
+            self.assertEqual(round(base_w * scale), spec['width'], f"Width mismatch for {target}")
+            self.assertEqual(round(base_h * scale), spec['height'], f"Height mismatch for {target}")
 
 
 class LaunchFlagsTests(unittest.TestCase):

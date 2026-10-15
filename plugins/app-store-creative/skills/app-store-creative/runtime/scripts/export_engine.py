@@ -161,18 +161,45 @@ def run_native_browser(cmd, profile: Path, output: Path, timeout_seconds: int):
 
 
 
+# Exact base canvas dimensions and integer scaling factors guaranteeing:
+# base_w * scale == phys_w AND base_h * scale == phys_h with 0 pixel rounding error.
+TARGET_BASE_SCALING: Dict[str, Tuple[int, int, float]] = {
+    "iphone_6_9": (440, 956, 3.0),
+    "iphone_6_7": (430, 932, 3.0),
+    "iphone_6_5": (414, 896, 3.0),
+    "iphone_5_5": (414, 736, 3.0),
+    "ipad_13": (516, 688, 4.0),
+    "ipad_12_9": (512, 683, 4.0),
+    "mac_16_10": (720, 450, 4.0),
+    "watch_ultra": (205, 251, 2.0),
+    "google_play_phone": (360, 800, 3.0),
+    "google_play_tablet_7": (400, 640, 3.0),
+    "google_play_tablet_10": (400, 640, 4.0),
+    "google_play_feature_graphic": (512, 250, 2.0),
+}
+
+
 def get_target_scaling(target: str) -> Tuple[int, int, float, int, int]:
-    """Return (base_width, base_height, scale_factor, physical_width, physical_height)."""
+    """Return (base_width, base_height, scale_factor, physical_width, physical_height).
+
+    Guarantees round(base_width * scale_factor) == physical_width and
+    round(base_height * scale_factor) == physical_height for all supported targets.
+    """
     spec = TARGET_SPECS.get(target, TARGET_SPECS["iphone_6_9"])
     phys_w = spec["width"]
     phys_h = spec["height"]
-    is_feature_graphic = target == "google_play_feature_graphic"
-    is_mac = target.startswith("mac_")
-    is_tablet = target.startswith("ipad_") or target.startswith("google_play_tablet_")
-    base_w = 600 if is_feature_graphic else (720 if is_mac else (480 if is_tablet else 400))
-    base_h = round(base_w * (phys_h / phys_w))
-    scale = phys_w / base_w
-    return base_w, base_h, scale, phys_w, phys_h
+
+    if target in TARGET_BASE_SCALING:
+        base_w, base_h, scale = TARGET_BASE_SCALING[target]
+        return base_w, base_h, scale, phys_w, phys_h
+
+    # Dynamic fallback for arbitrary custom dimensions:
+    for cand in (4.0, 3.0, 2.0):
+        int_cand = int(cand)
+        if phys_w % int_cand == 0 and phys_h % int_cand == 0:
+            return phys_w // int_cand, phys_h // int_cand, cand, phys_w, phys_h
+
+    return phys_w, phys_h, 1.0, phys_w, phys_h
 
 
 def export_single_card(
