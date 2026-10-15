@@ -161,6 +161,20 @@ def run_native_browser(cmd, profile: Path, output: Path, timeout_seconds: int):
 
 
 
+def get_target_scaling(target: str) -> Tuple[int, int, float, int, int]:
+    """Return (base_width, base_height, scale_factor, physical_width, physical_height)."""
+    spec = TARGET_SPECS.get(target, TARGET_SPECS["iphone_6_9"])
+    phys_w = spec["width"]
+    phys_h = spec["height"]
+    is_feature_graphic = target == "google_play_feature_graphic"
+    is_mac = target.startswith("mac_")
+    is_tablet = target.startswith("ipad_") or target.startswith("google_play_tablet_")
+    base_w = 600 if is_feature_graphic else (720 if is_mac else (480 if is_tablet else 400))
+    base_h = round(base_w * (phys_h / phys_w))
+    scale = phys_w / base_w
+    return base_w, base_h, scale, phys_w, phys_h
+
+
 def export_single_card(
     chrome_bin: str,
     port: int,
@@ -173,9 +187,7 @@ def export_single_card(
     metadata=None,
 ) -> bool:
     """Render a single card at 1:1 physical pixel dimensions via headless Chrome."""
-    spec = TARGET_SPECS.get(target, TARGET_SPECS["iphone_6_9"])
-    width = spec["width"]
-    height = spec["height"]
+    base_w, base_h, scale, width, height = get_target_scaling(target)
 
     url = f"http://127.0.0.1:{port}/?" + urllib.parse.urlencode({"export": "true", "card": card_id, "target": target, "locale": locale})
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -184,14 +196,14 @@ def export_single_card(
         chrome_bin,
         "--headless=new",
         f"--screenshot={output_path.resolve()}",
-        f"--window-size={width},{height}",
+        f"--window-size={base_w},{base_h}",
         "--default-background-color=ffffffff",
         "--dump-dom",
         "--no-first-run",
         "--disable-background-networking",
         "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1",
         "--hide-scrollbars",
-        "--force-device-scale-factor=1",
+        f"--force-device-scale-factor={scale}",
         "--disable-gpu",
         "--disable-dev-shm-usage",
         "--run-all-compositor-stages-before-draw",

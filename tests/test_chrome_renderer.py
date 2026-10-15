@@ -83,3 +83,52 @@ class BrowserIdentityTests(unittest.TestCase):
         for product in (None, '/Users/private/browser', 'Chrome/unknown'):
             with self.assertRaises(ValueError):
                 browser_identity({'product': product, 'protocolVersion': '1.3', 'jsVersion': '14.1'})
+
+
+class TargetScalingTests(unittest.TestCase):
+    def test_mac_16_10_scaling_is_exact_integer_retina(self):
+        from export_engine import get_target_scaling
+        base_w, base_h, scale, phys_w, phys_h = get_target_scaling('mac_16_10')
+        self.assertEqual(base_w, 720)
+        self.assertEqual(base_h, 450)
+        self.assertEqual(scale, 4.0)
+        self.assertEqual(phys_w, 2880)
+        self.assertEqual(phys_h, 1800)
+
+    def test_iphone_scaling_matches_proportional_physical_dimensions(self):
+        from export_engine import get_target_scaling
+        base_w, base_h, scale, phys_w, phys_h = get_target_scaling('iphone_6_9')
+        self.assertEqual(base_w, 400)
+        self.assertEqual(base_h, 869)
+        self.assertAlmostEqual(scale, 3.3, places=2)
+        self.assertEqual(phys_w, 1320)
+        self.assertEqual(phys_h, 2868)
+
+
+class LaunchFlagsTests(unittest.TestCase):
+    def test_launch_flags_preserve_scale_factor_and_window_size(self):
+        cmd = [
+            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            '--headless=new',
+            '--screenshot=/tmp/out.png',
+            '--window-size=720,450',
+            '--default-background-color=ffffffff',
+            '--dump-dom',
+            '--no-first-run',
+            '--disable-background-networking',
+            '--hide-scrollbars',
+            '--force-device-scale-factor=4.0',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--run-all-compositor-stages-before-draw',
+            '--virtual-time-budget=10000',
+            'http://127.0.0.1:3100/?export=true',
+        ]
+        excluded = ('--screenshot=', '--virtual-time-budget=')
+        flags = [value for value in cmd[1:-1] if not value.startswith(excluded)
+                 and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--default-background-color=ffffffff', '--disable-gpu', '--disable-dev-shm-usage')]
+        self.assertIn('--force-device-scale-factor=4.0', flags)
+        self.assertIn('--window-size=720,450', flags)
+        self.assertNotIn('--disable-gpu', flags)
+        self.assertNotIn('--screenshot=/tmp/out.png', flags)
+
