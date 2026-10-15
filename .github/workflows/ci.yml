@@ -80,11 +80,24 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
     steps:
+      - name: Mint release-bot token
+        id: release-bot
+        if: ${{ vars.RELEASE_BOT_APP_ID != '' }}
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           persist-credentials: false
+          token: ${{ steps.release-bot.outputs.token || github.token }}
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -100,5 +113,5 @@ jobs:
         run: python3 -m zipfile -e .build/validated/app-store-creative.zip .build/validated
       - name: Publish plugin release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.release-bot.outputs.token || secrets.GITHUB_TOKEN }}
         run: npm run release

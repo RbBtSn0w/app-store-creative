@@ -26,11 +26,12 @@ package smoke checks. It also updates the repository's source manifests in place
 Both the source manifests on `main` and the release ZIP stay aligned with the released
 version. No npm package, ADG update, or ASC operation is performed.
 
-Only `contents: write` is granted to the release job. Issue creation, PR comments,
-and release labels are disabled. Repository rules must permit the Actions token
-to create release tags; no branch-protection bypass is configured.
+When configured with `vars.RELEASE_BOT_APP_ID` and `secrets.RELEASE_BOT_PRIVATE_KEY`,
+the release job mints an installation token for `rbbtsn0w-bot` using `actions/create-github-app-token@v3`
+to bypass repository rulesets (such as required pull requests on `main`) and publish
+release commits and tags. If absent, it falls back to the default `github.token`.
 The release checkout does not persist credentials, release tooling installs with
-lifecycle scripts disabled, and only the publish step receives `GITHUB_TOKEN`.
+lifecycle scripts disabled, and only the publish step receives the release token.
 
 Dependency audit at integration reported 12 transitive advisories (10 high,
 2 moderate) even with semantic-release 25.0.9. Compatible `npm audit fix` did not
