@@ -1,3 +1,4 @@
+import copy
 import json
 import pytest
 from pathlib import Path
@@ -246,3 +247,44 @@ def test_cli_ppo_dispatch(tmp_path):
     )
     assert res_handoff["control"]["delivery_id"] == "del_base_1"
     assert out_json.is_file()
+
+
+def test_platform_readiness_tv_and_vision_os():
+    r_tv = ppo_experiment.validate_platform_readiness("TV_OS")
+    assert r_tv["platform"] == "TV_OS"
+    assert r_tv["eligible"] is True
+    assert r_tv["endpoint"] == "v2"
+    assert r_tv["v1_supported"] is False
+    assert r_tv["v2_supported"] is True
+
+    r_vis = ppo_experiment.validate_platform_readiness("VISION_OS")
+    assert r_vis["platform"] == "VISION_OS"
+    assert r_vis["eligible"] is True
+    assert r_vis["endpoint"] == "v2"
+
+
+def test_compile_ppo_handoff_shell_quoting(tmp_path):
+    special_config = copy.deepcopy(SAMPLE_CONFIG)
+    special_config["experiments"]["visual_style_cro"]["name"] = 'Holiday "Sale" & $Special'
+    special_config["experiments"]["visual_style_cro"]["treatments"]["quartz_titanium"]["name"] = "Variant 'A' & B"
+    special_config["experiments"]["visual_style_cro"]["treatments"]["quartz_titanium"]["appIconName"] = "Icon $1"
+
+    handoff = ppo_experiment.compile_ppo_handoff(
+        repo_root=tmp_path,
+        base_config=special_config,
+        experiment_id="visual_style_cro",
+        baseline_delivery_id="del_base",
+        treatment_deliveries={"quartz_titanium": "del_treat"},
+        output_path=tmp_path / "handoff.json",
+    )
+
+    plan = handoff["asc_execution_plan"]
+    # Verify quotes or metacharacters are safely escaped in commands
+    import shlex
+    expected_exp = shlex.quote('Holiday "Sale" & $Special')
+    expected_treat = shlex.quote("Variant 'A' & B")
+    expected_icon = shlex.quote("Icon $1")
+    assert any(f"--name {expected_exp}" in cmd for cmd in plan)
+    assert any(f"--name {expected_treat}" in cmd for cmd in plan)
+    assert any(f"--app-icon-name {expected_icon}" in cmd for cmd in plan)
+

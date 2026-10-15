@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import copy
 import json
+import shlex
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -200,14 +201,19 @@ def validate_platform_readiness(
             "reasons": reasons if not eligible else ["macOS supports standalone v2 PPO experiments on live store versions."],
         }
 
-    # iOS default
+    # iOS / other platforms default
+    is_ios = normalized_platform == "IOS"
     return {
         "eligible": True,
-        "platform": "IOS",
-        "endpoint": "v1_or_v2",
-        "v1_supported": True,
+        "platform": normalized_platform,
+        "endpoint": "v1_or_v2" if is_ios else "v2",
+        "v1_supported": is_ios,
         "v2_supported": True,
-        "reasons": ["iOS supports both version-bound (v1) and standalone (v2) PPO experiments."],
+        "reasons": (
+            ["iOS supports both version-bound (v1) and standalone (v2) PPO experiments."]
+            if is_ios
+            else [f"{normalized_platform} supports standalone v2 PPO experiments."]
+        ),
     }
 
 
@@ -269,27 +275,27 @@ def compile_ppo_handoff(
     asc_commands = []
     if platform.upper() == "MAC_OS":
         asc_commands.append(
-            f'asc product-pages experiments create --v2 --app "{app_id}" --platform MAC_OS --name "{exp.name}" --traffic-proportion {exp.traffic_proportion}'
+            f"asc product-pages experiments create --v2 --app {shlex.quote(str(app_id))} --platform MAC_OS --name {shlex.quote(exp.name)} --traffic-proportion {int(exp.traffic_proportion)}"
         )
     else:
         asc_commands.append(
-            f'asc product-pages experiments create --name "{exp.name}" --traffic-proportion {exp.traffic_proportion}'
+            f"asc product-pages experiments create --name {shlex.quote(exp.name)} --traffic-proportion {int(exp.traffic_proportion)}"
         )
 
     for treat in treatments_payload:
         v2_flag = " --v2" if platform.upper() == "MAC_OS" else ""
-        icon_flag = f' --app-icon-name "{treat["app_icon_name"]}"' if treat["app_icon_name"] else ""
+        icon_flag = f" --app-icon-name {shlex.quote(treat['app_icon_name'])}" if treat.get("app_icon_name") else ""
         asc_commands.append(
-            f'asc product-pages experiments treatments create --experiment-id "<EXPERIMENT_ID>" --name "{treat["name"]}"{v2_flag}{icon_flag}'
+            f"asc product-pages experiments treatments create --experiment-id '<EXPERIMENT_ID>' --name {shlex.quote(treat['name'])}{v2_flag}{icon_flag}"
         )
         for loc in treat["locales"]:
             asc_commands.append(
-                f'asc product-pages experiments treatments localizations create --treatment-id "<TREATMENT_ID>" --locale "{loc}"'
+                f"asc product-pages experiments treatments localizations create --treatment-id '<TREATMENT_ID>' --locale {shlex.quote(loc)}"
             )
             # Screenshot set upload
-            loc_path = f'{treat["delivery_path"]}/media/{loc}' if treat["delivery_path"] else f'<DELIVERY_PATH>/media/{loc}'
+            loc_path = f"{treat['delivery_path']}/media/{loc}" if treat.get("delivery_path") else f"<DELIVERY_PATH>/media/{loc}"
             asc_commands.append(
-                f'asc product-pages experiments treatments localizations screenshot-sets upload --localization-id "<LOCALIZATION_ID>" --path "{loc_path}"'
+                f"asc product-pages experiments treatments localizations screenshot-sets upload --localization-id '<LOCALIZATION_ID>' --path {shlex.quote(loc_path)}"
             )
 
     handoff = {
