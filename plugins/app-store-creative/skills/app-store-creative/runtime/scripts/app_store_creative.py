@@ -124,12 +124,20 @@ def run(args):
 
         if args.ppo_action == "handoff":
             exp_id = args.experiment
+            experiments = ppo_experiment.parse_experiments(base_config)
+            if exp_id not in experiments:
+                raise KeyError(f"Experiment '{exp_id}' not found in configuration")
+            exp = experiments[exp_id]
             baseline_del = getattr(args, "baseline_delivery", None)
             treatment_del_map = {}
             for item in (getattr(args, "treatment_deliveries", None) or []):
-                if ":" in item:
-                    tid, did = item.split(":", 1)
-                    treatment_del_map[tid.strip()] = did.strip()
+                if ":" not in item:
+                    raise ValueError(f"Malformed --treatment-delivery value '{item}': expected format 'treatment_id:delivery_id'")
+                tid, did = item.split(":", 1)
+                tid, did = tid.strip(), did.strip()
+                if tid not in exp.treatments:
+                    raise ValueError(f"Unknown treatment ID '{tid}' in --treatment-delivery. Known treatments: {list(exp.treatments.keys())}")
+                treatment_del_map[tid] = did
             out_path = project_path(getattr(args, "output", None))
             return ppo_experiment.compile_ppo_handoff(
                 repo_root=root,
@@ -182,13 +190,16 @@ def build_parser():
     ppo_sub = ppo.add_subparsers(dest="ppo_action", required=True)
 
     ppo_list = ppo_sub.add_parser("list", help="List experiments defined in creative.config.json")
+    ppo_list.add_argument("--repo", type=Path, default=Path.cwd())
     ppo_list.add_argument("--config", type=Path, help="Path to creative.config.json")
 
     ppo_plan = ppo_sub.add_parser("plan", help="Compile and inspect PPO experiment execution plan")
+    ppo_plan.add_argument("--repo", type=Path, default=Path.cwd())
     ppo_plan.add_argument("--config", type=Path, help="Path to creative.config.json")
     ppo_plan.add_argument("--experiment", type=str, required=True, help="Experiment ID to plan")
 
     ppo_handoff = ppo_sub.add_parser("handoff", help="Compile ppo-handoff.json and ASC execution plan")
+    ppo_handoff.add_argument("--repo", type=Path, default=Path.cwd())
     ppo_handoff.add_argument("--config", type=Path, help="Path to creative.config.json")
     ppo_handoff.add_argument("--experiment", type=str, required=True, help="Experiment ID")
     ppo_handoff.add_argument("--baseline-delivery", type=str, help="Delivery ID of baseline / control")

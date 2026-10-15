@@ -82,13 +82,13 @@ App Store Creative supports native Product Page Optimization (PPO) experiments d
 ### CLI Subcommands
 ```sh
 # 1. List defined experiments
-python3 <runtime-root>/scripts/app_store_creative.py ppo list --repo <repo>
+python3 <runtime-root>/scripts/app_store_creative.py ppo --repo <repo> list
 
 # 2. Plan and inspect derived treatment configurations & platform readiness
-python3 <runtime-root>/scripts/app_store_creative.py ppo plan --repo <repo> --experiment <id>
+python3 <runtime-root>/scripts/app_store_creative.py ppo --repo <repo> plan --experiment <id>
 
 # 3. Compile ppo-handoff.json with exact asc execution sequence
-python3 <runtime-root>/scripts/app_store_creative.py ppo handoff --repo <repo> --experiment <id> \
+python3 <runtime-root>/scripts/app_store_creative.py ppo --repo <repo> handoff --experiment <id> \
   --baseline-delivery <baseline_del_id> \
   --treatment-delivery <treatment_id>:<treatment_del_id> \
   --output .creative/ppo-handoff.json

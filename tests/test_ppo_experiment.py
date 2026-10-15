@@ -288,3 +288,66 @@ def test_compile_ppo_handoff_shell_quoting(tmp_path):
     assert any(f"--name {expected_treat}" in cmd for cmd in plan)
     assert any(f"--app-icon-name {expected_icon}" in cmd for cmd in plan)
 
+
+def test_parse_experiments_validation():
+    # Not a dict
+    with pytest.raises(ValueError, match="'experiments' must be an object/dict"):
+        ppo_experiment.parse_experiments({"experiments": "invalid"})
+
+    # Missing name
+    with pytest.raises(ValueError, match="requires a non-empty string 'name'"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"trafficProportion": 50, "treatments": {"t1": {"name": "T1"}}}}})
+
+    # Invalid trafficProportion
+    with pytest.raises(ValueError, match="trafficProportion must be an integer between 1 and 100"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 150, "treatments": {"t1": {"name": "T1"}}}}})
+
+    # Invalid platform
+    with pytest.raises(ValueError, match="invalid platform 'ANDROID'"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "platform": "ANDROID", "treatments": {"t1": {"name": "T1"}}}}})
+
+    # Empty treatments
+    with pytest.raises(ValueError, match="must define at least one treatment"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "treatments": {}}}})
+
+    # Treatment missing name
+    with pytest.raises(ValueError, match="requires a non-empty string 'name'"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "treatments": {"t1": {}}}}})
+
+
+def test_macos_readiness_without_state():
+    r = ppo_experiment.validate_platform_readiness("MAC_OS")
+    assert r["eligible"] is False
+    assert any("Store state has not been verified" in reason for reason in r["reasons"])
+
+
+def test_cli_treatment_delivery_validation(tmp_path):
+    cfg_file = tmp_path / "creative.config.json"
+    with open(cfg_file, "w", encoding="utf-8") as f:
+        json.dump(SAMPLE_CONFIG, f)
+
+    parser = app_store_creative.build_parser()
+
+    # Malformed entry without colon
+    with pytest.raises(ValueError, match="Malformed --treatment-delivery"):
+        app_store_creative.run(
+            parser.parse_args([
+                "ppo", "--repo", str(tmp_path), "handoff",
+                "--config", str(cfg_file),
+                "--experiment", "visual_style_cro",
+                "--treatment-delivery", "malformed_entry",
+            ])
+        )
+
+    # Unknown treatment ID
+    with pytest.raises(ValueError, match="Unknown treatment ID 'nonexistent'"):
+        app_store_creative.run(
+            parser.parse_args([
+                "ppo", "--repo", str(tmp_path), "handoff",
+                "--config", str(cfg_file),
+                "--experiment", "visual_style_cro",
+                "--treatment-delivery", "nonexistent:del123",
+            ])
+        )
+
+

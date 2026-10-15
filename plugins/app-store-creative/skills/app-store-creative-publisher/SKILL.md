@@ -69,10 +69,10 @@ If a request result is unknown, inspect existing records before retrying. Never 
 
 When an experiment is defined in `creative.config.json` and treatment deliveries have been approved and sealed:
 
-1. **Pre-flight Platform Gate**: Check platform eligibility (`app_store_creative.py ppo plan --experiment <id>`). On macOS, verify the target app is in `READY_FOR_DISTRIBUTION` status and that no `PREPARE_FOR_SUBMISSION` edit drafts exist before scheduling live store experiments.
+1. **Pre-flight Platform Gate**: Check platform eligibility (`app_store_creative.py ppo --repo <repo> plan --experiment <id>`). On macOS, verify the target app is in `READY_FOR_DISTRIBUTION` status and that no `PREPARE_FOR_SUBMISSION` edit drafts exist before scheduling live store experiments.
 2. **Compile Handoff Manifest**:
    ```sh
-   python3 <runtime-root>/scripts/app_store_creative.py ppo handoff --repo <repo> --experiment <id> \
+   python3 <runtime-root>/scripts/app_store_creative.py ppo --repo <repo> handoff --experiment <id> \
      --baseline-delivery <baseline_del_id> \
      --treatment-delivery <treatment_id>:<treatment_del_id> \
      --output .creative/ppo-handoff.json

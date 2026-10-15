@@ -46,37 +46,68 @@ def parse_experiments(config_or_path: dict[str, Any] | Path | str) -> dict[str, 
     else:
         config = config_or_path
 
-    raw_experiments = config.get("experiments", {})
-    if not isinstance(raw_experiments, dict):
+    if "experiments" not in config:
         return {}
+
+    raw_experiments = config["experiments"]
+    if not isinstance(raw_experiments, dict):
+        raise ValueError(f"'experiments' must be an object/dict, got {type(raw_experiments).__name__}")
 
     default_platform = config.get("publishing", {}).get("platform")
 
+    valid_platforms = {"IOS", "MAC_OS", "TV_OS", "VISION_OS"}
     parsed: dict[str, ExperimentDefinition] = {}
     for exp_id, exp_data in raw_experiments.items():
         if not isinstance(exp_data, dict):
-            continue
+            raise ValueError(f"Experiment '{exp_id}' must be an object/dict")
 
-        treatments_data = exp_data.get("treatments", {})
+        name = exp_data.get("name")
+        if not name or not isinstance(name, str):
+            raise ValueError(f"Experiment '{exp_id}' requires a non-empty string 'name'")
+
+        if "trafficProportion" not in exp_data:
+            raise ValueError(f"Experiment '{exp_id}' requires 'trafficProportion'")
+        traffic_prop = exp_data["trafficProportion"]
+        if not isinstance(traffic_prop, (int, float)) or not (1 <= traffic_prop <= 100):
+            raise ValueError(
+                f"Experiment '{exp_id}' trafficProportion must be an integer between 1 and 100, got {traffic_prop}"
+            )
+
+        exp_platform = exp_data.get("platform", default_platform)
+        if exp_platform and exp_platform.upper() not in valid_platforms:
+            raise ValueError(
+                f"Experiment '{exp_id}' has invalid platform '{exp_platform}'. Must be one of {sorted(valid_platforms)}"
+            )
+
+        treatments_data = exp_data.get("treatments")
+        if not isinstance(treatments_data, dict):
+            raise ValueError(f"Experiment '{exp_id}' requires 'treatments' object/dict")
+        if not treatments_data:
+            raise ValueError(f"Experiment '{exp_id}' must define at least one treatment")
+
         treatments: dict[str, TreatmentDefinition] = {}
         for treat_id, treat_data in treatments_data.items():
             if not isinstance(treat_data, dict):
-                continue
+                raise ValueError(f"Treatment '{treat_id}' in experiment '{exp_id}' must be an object/dict")
+            treat_name = treat_data.get("name")
+            if not treat_name or not isinstance(treat_name, str):
+                raise ValueError(f"Treatment '{treat_id}' in experiment '{exp_id}' requires a non-empty string 'name'")
+
             treatments[treat_id] = TreatmentDefinition(
                 id=treat_id,
-                name=treat_data.get("name", treat_id),
+                name=treat_name,
                 app_icon_name=treat_data.get("appIconName"),
-                theme=treat_data.get("theme", {}),
-                card_overrides=treat_data.get("cardOverrides", {}),
-                localizations=treat_data.get("localizations", {}),
+                theme=treat_data.get("theme", {}) if isinstance(treat_data.get("theme"), dict) else {},
+                card_overrides=treat_data.get("cardOverrides", {}) if isinstance(treat_data.get("cardOverrides"), dict) else {},
+                localizations=treat_data.get("localizations", {}) if isinstance(treat_data.get("localizations"), dict) else {},
             )
 
         parsed[exp_id] = ExperimentDefinition(
             id=exp_id,
-            name=exp_data.get("name", exp_id),
-            traffic_proportion=int(exp_data.get("trafficProportion", 50)),
+            name=name,
+            traffic_proportion=int(traffic_prop),
             hypothesis=exp_data.get("hypothesis"),
-            platform=exp_data.get("platform", default_platform),
+            platform=exp_platform,
             treatments=treatments,
         )
 
@@ -180,16 +211,21 @@ def validate_platform_readiness(
         reasons = []
         eligible = True
 
+        if app_store_state is None:
+            eligible = False
+            reasons.append(
+                "macOS requires app to be in READY_FOR_DISTRIBUTION / READY_FOR_SALE state on App Store Connect to create standalone v2 PPO experiments. Store state has not been verified."
+            )
+        elif app_store_state not in ("READY_FOR_SALE", "READY_FOR_DISTRIBUTION"):
+            eligible = False
+            reasons.append(
+                f"App current state '{app_store_state}' is not eligible for live macOS PPO. Must be READY_FOR_DISTRIBUTION / READY_FOR_SALE."
+            )
+
         if has_inflight_version:
             eligible = False
             reasons.append(
                 "Apple App Store Connect requires macOS apps to be in READY_FOR_DISTRIBUTION without in-flight PREPARE_FOR_SUBMISSION drafts to create standalone v2 PPO experiments."
-            )
-
-        if app_store_state and app_store_state != "READY_FOR_SALE" and app_store_state != "READY_FOR_DISTRIBUTION":
-            eligible = False
-            reasons.append(
-                f"App current state '{app_store_state}' is not eligible for live macOS PPO. Must be READY_FOR_DISTRIBUTION / READY_FOR_SALE."
             )
 
         return {
