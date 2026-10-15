@@ -96,3 +96,18 @@ it('renders editable subheadline placeholder in interactive mode with onUpdateTe
   expect(markup).toContain('contentEditable="true"');
 });
 
+it('renders export container directly at base canvas dimensions without scale transform', () => {
+  const markup = renderToStaticMarkup(
+    <CardView
+      card={{ id: 'retina', headline: 'Sharp Retina' }}
+      index={0}
+      target="mac_16_10"
+      theme={{ background: { type: 'solid', colors: ['#000'] } }}
+      isExport
+    />
+  );
+  expect(markup).toContain('width:720px;height:450px');
+  expect(markup).not.toContain('transform:scale');
+});
+
+

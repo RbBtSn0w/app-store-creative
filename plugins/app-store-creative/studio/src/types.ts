@@ -53,19 +53,37 @@ export interface TargetScalingInfo {
   isFeatureGraphic: boolean;
 }
 
+export const TARGET_BASE_SCALING: Record<TargetDevice, { baseCanvasWidth: number; baseCanvasHeight: number; exportScale: number }> = {
+  iphone_6_9: { baseCanvasWidth: 440, baseCanvasHeight: 956, exportScale: 3.0 },
+  iphone_6_7: { baseCanvasWidth: 430, baseCanvasHeight: 932, exportScale: 3.0 },
+  iphone_6_5: { baseCanvasWidth: 414, baseCanvasHeight: 896, exportScale: 3.0 },
+  iphone_5_5: { baseCanvasWidth: 414, baseCanvasHeight: 736, exportScale: 3.0 },
+  ipad_13: { baseCanvasWidth: 516, baseCanvasHeight: 688, exportScale: 4.0 },
+  ipad_12_9: { baseCanvasWidth: 512, baseCanvasHeight: 683, exportScale: 4.0 },
+  mac_16_10: { baseCanvasWidth: 720, baseCanvasHeight: 450, exportScale: 4.0 },
+  watch_ultra: { baseCanvasWidth: 205, baseCanvasHeight: 251, exportScale: 2.0 },
+  google_play_phone: { baseCanvasWidth: 360, baseCanvasHeight: 800, exportScale: 3.0 },
+  google_play_tablet_7: { baseCanvasWidth: 400, baseCanvasHeight: 640, exportScale: 3.0 },
+  google_play_tablet_10: { baseCanvasWidth: 400, baseCanvasHeight: 640, exportScale: 4.0 },
+  google_play_feature_graphic: { baseCanvasWidth: 512, baseCanvasHeight: 250, exportScale: 2.0 },
+};
+
 export function getTargetScalingInfo(target: TargetDevice): TargetScalingInfo {
   const isFeatureGraphic = target === 'google_play_feature_graphic';
   const isMac = target.startsWith('mac_');
   const isTablet = target.startsWith('ipad_') || target.startsWith('google_play_tablet_');
-  const baseCanvasWidth = isFeatureGraphic ? 600 : isMac ? 720 : isTablet ? 480 : 400;
   const targetDim = TARGET_DIMENSIONS[target] || TARGET_DIMENSIONS.iphone_6_9;
-  const baseCanvasHeight = Math.round(baseCanvasWidth * (targetDim.height / targetDim.width));
-  const exportScale = targetDim.width / baseCanvasWidth;
+
+  const scaling = TARGET_BASE_SCALING[target] || {
+    baseCanvasWidth: isFeatureGraphic ? 512 : isMac ? 720 : isTablet ? 512 : 440,
+    baseCanvasHeight: Math.round((isFeatureGraphic ? 512 : isMac ? 720 : isTablet ? 512 : 440) * (targetDim.height / targetDim.width)),
+    exportScale: targetDim.width / (isFeatureGraphic ? 512 : isMac ? 720 : isTablet ? 512 : 440),
+  };
 
   return {
-    baseCanvasWidth,
-    baseCanvasHeight,
-    exportScale,
+    baseCanvasWidth: scaling.baseCanvasWidth,
+    baseCanvasHeight: scaling.baseCanvasHeight,
+    exportScale: scaling.exportScale,
     physicalWidth: targetDim.width,
     physicalHeight: targetDim.height,
     isMac,

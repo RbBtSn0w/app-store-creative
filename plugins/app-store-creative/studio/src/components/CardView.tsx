@@ -139,9 +139,6 @@ export const CardView: React.FC<CardViewProps> = ({
   const {
     baseCanvasWidth,
     baseCanvasHeight,
-    exportScale,
-    physicalWidth,
-    physicalHeight,
     isMac,
   } = getTargetScalingInfo(target);
 
@@ -181,12 +178,12 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Top Marketing Copy Section */}
-      <div data-copy-region className={`relative z-20 ${isNativeSide ? 'text-left w-[240px] shrink-0' : isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-8 px-8 pb-3 max-w-[85%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
+      <div data-copy-region className={`relative z-20 ${isNativeSide ? 'text-left w-[240px] shrink-0' : isFeatureGraphic ? 'text-left max-w-[50%] px-4' : isMac ? 'pt-5 px-6 pb-2 max-w-[90%] mx-auto flex flex-col items-center' : 'pt-12 px-6 pb-4 max-w-[90%] mx-auto flex flex-col items-center'}`}>
         <h2
           contentEditable={!isExport && !!onUpdateText}
           suppressContentEditableWarning
           onBlur={(e) => onUpdateText?.('headline', e.currentTarget.textContent || '')}
-          className="text-3xl font-extrabold tracking-tight leading-tight mb-2 drop-shadow-md outline-none focus:ring-1 focus:ring-blue-400 rounded px-1"
+          className={`${isMac ? 'text-2xl font-extrabold tracking-tight leading-tight mb-1' : 'text-3xl font-extrabold tracking-tight leading-tight mb-2'} drop-shadow-md outline-none focus:ring-1 focus:ring-blue-400 rounded px-1`}
           style={{
             color: resolvedTheme.headlineColor || '#FFFFFF',
             fontFamily: resolvedTheme.fontFamily,
@@ -213,10 +210,10 @@ export const CardView: React.FC<CardViewProps> = ({
                 onUpdateText?.('subheadline', val);
               }
             }}
-            className={`text-sm font-medium tracking-normal leading-snug drop-shadow-sm outline-none focus:ring-1 focus:ring-blue-400 rounded px-1 ${
+            className={`${isMac ? 'text-xs font-medium' : 'text-sm font-medium'} tracking-normal leading-snug drop-shadow-sm outline-none focus:ring-1 focus:ring-blue-400 rounded px-1 ${
               !subheadline ? 'opacity-40 italic cursor-pointer' : ''
             } ${
-              isFeatureGraphic ? 'max-w-[320px]' : isMac ? 'max-w-[420px]' : 'max-w-[280px]'
+              isFeatureGraphic ? 'max-w-[320px]' : isMac ? 'max-w-[480px]' : 'max-w-[280px]'
             }`}
             style={{
               color: resolvedTheme.subheadlineColor || 'rgba(255, 255, 255, 0.75)',
@@ -230,11 +227,11 @@ export const CardView: React.FC<CardViewProps> = ({
       </div>
 
       {/* Device Frame Display Area */}
-      {layout !== 'pure_text' && <div data-device-region className={`relative z-10 ${isNativeSide ? 'flex-1 h-full min-w-0 flex items-center justify-center' : isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-4' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
+      {layout !== 'pure_text' && <div data-device-region className={`relative z-10 ${isNativeSide ? 'flex-1 h-full min-w-0 flex items-center justify-center' : isFeatureGraphic ? 'flex-1 h-full flex items-center justify-center' : isMac ? 'flex-1 w-full min-h-0 flex items-center justify-center pb-2' : 'flex-1 w-full flex items-end justify-center overflow-visible pb-0'}`}>
         <DeviceFrame
           nativeWindow={isNativeMac}
-          maxWidth={isNativeSide ? 320 : 540}
-          maxHeight={isNativeSide ? 360 : 280}
+          maxWidth={isNativeSide ? 380 : 610}
+          maxHeight={isNativeSide ? 360 : 340}
           screenshot={localizedText?.screenshot ?? card.screenshot}
           offset={computedOffset}
           theme={resolvedTheme}
@@ -267,20 +264,11 @@ export const CardView: React.FC<CardViewProps> = ({
       <div
         className="w-full h-full overflow-hidden flex items-center justify-center"
         style={{
-          width: `${physicalWidth}px`,
-          height: `${physicalHeight}px`,
+          width: `${baseCanvasWidth}px`,
+          height: `${baseCanvasHeight}px`,
         }}
       >
-        <div
-          style={{
-            width: `${baseCanvasWidth}px`,
-            height: `${baseCanvasHeight}px`,
-            transform: `scale(${exportScale})`,
-            transformOrigin: 'center center',
-          }}
-        >
-          {cardContent}
-        </div>
+        {cardContent}
       </div>
     );
   }

@@ -161,6 +161,47 @@ def run_native_browser(cmd, profile: Path, output: Path, timeout_seconds: int):
 
 
 
+# Exact base canvas dimensions and integer scaling factors guaranteeing:
+# base_w * scale == phys_w AND base_h * scale == phys_h with 0 pixel rounding error.
+TARGET_BASE_SCALING: Dict[str, Tuple[int, int, float]] = {
+    "iphone_6_9": (440, 956, 3.0),
+    "iphone_6_7": (430, 932, 3.0),
+    "iphone_6_5": (414, 896, 3.0),
+    "iphone_5_5": (414, 736, 3.0),
+    "ipad_13": (516, 688, 4.0),
+    "ipad_12_9": (512, 683, 4.0),
+    "mac_16_10": (720, 450, 4.0),
+    "watch_ultra": (205, 251, 2.0),
+    "google_play_phone": (360, 800, 3.0),
+    "google_play_tablet_7": (400, 640, 3.0),
+    "google_play_tablet_10": (400, 640, 4.0),
+    "google_play_feature_graphic": (512, 250, 2.0),
+}
+
+
+def get_target_scaling(target: str) -> Tuple[int, int, float, int, int]:
+    """Return (base_width, base_height, scale_factor, physical_width, physical_height).
+
+    Guarantees round(base_width * scale_factor) == physical_width and
+    round(base_height * scale_factor) == physical_height for all supported targets.
+    """
+    spec = TARGET_SPECS.get(target, TARGET_SPECS["iphone_6_9"])
+    phys_w = spec["width"]
+    phys_h = spec["height"]
+
+    if target in TARGET_BASE_SCALING:
+        base_w, base_h, scale = TARGET_BASE_SCALING[target]
+        return base_w, base_h, scale, phys_w, phys_h
+
+    # Dynamic fallback for arbitrary custom dimensions:
+    for cand in (4.0, 3.0, 2.0):
+        int_cand = int(cand)
+        if phys_w % int_cand == 0 and phys_h % int_cand == 0:
+            return phys_w // int_cand, phys_h // int_cand, cand, phys_w, phys_h
+
+    return phys_w, phys_h, 1.0, phys_w, phys_h
+
+
 def export_single_card(
     chrome_bin: str,
     port: int,
@@ -173,9 +214,7 @@ def export_single_card(
     metadata=None,
 ) -> bool:
     """Render a single card at 1:1 physical pixel dimensions via headless Chrome."""
-    spec = TARGET_SPECS.get(target, TARGET_SPECS["iphone_6_9"])
-    width = spec["width"]
-    height = spec["height"]
+    base_w, base_h, scale, width, height = get_target_scaling(target)
 
     url = f"http://127.0.0.1:{port}/?" + urllib.parse.urlencode({"export": "true", "card": card_id, "target": target, "locale": locale})
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -184,14 +223,14 @@ def export_single_card(
         chrome_bin,
         "--headless=new",
         f"--screenshot={output_path.resolve()}",
-        f"--window-size={width},{height}",
+        f"--window-size={base_w},{base_h}",
         "--default-background-color=ffffffff",
         "--dump-dom",
         "--no-first-run",
         "--disable-background-networking",
         "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1",
         "--hide-scrollbars",
-        "--force-device-scale-factor=1",
+        f"--force-device-scale-factor={scale}",
         "--disable-gpu",
         "--disable-dev-shm-usage",
         "--run-all-compositor-stages-before-draw",

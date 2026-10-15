@@ -135,10 +135,12 @@ def render_native(cmd, profile: Path, output: Path, timeout_seconds):
     app = next(parent for parent in Path(cmd[0]).parents if parent.suffix == '.app')
     size = next(value.split('=', 1)[1] for value in cmd if value.startswith('--window-size='))
     width, height = map(int, size.split(','))
+    scale_flag = next((value for value in cmd if value.startswith('--force-device-scale-factor=')), None)
+    device_scale_factor = float(scale_flag.split('=', 1)[1]) if scale_flag else 1.0
     # DevTools owns the screenshot action; virtual time must not expire image decoding.
-    excluded = ('--screenshot=', '--virtual-time-budget=', '--window-size=')
+    excluded = ('--screenshot=', '--virtual-time-budget=')
     flags = [value for value in cmd[1:-1] if not value.startswith(excluded)
-             and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--force-device-scale-factor=1', '--default-background-color=ffffffff')]
+             and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--default-background-color=ffffffff', '--disable-gpu', '--disable-dev-shm-usage')]
     launch = ['/usr/bin/open', '-n', '-g', '--stdout', str(profile / 'browser.stdout'),
               '--stderr', str(profile / 'browser.stderr'), '-a', str(app), '--args', *flags,
               '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', 'about:blank']
@@ -163,7 +165,7 @@ def render_native(cmd, profile: Path, output: Path, timeout_seconds):
     try:
         identity = browser_identity(client.call('Browser.getVersion'))
         client.call('Page.enable')
-        client.call('Emulation.setDeviceMetricsOverride', {'width': width, 'height': height, 'deviceScaleFactor': 1, 'mobile': False})
+        client.call('Emulation.setDeviceMetricsOverride', {'width': width, 'height': height, 'deviceScaleFactor': device_scale_factor, 'mobile': False})
         client.call('Emulation.setDefaultBackgroundColorOverride', {'color': {'r': 255, 'g': 255, 'b': 255, 'a': 1}})
         client.call('Page.navigate', {'url': cmd[-1]})
         while time.monotonic() < deadline:
