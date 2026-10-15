@@ -403,6 +403,33 @@ class TestPPOExperiment(unittest.TestCase):
         args2 = parser.parse_args(["ppo", "list", "--repo", "/custom/repo2"])
         self.assertEqual(str(args2.repo), "/custom/repo2")
 
+    def test_compile_ppo_handoff_default_storage_fallback(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg = copy.deepcopy(SAMPLE_CONFIG)
+            # Remove explicit storage configuration to test default fallback to STORAGE_DEFAULTS['releaseRoot']
+            cfg.pop("storage", None)
+
+            # Create default release structure under creative-releases
+            base_del = tmp_path / "creative-releases" / "sample-app" / "MAC_OS" / "1.0" / "del_base"
+            base_del.mkdir(parents=True)
+            treat_del = tmp_path / "creative-releases" / "sample-app" / "MAC_OS" / "1.0" / "del_treat"
+            treat_media = treat_del / "media" / "en-US"
+            treat_media.mkdir(parents=True)
+
+            handoff = ppo_experiment.compile_ppo_handoff(
+                repo_root=tmp_path,
+                base_config=cfg,
+                experiment_id="visual_style_cro",
+                baseline_delivery_id="del_base",
+                treatment_deliveries={"quartz_titanium": "del_treat"},
+            )
+
+            self.assertTrue(handoff["control"]["delivery_exists"])
+            self.assertEqual(handoff["treatments"][0]["delivery_id"], "del_treat")
+            self.assertTrue(handoff["treatments"][0]["delivery_exists"])
+            self.assertIn("en-US", handoff["treatments"][0]["locales"])
+
 
 if __name__ == "__main__":
     unittest.main()
