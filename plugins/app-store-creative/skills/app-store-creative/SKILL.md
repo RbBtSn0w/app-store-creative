@@ -98,3 +98,32 @@ python3 <runtime-root>/scripts/app_store_creative.py ppo --repo <repo> handoff -
 - **macOS**: Apple App Store Connect API v1 (`POST /v1/appStoreVersionExperiments`) is unsupported on macOS (`App Store Version Platform is not supported`). Only v2 standalone experiments (`POST /v2/appStoreVersionExperiments`) on live `READY_FOR_DISTRIBUTION` apps are supported, requiring no active in-flight edit drafts in `PREPARE_FOR_SUBMISSION`.
 - **iOS**: Both v1 (version-bound in `PREPARE_FOR_SUBMISSION`) and v2 (standalone live) are supported.
 
+
+## Zero-Server Companion & Review Lifecycle (Issue #30)
+
+For agent-driven critique and headless visual verification, avoid launching long-running `studio_server` daemons that risk process orphaning and port conflicts. Instead, use the air-gapped Zero-Server Companion:
+
+```sh
+# Generate self-contained, offline HTML companion
+python3 <runtime-root>/scripts/app_store_creative.py companion --repo <repo> \
+  --output .creative/companion/index.html \
+  --target mac_16_10 --locale en-US
+```
+
+### Variant Delta Isolation & Copy Fallback Chain
+- **Delta Isolation**: Target-scoped pose directives in `apply-critique` only store modified keys in variant `deviceOffset`, preserving card-level baselines for unmentioned coordinates (e.g. applying `rotateX: 4` does not zero out baseline `x`, `y`, or `scale`).
+- **Three-Tier Fallback Chain**: Studio and Companion data resolution (`resolveCard`) evaluates copy in strict priority: `localized ?? variant ?? card`. Setting a variant headline for the default locale will not be shadowed by the base card headline.
+
+
+## 3D Spatial Canvas & High-DPI Export Invariants (Issue #32)
+
+Headless Chromium exports render multi-layer 3D CSS compositions (`perspective`, `rotateX`, `rotateY`) at physical native resolutions. The rendering engine and CLI enforce two architectural invariants:
+
+### 1. Process-Level Device Scale Factor
+- Headless Chromium must be launched with `--force-device-scale-factor=<scale>` matching the exact target entry registered in `TARGET_BASE_SCALING` / `TARGET_SPECS` (e.g., 3.0x for iPhones, Google Play phones, and 7" tablets; 4.0x for iPads, Macs, and 10" tablets; 2.0x for Apple Watch and Feature Graphics).
+- CDP `Emulation.setDeviceMetricsOverride` only scales the DOM viewport and 2D vector elements; Chromium's hardware compositor (`cc::PictureLayerImpl`) downsamples 3D transformed CSS layers to 1.0x raster tiles unless `--force-device-scale-factor` is passed at the process level.
+
+### 2. Metal Hardware Acceleration on macOS
+- Never pass `--disable-gpu` on macOS. Preserving Metal hardware acceleration completes card exports in ~1.8s, whereas SwiftShader CPU software rasterization takes >6s per card and triggers export timeouts.
+- Mathematical dimension exactness: $\text{round}(\text{base\_w} \times \text{scale}) == \text{phys\_w}$ and $\text{round}(\text{base\_h} \times \text{scale}) == \text{phys\_h}$. Never use fractional base dimensions that cause 1-pixel rounding drift.
+

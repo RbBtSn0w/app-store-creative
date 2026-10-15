@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from artifact_lifecycle import StoragePaths
+
 
 @dataclass
 class TreatmentDefinition:
@@ -276,7 +278,7 @@ def compile_ppo_handoff(
     app_id = project.get("appStoreId") or project.get("id")
 
     # Read baseline delivery details
-    release_root = repo_root / base_config.get("storage", {}).get("releaseRoot", "marketing/Creative/releases")
+    release_root = StoragePaths.resolve(repo_root, base_config).releases
     project_slug = project.get("id", "app")
     base_del_path = release_root / project_slug / platform / version / baseline_delivery_id
 

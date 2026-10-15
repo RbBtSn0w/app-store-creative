@@ -17,6 +17,8 @@ Use `publication status` to inspect the bound plan and approval, then `publicati
 
 Do not delete the old remote set until verified replacements are locally available and the approved plan explicitly requires replacement. Never infer rollback from a client error: the server may have accepted part of the request.
 
+When `--replace` is used, App Store Connect initiates an asynchronous pre-deletion phase that empties remote galleries before new uploads attach. Do not rely on web dashboard inspection during this transient state; verify completion using authoritative `asc screenshots list` / `asc app-previews list`. For manual web audits, use Incognito mode or hard refresh (`Cmd+Shift+R`) strictly for client-side browser cache troubleshooting, recognizing that client clearing does not purge intermediary edge CDN caches.
+
 ## Completion report
 
 Report the approved local plan, attempted operations, successful writes, failed or skipped operations, and fresh remote state independently. Upload completion does not authorize submitting the app version for review or changing release settings.
