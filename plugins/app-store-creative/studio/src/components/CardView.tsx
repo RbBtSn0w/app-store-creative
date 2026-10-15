@@ -139,9 +139,6 @@ export const CardView: React.FC<CardViewProps> = ({
   const {
     baseCanvasWidth,
     baseCanvasHeight,
-    exportScale,
-    physicalWidth,
-    physicalHeight,
     isMac,
   } = getTargetScalingInfo(target);
 
