@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from artifact_lifecycle import STORAGE_DEFAULTS, StoragePaths
+from artifact_lifecycle import StoragePaths
 
 
 @dataclass
@@ -278,13 +278,7 @@ def compile_ppo_handoff(
     app_id = project.get("appStoreId") or project.get("id")
 
     # Read baseline delivery details
-    try:
-        release_root = StoragePaths.resolve(repo_root, base_config).releases
-    except Exception:
-        release_root_str = base_config.get("storage", {}).get(
-            "releaseRoot", STORAGE_DEFAULTS["releaseRoot"]
-        )
-        release_root = Path(release_root_str) if Path(release_root_str).is_absolute() else repo_root / release_root_str
+    release_root = StoragePaths.resolve(repo_root, base_config).releases
     project_slug = project.get("id", "app")
     base_del_path = release_root / project_slug / platform / version / baseline_delivery_id
 

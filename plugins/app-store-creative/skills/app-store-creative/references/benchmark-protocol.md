@@ -48,7 +48,7 @@ For each evaluated product release run, record metrics into `.creative/benchmark
 
 ### Metrics Definitions
 
-1. **`time_to_first_valid_candidate`**:
+1. **`time_to_first_valid_candidate_seconds`**:
    - Wall-clock seconds elapsed from repository initialization to the first successful `app_store_creative.py candidate validate --id <candidate_id>`.
 2. **`active_human_intervention_minutes`**:
    - Total minutes an operator spends editing `creative.config.json`, adjusting captures, or resolving validation failures.
@@ -57,7 +57,7 @@ For each evaluated product release run, record metrics into `.creative/benchmark
 4. **`agent_token_cost`**:
    - Prompt/completion token consumption and tool call count when executed by an autonomous coding agent.
 5. **`recovery_elapsed_seconds`**:
-   - Wall-clock time to detect an invalidated source/config and re-validate only the dependent assets.
+   - Wall-clock seconds elapsed from the detection of an invalidated source/config failure to the first successful passing re-validation.
 6. **`blinded_visual_score`**:
    - Blinded design evaluation comparing default Studio outputs against reference hand-crafted designs on a 1–5 scale.
 
@@ -69,13 +69,19 @@ For each evaluated product release run, record metrics into `.creative/benchmark
 1. Clone the project repository.
 2. Initialize `creative.config.json` with target dimensions and default theme.
 3. Import real UI screenshots via `input import` or capture journeys.
-4. Record elapsed time and intervention count to produce Candidate 1.
+4. Export assets, create Candidate 1, and execute full baseline validation:
+   ```sh
+   python3 <runtime-root>/scripts/app_store_creative.py candidate validate --repo <repo> --id <candidate_id>
+   ```
+5. Stop the `time_to_first_valid_candidate_seconds` timer immediately upon successful validation exit.
 
 ### Stage 2: Incremental Revision (Repeat Release)
 1. Introduce a minor UI modification (e.g., updated hero screenshot or revised localized headline).
-2. Execute an incremental export and record elapsed time.
-3. Verify that unchanged targets/locales retain existing hash provenance and are not needlessly re-rendered.
+2. Execute export (`app_store_creative.py export --repo <repo>`) and record elapsed re-render time (evaluating full re-render performance).
+3. Create a new candidate revision and verify that candidate metadata preserves unchanged asset hash provenance for unmodified targets/locales.
 
 ### Stage 3: Simulated Failure Recovery
-1. Introduce a corrupt image dimension or invalid color specification.
-2. Run validation, record failure diagnosis latency, apply correction, and re-validate.
+1. Introduce an intentional defect (e.g., corrupt image dimensions or missing mandatory localized capture).
+2. Execute candidate validation (`app_store_creative.py candidate validate --repo <repo> --id <candidate_id>`); start the `recovery_elapsed_seconds` timer upon observing validation failure exit.
+3. Diagnose the defect from validation error diagnostics, apply the targeted fix, and re-run validation.
+4. Stop the `recovery_elapsed_seconds` timer immediately upon receiving validation success (`exit code 0`).

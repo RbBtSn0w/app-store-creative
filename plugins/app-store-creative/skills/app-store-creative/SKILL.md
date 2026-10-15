@@ -120,7 +120,7 @@ python3 <runtime-root>/scripts/app_store_creative.py companion --repo <repo> \
 Headless Chromium exports render multi-layer 3D CSS compositions (`perspective`, `rotateX`, `rotateY`) at physical native resolutions. The rendering engine and CLI enforce two architectural invariants:
 
 ### 1. Process-Level Device Scale Factor
-- Headless Chromium must be launched with `--force-device-scale-factor=<scale>` matching `TARGET_BASE_SCALING` / `TARGET_SPECS` (Phone: 3.0x, Tablet/Mac: 4.0x, Watch/Feature: 2.0x).
+- Headless Chromium must be launched with `--force-device-scale-factor=<scale>` matching the exact target entry registered in `TARGET_BASE_SCALING` / `TARGET_SPECS` (e.g., 3.0x for iPhones, Google Play phones, and 7" tablets; 4.0x for iPads, Macs, and 10" tablets; 2.0x for Apple Watch and Feature Graphics).
 - CDP `Emulation.setDeviceMetricsOverride` only scales the DOM viewport and 2D vector elements; Chromium's hardware compositor (`cc::PictureLayerImpl`) downsamples 3D transformed CSS layers to 1.0x raster tiles unless `--force-device-scale-factor` is passed at the process level.
 
 ### 2. Metal Hardware Acceleration on macOS

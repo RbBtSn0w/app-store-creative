@@ -92,10 +92,10 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
   ```
   Verify all expected screenshot and preview records are acknowledged by ASC before declaring completion.
 
-### 2. Akamai CDN Edge & SPA Cache Bypass
-- Apple's Akamai CDN and the App Store Connect Single Page Application (SPA) aggressively cache older screenshot and preview assets.
-- If manually inspecting the ASC web dashboard post-upload, standard browser reloads will often serve stale, lower-resolution, or empty cards.
-- **Cache-Busting Protocol**: Always inspect ASC in Private/Incognito browsing mode or perform a hard cache bypass (`Cmd+Shift+R` / `Ctrl+F5`) to observe true current store assets.
+### 2. Client Browser-Cache Troubleshooting
+- Apple's App Store Connect Single Page Application (SPA) and client browsers can aggressively cache older screenshot and preview assets.
+- If manually inspecting the ASC web dashboard post-upload, standard browser reloads may display stale or cached representations.
+- **Troubleshooting Guideline**: Use Private/Incognito browsing or a hard browser refresh (`Cmd+Shift+R` / `Ctrl+F5`) for client-side cache troubleshooting. Note that client cache clearing does NOT purge intermediary edge CDN caches, so web dashboard inspection remains advisory only; authoritative verification rests entirely with `asc screenshots list` / `asc app-previews list` CLI queries.
 
 ### 3. Explicit Video Poster Frame Timecode
 - App Preview video uploads must specify an explicit `previewFrameTimeCode` (e.g. `00:00:19:00`) matching the hero feature in the approved creative plan.

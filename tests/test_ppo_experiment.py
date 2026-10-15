@@ -430,6 +430,20 @@ class TestPPOExperiment(unittest.TestCase):
             self.assertTrue(handoff["treatments"][0]["delivery_exists"])
             self.assertIn("en-US", handoff["treatments"][0]["locales"])
 
+    def test_compile_ppo_handoff_invalid_storage_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg = copy.deepcopy(SAMPLE_CONFIG)
+            cfg["storage"]["releaseRoot"] = "../outside"
+            with self.assertRaises(ValueError):
+                ppo_experiment.compile_ppo_handoff(
+                    repo_root=tmp_path,
+                    base_config=cfg,
+                    experiment_id="visual_style_cro",
+                    baseline_delivery_id="del_base",
+                    treatment_deliveries={"quartz_titanium": "del_treat"},
+                )
+
 
 if __name__ == "__main__":
     unittest.main()
