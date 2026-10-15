@@ -351,3 +351,63 @@ def test_cli_treatment_delivery_validation(tmp_path):
         )
 
 
+def test_traffic_proportion_rejects_non_integers_and_bool():
+    # Reject float
+    with pytest.raises(ValueError, match="trafficProportion must be an integer between 1 and 100"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 12.9, "treatments": {"t1": {"name": "T1"}}}}})
+
+    # Reject bool
+    with pytest.raises(ValueError, match="trafficProportion must be an integer between 1 and 100"):
+        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": True, "treatments": {"t1": {"name": "T1"}}}}})
+
+
+def test_platform_normalization():
+    parsed = ppo_experiment.parse_experiments({
+        "experiments": {
+            "exp1": {
+                "name": "E1",
+                "trafficProportion": 50,
+                "platform": "mac_os",
+                "treatments": {"t1": {"name": "T1"}},
+            }
+        }
+    })
+    assert parsed["exp1"].platform == "MAC_OS"
+
+
+def test_v2_command_generation_for_tv_and_vision_os(tmp_path):
+    cfg = copy.deepcopy(SAMPLE_CONFIG)
+    cfg["experiments"]["visual_style_cro"]["platform"] = "TV_OS"
+    handoff_tv = ppo_experiment.compile_ppo_handoff(
+        repo_root=tmp_path,
+        base_config=cfg,
+        experiment_id="visual_style_cro",
+        baseline_delivery_id="del_base",
+        treatment_deliveries={"quartz_titanium": "del_treat"},
+    )
+    assert any("--v2 --app 1234567890 --platform TV_OS" in cmd for cmd in handoff_tv["asc_execution_plan"])
+
+    cfg["experiments"]["visual_style_cro"]["platform"] = "VISION_OS"
+    handoff_vision = ppo_experiment.compile_ppo_handoff(
+        repo_root=tmp_path,
+        base_config=cfg,
+        experiment_id="visual_style_cro",
+        baseline_delivery_id="del_base",
+        treatment_deliveries={"quartz_titanium": "del_treat"},
+    )
+    assert any("--v2 --app 1234567890 --platform VISION_OS" in cmd for cmd in handoff_vision["asc_execution_plan"])
+
+
+def test_cli_repo_preservation_pre_and_post_action():
+    parser = app_store_creative.build_parser()
+
+    # Pre-action --repo
+    args1 = parser.parse_args(["ppo", "--repo", "/custom/repo", "list"])
+    assert str(args1.repo) == "/custom/repo"
+
+    # Post-action --repo
+    args2 = parser.parse_args(["ppo", "list", "--repo", "/custom/repo2"])
+    assert str(args2.repo) == "/custom/repo2"
+
+
+

@@ -190,16 +190,16 @@ def build_parser():
     ppo_sub = ppo.add_subparsers(dest="ppo_action", required=True)
 
     ppo_list = ppo_sub.add_parser("list", help="List experiments defined in creative.config.json")
-    ppo_list.add_argument("--repo", type=Path, default=Path.cwd())
+    ppo_list.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
     ppo_list.add_argument("--config", type=Path, help="Path to creative.config.json")
 
     ppo_plan = ppo_sub.add_parser("plan", help="Compile and inspect PPO experiment execution plan")
-    ppo_plan.add_argument("--repo", type=Path, default=Path.cwd())
+    ppo_plan.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
     ppo_plan.add_argument("--config", type=Path, help="Path to creative.config.json")
     ppo_plan.add_argument("--experiment", type=str, required=True, help="Experiment ID to plan")
 
     ppo_handoff = ppo_sub.add_parser("handoff", help="Compile ppo-handoff.json and ASC execution plan")
-    ppo_handoff.add_argument("--repo", type=Path, default=Path.cwd())
+    ppo_handoff.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
     ppo_handoff.add_argument("--config", type=Path, help="Path to creative.config.json")
     ppo_handoff.add_argument("--experiment", type=str, required=True, help="Experiment ID")
     ppo_handoff.add_argument("--baseline-delivery", type=str, help="Delivery ID of baseline / control")

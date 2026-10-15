@@ -68,16 +68,18 @@ def parse_experiments(config_or_path: dict[str, Any] | Path | str) -> dict[str, 
         if "trafficProportion" not in exp_data:
             raise ValueError(f"Experiment '{exp_id}' requires 'trafficProportion'")
         traffic_prop = exp_data["trafficProportion"]
-        if not isinstance(traffic_prop, (int, float)) or not (1 <= traffic_prop <= 100):
+        if isinstance(traffic_prop, bool) or not isinstance(traffic_prop, int) or not (1 <= traffic_prop <= 100):
             raise ValueError(
                 f"Experiment '{exp_id}' trafficProportion must be an integer between 1 and 100, got {traffic_prop}"
             )
 
         exp_platform = exp_data.get("platform", default_platform)
-        if exp_platform and exp_platform.upper() not in valid_platforms:
-            raise ValueError(
-                f"Experiment '{exp_id}' has invalid platform '{exp_platform}'. Must be one of {sorted(valid_platforms)}"
-            )
+        if exp_platform:
+            if not isinstance(exp_platform, str) or exp_platform.upper() not in valid_platforms:
+                raise ValueError(
+                    f"Experiment '{exp_id}' has invalid platform '{exp_platform}'. Must be one of {sorted(valid_platforms)}"
+                )
+            exp_platform = exp_platform.upper()
 
         treatments_data = exp_data.get("treatments")
         if not isinstance(treatments_data, dict):
@@ -309,9 +311,11 @@ def compile_ppo_handoff(
 
     # Compile ASC command sequence plan
     asc_commands = []
-    if platform.upper() == "MAC_OS":
+    normalized_platform = platform.upper()
+    v2_platforms = {"MAC_OS", "TV_OS", "VISION_OS"}
+    if normalized_platform in v2_platforms:
         asc_commands.append(
-            f"asc product-pages experiments create --v2 --app {shlex.quote(str(app_id))} --platform MAC_OS --name {shlex.quote(exp.name)} --traffic-proportion {int(exp.traffic_proportion)}"
+            f"asc product-pages experiments create --v2 --app {shlex.quote(str(app_id))} --platform {normalized_platform} --name {shlex.quote(exp.name)} --traffic-proportion {int(exp.traffic_proportion)}"
         )
     else:
         asc_commands.append(
@@ -319,7 +323,7 @@ def compile_ppo_handoff(
         )
 
     for treat in treatments_payload:
-        v2_flag = " --v2" if platform.upper() == "MAC_OS" else ""
+        v2_flag = " --v2" if normalized_platform in v2_platforms else ""
         icon_flag = f" --app-icon-name {shlex.quote(treat['app_icon_name'])}" if treat.get("app_icon_name") else ""
         asc_commands.append(
             f"asc product-pages experiments treatments create --experiment-id '<EXPERIMENT_ID>' --name {shlex.quote(treat['name'])}{v2_flag}{icon_flag}"
