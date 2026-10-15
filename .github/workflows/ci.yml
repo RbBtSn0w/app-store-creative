@@ -14,15 +14,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  validate:
+  validate-tests:
+    name: Unit tests (Shard ${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
-
-      - name: Validate plugin package
-        run: python3 .github/validate_plugin.py
 
       - name: Install media tools
         run: |
@@ -31,8 +33,19 @@ jobs:
           ffmpeg -version
           ffprobe -version
 
-      - name: Run unit tests
-        run: python3 -m unittest discover -s tests -p 'test_*.py'
+      - name: Run sharded unit tests
+        run: python3 .github/run_sharded_tests.py --shard ${{ matrix.shard }} --total 4
+
+  validate-distribution:
+    name: Validate distribution & frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Validate plugin package
+        run: python3 .github/validate_plugin.py
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -74,7 +87,7 @@ jobs:
           retention-days: 7
 
   release:
-    needs: validate
+    needs: [validate-tests, validate-distribution]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15

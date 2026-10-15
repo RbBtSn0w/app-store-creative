@@ -16,10 +16,15 @@ This document outlines the architectural rules, CI invariants, testing standards
       ...
   ```
 - **Exception Assertions**: Use `self.assertRaises(...)` or `self.assertRaisesRegex(...)` for exception assertions.
-- **Authoritative CI Test Command**: Local test verification must match the CI test invocation:
+- **Authoritative CI Test Command**: In CI, unit tests are sharded across parallel matrix runners via:
+  ```bash
+  python3 .github/run_sharded_tests.py --shard ${{ matrix.shard }} --total 4
+  ```
+  Local test verification can execute the full suite using:
   ```bash
   python3 -m unittest discover -s tests -p 'test_*.py'
   ```
+  or run an individual shard via `python3 .github/run_sharded_tests.py --shard 1 --total 4`.
 
 ---
 
