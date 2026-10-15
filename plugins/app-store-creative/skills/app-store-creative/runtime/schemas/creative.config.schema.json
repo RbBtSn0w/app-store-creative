@@ -600,6 +600,72 @@
           ]
         }
       }
+    },
+    "experiments": {
+      "type": "object",
+      "description": "Product Page Optimization (PPO) experiments mapping",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "name",
+          "trafficProportion",
+          "treatments"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "trafficProportion": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "hypothesis": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "IOS",
+              "MAC_OS",
+              "TV_OS",
+              "VISION_OS"
+            ]
+          },
+          "treatments": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "appIconName": {
+                  "type": "string"
+                },
+                "theme": {
+                  "$ref": "#/properties/theme"
+                },
+                "cardOverrides": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                },
+                "localizations": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

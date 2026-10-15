@@ -53,3 +53,48 @@ Never upload from CI or submit a version for review. The official ASC plugin per
 Before producing a release candidate for approval, enable `studio.requireExportEvidence` in the reviewed project configuration. Use the strict input and rendering evidence checks for every target and locale. A permissive exploratory export does not establish that localized capture assignments or rendering evidence have been reviewed.
 
 For nondefault locales, assign real localized captures or record an explicit reviewed `inheritDefault` decision. Do not mark UI localization complete from translated headlines. Never reuse already composed store images as raw captures. If required inputs are unavailable, report the exact blocked locale/scene and retain exploratory attempts separately from approved delivery revisions.
+
+
+## Product Page Optimization (PPO) & A/B Experiment Workflow
+
+App Store Creative supports native Product Page Optimization (PPO) experiments defined declaratively inside `creative.config.json` under `experiments`:
+
+```json
+{
+  "experiments": {
+    "visual_style_cro": {
+      "name": "3D Visual Style CRO",
+      "trafficProportion": 50,
+      "hypothesis": "Titanium cold gray drives higher enterprise conversion than Aurora purple.",
+      "platform": "MAC_OS",
+      "treatments": {
+        "quartz_titanium": {
+          "name": "Treatment-Quartz-Titanium",
+          "theme": { "background": { "colors": ["#0B0E14", "#1B202B", "#2F3747"], "angle": 160 } },
+          "cardOverrides": { "01-history": { "deviceOffset": { "rotateX": 4 } } }
+        }
+      }
+    }
+  }
+}
+```
+
+### CLI Subcommands
+```sh
+# 1. List defined experiments
+python3 <runtime-root>/scripts/app_store_creative.py ppo list --repo <repo>
+
+# 2. Plan and inspect derived treatment configurations & platform readiness
+python3 <runtime-root>/scripts/app_store_creative.py ppo plan --repo <repo> --experiment <id>
+
+# 3. Compile ppo-handoff.json with exact asc execution sequence
+python3 <runtime-root>/scripts/app_store_creative.py ppo handoff --repo <repo> --experiment <id> \
+  --baseline-delivery <baseline_del_id> \
+  --treatment-delivery <treatment_id>:<treatment_del_id> \
+  --output .creative/ppo-handoff.json
+```
+
+### Platform Availability Constraints
+- **macOS**: Apple App Store Connect API v1 (`POST /v1/appStoreVersionExperiments`) is unsupported on macOS (`App Store Version Platform is not supported`). Only v2 standalone experiments (`POST /v2/appStoreVersionExperiments`) on live `READY_FOR_DISTRIBUTION` apps are supported, requiring no active in-flight edit drafts in `PREPARE_FOR_SUBMISSION`.
+- **iOS**: Both v1 (version-bound in `PREPARE_FOR_SUBMISSION`) and v2 (standalone live) are supported.
+
