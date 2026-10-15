@@ -63,3 +63,19 @@ python3 <runtime-root>/scripts/app_store_creative.py archive retrieve-evidence -
 This consumer does not require the production workspace or configuration. Hashing an untrusted locator does not establish trust. A successful readback proves byte consistency at that time, not backend permanence, executor authenticity, upload authorization or remote media acceptance. Missing versions and changed bytes must remain failures.
 
 If a request result is unknown, inspect existing records before retrying. Never repeat ASC uploads to repair missing local evidence. An unfinished evidence producer cannot be persisted or exported. Use explicit expired-lease recovery, preserve original work, and create a new retention attempt; do not fabricate a successful outcome for interrupted work.
+
+
+## Product Page Optimization (PPO) ASC Handoff Protocol
+
+When an experiment is defined in `creative.config.json` and treatment deliveries have been approved and sealed:
+
+1. **Pre-flight Platform Gate**: Check platform eligibility (`app_store_creative.py ppo --repo <repo> plan --experiment <id>`). On macOS, verify the target app is in `READY_FOR_DISTRIBUTION` status and that no `PREPARE_FOR_SUBMISSION` edit drafts exist before scheduling live store experiments.
+2. **Compile Handoff Manifest**:
+   ```sh
+   python3 <runtime-root>/scripts/app_store_creative.py ppo --repo <repo> handoff --experiment <id> \
+     --baseline-delivery <baseline_del_id> \
+     --treatment-delivery <treatment_id>:<treatment_del_id> \
+     --output .creative/ppo-handoff.json
+   ```
+3. **Audit Execution Plan**: Inspect `.creative/ppo-handoff.json` to review the generated command sequence (`asc product-pages experiments create`, `treatments create`, `localizations create`, and `screenshot-sets upload`) before executing external mutations.
+
