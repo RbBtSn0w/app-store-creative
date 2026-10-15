@@ -1,16 +1,18 @@
 import copy
 import json
-import pytest
-from pathlib import Path
+import shlex
 import sys
+import tempfile
+import unittest
+from pathlib import Path
 
 # Ensure runtime scripts can be imported
 scripts_dir = Path(__file__).resolve().parent.parent / "plugins" / "app-store-creative" / "skills" / "app-store-creative" / "runtime" / "scripts"
 if str(scripts_dir) not in sys.path:
     sys.path.insert(0, str(scripts_dir))
 
-import ppo_experiment
 import app_store_creative
+import ppo_experiment
 
 
 SAMPLE_CONFIG = {
@@ -96,318 +98,311 @@ SAMPLE_CONFIG = {
 }
 
 
-def test_parse_experiments_empty():
-    parsed = ppo_experiment.parse_experiments({})
-    assert parsed == {}
+class TestPPOExperiment(unittest.TestCase):
+    def test_parse_experiments_empty(self):
+        parsed = ppo_experiment.parse_experiments({})
+        self.assertEqual(parsed, {})
 
+    def test_parse_experiments_valid(self):
+        parsed = ppo_experiment.parse_experiments(SAMPLE_CONFIG)
+        self.assertIn("visual_style_cro", parsed)
+        exp = parsed["visual_style_cro"]
+        self.assertEqual(exp.name, "3D Visual Style CRO Experiment")
+        self.assertEqual(exp.traffic_proportion, 50)
+        self.assertEqual(exp.platform, "MAC_OS")
+        self.assertIn("quartz_titanium", exp.treatments)
+        treatment = exp.treatments["quartz_titanium"]
+        self.assertEqual(treatment.name, "Treatment-Quartz-Titanium")
+        self.assertEqual(treatment.theme["background"]["angle"], 160)
 
-def test_parse_experiments_valid():
-    parsed = ppo_experiment.parse_experiments(SAMPLE_CONFIG)
-    assert "visual_style_cro" in parsed
-    exp = parsed["visual_style_cro"]
-    assert exp.name == "3D Visual Style CRO Experiment"
-    assert exp.traffic_proportion == 50
-    assert exp.platform == "MAC_OS"
-    assert "quartz_titanium" in exp.treatments
-    treatment = exp.treatments["quartz_titanium"]
-    assert treatment.name == "Treatment-Quartz-Titanium"
-    assert treatment.theme["background"]["angle"] == 160
+    def test_derive_treatment_config(self):
+        derived = ppo_experiment.derive_treatment_config(SAMPLE_CONFIG, "visual_style_cro", "quartz_titanium")
 
+        # 1. Theme override verification
+        self.assertEqual(derived["theme"]["background"]["colors"], ["#0B0E14", "#1B202B", "#2F3747"])
+        self.assertEqual(derived["theme"]["background"]["angle"], 160)
+        self.assertEqual(derived["theme"]["headlineColor"], "#FFFFFF")  # Preserved
 
-def test_derive_treatment_config():
-    derived = ppo_experiment.derive_treatment_config(SAMPLE_CONFIG, "visual_style_cro", "quartz_titanium")
+        # 2. Card override verification
+        card01 = next(c for c in derived["cards"] if c["id"] == "01-hero")
+        self.assertEqual(card01["headline"], "Titanium Hero")
+        # Partial deviceOffset patch preserves baseline keys (x: 10, y: 20, scale: 1.0)
+        self.assertEqual(card01["deviceOffset"]["rotateX"], 6)
+        self.assertEqual(card01["deviceOffset"]["x"], 10)
+        self.assertEqual(card01["deviceOffset"]["y"], 20)
+        self.assertEqual(card01["deviceOffset"]["scale"], 1.0)
 
-    # 1. Theme override verification
-    assert derived["theme"]["background"]["colors"] == ["#0B0E14", "#1B202B", "#2F3747"]
-    assert derived["theme"]["background"]["angle"] == 160
-    assert derived["theme"]["headlineColor"] == "#FFFFFF"  # Preserved
+        # 3. Localized override verification
+        zh_hero = derived["localizations"]["zh-Hans"]["01-hero"]
+        self.assertEqual(zh_hero["headline"], "钛金版标题")
+        self.assertEqual(zh_hero["subheadline"], "基础副标题")  # Preserved
 
-    # 2. Card override verification
-    card01 = next(c for c in derived["cards"] if c["id"] == "01-hero")
-    assert card01["headline"] == "Titanium Hero"
-    # Partial deviceOffset patch preserves baseline keys (x: 10, y: 20, scale: 1.0)
-    assert card01["deviceOffset"]["rotateX"] == 6
-    assert card01["deviceOffset"]["x"] == 10
-    assert card01["deviceOffset"]["y"] == 20
-    assert card01["deviceOffset"]["scale"] == 1.0
+        # 4. Storage workspace isolation
+        self.assertEqual(derived["storage"]["workspaceRoot"], ".creative-quartz_titanium")
+        self.assertEqual(derived["storage"]["objectRoot"], ".creative/objects-quartz_titanium")
 
-    # 3. Localized override verification
-    zh_hero = derived["localizations"]["zh-Hans"]["01-hero"]
-    assert zh_hero["headline"] == "钛金版标题"
-    assert zh_hero["subheadline"] == "基础副标题"  # Preserved
+        # 5. Metadata verification
+        self.assertEqual(derived["_experiment"]["treatment_id"], "quartz_titanium")
 
-    # 4. Storage workspace isolation
-    assert derived["storage"]["workspaceRoot"] == ".creative-quartz_titanium"
-    assert derived["storage"]["objectRoot"] == ".creative/objects-quartz_titanium"
+    def test_derive_treatment_config_missing_keys(self):
+        with self.assertRaisesRegex(KeyError, "not found"):
+            ppo_experiment.derive_treatment_config(SAMPLE_CONFIG, "non_existent_exp", "treat")
 
-    # 5. Metadata verification
-    assert derived["_experiment"]["treatment_id"] == "quartz_titanium"
+        with self.assertRaisesRegex(KeyError, "not found"):
+            ppo_experiment.derive_treatment_config(SAMPLE_CONFIG, "visual_style_cro", "non_existent_treat")
 
+    def test_validate_platform_readiness_macos(self):
+        # macOS with inflight edit draft is restricted
+        r1 = ppo_experiment.validate_platform_readiness("MAC_OS", app_store_state="READY_FOR_SALE", has_inflight_version=True)
+        self.assertFalse(r1["eligible"])
+        self.assertEqual(r1["endpoint"], "v2")
+        self.assertTrue(any("PREPARE_FOR_SUBMISSION" in reason for reason in r1["reasons"]))
 
-def test_derive_treatment_config_missing_keys():
-    with pytest.raises(KeyError, match="not found"):
-        ppo_experiment.derive_treatment_config(SAMPLE_CONFIG, "non_existent_exp", "treat")
+        # macOS with non-live state is restricted
+        r2 = ppo_experiment.validate_platform_readiness("MAC_OS", app_store_state="PREPARE_FOR_SUBMISSION", has_inflight_version=False)
+        self.assertFalse(r2["eligible"])
 
-    with pytest.raises(KeyError, match="not found"):
-        ppo_experiment.derive_treatment_config(SAMPLE_CONFIG, "visual_style_cro", "non_existent_treat")
+        # macOS live store app with no inflight draft is eligible
+        r3 = ppo_experiment.validate_platform_readiness("MAC_OS", app_store_state="READY_FOR_SALE", has_inflight_version=False)
+        self.assertTrue(r3["eligible"])
+        self.assertEqual(r3["endpoint"], "v2")
 
+    def test_validate_platform_readiness_ios(self):
+        r = ppo_experiment.validate_platform_readiness("IOS")
+        self.assertTrue(r["eligible"])
+        self.assertTrue(r["v1_supported"])
+        self.assertTrue(r["v2_supported"])
 
-def test_validate_platform_readiness_macos():
-    # macOS with inflight edit draft is restricted
-    r1 = ppo_experiment.validate_platform_readiness("MAC_OS", app_store_state="READY_FOR_SALE", has_inflight_version=True)
-    assert r1["eligible"] is False
-    assert r1["endpoint"] == "v2"
-    assert any("PREPARE_FOR_SUBMISSION" in reason for reason in r1["reasons"])
+    def test_compile_ppo_handoff(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            repo_root = Path(tmp_dir)
+            rel_root = repo_root / "releases" / "sample-app" / "MAC_OS" / "1.0"
+            base_del = rel_root / "base_delivery_123"
+            base_del.mkdir(parents=True)
+            treat_del = rel_root / "treat_delivery_456"
+            (treat_del / "media" / "en-US").mkdir(parents=True)
+            (treat_del / "media" / "zh-Hans").mkdir(parents=True)
 
-    # macOS with non-live state is restricted
-    r2 = ppo_experiment.validate_platform_readiness("MAC_OS", app_store_state="PREPARE_FOR_SUBMISSION", has_inflight_version=False)
-    assert r2["eligible"] is False
+            out_file = repo_root / "ppo-handoff.json"
+            handoff = ppo_experiment.compile_ppo_handoff(
+                repo_root=repo_root,
+                base_config=SAMPLE_CONFIG,
+                experiment_id="visual_style_cro",
+                baseline_delivery_id="base_delivery_123",
+                treatment_deliveries={"quartz_titanium": "treat_delivery_456"},
+                output_path=out_file,
+            )
 
-    # macOS live store app with no inflight draft is eligible
-    r3 = ppo_experiment.validate_platform_readiness("MAC_OS", app_store_state="READY_FOR_SALE", has_inflight_version=False)
-    assert r3["eligible"] is True
-    assert r3["endpoint"] == "v2"
+            self.assertEqual(handoff["schema_version"], 1)
+            self.assertEqual(handoff["experiment"]["id"], "visual_style_cro")
+            self.assertTrue(handoff["control"]["delivery_exists"])
+            self.assertEqual(len(handoff["treatments"]), 1)
+            t = handoff["treatments"][0]
+            self.assertTrue(t["delivery_exists"])
+            self.assertEqual(t["locales"], ["en-US", "zh-Hans"])
+            self.assertTrue(out_file.is_file())
 
+            # Check ASC command sequence
+            asc_plan = handoff["asc_execution_plan"]
+            self.assertTrue(any("asc product-pages experiments create --v2" in cmd for cmd in asc_plan))
+            self.assertTrue(any("asc product-pages experiments treatments create" in cmd for cmd in asc_plan))
+            self.assertTrue(any("asc product-pages experiments treatments localizations create" in cmd for cmd in asc_plan))
 
-def test_validate_platform_readiness_ios():
-    r = ppo_experiment.validate_platform_readiness("IOS")
-    assert r["eligible"] is True
-    assert r["v1_supported"] is True
-    assert r["v2_supported"] is True
+    def test_cli_ppo_dispatch(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg_file = tmp_path / "creative.config.json"
+            with open(cfg_file, "w", encoding="utf-8") as f:
+                json.dump(SAMPLE_CONFIG, f)
 
+            # 1. ppo list
+            res_list = app_store_creative.run(
+                app_store_creative.build_parser().parse_args(["ppo", "--repo", str(tmp_path), "list", "--config", str(cfg_file)])
+            )
+            self.assertIn("experiments", res_list)
+            self.assertEqual(len(res_list["experiments"]), 1)
+            self.assertEqual(res_list["experiments"][0]["id"], "visual_style_cro")
 
-def test_compile_ppo_handoff(tmp_path):
-    repo_root = tmp_path
-    rel_root = repo_root / "releases" / "sample-app" / "MAC_OS" / "1.0"
-    base_del = rel_root / "base_delivery_123"
-    base_del.mkdir(parents=True)
-    treat_del = rel_root / "treat_delivery_456"
-    (treat_del / "media" / "en-US").mkdir(parents=True)
-    (treat_del / "media" / "zh-Hans").mkdir(parents=True)
+            # 2. ppo plan
+            res_plan = app_store_creative.run(
+                app_store_creative.build_parser().parse_args(["ppo", "--repo", str(tmp_path), "plan", "--config", str(cfg_file), "--experiment", "visual_style_cro"])
+            )
+            self.assertEqual(res_plan["experiment"]["id"], "visual_style_cro")
+            self.assertIn("quartz_titanium", res_plan["treatments"])
 
-    out_file = tmp_path / "ppo-handoff.json"
-    handoff = ppo_experiment.compile_ppo_handoff(
-        repo_root=repo_root,
-        base_config=SAMPLE_CONFIG,
-        experiment_id="visual_style_cro",
-        baseline_delivery_id="base_delivery_123",
-        treatment_deliveries={"quartz_titanium": "treat_delivery_456"},
-        output_path=out_file,
-    )
+            # 3. ppo handoff
+            out_json = tmp_path / "out-handoff.json"
+            res_handoff = app_store_creative.run(
+                app_store_creative.build_parser().parse_args([
+                    "ppo",
+                    "--repo", str(tmp_path),
+                    "handoff",
+                    "--config", str(cfg_file),
+                    "--experiment", "visual_style_cro",
+                    "--baseline-delivery", "del_base_1",
+                    "--treatment-delivery", "quartz_titanium:del_treat_1",
+                    "--output", str(out_json),
+                ])
+            )
+            self.assertEqual(res_handoff["control"]["delivery_id"], "del_base_1")
+            self.assertTrue(out_json.is_file())
 
-    assert handoff["schema_version"] == 1
-    assert handoff["experiment"]["id"] == "visual_style_cro"
-    assert handoff["control"]["delivery_exists"] is True
-    assert len(handoff["treatments"]) == 1
-    t = handoff["treatments"][0]
-    assert t["delivery_exists"] is True
-    assert t["locales"] == ["en-US", "zh-Hans"]
-    assert out_file.is_file()
+    def test_platform_readiness_tv_and_vision_os(self):
+        r_tv = ppo_experiment.validate_platform_readiness("TV_OS")
+        self.assertEqual(r_tv["platform"], "TV_OS")
+        self.assertTrue(r_tv["eligible"])
+        self.assertEqual(r_tv["endpoint"], "v2")
+        self.assertFalse(r_tv["v1_supported"])
+        self.assertTrue(r_tv["v2_supported"])
 
-    # Check ASC command sequence
-    asc_plan = handoff["asc_execution_plan"]
-    assert any("asc product-pages experiments create --v2" in cmd for cmd in asc_plan)
-    assert any("asc product-pages experiments treatments create" in cmd for cmd in asc_plan)
-    assert any("asc product-pages experiments treatments localizations create" in cmd for cmd in asc_plan)
+        r_vis = ppo_experiment.validate_platform_readiness("VISION_OS")
+        self.assertEqual(r_vis["platform"], "VISION_OS")
+        self.assertTrue(r_vis["eligible"])
+        self.assertEqual(r_vis["endpoint"], "v2")
 
+    def test_compile_ppo_handoff_shell_quoting(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            special_config = copy.deepcopy(SAMPLE_CONFIG)
+            special_config["experiments"]["visual_style_cro"]["name"] = 'Holiday "Sale" & $Special'
+            special_config["experiments"]["visual_style_cro"]["treatments"]["quartz_titanium"]["name"] = "Variant 'A' & B"
+            special_config["experiments"]["visual_style_cro"]["treatments"]["quartz_titanium"]["appIconName"] = "Icon $1"
 
-def test_cli_ppo_dispatch(tmp_path):
-    cfg_file = tmp_path / "creative.config.json"
-    with open(cfg_file, "w", encoding="utf-8") as f:
-        json.dump(SAMPLE_CONFIG, f)
+            handoff = ppo_experiment.compile_ppo_handoff(
+                repo_root=tmp_path,
+                base_config=special_config,
+                experiment_id="visual_style_cro",
+                baseline_delivery_id="del_base",
+                treatment_deliveries={"quartz_titanium": "del_treat"},
+                output_path=tmp_path / "handoff.json",
+            )
 
-    # 1. ppo list
-    res_list = app_store_creative.run(
-        app_store_creative.build_parser().parse_args(["ppo", "--repo", str(tmp_path), "list", "--config", str(cfg_file)])
-    )
-    assert "experiments" in res_list
-    assert len(res_list["experiments"]) == 1
-    assert res_list["experiments"][0]["id"] == "visual_style_cro"
+            plan = handoff["asc_execution_plan"]
+            expected_exp = shlex.quote('Holiday "Sale" & $Special')
+            expected_treat = shlex.quote("Variant 'A' & B")
+            expected_icon = shlex.quote("Icon $1")
+            self.assertTrue(any(f"--name {expected_exp}" in cmd for cmd in plan))
+            self.assertTrue(any(f"--name {expected_treat}" in cmd for cmd in plan))
+            self.assertTrue(any(f"--app-icon-name {expected_icon}" in cmd for cmd in plan))
 
-    # 2. ppo plan
-    res_plan = app_store_creative.run(
-        app_store_creative.build_parser().parse_args(["ppo", "--repo", str(tmp_path), "plan", "--config", str(cfg_file), "--experiment", "visual_style_cro"])
-    )
-    assert res_plan["experiment"]["id"] == "visual_style_cro"
-    assert "quartz_titanium" in res_plan["treatments"]
+    def test_parse_experiments_validation(self):
+        # Not a dict
+        with self.assertRaisesRegex(ValueError, "'experiments' must be an object/dict"):
+            ppo_experiment.parse_experiments({"experiments": "invalid"})
 
-    # 3. ppo handoff
-    out_json = tmp_path / "out-handoff.json"
-    res_handoff = app_store_creative.run(
-        app_store_creative.build_parser().parse_args([
-            "ppo",
-            "--repo", str(tmp_path),
-            "handoff",
-            "--config", str(cfg_file),
-            "--experiment", "visual_style_cro",
-            "--baseline-delivery", "del_base_1",
-            "--treatment-delivery", "quartz_titanium:del_treat_1",
-            "--output", str(out_json),
-        ])
-    )
-    assert res_handoff["control"]["delivery_id"] == "del_base_1"
-    assert out_json.is_file()
+        # Missing name
+        with self.assertRaisesRegex(ValueError, "requires a non-empty string 'name'"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"trafficProportion": 50, "treatments": {"t1": {"name": "T1"}}}}})
 
+        # Invalid trafficProportion
+        with self.assertRaisesRegex(ValueError, "trafficProportion must be an integer between 1 and 100"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 150, "treatments": {"t1": {"name": "T1"}}}}})
 
-def test_platform_readiness_tv_and_vision_os():
-    r_tv = ppo_experiment.validate_platform_readiness("TV_OS")
-    assert r_tv["platform"] == "TV_OS"
-    assert r_tv["eligible"] is True
-    assert r_tv["endpoint"] == "v2"
-    assert r_tv["v1_supported"] is False
-    assert r_tv["v2_supported"] is True
+        # Invalid platform
+        with self.assertRaisesRegex(ValueError, "invalid platform 'ANDROID'"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "platform": "ANDROID", "treatments": {"t1": {"name": "T1"}}}}})
 
-    r_vis = ppo_experiment.validate_platform_readiness("VISION_OS")
-    assert r_vis["platform"] == "VISION_OS"
-    assert r_vis["eligible"] is True
-    assert r_vis["endpoint"] == "v2"
+        # Empty treatments
+        with self.assertRaisesRegex(ValueError, "must define at least one treatment"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "treatments": {}}}})
 
+        # Treatment missing name
+        with self.assertRaisesRegex(ValueError, "requires a non-empty string 'name'"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "treatments": {"t1": {}}}}})
 
-def test_compile_ppo_handoff_shell_quoting(tmp_path):
-    special_config = copy.deepcopy(SAMPLE_CONFIG)
-    special_config["experiments"]["visual_style_cro"]["name"] = 'Holiday "Sale" & $Special'
-    special_config["experiments"]["visual_style_cro"]["treatments"]["quartz_titanium"]["name"] = "Variant 'A' & B"
-    special_config["experiments"]["visual_style_cro"]["treatments"]["quartz_titanium"]["appIconName"] = "Icon $1"
+    def test_macos_readiness_without_state(self):
+        r = ppo_experiment.validate_platform_readiness("MAC_OS")
+        self.assertFalse(r["eligible"])
+        self.assertTrue(any("Store state has not been verified" in reason for reason in r["reasons"]))
 
-    handoff = ppo_experiment.compile_ppo_handoff(
-        repo_root=tmp_path,
-        base_config=special_config,
-        experiment_id="visual_style_cro",
-        baseline_delivery_id="del_base",
-        treatment_deliveries={"quartz_titanium": "del_treat"},
-        output_path=tmp_path / "handoff.json",
-    )
+    def test_cli_treatment_delivery_validation(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg_file = tmp_path / "creative.config.json"
+            with open(cfg_file, "w", encoding="utf-8") as f:
+                json.dump(SAMPLE_CONFIG, f)
 
-    plan = handoff["asc_execution_plan"]
-    # Verify quotes or metacharacters are safely escaped in commands
-    import shlex
-    expected_exp = shlex.quote('Holiday "Sale" & $Special')
-    expected_treat = shlex.quote("Variant 'A' & B")
-    expected_icon = shlex.quote("Icon $1")
-    assert any(f"--name {expected_exp}" in cmd for cmd in plan)
-    assert any(f"--name {expected_treat}" in cmd for cmd in plan)
-    assert any(f"--app-icon-name {expected_icon}" in cmd for cmd in plan)
+            parser = app_store_creative.build_parser()
 
+            # Malformed entry without colon
+            with self.assertRaisesRegex(ValueError, "Malformed --treatment-delivery"):
+                app_store_creative.run(
+                    parser.parse_args([
+                        "ppo", "--repo", str(tmp_path), "handoff",
+                        "--config", str(cfg_file),
+                        "--experiment", "visual_style_cro",
+                        "--treatment-delivery", "malformed_entry",
+                    ])
+                )
 
-def test_parse_experiments_validation():
-    # Not a dict
-    with pytest.raises(ValueError, match="'experiments' must be an object/dict"):
-        ppo_experiment.parse_experiments({"experiments": "invalid"})
+            # Unknown treatment ID
+            with self.assertRaisesRegex(ValueError, "Unknown treatment ID 'nonexistent'"):
+                app_store_creative.run(
+                    parser.parse_args([
+                        "ppo", "--repo", str(tmp_path), "handoff",
+                        "--config", str(cfg_file),
+                        "--experiment", "visual_style_cro",
+                        "--treatment-delivery", "nonexistent:del123",
+                    ])
+                )
 
-    # Missing name
-    with pytest.raises(ValueError, match="requires a non-empty string 'name'"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"trafficProportion": 50, "treatments": {"t1": {"name": "T1"}}}}})
+    def test_traffic_proportion_rejects_non_integers_and_bool(self):
+        # Reject float
+        with self.assertRaisesRegex(ValueError, "trafficProportion must be an integer between 1 and 100"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 12.9, "treatments": {"t1": {"name": "T1"}}}}})
 
-    # Invalid trafficProportion
-    with pytest.raises(ValueError, match="trafficProportion must be an integer between 1 and 100"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 150, "treatments": {"t1": {"name": "T1"}}}}})
+        # Reject bool
+        with self.assertRaisesRegex(ValueError, "trafficProportion must be an integer between 1 and 100"):
+            ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": True, "treatments": {"t1": {"name": "T1"}}}}})
 
-    # Invalid platform
-    with pytest.raises(ValueError, match="invalid platform 'ANDROID'"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "platform": "ANDROID", "treatments": {"t1": {"name": "T1"}}}}})
-
-    # Empty treatments
-    with pytest.raises(ValueError, match="must define at least one treatment"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "treatments": {}}}})
-
-    # Treatment missing name
-    with pytest.raises(ValueError, match="requires a non-empty string 'name'"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 50, "treatments": {"t1": {}}}}})
-
-
-def test_macos_readiness_without_state():
-    r = ppo_experiment.validate_platform_readiness("MAC_OS")
-    assert r["eligible"] is False
-    assert any("Store state has not been verified" in reason for reason in r["reasons"])
-
-
-def test_cli_treatment_delivery_validation(tmp_path):
-    cfg_file = tmp_path / "creative.config.json"
-    with open(cfg_file, "w", encoding="utf-8") as f:
-        json.dump(SAMPLE_CONFIG, f)
-
-    parser = app_store_creative.build_parser()
-
-    # Malformed entry without colon
-    with pytest.raises(ValueError, match="Malformed --treatment-delivery"):
-        app_store_creative.run(
-            parser.parse_args([
-                "ppo", "--repo", str(tmp_path), "handoff",
-                "--config", str(cfg_file),
-                "--experiment", "visual_style_cro",
-                "--treatment-delivery", "malformed_entry",
-            ])
-        )
-
-    # Unknown treatment ID
-    with pytest.raises(ValueError, match="Unknown treatment ID 'nonexistent'"):
-        app_store_creative.run(
-            parser.parse_args([
-                "ppo", "--repo", str(tmp_path), "handoff",
-                "--config", str(cfg_file),
-                "--experiment", "visual_style_cro",
-                "--treatment-delivery", "nonexistent:del123",
-            ])
-        )
-
-
-def test_traffic_proportion_rejects_non_integers_and_bool():
-    # Reject float
-    with pytest.raises(ValueError, match="trafficProportion must be an integer between 1 and 100"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": 12.9, "treatments": {"t1": {"name": "T1"}}}}})
-
-    # Reject bool
-    with pytest.raises(ValueError, match="trafficProportion must be an integer between 1 and 100"):
-        ppo_experiment.parse_experiments({"experiments": {"exp1": {"name": "E1", "trafficProportion": True, "treatments": {"t1": {"name": "T1"}}}}})
-
-
-def test_platform_normalization():
-    parsed = ppo_experiment.parse_experiments({
-        "experiments": {
-            "exp1": {
-                "name": "E1",
-                "trafficProportion": 50,
-                "platform": "mac_os",
-                "treatments": {"t1": {"name": "T1"}},
+    def test_platform_normalization(self):
+        parsed = ppo_experiment.parse_experiments({
+            "experiments": {
+                "exp1": {
+                    "name": "E1",
+                    "trafficProportion": 50,
+                    "platform": "mac_os",
+                    "treatments": {"t1": {"name": "T1"}},
+                }
             }
-        }
-    })
-    assert parsed["exp1"].platform == "MAC_OS"
+        })
+        self.assertEqual(parsed["exp1"].platform, "MAC_OS")
+
+    def test_v2_command_generation_for_tv_and_vision_os(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg = copy.deepcopy(SAMPLE_CONFIG)
+            cfg["experiments"]["visual_style_cro"]["platform"] = "TV_OS"
+            handoff_tv = ppo_experiment.compile_ppo_handoff(
+                repo_root=tmp_path,
+                base_config=cfg,
+                experiment_id="visual_style_cro",
+                baseline_delivery_id="del_base",
+                treatment_deliveries={"quartz_titanium": "del_treat"},
+            )
+            self.assertTrue(any("--v2 --app 1234567890 --platform TV_OS" in cmd for cmd in handoff_tv["asc_execution_plan"]))
+
+            cfg["experiments"]["visual_style_cro"]["platform"] = "VISION_OS"
+            handoff_vision = ppo_experiment.compile_ppo_handoff(
+                repo_root=tmp_path,
+                base_config=cfg,
+                experiment_id="visual_style_cro",
+                baseline_delivery_id="del_base",
+                treatment_deliveries={"quartz_titanium": "del_treat"},
+            )
+            self.assertTrue(any("--v2 --app 1234567890 --platform VISION_OS" in cmd for cmd in handoff_vision["asc_execution_plan"]))
+
+    def test_cli_repo_preservation_pre_and_post_action(self):
+        parser = app_store_creative.build_parser()
+
+        # Pre-action --repo
+        args1 = parser.parse_args(["ppo", "--repo", "/custom/repo", "list"])
+        self.assertEqual(str(args1.repo), "/custom/repo")
+
+        # Post-action --repo
+        args2 = parser.parse_args(["ppo", "list", "--repo", "/custom/repo2"])
+        self.assertEqual(str(args2.repo), "/custom/repo2")
 
 
-def test_v2_command_generation_for_tv_and_vision_os(tmp_path):
-    cfg = copy.deepcopy(SAMPLE_CONFIG)
-    cfg["experiments"]["visual_style_cro"]["platform"] = "TV_OS"
-    handoff_tv = ppo_experiment.compile_ppo_handoff(
-        repo_root=tmp_path,
-        base_config=cfg,
-        experiment_id="visual_style_cro",
-        baseline_delivery_id="del_base",
-        treatment_deliveries={"quartz_titanium": "del_treat"},
-    )
-    assert any("--v2 --app 1234567890 --platform TV_OS" in cmd for cmd in handoff_tv["asc_execution_plan"])
-
-    cfg["experiments"]["visual_style_cro"]["platform"] = "VISION_OS"
-    handoff_vision = ppo_experiment.compile_ppo_handoff(
-        repo_root=tmp_path,
-        base_config=cfg,
-        experiment_id="visual_style_cro",
-        baseline_delivery_id="del_base",
-        treatment_deliveries={"quartz_titanium": "del_treat"},
-    )
-    assert any("--v2 --app 1234567890 --platform VISION_OS" in cmd for cmd in handoff_vision["asc_execution_plan"])
-
-
-def test_cli_repo_preservation_pre_and_post_action():
-    parser = app_store_creative.build_parser()
-
-    # Pre-action --repo
-    args1 = parser.parse_args(["ppo", "--repo", "/custom/repo", "list"])
-    assert str(args1.repo) == "/custom/repo"
-
-    # Post-action --repo
-    args2 = parser.parse_args(["ppo", "list", "--repo", "/custom/repo2"])
-    assert str(args2.repo) == "/custom/repo2"
-
-
-
+if __name__ == "__main__":
+    unittest.main()
