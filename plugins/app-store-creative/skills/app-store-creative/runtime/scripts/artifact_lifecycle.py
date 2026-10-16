@@ -133,6 +133,66 @@ class StoragePaths:
     def binding(self):
         return {key: str(getattr(self, key)) for key in ('workspace', 'objects', 'releases', 'publications')}
 
+    @property
+    def inputs(self) -> Path:
+        return self.workspace / 'inputs'
+
+    @property
+    def pipeline(self) -> Path:
+        return self.workspace / 'pipeline'
+
+    @property
+    def dist(self) -> Path:
+        return self.workspace / 'dist'
+
+    @property
+    def cache(self) -> Path:
+        return self.workspace / '.cache'
+
+    @staticmethod
+    def ensure_cache_isolation(cache_path: Path) -> Path:
+        p = Path(cache_path)
+        if p.is_symlink():
+            raise ValueError('Symlinked cache directory')
+        p.mkdir(parents=True, exist_ok=True)
+        if p.is_symlink():
+            raise ValueError('Symlinked cache directory')
+        gitignore = p / '.gitignore'
+        if gitignore.is_symlink():
+            raise ValueError('Symlinked cache ignore file')
+        if not gitignore.exists() or gitignore.read_text() != '*\n':
+            gitignore.write_text('*\n')
+        return p
+
+    def ensure_layers(self) -> dict[str, Path]:
+        """Ensure the RFC #46 4-layer workspace layout exists."""
+        layers = {
+            'inputs': self.inputs,
+            'pipeline': self.pipeline,
+            'dist': self.dist,
+            'cache': self.cache,
+        }
+        for name, path in layers.items():
+            path.mkdir(parents=True, exist_ok=True)
+        self.ensure_cache_isolation(layers['cache'])
+        return layers
+
+    def layer_paths(self) -> dict[str, Path]:
+        return {
+            'inputs': self.workspace / 'inputs',
+            'pipeline': self.workspace / 'pipeline',
+            'dist': self.workspace / 'dist',
+            'cache': self.workspace / '.cache',
+        }
+
+    def resolve_layer(self, name: str) -> Path:
+        valid_layers = {'inputs', 'pipeline', 'dist', 'cache'}
+        if name not in valid_layers:
+            raise ValueError(f"Unknown workspace layer: {name}. Expected one of {sorted(valid_layers)}")
+        if name == 'cache':
+            return self.cache
+        return getattr(self, name)
+
 
 class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, IncidentOperations, LeaseOperations, ObservationOperations, InputOperations, InventoryOperations, RelocationOperations):
     def __init__(self, root, config, config_path=None):
@@ -175,6 +235,7 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         check_source_write_fence(self)
         self._live_configuration()
         self.paths.workspace.mkdir(parents=True, exist_ok=True)
+        self.paths.ensure_cache_isolation(self.paths.workspace / '.cache')
         owner = self.paths.workspace / 'owner.json'
         authority = self.paths.workspace / 'configuration-authority.json'
         lock = self.paths.workspace / 'write.lock'

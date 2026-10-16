@@ -18,7 +18,7 @@ class PublicationLifecycleTests(unittest.TestCase):
         validation = self.store.validate_candidate(self.candidate['id'])
         approval = self.store.approve_design(self.candidate['id'], validation['id'], 'owner', 'human:design')
         self.delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
-        self.target = {'app_id': '123456', 'version_id': 'version-resource', 'platform': 'MAC_OS'}
+        self.target = {'app_id': '123456', 'bundle_id': 'example.demo', 'version_id': 'version-resource', 'platform': 'MAC_OS'}
 
     def git(self, *args):
         return subprocess.check_output(['git', '-C', str(self.root), *args], text=True).strip()
@@ -115,6 +115,18 @@ class PublicationLifecycleTests(unittest.TestCase):
         sha = self.persist()
         with self.assertRaisesRegex(ValueError, 'platform'):
             self.store.plan_publication(self.delivery['id'], sha, {**self.target, 'platform': 'IOS'})
+
+    def test_plan_rejects_missing_bundle_id(self):
+        sha = self.persist()
+        bad_target = {k: v for k, v in self.target.items() if k != 'bundle_id'}
+        with self.assertRaisesRegex(ValueError, 'bundle_id'):
+            self.store.plan_publication(self.delivery['id'], sha, bad_target)
+
+    def test_plan_rejects_mismatched_bundle_id(self):
+        sha = self.persist()
+        bad_target = {**self.target, 'bundle_id': 'com.other.app'}
+        with self.assertRaisesRegex(ValueError, 'Remote target bundle identifier does not match configuration'):
+            self.store.plan_publication(self.delivery['id'], sha, bad_target)
 
     def test_exported_handoff_keeps_upload_approval_separate(self):
         plan = self.store.plan_publication(self.delivery['id'], self.persist(), self.target)

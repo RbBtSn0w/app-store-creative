@@ -58,6 +58,7 @@ func run() async throws {
           let width = plan["width"] as? Int, let height = plan["height"] as? Int,
           let fps = plan["fps"] as? Int,
           plan["capture_scope"] as? String == "window", plan["include_cursor"] as? Bool == false,
+          plan["capture_audio"] == nil || plan["capture_audio"] is Bool,
           duration.isFinite, duration > 0, duration <= 3600,
           width > 0, width <= 7680, height > 0, height <= 7680, fps > 0, fps <= 60 else {
         throw CaptureError(description: "Invalid bounded window recording plan")
@@ -70,8 +71,9 @@ func run() async throws {
     }
     let config = SCStreamConfiguration()
     config.width = width; config.height = height
+    let captureAudio = plan["capture_audio"] as? Bool ?? true
+    config.showsCursor = false; config.capturesAudio = captureAudio; config.scalesToFit = true
     config.minimumFrameInterval = CMTime(value: 1, timescale: Int32(fps))
-    config.showsCursor = false; config.capturesAudio = false; config.scalesToFit = true
     let delegate = RecordingDelegate()
     let outputConfig = SCRecordingOutputConfiguration()
     outputConfig.outputURL = URL(fileURLWithPath: destination)

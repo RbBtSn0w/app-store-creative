@@ -60,6 +60,8 @@ def main(argv=None):
     parser.add_argument('--width', type=int, default=1920)
     parser.add_argument('--height', type=int, default=1080)
     parser.add_argument('--fps', type=int, default=30)
+    parser.add_argument('--capture-audio', dest='capture_audio', action='store_true', default=True)
+    parser.add_argument('--no-capture-audio', dest='capture_audio', action='store_false')
     parser.add_argument('--receipt', type=Path)
     parser.add_argument('--execute', action='store_true')
     args = parser.parse_args(argv)
@@ -71,7 +73,8 @@ def main(argv=None):
                 raise ValueError('--output and --window-id are required for recording')
             plan = macos_recording_plan(bundle_id=args.bundle_id, window_id=args.window_id,
                                         output=args.output.resolve(), duration=args.duration,
-                                        width=args.width, height=args.height, fps=args.fps)
+                                        width=args.width, height=args.height, fps=args.fps,
+                                        capture_audio=args.capture_audio)
         if not args.execute:
             print(json.dumps({'executed': False, 'plan': plan})); return 0
         if platform.system() != 'Darwin' or int(platform.mac_ver()[0].split('.')[0]) < 15:

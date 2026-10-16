@@ -74,3 +74,68 @@ class BoundAscAdapterTests(unittest.TestCase):
             preview_observations(plan, json.dumps(self.response()).encode(), {**scope, 'target': {'app_id': 'foreign'}})
         with self.assertRaisesRegex(ValueError, 'Preview'):
             preview_observations(plan, json.dumps(self.response()).encode(), {**scope, 'artifact_id': 'foreign'})
+
+    def test_video_facts_alias(self):
+        from asc_observation_adapter import video_facts, preview_facts
+        self.assertIs(video_facts, preview_facts)
+
+
+class ScreenshotObservationAdapterTests(unittest.TestCase):
+    def response(self, image=None):
+        return {'versionLocalizationId': 'localization', 'sets': [
+            {'set': {'type': 'appScreenshotSets', 'id': 'set'}, 'screenshots': [
+                {'type': 'appScreenshots', 'id': 'screenshot-1', 'attributes': {
+                    'sourceFileChecksum': 'b' * 32,
+                    'assetDeliveryState': {'state': 'COMPLETE'},
+                    'imageAsset': image or {'width': 2880, 'height': 1800}}}]}]}
+
+    def test_screenshot_facts_normal(self):
+        from asc_observation_adapter import screenshot_facts
+        facts = screenshot_facts(self.response(), 'localization', 'screenshot-1')
+        self.assertEqual(facts['upload']['source_checksum'], 'b' * 32)
+        self.assertEqual(facts['processing']['processing_state'], 'COMPLETE')
+        self.assertEqual(facts['media']['image_width'], 2880)
+        self.assertEqual(facts['media']['image_height'], 1800)
+
+    def test_screenshot_facts_zero_dimension_fails_media(self):
+        from asc_observation_adapter import screenshot_facts
+        facts = screenshot_facts(self.response({'width': 0, 'height': 0}), 'localization', 'screenshot-1')
+        self.assertFalse(facts['media']['media_verified'])
+
+    def test_screenshot_facts_missing_remote_id(self):
+        from asc_observation_adapter import screenshot_facts
+        facts = screenshot_facts(self.response(), 'localization', 'missing')
+        self.assertEqual(facts, {'upload': {'found': False}})
+
+    def test_screenshot_facts_foreign_localization(self):
+        from asc_observation_adapter import screenshot_facts
+        with self.assertRaisesRegex(ValueError, 'localization'):
+            screenshot_facts(self.response(), 'foreign', 'screenshot-1')
+
+    def test_screenshot_facts_duplicate(self):
+        from asc_observation_adapter import screenshot_facts
+        resp = self.response()
+        resp['sets'][0]['screenshots'] *= 2
+        with self.assertRaisesRegex(ValueError, 'Duplicate'):
+            screenshot_facts(resp, 'localization', 'screenshot-1')
+
+    def test_screenshot_observations_matches_plan(self):
+        from asc_observation_adapter import screenshot_observations
+        plan = {'target': {'app_id': 'app', 'version_id': 'version', 'platform': 'MAC_OS'},
+                'assets': [{'artifact_id': 'art-shot', 'role': 'screenshot'}]}
+        scope = {'target': plan['target'], 'artifact_id': 'art-shot',
+                 'localization_id': 'localization', 'remote_id': 'screenshot-1',
+                 'observed_at': '2026-10-07T01:00:00+00:00', 'evidence_reference': 'asc:read:1'}
+        rows = screenshot_observations(plan, json.dumps(self.response()).encode(), scope)
+        self.assertEqual([r['gate'] for r in rows], ['upload', 'processing', 'media'])
+        self.assertTrue(all(r['target'] == plan['target'] and r['source'] == 'asc-cli' for r in rows))
+
+    def test_screenshot_observations_rejects_non_screenshot(self):
+        from asc_observation_adapter import screenshot_observations
+        plan = {'target': {'app_id': 'app', 'version_id': 'version', 'platform': 'MAC_OS'},
+                'assets': [{'artifact_id': 'art-preview', 'role': 'preview'}]}
+        scope = {'target': plan['target'], 'artifact_id': 'art-preview',
+                 'localization_id': 'localization', 'remote_id': 'screenshot-1',
+                 'observed_at': '2026-10-07T01:00:00+00:00', 'evidence_reference': 'asc:read:1'}
+        with self.assertRaisesRegex(ValueError, 'Screenshot'):
+            screenshot_observations(plan, json.dumps(self.response()).encode(), scope)

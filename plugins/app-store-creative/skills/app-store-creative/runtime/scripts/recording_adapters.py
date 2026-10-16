@@ -33,7 +33,7 @@ def shell_preview(command: list[str]) -> str:
 
 def macos_recording_plan(*, bundle_id: str, window_id: int, output: Path,
                          duration: float, width: int = 1920, height: int = 1080,
-                         fps: int = 30) -> dict:
+                         fps: int = 30, capture_audio: bool = True) -> dict:
     import math
     plan = macos_screencapturekit_contract(bundle_id=bundle_id, output=output)
     if output.suffix.lower() != ".mov":
@@ -46,7 +46,9 @@ def macos_recording_plan(*, bundle_id: str, window_id: int, output: Path,
         raise RecordingContractError("width, height, and fps must be positive integers")
     if width > 7680 or height > 7680 or fps > 60:
         raise RecordingContractError("recording dimensions or fps exceed supported bounds")
-    plan.update(window_id=window_id, duration=duration, width=width, height=height, fps=fps)
+    if not isinstance(capture_audio, bool):
+        raise RecordingContractError("capture_audio must be a boolean")
+    plan.update(window_id=window_id, duration=duration, width=width, height=height, fps=fps, capture_audio=capture_audio)
     return plan
 
 

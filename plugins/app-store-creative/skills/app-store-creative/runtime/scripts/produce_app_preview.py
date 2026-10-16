@@ -36,22 +36,36 @@ def build_command(contract: dict, output: Path, tools=None) -> list[str]:
     end_input = None
     if end_card:
         end_input = len(segments) + len(overlay_inputs); command += ["-loop", "1", "-i", str(Path(end_card["path"]))]
+    audio_source_input = None
+    if contract.get("audio_source"):
+        audio_source_input = len(segments) + len(overlay_inputs) + (1 if end_card else 0)
+        command += ["-i", str(Path(contract["audio_source"]))]
     filters = []
     concat_inputs = []
     for i, segment in enumerate(segments):
         segment_duration = float(segment.get("duration", duration))
         start = float(segment.get("start", 0))
         filters.append(f"[{i}:v:0]scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,fps={fps},trim=start={start}:duration={segment_duration},setpts=PTS-STARTPTS[v{i}]")
-        if segment.get("has_audio", True):
-            filters.append(f"[{i}:a:0]atrim=start={start}:duration={segment_duration},asetpts=PTS-STARTPTS[a{i}]")
+        if not contract.get("audio_source"):
+            if segment.get("has_audio", True):
+                filters.append(f"[{i}:a:0]atrim=start={start}:duration={segment_duration},asetpts=PTS-STARTPTS,aformat=channel_layouts=stereo:sample_rates=48000[a{i}]")
+            else:
+                filters.append(f"anullsrc=channel_layout=stereo:sample_rate=48000,atrim=duration={segment_duration}[a{i}]")
+            concat_inputs.append(f"[v{i}][a{i}]")
         else:
-            filters.append(f"anullsrc=channel_layout=stereo:sample_rate=48000,atrim=duration={segment_duration}[a{i}]")
-        concat_inputs.append(f"[v{i}][a{i}]")
+            concat_inputs.append(f"[v{i}]")
     if end_card:
         filters.append(f"[{end_input}:v:0]scale={width}:{height},fps={fps},trim=duration={end_duration},setpts=PTS-STARTPTS[vend]")
-        filters.append(f"anullsrc=channel_layout=stereo:sample_rate=48000,atrim=duration={end_duration}[aend]")
-        concat_inputs.append("[vend][aend]")
-    filters.append("".join(concat_inputs) + f"concat=n={len(concat_inputs)}:v=1:a=1[vbase][a]")
+        if not contract.get("audio_source"):
+            filters.append(f"anullsrc=channel_layout=stereo:sample_rate=48000,atrim=duration={end_duration}[aend]")
+            concat_inputs.append("[vend][aend]")
+        else:
+            concat_inputs.append("[vend]")
+    if not contract.get("audio_source"):
+        filters.append("".join(concat_inputs) + f"concat=n={len(concat_inputs)}:v=1:a=1[vbase][a]")
+    else:
+        filters.append("".join(concat_inputs) + f"concat=n={len(concat_inputs)}:v=1:a=0[vbase]")
+        filters.append(f"[{audio_source_input}:a:0]aformat=channel_layouts=stereo:sample_rates=48000,atrim=start=0:duration={duration},asetpts=PTS-STARTPTS,apad=whole_dur={duration}[a]")
     current = "vbase"
     image_index = 0
     for index, overlay in enumerate(contract.get("overlays", [])):
@@ -104,6 +118,7 @@ def probe_media(path: Path, tools=None) -> dict:
 
 def preflight_sources(contract: dict, tools=None) -> list[dict]:
     sources = []
+    has_custom_audio = bool(contract.get("audio_source"))
     for segment in contract["segments"]:
         path = Path(segment["path"]).resolve()
         probe = probe_media(path, tools)
@@ -111,9 +126,22 @@ def preflight_sources(contract: dict, tools=None) -> list[dict]:
             raise ValueError(f"source has no video: {path}")
         if float(segment.get("start", 0)) + float(segment["duration"]) > float(probe["format"]["duration"]) + 0.01:
             raise ValueError(f"segment exceeds source duration: {path}")
-        if segment.get("has_audio", True) and not any(s.get("codec_type") == "audio" for s in probe.get("streams", [])):
+        source_has_audio = any(s.get("codec_type") == "audio" for s in probe.get("streams", []))
+        if segment.get("has_audio") is True and not source_has_audio and not has_custom_audio:
             raise ValueError(f"source has no audio; explicitly set has_audio=false: {path}")
+        if not source_has_audio and not has_custom_audio:
+            segment["has_audio"] = False
+        elif segment.get("has_audio") is None:
+            segment["has_audio"] = source_has_audio
         sources.append({"path": str(path), "sha256": digest(path), "probe": probe})
+    if contract.get("audio_source"):
+        audio_path = Path(contract["audio_source"]).resolve()
+        if not audio_path.exists():
+            raise FileNotFoundError(f"Audio source not found: {audio_path}")
+        probe = probe_media(audio_path, tools)
+        if not any(s.get("codec_type") == "audio" for s in probe.get("streams", [])):
+            raise ValueError(f"audio source has no audio: {audio_path}")
+        sources.append({"path": str(audio_path), "sha256": digest(audio_path), "probe": probe})
     for image in [*contract.get("overlays", []), contract.get("end_card") or {}]:
         if image.get("path"):
             path = Path(image["path"]).resolve()
@@ -174,12 +202,17 @@ def execute(contract: dict, output: Path, receipt: Path, snapshot: Path) -> dict
 def main(argv=None):
     p = argparse.ArgumentParser(); p.add_argument("--contract", type=Path, required=True); p.add_argument("--output", type=Path, required=True); p.add_argument("--execute", action="store_true")
     p.add_argument("--receipt", type=Path); p.add_argument("--snapshot", type=Path)
+    p.add_argument("--audio-source", type=Path, help="Explicit external voiceover or music track")
     args = p.parse_args(argv)
     try:
         contract = json.loads(args.contract.read_text())
         for item in [*contract.get("segments", []), *contract.get("overlays", []), contract.get("end_card") or {}]:
             if item.get("path"):
                 item["path"] = str((args.contract.resolve().parent / item["path"]).resolve())
+        if args.audio_source:
+            contract["audio_source"] = str(args.audio_source.resolve())
+        elif contract.get("audio_source"):
+            contract["audio_source"] = str((args.contract.resolve().parent / contract["audio_source"]).resolve())
         command = build_command(contract, args.output)
         if not args.execute: print(json.dumps({"executed": False, "command": command})); return 0
         result = execute(contract, args.output, args.receipt or args.output.with_suffix(".receipt.json"),

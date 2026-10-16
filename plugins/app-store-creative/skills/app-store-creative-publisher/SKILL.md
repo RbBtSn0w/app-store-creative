@@ -83,23 +83,27 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 ## Publisher Safety & ASC Web UI Invariants (Issue #33)
 
 ### 1. `--replace` Pre-Deletion Transient State Warning
-- Executing `asc screenshots upload` with `--replace` initiates an immediate asynchronous purge of existing screenshot sets in App Store Connect before new uploads attach.
+- Executing `asc screenshots upload` or `asc video-previews upload` with `--replace` initiates an immediate asynchronous purge of existing sets in App Store Connect before new uploads attach.
 - During this 2–5 minute transient phase, inspecting the App Store Connect Web UI will display completely empty galleries. This is expected server-side behavior and does NOT indicate asset loss.
 - **Authoritative Verification**: Never verify upload progress or completion via the ASC web dashboard mid-upload. Rely exclusively on authoritative ASC CLI listings:
   ```sh
   asc screenshots list --app <app_id> --version <version> --platform <platform>
-  asc app-previews list --app <app_id> --version <version> --platform <platform>
+  asc video-previews list --version-localization <resource-id> --output json
   ```
   Verify all expected screenshot and preview records are acknowledged by ASC before declaring completion.
 
 ### 2. Client Browser-Cache Troubleshooting
 - Apple's App Store Connect Single Page Application (SPA) and client browsers can aggressively cache older screenshot and preview assets.
 - If manually inspecting the ASC web dashboard post-upload, standard browser reloads may display stale or cached representations.
-- **Troubleshooting Guideline**: Use Private/Incognito browsing or a hard browser refresh (`Cmd+Shift+R` / `Ctrl+F5`) for client-side cache troubleshooting. Note that client cache clearing does NOT purge intermediary edge CDN caches, so web dashboard inspection remains advisory only; authoritative verification rests entirely with `asc screenshots list` / `asc app-previews list` CLI queries.
+- **Troubleshooting Guideline**: Use Private/Incognito browsing or a hard browser refresh (`Cmd+Shift+R` / `Ctrl+F5`) for client-side cache troubleshooting. Note that client cache clearing does NOT purge intermediary edge CDN caches, so web dashboard inspection remains advisory only; authoritative verification rests entirely with `asc screenshots list` / `asc video-previews list` CLI queries.
 
 ### 3. Explicit Video Poster Frame Timecode
 - App Preview video uploads must specify an explicit `previewFrameTimeCode` (e.g. `00:00:19:00`) matching the hero feature in the approved creative plan.
 - Omitting `previewFrameTimeCode` causes ASC to default to a 5-second poster frame (`00:00:05:01`), which frequently results in black, transitional, or uninformative store thumbnails on non-primary locales.
 - For multi-locale releases with `inheritDefault: true`, ensure each locale either receives its localized video with an explicit timecode or explicitly references the primary storefront's approved preview set.
+
+### 4. `asc video-previews upload` Replacement Flags and Device Types (Issue #40)
+- For an authorized non-interactive replacement, supply `--replace --confirm`. ASC purges existing previews before new uploads attach, so this operation is not atomic.
+- For macOS desktop App Previews, specify `--device-type DESKTOP` (Apple API uses `DESKTOP`, not `APP_DESKTOP`).
 
 
