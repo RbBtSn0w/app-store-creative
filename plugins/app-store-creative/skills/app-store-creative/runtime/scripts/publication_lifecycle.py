@@ -28,8 +28,8 @@ def check_remote_target(target, delivery, config=None):
             if recipe_cfg.is_file():
                 try:
                     expected_bundle_id = json.loads(recipe_cfg.read_text()).get('project', {}).get('bundleId')
-                except Exception:
-                    pass
+                except (json.JSONDecodeError, OSError) as error:
+                    raise ValueError(f'Invalid delivery recipe configuration: {error}') from error
     if expected_bundle_id and target['bundle_id'] != expected_bundle_id:
         raise ValueError('Remote target bundle identifier does not match configuration')
 

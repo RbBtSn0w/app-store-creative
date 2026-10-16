@@ -23,37 +23,39 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
     if with_video:
         from managed_poster import timestamp_from_time_code
         global_pv = config.get('previewVideo', {})
-        if global_pv.get('enabled') and global_pv.get('posterRequired'):
-            timestamp_from_time_code(global_pv.get('posterFrameTimeCode'), global_pv.get('fps', 30))
+        global_enabled = global_pv.get('enabled', False)
         localizations = config.get('localizations', {})
+        project_locales = config.get('project', {}).get('locales', [])
+        all_locales = set(project_locales)
         if isinstance(localizations, dict):
-            for l_cfg in localizations.values():
-                if isinstance(l_cfg, dict) and 'previewVideo' in l_cfg:
-                    l_pv = {**global_pv, **l_cfg['previewVideo']}
-                    if l_pv.get('enabled') and l_pv.get('posterRequired'):
-                        timestamp_from_time_code(l_pv.get('posterFrameTimeCode'), l_pv.get('fps', 30))
+            all_locales.update(localizations.keys())
+
+        effective_pvs = []
+        if all_locales:
+            for loc in all_locales:
+                l_cfg = localizations.get(loc, {}) if isinstance(localizations, dict) else {}
+                l_pv = l_cfg.get('previewVideo', {}) if isinstance(l_cfg, dict) else {}
+                merged = {**global_pv, **l_pv}
+                if merged.get('enabled', global_enabled):
+                    effective_pvs.append(merged)
+        elif global_enabled:
+            effective_pvs.append(global_pv)
+
+        for epv in effective_pvs:
+            if epv.get('posterRequired'):
+                timestamp_from_time_code(epv.get('posterFrameTimeCode'), epv.get('fps', 30))
     publishing = config.get('publishing', {})
     platform = publishing.get('platform') or ('MAC_OS' if all(t.startswith('mac_') for t in config.get('targets', [])) else 'IOS')
     sources, input_errors = contract.input_hashes(root, config, targets, locales)
     if with_video:
         pv_sources = []
-        global_pv = config.get('previewVideo', {})
-        if global_pv.get('enabled'):
-            if global_pv.get('source'):
-                pv_sources.append(global_pv['source'])
-            if global_pv.get('audioSource') or global_pv.get('audio_source'):
-                pv_sources.append(global_pv.get('audioSource') or global_pv.get('audio_source'))
-        localizations = config.get('localizations', {})
-        if isinstance(localizations, dict):
-            for l_cfg in localizations.values():
-                if isinstance(l_cfg, dict) and 'previewVideo' in l_cfg:
-                    l_pv = l_cfg['previewVideo']
-                    if l_pv.get('enabled', global_pv.get('enabled', False)):
-                        if l_pv.get('source'):
-                            pv_sources.append(l_pv['source'])
-                        if l_pv.get('audioSource') or l_pv.get('audio_source'):
-                            pv_sources.append(l_pv.get('audioSource') or l_pv.get('audio_source'))
-        if global_pv.get('enabled') and not pv_sources:
+        for epv in effective_pvs:
+            if epv.get('source'):
+                pv_sources.append(epv['source'])
+            if epv.get('audioSource') or epv.get('audio_source'):
+                pv_sources.append(epv.get('audioSource') or epv.get('audio_source'))
+
+        if effective_pvs and not pv_sources:
             input_errors.append('Preview source must be a managed local regular file')
         for src in set(pv_sources):
             name = relative_name(src)
