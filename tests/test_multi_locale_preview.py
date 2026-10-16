@@ -175,7 +175,8 @@ class MultiLocalePreviewLifecycleTests(unittest.TestCase):
 
     def test_locale_path_traversal_is_rejected(self):
         import video_engine
-        bad_config = dict(self.config)
+        bad_config = json.loads(json.dumps(self.config))
+        bad_config["project"]["locales"] = ["../../outside"]
         bad_config["localizations"] = {
             "../../outside": {"previewVideo": {"source": "inputs/en_preview.mov"}}
         }

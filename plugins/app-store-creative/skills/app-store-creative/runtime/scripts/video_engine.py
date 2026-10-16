@@ -50,6 +50,10 @@ def produce_preview_from_config(
     has_locale_previews = isinstance(localizations, dict) and any(
         isinstance(l_cfg, dict) and "previewVideo" in l_cfg for l_cfg in localizations.values()
     )
+    out_root = output_dir or (repo_root / "artifacts")
+    targets = config.get("targets", [])
+    is_mac = any(t.startswith("mac_") for t in targets)
+
     locale_previews = {}
     if has_locale_previews:
         project_locales = config.get("project", {}).get("locales", [])
@@ -59,6 +63,9 @@ def produce_preview_from_config(
         if locales is not None:
             all_locales = all_locales.intersection(set(locales))
         for locale in all_locales:
+            target_out = out_root / locale / "preview" / "app_preview.mp4"
+            if not target_out.resolve().is_relative_to(out_root.resolve()):
+                raise ValueError("Locale output path escapes output directory")
             l_cfg = localizations.get(locale, {}) if isinstance(localizations, dict) else {}
             l_pv = l_cfg.get("previewVideo", {}) if isinstance(l_cfg, dict) else {}
             merged = {**preview_cfg, **l_pv}
@@ -67,10 +74,6 @@ def produce_preview_from_config(
 
     if not global_enabled and not locale_previews:
         return None
-
-    out_root = output_dir or (repo_root / "artifacts")
-    targets = config.get("targets", [])
-    is_mac = any(t.startswith("mac_") for t in targets)
 
     def _produce_single(p_cfg: Dict[str, Any], target_out: Path, logical_path: str) -> Dict[str, Any]:
         src_rel = p_cfg.get("source")
