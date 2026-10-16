@@ -34,6 +34,8 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
             all_locales = set(project_locales)
             if isinstance(localizations, dict):
                 all_locales.update(localizations.keys())
+            if locales is not None:
+                all_locales = all_locales.intersection(set(locales))
             for loc in all_locales:
                 l_cfg = localizations.get(loc, {}) if isinstance(localizations, dict) else {}
                 l_pv = l_cfg.get('previewVideo', {}) if isinstance(l_cfg, dict) else {}
@@ -99,7 +101,7 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                 raise ValueError('; '.join(result.get('errors', [])) or 'Rendering failed')
             video = None
             if with_video:
-                video = video_engine.produce_preview_from_config(input_root, input_cfg, output_dir=outputs)
+                video = video_engine.produce_preview_from_config(input_root, input_cfg, output_dir=outputs, locales=locales)
             core._live_configuration()
             if cfg.read_bytes() != raw or any(digest(contract.local_asset(root, name, config)) != sha for name, sha in original_hashes.items()):
                 raise ValueError('Inputs changed during production; review the current project and retry')

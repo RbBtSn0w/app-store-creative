@@ -173,6 +173,17 @@ class MultiLocalePreviewLifecycleTests(unittest.TestCase):
             self.assertEqual(validation["status"], "FAIL")
             self.assertTrue(any("Poster must reference the selected preview: zh-Hans/preview/poster.png" in err for err in validation["errors"]))
 
+    def test_locale_path_traversal_is_rejected(self):
+        import video_engine
+        bad_config = dict(self.config)
+        bad_config["localizations"] = {
+            "../../outside": {"previewVideo": {"source": "inputs/en_preview.mov"}}
+        }
+        cfg_file = self.root / "bad_creative.config.json"
+        cfg_file.write_text(json.dumps(bad_config))
+        with self.assertRaisesRegex(ValueError, "escapes output directory"):
+            video_engine.produce_preview_from_config(self.root, cfg_file, output_dir=self.root / "artifacts")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,7 +7,7 @@ import subprocess
 import sys
 import produce_app_preview
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
 def probe_video(path: Path) -> Dict[str, Any]:
@@ -36,6 +36,7 @@ def produce_preview_from_config(
     repo_root: Path,
     config_path: Optional[Path] = None,
     output_dir: Optional[Path] = None,
+    locales: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
     """Produce an Apple-compliant App Preview video from creative.config.json."""
     cfg_file = config_path or (repo_root / "creative.config.json")
@@ -55,6 +56,8 @@ def produce_preview_from_config(
         all_locales = set(project_locales)
         if isinstance(localizations, dict):
             all_locales.update(localizations.keys())
+        if locales is not None:
+            all_locales = all_locales.intersection(set(locales))
         for locale in all_locales:
             l_cfg = localizations.get(locale, {}) if isinstance(localizations, dict) else {}
             l_pv = l_cfg.get("previewVideo", {}) if isinstance(l_cfg, dict) else {}
@@ -141,6 +144,8 @@ def produce_preview_from_config(
         for locale, lp in locale_previews.items():
             logical_path = f"{locale}/preview/app_preview.mp4"
             target_out = out_root / locale / "preview" / "app_preview.mp4"
+            if not target_out.resolve().is_relative_to(out_root.resolve()):
+                raise ValueError("Locale output path escapes output directory")
             videos[locale] = _produce_single(lp, target_out, logical_path)
         first = next(iter(videos.values()))
         return {
