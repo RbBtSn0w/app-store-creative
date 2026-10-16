@@ -46,13 +46,15 @@ def produce_preview_from_config(
     preview_cfg = config.get("previewVideo", {})
     global_enabled = preview_cfg.get("enabled", False)
     localizations = config.get("localizations", {})
-    project_locales = config.get("project", {}).get("locales", [])
-    all_locales = set(project_locales)
-    if isinstance(localizations, dict):
-        all_locales.update(localizations.keys())
-
+    has_locale_previews = isinstance(localizations, dict) and any(
+        isinstance(l_cfg, dict) and "previewVideo" in l_cfg for l_cfg in localizations.values()
+    )
     locale_previews = {}
-    if all_locales:
+    if has_locale_previews:
+        project_locales = config.get("project", {}).get("locales", [])
+        all_locales = set(project_locales)
+        if isinstance(localizations, dict):
+            all_locales.update(localizations.keys())
         for locale in all_locales:
             l_cfg = localizations.get(locale, {}) if isinstance(localizations, dict) else {}
             l_pv = l_cfg.get("previewVideo", {}) if isinstance(l_cfg, dict) else {}

@@ -137,13 +137,42 @@ class PublicationOperations:
         import shutil
         from artifact_lifecycle import now, digest
         local_dir = self.paths.publications / publication_id / 'local_delivery'
+        manifest_file = local_dir / 'manifest.json'
+        receipt_file = local_dir / 'receipt.json'
+        expected_manifest_sha = manifest.get('manifest_sha256') or digest(package / 'manifest.json')
+
+        if manifest_file.exists() and receipt_file.exists():
+            if digest(manifest_file) != expected_manifest_sha:
+                raise ValueError('Existing local delivery manifest differs from sealed delivery')
+            receipt_data = json.loads(receipt_file.read_text())
+            if receipt_data.get('status') != 'PASS' or receipt_data.get('delivery_id') != delivery_id:
+                raise ValueError('Existing local delivery receipt is invalid')
+            for asset in manifest.get('assets', []):
+                rel_path = asset['path']
+                dst = local_dir / rel_path
+                if not dst.is_file() or digest(dst) != asset['sha256']:
+                    raise ValueError(f'Existing local delivery asset missing or corrupted: {rel_path}')
+            return local_dir
+
         local_dir.mkdir(parents=True, exist_ok=True)
-        (local_dir / 'manifest.json').write_text(json.dumps(manifest, indent=2))
+        for asset in manifest.get('assets', []):
+            rel_path = asset['path']
+            src = package / rel_path
+            dst = local_dir / rel_path
+            if src.is_file():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dst)
+                if digest(dst) != asset['sha256']:
+                    raise ValueError(f'Copied local delivery asset failed hash verification: {rel_path}')
+            else:
+                raise ValueError(f'Sealed package missing declared asset: {rel_path}')
+
+        manifest_file.write_text(json.dumps(manifest, indent=2))
         receipt = {
             'schema_version': 1,
             'publication_id': publication_id,
             'delivery_id': delivery_id,
-            'manifest_sha256': manifest.get('manifest_sha256') or digest(package / 'manifest.json'),
+            'manifest_sha256': expected_manifest_sha,
             'verified_at': now(),
             'status': 'PASS',
             'target': target,
@@ -156,14 +185,7 @@ class PublicationOperations:
                 'provenance_verified': True,
             }
         }
-        (local_dir / 'receipt.json').write_text(json.dumps(receipt, indent=2))
-        for asset in manifest.get('assets', []):
-            rel_path = asset['path']
-            src = package / rel_path
-            dst = local_dir / rel_path
-            if src.is_file():
-                dst.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(src, dst)
+        receipt_file.write_text(json.dumps(receipt, indent=2))
         return local_dir
 
     def plan_publication(self, delivery_id, archive_commit=None, remote_target=None, archive_remote=None,

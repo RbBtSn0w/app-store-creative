@@ -25,13 +25,15 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
         global_pv = config.get('previewVideo', {})
         global_enabled = global_pv.get('enabled', False)
         localizations = config.get('localizations', {})
-        project_locales = config.get('project', {}).get('locales', [])
-        all_locales = set(project_locales)
-        if isinstance(localizations, dict):
-            all_locales.update(localizations.keys())
-
+        has_locale_previews = isinstance(localizations, dict) and any(
+            isinstance(l_cfg, dict) and 'previewVideo' in l_cfg for l_cfg in localizations.values()
+        )
         effective_pvs = []
-        if all_locales:
+        if has_locale_previews:
+            project_locales = config.get('project', {}).get('locales', [])
+            all_locales = set(project_locales)
+            if isinstance(localizations, dict):
+                all_locales.update(localizations.keys())
             for loc in all_locales:
                 l_cfg = localizations.get(loc, {}) if isinstance(localizations, dict) else {}
                 l_pv = l_cfg.get('previewVideo', {}) if isinstance(l_cfg, dict) else {}

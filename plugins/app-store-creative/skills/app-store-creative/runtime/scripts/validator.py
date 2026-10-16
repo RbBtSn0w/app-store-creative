@@ -212,12 +212,23 @@ def _run_validation(repo_root, config_path, artifacts_dir, allow_silent_audio: b
                 or record.get('render_ready') is not True):
                 errors.append(f'Missing or stale render evidence: {name}; export the current project')
     preview = config.get("previewVideo", {})
+    global_enabled = preview.get("enabled", False)
     localizations = config.get("localizations", {})
+    has_locale_previews = isinstance(localizations, dict) and any(
+        isinstance(l_cfg, dict) and "previewVideo" in l_cfg for l_cfg in localizations.values()
+    )
     locale_previews = {}
-    if isinstance(localizations, dict):
-        for locale, l_cfg in localizations.items():
-            if isinstance(l_cfg, dict) and "previewVideo" in l_cfg:
-                locale_previews[locale] = {**preview, **l_cfg["previewVideo"]}
+    if has_locale_previews:
+        project_locales = config.get("project", {}).get("locales", [])
+        all_locales = set(project_locales)
+        if isinstance(localizations, dict):
+            all_locales.update(localizations.keys())
+        for locale in all_locales:
+            l_cfg = localizations.get(locale, {}) if isinstance(localizations, dict) else {}
+            l_pv = l_cfg.get("previewVideo", {}) if isinstance(l_cfg, dict) else {}
+            merged = {**preview, **l_pv}
+            if merged.get("enabled", global_enabled):
+                locale_previews[locale] = merged
 
     if locale_previews:
         for locale, lp in locale_previews.items():
