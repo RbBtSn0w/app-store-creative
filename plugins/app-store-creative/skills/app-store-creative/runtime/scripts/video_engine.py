@@ -2,8 +2,9 @@
 """App Preview video generation engine for App Store Creative v2.0."""
 
 import json
-import sys
+import shutil
 import subprocess
+import sys
 import produce_app_preview
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -69,9 +70,11 @@ def produce_preview_from_config(
         if not src_path.exists():
             raise FileNotFoundError(f"Source video not found: {src_path}")
 
-        probe = probe_video(src_path)
-        streams = probe.get("streams", [])
-        has_audio = any(s.get("codec_type") == "audio" for s in streams)
+        has_audio = False
+        if shutil.which("ffprobe"):
+            probe = probe_video(src_path)
+            streams = probe.get("streams", [])
+            has_audio = any(s.get("codec_type") == "audio" for s in streams)
 
         audio_src_rel = p_cfg.get("audioSource") or p_cfg.get("audio_source")
         audio_src_path = (repo_root / audio_src_rel).resolve() if audio_src_rel else None
