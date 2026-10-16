@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import subprocess
+import shutil
 import sys
 import tempfile
 import unittest
@@ -85,6 +86,9 @@ class AudioAndTTSCapabilitiesTests(unittest.TestCase):
     def test_macos_speech_synthesizer_script_exists_and_runnable(self):
         script = Path(__file__).parents[1] / "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/macos_speech_synthesizer.swift"
         self.assertTrue(script.is_file(), "macos_speech_synthesizer.swift must exist")
+
+        if sys.platform != "darwin" or not shutil.which("swift"):
+            self.skipTest("macOS with Swift and AVFoundation required to run native speech synthesizer")
 
         # Test --help flag with swift
         res = subprocess.run(["swift", str(script), "--help"], capture_output=True, text=True)

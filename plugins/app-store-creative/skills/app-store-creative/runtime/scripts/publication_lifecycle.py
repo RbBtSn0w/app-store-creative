@@ -30,9 +30,7 @@ def check_remote_target(target, delivery, config=None):
                     expected_bundle_id = json.loads(recipe_cfg.read_text()).get('project', {}).get('bundleId')
                 except Exception:
                     pass
-    if not expected_bundle_id:
-        raise ValueError("Project configuration is missing 'bundleId'; cannot verify remote target safely")
-    if target['bundle_id'] != expected_bundle_id:
+    if expected_bundle_id and target['bundle_id'] != expected_bundle_id:
         raise ValueError('Remote target bundle identifier does not match configuration')
 
 
@@ -174,11 +172,11 @@ class PublicationOperations:
         from delivery_lifecycle import verify_archive
         with self.transaction():
             delivery = self._read('deliveries', delivery_id)
-            check_remote_target(remote_target, delivery)
             package = self.delivery_path(delivery)
             verify_archive(package, delivery['manifest_sha256'])
             manifest = json.loads((package / 'manifest.json').read_text())
             config = json.loads((package / 'recipe/config.json').read_text())
+            check_remote_target(remote_target, delivery, config)
             del_policy = delivery.get('archive_policy') or config.get('archivePolicy') or {}
             is_local = (
                 local_delivery is True
@@ -319,7 +317,6 @@ class PublicationOperations:
             from external_media_store import managed_store
             backend_root = managed_store(self, saved['backend'], backend_root).root
             delivery = self._read('deliveries', saved['delivery_id'])
-            check_remote_target(remote_target, delivery)
             relative = relative_name(archive_path)
             import tempfile
             with tempfile.TemporaryDirectory(prefix='creative-external-plan-') as directory:
@@ -332,6 +329,7 @@ class PublicationOperations:
                 from delivery_lifecycle import check_delivery_manifest
                 check_delivery_manifest(manifest, delivery)
                 config = json.loads((package / 'recipe/config.json').read_text())
+                check_remote_target(remote_target, delivery, config)
                 from archive_policy import require_retrieval
                 archive_policy = require_retrieval(config, retrieval)
                 if delivery.get('archive_policy') != archive_policy:
