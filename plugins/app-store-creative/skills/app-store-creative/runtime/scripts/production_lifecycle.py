@@ -20,21 +20,48 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
     if expected_revision is not None and expected_revision != '"' + core._configuration_layers.revision + '"':
         raise ValueError('Project changed after review; save and export again')
     config = contract.check_config(core.config)
-    poster_timestamp = None
-    if with_video and config.get('previewVideo', {}).get('enabled') and config['previewVideo'].get('posterRequired'):
+    if with_video:
         from managed_poster import timestamp_from_time_code
-        poster_timestamp = timestamp_from_time_code(config['previewVideo'].get('posterFrameTimeCode'),
-                                                   config['previewVideo'].get('fps', 30))
+        global_pv = config.get('previewVideo', {})
+        if global_pv.get('enabled') and global_pv.get('posterRequired'):
+            timestamp_from_time_code(global_pv.get('posterFrameTimeCode'), global_pv.get('fps', 30))
+        localizations = config.get('localizations', {})
+        if isinstance(localizations, dict):
+            for l_cfg in localizations.values():
+                if isinstance(l_cfg, dict) and 'previewVideo' in l_cfg:
+                    l_pv = {**global_pv, **l_cfg['previewVideo']}
+                    if l_pv.get('enabled') and l_pv.get('posterRequired'):
+                        timestamp_from_time_code(l_pv.get('posterFrameTimeCode'), l_pv.get('fps', 30))
     publishing = config.get('publishing', {})
     platform = publishing.get('platform') or ('MAC_OS' if all(t.startswith('mac_') for t in config.get('targets', [])) else 'IOS')
     sources, input_errors = contract.input_hashes(root, config, targets, locales)
-    if with_video and config.get('previewVideo', {}).get('enabled'):
-        name = relative_name(config['previewVideo'].get('source', ''))
-        path = root / name
-        if not path.is_file() or path.is_symlink() or not path.resolve().is_relative_to(root):
+    if with_video:
+        pv_sources = []
+        global_pv = config.get('previewVideo', {})
+        if global_pv.get('enabled'):
+            if global_pv.get('source'):
+                pv_sources.append(global_pv['source'])
+            if global_pv.get('audioSource') or global_pv.get('audio_source'):
+                pv_sources.append(global_pv.get('audioSource') or global_pv.get('audio_source'))
+        localizations = config.get('localizations', {})
+        if isinstance(localizations, dict):
+            for l_cfg in localizations.values():
+                if isinstance(l_cfg, dict) and 'previewVideo' in l_cfg:
+                    l_pv = l_cfg['previewVideo']
+                    if l_pv.get('enabled', global_pv.get('enabled', False)):
+                        if l_pv.get('source'):
+                            pv_sources.append(l_pv['source'])
+                        if l_pv.get('audioSource') or l_pv.get('audio_source'):
+                            pv_sources.append(l_pv.get('audioSource') or l_pv.get('audio_source'))
+        if global_pv.get('enabled') and not pv_sources:
             input_errors.append('Preview source must be a managed local regular file')
-        else:
-            sources[name] = digest(path)
+        for src in set(pv_sources):
+            name = relative_name(src)
+            path = root / name
+            if not path.is_file() or path.is_symlink() or not path.resolve().is_relative_to(root):
+                input_errors.append('Preview source must be a managed local regular file')
+            else:
+                sources[name] = digest(path)
     run = core.start_run({'platform': platform, 'version': publishing.get('version') or 'draft'}, source_hashes=sources)
     attempt = core.start_attempt(run['id'], 'export', 'creative-producer')
     work = core.work_path(attempt['id']); input_root = work / 'inputs'; outputs = work / 'outputs'
@@ -107,16 +134,28 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                                                   inputs=source_ids + [receipt['id']],
                                                   logical_path=logical_preview)['id'])
         core.finish_attempt(attempt['id'], 'succeeded')
-        if poster_timestamp is not None:
-            from managed_poster import produce as produce_poster
+        if with_video:
+            from managed_poster import produce as produce_poster, timestamp_from_time_code
             preview_ids = [item for item in selected if core._read('artifacts', item)['role'] == 'preview']
+            has_posters = False
             for p_id in preview_ids:
-                poster = produce_poster(core, run['id'], p_id, poster_timestamp, 'creative-producer')
-                selected.append(poster['poster_artifact_id'])
-            core._live_configuration()
-            if cfg.read_bytes() != raw or any(digest(contract.local_asset(root, name, config)) != sha
-                                             for name, sha in original_hashes.items()):
-                raise ValueError('Inputs changed during poster production; review and retry')
+                art = core._read('artifacts', p_id)
+                log_path = art.get('logical_path', '')
+                parts = log_path.split('/')
+                target_cfg = dict(config.get('previewVideo', {}))
+                if len(parts) == 3 and parts[1] == 'preview':
+                    locale_key = parts[0]
+                    target_cfg.update(config.get('localizations', {}).get(locale_key, {}).get('previewVideo', {}))
+                if target_cfg.get('enabled') and target_cfg.get('posterRequired'):
+                    ts = timestamp_from_time_code(target_cfg.get('posterFrameTimeCode'), target_cfg.get('fps', 30))
+                    poster = produce_poster(core, run['id'], p_id, ts, 'creative-producer')
+                    selected.append(poster['poster_artifact_id'])
+                    has_posters = True
+            if has_posters:
+                core._live_configuration()
+                if cfg.read_bytes() != raw or any(digest(contract.local_asset(root, name, config)) != sha
+                                                 for name, sha in original_hashes.items()):
+                    raise ValueError('Inputs changed during poster production; review and retry')
         candidate = core.select(run['id'], selected)
         validation = core.validate_candidate(candidate['id'])
         return {'status': validation['status'], 'run_id': run['id'], 'attempt_id': attempt['id'],

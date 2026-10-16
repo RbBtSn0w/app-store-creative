@@ -309,13 +309,14 @@ def _run_validation(repo_root, config_path, artifacts_dir, allow_silent_audio: b
             )
             loudness = inspect_audio_loudness(mp4)
             if not allow_silent:
-                if not loudness and not shutil.which("ffmpeg"):
+                if not shutil.which("ffmpeg"):
                     raise ValueError("ffmpeg is required to inspect App Preview audio loudness")
-                elif loudness:
-                    mean_vol = loudness.get("mean_volume")
-                    max_vol = loudness.get("max_volume")
-                    if (mean_vol is not None and mean_vol < -80.0) or (max_vol is not None and max_vol < -80.0):
-                        raise ValueError("App Preview audio track is silent (< -80 dB); audible commentary or soundtrack required")
+                if not loudness or "mean_volume" not in loudness:
+                    raise ValueError("ffmpeg failed to detect audio loudness in App Preview")
+                mean_vol = loudness.get("mean_volume")
+                max_vol = loudness.get("max_volume")
+                if (mean_vol is not None and mean_vol < -80.0) or (max_vol is not None and max_vol < -80.0):
+                    raise ValueError("App Preview audio track is silent (< -80 dB); audible commentary or soundtrack required")
             if not 14.95 <= duration <= 30.05 or not 0 < fps <= 30:
                 raise ValueError("App Preview requires 15-30 seconds and at most 30 fps")
             is_mac = any(x.startswith("mac_") for x in config.get("targets", []))

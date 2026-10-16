@@ -58,6 +58,7 @@ func run() async throws {
           let width = plan["width"] as? Int, let height = plan["height"] as? Int,
           let fps = plan["fps"] as? Int,
           plan["capture_scope"] as? String == "window", plan["include_cursor"] as? Bool == false,
+          plan["capture_audio"] == nil || plan["capture_audio"] is Bool,
           duration.isFinite, duration > 0, duration <= 3600,
           width > 0, width <= 7680, height > 0, height <= 7680, fps > 0, fps <= 60 else {
         throw CaptureError(description: "Invalid bounded window recording plan")

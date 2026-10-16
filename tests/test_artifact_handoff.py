@@ -63,7 +63,8 @@ class ArtifactHandoffTests(unittest.TestCase):
             {"codec_type": "video", "codec_name": "h264", "width": 1920,
              "height": 1080, "r_frame_rate": "30/1"},
             {"codec_type": "audio", "codec_name": "aac"}]}
-        with mock.patch("validator.inspect_video_file", return_value=probe):
+        with mock.patch("validator.inspect_video_file", return_value=probe), \
+             mock.patch("validator.inspect_audio_loudness", return_value={"mean_volume": -20.0, "max_volume": -1.0}):
             self.assertEqual(self.verify()["status"], "PASS")
             probe["streams"][0]["width"] = 100
             self.assertEqual(self.verify()["status"], "FAIL")

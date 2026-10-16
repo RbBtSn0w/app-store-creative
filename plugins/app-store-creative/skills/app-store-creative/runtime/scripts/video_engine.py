@@ -43,14 +43,17 @@ def produce_preview_from_config(
 
     config = json.loads(cfg_file.read_text())
     preview_cfg = config.get("previewVideo", {})
+    global_enabled = preview_cfg.get("enabled", False)
     localizations = config.get("localizations", {})
     locale_previews = {}
     if isinstance(localizations, dict):
         for locale, l_cfg in localizations.items():
             if isinstance(l_cfg, dict) and "previewVideo" in l_cfg:
-                locale_previews[locale] = {**preview_cfg, **l_cfg["previewVideo"]}
+                merged = {**preview_cfg, **l_cfg["previewVideo"]}
+                if merged.get("enabled", global_enabled):
+                    locale_previews[locale] = merged
 
-    if not preview_cfg.get("enabled", False) and not locale_previews:
+    if not global_enabled and not locale_previews:
         return None
 
     out_root = output_dir or (repo_root / "artifacts")
@@ -139,7 +142,8 @@ def produce_preview_from_config(
             "logical_path": first["logical_path"],
             "videos": videos,
         }
-    else:
+    elif global_enabled:
         logical_path = "preview/app_preview.mp4"
         target_out = out_root / "preview" / "app_preview.mp4"
         return _produce_single(preview_cfg, target_out, logical_path)
+    return None

@@ -98,6 +98,16 @@ class ValidatorAudioLoudnessTests(unittest.TestCase):
             result = validator.run_validation(self.root)
             self.assertEqual(result["status"], "PASS")
 
+    def test_loudness_detection_failure_raises_when_not_allowed(self):
+        (self.root / "creative.config.json").write_text(json.dumps(self.base_config))
+        with mock.patch("validator.inspect_video_file", return_value=self.valid_probe), \
+             mock.patch("shutil.which", return_value="/usr/bin/ffmpeg"), \
+             mock.patch("validator.inspect_audio_loudness", return_value={}):
+            result = validator.run_validation(self.root)
+            self.assertEqual(result["status"], "FAIL")
+            self.assertTrue(any("ffmpeg failed to detect audio loudness in App Preview" in err for err in result["errors"]))
+
+
 
 class ValidatorMultiLocaleTests(unittest.TestCase):
     def setUp(self):

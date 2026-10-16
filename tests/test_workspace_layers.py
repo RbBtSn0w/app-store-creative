@@ -74,7 +74,7 @@ class WorkspaceLayersTests(unittest.TestCase):
 
         # Check git status: untracked files should not include anything inside .cache
         result = subprocess.run(
-            ["git", "-C", str(self.root), "status", "--porcelain"],
+            ["git", "-C", str(self.root), "status", "--porcelain", "-uall"],
             capture_output=True, text=True, check=True
         )
         for line in result.stdout.splitlines():
