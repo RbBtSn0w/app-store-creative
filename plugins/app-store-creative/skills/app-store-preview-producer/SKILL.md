@@ -53,6 +53,13 @@ python3 <runtime-root>/scripts/produce_app_preview.py --contract <contract-file>
 
 Run without `--execute` to inspect the derived media command. Add `--execute` only after reviewing the contract and command.
 
+### Audio Engineering & 3-Tier Neural TTS
+
+Preview voiceover commentary and background audio must comply with [audio-standards.md](references/audio-standards.md):
+- **3-Tier Hierarchy**: Tier 1 Cloud Neural TTS (Azure/Edge-TTS) -> Tier 2 macOS Native Enhanced Voice (`macos_speech_synthesizer.swift`) -> Tier 3 Silent Fallback (requires explicit `allowSilentAudio: true`).
+- **Ducking Mix**: Background music must duck by `-12 dB` under narration with smooth 150ms/400ms envelopes.
+- **Loudness Compliance**: Final preview audio tracks must target `-14 LUFS` integrated loudness and pass the anti-silence gate (`mean_volume >= -80 dB`).
+
 For changed story, interaction, pacing, or locale, use the [iteration contract](../app-store-creative/references/iteration-contract.md) to isolate affected real UI segments. Register current source takes, final intervals, output hashes, and producer evidence against a new managed attempt. Do not upload or request either approval from this skill.
 
 ### Registered timeline inputs

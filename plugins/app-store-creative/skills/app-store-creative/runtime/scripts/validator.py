@@ -5,6 +5,7 @@ import hashlib
 import studio_contract as contract
 import json
 import os
+import re
 import shutil
 import subprocess
 from datetime import datetime, timezone
@@ -51,9 +52,48 @@ def get_git_commit(repo_root: Path) -> Optional[str]:
         return None
 
 
+def probe_png_format(data: bytes) -> Dict[str, Any]:
+    """Inspect PNG header chunks to extract exact width, height, bit_depth, color_type, and alpha presence."""
+    if len(data) < 24 or not data.startswith(b'\x89PNG\r\n\x1a\n'):
+        raise ValueError("Invalid PNG header")
+    import struct
+    ihdr_len = int.from_bytes(data[8:12], 'big')
+    ihdr_type = data[12:16]
+    if ihdr_type != b'IHDR' or ihdr_len != 13:
+        raise ValueError("Invalid PNG IHDR chunk")
+    width, height, bit_depth, color_type = struct.unpack('>IIBB', data[16:26])
+    has_alpha_channel = color_type in (4, 6)
+    has_trns = False
+    offset = 8
+    while offset + 8 <= len(data):
+        chunk_len = int.from_bytes(data[offset:offset+4], 'big')
+        chunk_type = data[offset+4:offset+8]
+        if chunk_type == b'tRNS':
+            has_trns = True
+            break
+        if chunk_type == b'IEND':
+            break
+        offset += 12 + chunk_len
+    has_alpha = has_alpha_channel or has_trns
+    mode = {0: 'L', 2: 'RGB', 3: 'P', 4: 'LA', 6: 'RGBA'}.get(color_type, 'UNKNOWN')
+    return {
+        'width': width,
+        'height': height,
+        'bit_depth': bit_depth,
+        'color_type': color_type,
+        'mode': mode,
+        'has_alpha': has_alpha,
+    }
+
+
 def read_image_meta(path: Path) -> Tuple[int, int, bool]:
     """Validate PNG chunks and pixel data before returning image metadata."""
-    return contract.inspect_png(path.read_bytes())
+    data = path.read_bytes()
+    w, h, has_alpha = contract.inspect_png(data)
+    probe = probe_png_format(data)
+    if probe['has_alpha']:
+        has_alpha = True
+    return w, h, has_alpha
 
 
 def match_target_spec(path_part: str) -> Optional[str]:
@@ -78,6 +118,28 @@ def inspect_video_file(path: Path) -> Dict[str, Any]:
     return json.loads(result.stdout)
 
 
+def inspect_audio_loudness(path: Path) -> Dict[str, float]:
+    """Measure mean and max volume in dB using ffmpeg volumedetect filter."""
+    if not shutil.which("ffmpeg"):
+        return {}
+    try:
+        from media_tool_identity import MediaTools
+        ffmpeg = MediaTools().paths.get("ffmpeg", "ffmpeg")
+    except Exception:
+        ffmpeg = shutil.which("ffmpeg") or "ffmpeg"
+    cmd = [ffmpeg, "-nostdin", "-hide_banner", "-i", str(path),
+           "-vn", "-af", "volumedetect", "-f", "null", "-"]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    result = {}
+    mean_match = re.search(r"mean_volume:\s*(-?[0-9.]+)\s*dB", res.stderr)
+    max_match = re.search(r"max_volume:\s*(-?[0-9.]+)\s*dB", res.stderr)
+    if mean_match:
+        result["mean_volume"] = float(mean_match.group(1))
+    if max_match:
+        result["max_volume"] = float(max_match.group(1))
+    return result
+
+
 def declared_screenshots(config: Dict[str, Any]) -> List[str]:
     """Return the complete ordered screenshot matrix declared by the project."""
     return [f"{locale}/{target}/{card['id']}.png"
@@ -90,14 +152,15 @@ def run_validation(
     repo_root: Path,
     config_path: Optional[Path] = None,
     artifacts_dir: Optional[Path] = None,
+    allow_silent_audio: bool = False,
 ) -> Dict[str, Any]:
     # Studio saves and export publication share this lock; external writers are
     # also detected by the snapshot checks before verification is published.
     with contract.WRITE_LOCK:
-        return _run_validation(repo_root, config_path, artifacts_dir)
+        return _run_validation(repo_root, config_path, artifacts_dir, allow_silent_audio=allow_silent_audio)
 
 
-def _run_validation(repo_root, config_path, artifacts_dir):
+def _run_validation(repo_root, config_path, artifacts_dir, allow_silent_audio: bool = False):
     """Validate all assets in artifacts against App Store rules, with zero network dependencies."""
     cfg_file = config_path or (repo_root / "creative.config.json")
     if not cfg_file.exists():
@@ -149,7 +212,23 @@ def _run_validation(repo_root, config_path, artifacts_dir):
                 or record.get('render_ready') is not True):
                 errors.append(f'Missing or stale render evidence: {name}; export the current project')
     preview = config.get("previewVideo", {})
-    if preview.get("enabled"):
+    localizations = config.get("localizations", {})
+    locale_previews = {}
+    if isinstance(localizations, dict):
+        for locale, l_cfg in localizations.items():
+            if isinstance(l_cfg, dict) and "previewVideo" in l_cfg:
+                locale_previews[locale] = {**preview, **l_cfg["previewVideo"]}
+
+    if locale_previews:
+        for locale, lp in locale_previews.items():
+            source = lp.get("source")
+            if not source or not (repo_root / source).is_file():
+                errors.append(f"Enabled previewVideo for {locale} requires an existing real source recording")
+            if not (art_dir / f"{locale}/preview/app_preview.mp4").is_file():
+                errors.append(f"Missing declared App Preview: {locale}/preview/app_preview.mp4")
+            if lp.get("posterRequired") and not (art_dir / f"{locale}/preview/poster.png").is_file():
+                errors.append(f"Missing declared poster: {locale}/preview/poster.png")
+    elif preview.get("enabled"):
         source = preview.get("source")
         if not source or not (repo_root / source).is_file():
             errors.append("Enabled previewVideo requires an existing real source recording")
@@ -174,7 +253,8 @@ def _run_validation(repo_root, config_path, artifacts_dir):
         # 2. Dimensions and Alpha check
         try:
             w, h, has_alpha = read_image_meta(png)
-            if has_alpha:
+            allow_alpha = config.get("project", {}).get("allowAlpha", False) or config.get("allowAlpha", False)
+            if has_alpha and not allow_alpha:
                 errors.append(f"Screenshot contains Alpha channel (Apple requires 24-bit RGB without transparency): {rel}")
 
             # Match target directory to expected dimensions
@@ -216,31 +296,58 @@ def _run_validation(repo_root, config_path, artifacts_dir):
             width, height = int(video["width"]), int(video["height"])
             if video.get("codec_name") != "h264" or audio.get("codec_name") != "aac":
                 raise ValueError("App Preview requires H.264 video and AAC audio")
+            rel_str = str(rel)
+            v_preview = preview
+            for loc, lp in locale_previews.items():
+                if rel_str.startswith(f"{loc}/preview/"):
+                    v_preview = lp
+                    break
+            allow_silent = (
+                allow_silent_audio
+                or v_preview.get("allowSilentAudio", False)
+                or config.get("allowSilentAudio", False)
+            )
+            loudness = inspect_audio_loudness(mp4)
+            if not allow_silent:
+                if not loudness and not shutil.which("ffmpeg"):
+                    raise ValueError("ffmpeg is required to inspect App Preview audio loudness")
+                elif loudness:
+                    mean_vol = loudness.get("mean_volume")
+                    max_vol = loudness.get("max_volume")
+                    if (mean_vol is not None and mean_vol < -80.0) or (max_vol is not None and max_vol < -80.0):
+                        raise ValueError("App Preview audio track is silent (< -80 dB); audible commentary or soundtrack required")
             if not 14.95 <= duration <= 30.05 or not 0 < fps <= 30:
                 raise ValueError("App Preview requires 15-30 seconds and at most 30 fps")
             is_mac = any(x.startswith("mac_") for x in config.get("targets", []))
-            portrait = preview.get("orientation", "portrait") == "portrait" and not is_mac
-            expected_size = (int(preview.get("width", 886 if portrait else 1920)),
-                             int(preview.get("height", 1920 if portrait else (1080 if is_mac else 886))))
+            portrait = v_preview.get("orientation", "portrait") == "portrait" and not is_mac
+            expected_size = (int(v_preview.get("width", 886 if portrait else 1920)),
+                             int(v_preview.get("height", 1920 if portrait else (1080 if is_mac else 886))))
             if (width, height) != expected_size:
                 raise ValueError(f"App Preview dimensions must be {expected_size}")
-            if abs(fps - float(preview.get("fps", 30))) > .01:
+            if abs(fps - float(v_preview.get("fps", 30))) > .01:
                 raise ValueError("App Preview fps differs from configuration")
-            if preview.get("enabled") and abs(duration - float(preview.get("duration", 20))) > .05:
+            if (v_preview.get("enabled") or locale_previews) and abs(duration - float(v_preview.get("duration", 20))) > .05:
                 raise ValueError("App Preview duration differs from configuration")
-            asset_records[str(rel)] = {"sha256": sha, "type": "video", "size_bytes": size_bytes,
-                                       "duration": duration, "fps": fps, "width": width, "height": height,
-                                       "video_codec": video["codec_name"], "audio_codec": audio["codec_name"]}
+            v_rec = {"sha256": sha, "type": "video", "size_bytes": size_bytes,
+                     "duration": duration, "fps": fps, "width": width, "height": height,
+                     "video_codec": video["codec_name"], "audio_codec": audio["codec_name"]}
+            if loudness:
+                if "mean_volume" in loudness:
+                    v_rec["mean_volume_db"] = loudness["mean_volume"]
+                if "max_volume" in loudness:
+                    v_rec["max_volume_db"] = loudness["max_volume"]
+            asset_records[str(rel)] = v_rec
         except Exception as exc:
             errors.append(f"Failed to validate video {rel}: {exc}")
 
-    poster_record = asset_records.get("preview/poster.png")
-    if poster_record:
-        preview_record = asset_records.get("preview/app_preview.mp4")
+    poster_records = {k: v for k, v in asset_records.items() if k.endswith("preview/poster.png")}
+    for poster_path, poster_record in poster_records.items():
+        expected_preview_path = poster_path.replace("poster.png", "app_preview.mp4")
+        preview_record = asset_records.get(expected_preview_path)
         if not preview_record or preview_record.get("type") != "video":
-            errors.append("Poster requires a validated App Preview")
+            errors.append(f"Poster requires a validated App Preview: {poster_path}")
         elif (poster_record["width"], poster_record["height"]) != (preview_record["width"], preview_record["height"]):
-            errors.append("Poster dimensions must match the validated App Preview")
+            errors.append(f"Poster dimensions must match the validated App Preview: {poster_path}")
 
     # Return probe facts; the lifecycle core owns immutable validation records.
     lock_data = {

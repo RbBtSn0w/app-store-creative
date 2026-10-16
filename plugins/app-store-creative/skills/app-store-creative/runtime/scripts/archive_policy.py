@@ -15,14 +15,14 @@ def resolve(config, *, required=False):
             or set(raw) - {'schema_version', 'mediaMode', 'backend'}):
         raise ValueError('Invalid archive policy schema or fields')
     mode = raw.get('mediaMode')
-    if not isinstance(mode, str) or mode not in ('git', 'lfs', 'external'):
+    if not isinstance(mode, str) or mode not in ('git', 'lfs', 'external', 'local'):
         raise ValueError('Invalid archive policy media mode')
     if mode == 'external':
         backend = raw.get('backend')
         if not isinstance(backend, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}', backend):
             raise ValueError('External archive policy requires a named backend')
     elif 'backend' in raw:
-        raise ValueError('Git and LFS archive policy cannot declare a backend')
+        raise ValueError('Git, LFS, and local archive policy cannot declare a backend')
     return dict(raw)
 
 

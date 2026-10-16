@@ -145,7 +145,9 @@ def add_commands(subparsers):
     select = candidate.add_parser('select')
     select.add_argument('--run-id', required=True)
     select.add_argument('--artifact', action='append', required=True)
-    candidate.add_parser('validate').add_argument('--id', required=True)
+    validate_parser = candidate.add_parser('validate')
+    validate_parser.add_argument('--id', required=True)
+    validate_parser.add_argument('--allow-silent-audio', action='store_true', default=False)
     candidate.add_parser('review').add_argument('--id', required=True)
     discard = candidate.add_parser('discard')
     discard.add_argument('--id', required=True)
@@ -218,7 +220,8 @@ def add_commands(subparsers):
     listing.add_argument('--cursor')
     plan = publication.add_parser('plan')
     plan.add_argument('--delivery-id', required=True)
-    plan.add_argument('--archive-commit', required=True)
+    plan.add_argument('--archive-commit', default=None)
+    plan.add_argument('--local-delivery', action='store_true')
     plan.add_argument('--archive-remote')
     plan.add_argument('--archive-repository')
     plan.add_argument('--archive-path')
@@ -256,6 +259,10 @@ def add_commands(subparsers):
     normalize.add_argument('--id', required=True)
     normalize.add_argument('--response', type=Path, required=True)
     normalize.add_argument('--scope', type=Path, required=True)
+    normalize_screenshots = publication.add_parser('normalize-asc-screenshots')
+    normalize_screenshots.add_argument('--id', required=True)
+    normalize_screenshots.add_argument('--response', type=Path, required=True)
+    normalize_screenshots.add_argument('--scope', type=Path, required=True)
     export = publication.add_parser('export')
     export.add_argument('--id', required=True)
     export.add_argument('--confirm', action='store_true')
@@ -511,7 +518,7 @@ def execute(args):
         if args.action == 'discard':
             return core.discard_candidate(args.id, args.actor, args.reason)
         if args.action == 'validate':
-            return core.validate_candidate(args.id)
+            return core.validate_candidate(args.id, allow_silent_audio=getattr(args, 'allow_silent_audio', False))
         return core.select(args.run_id, args.artifact)
     if args.command == 'publication':
         if args.action == 'list':
@@ -524,6 +531,14 @@ def execute(args):
             with core.transaction():
                 plan = core._read('publications', args.id, 'plan')
                 return {'remote_write': False, 'observations': preview_observations(plan, response, scope)}
+        if args.action == 'normalize-asc-screenshots':
+            from asc_observation_adapter import screenshot_observations
+            from configuration_layers import _read_regular
+            response = _read_regular(local(args.response))
+            scope = json.loads(_read_regular(local(args.scope)))
+            with core.transaction():
+                plan = core._read('publications', args.id, 'plan')
+                return {'remote_write': False, 'observations': screenshot_observations(plan, response, scope)}
         if args.action == 'persist-evidence':
             return core.persist_observation_evidence(args.evidence_id, args.backend,
                 local(args.backend_root) if args.backend_root else None)
@@ -545,8 +560,11 @@ def execute(args):
             return core.plan_external_publication(args.external_archive_id, args.archive_commit,
                 args.archive_path, json.loads(local(args.target).read_text()), local(args.backend_root) if args.backend_root else None, args.archive_remote)
         if args.action == 'plan':
+            if not args.archive_commit and not args.local_delivery:
+                raise ValueError('Archive commit is required unless --local-delivery is specified')
             return core.plan_publication(args.delivery_id, args.archive_commit, json.loads(local(args.target).read_text()), args.archive_remote,
-                                         archive_repository=args.archive_repository, archive_path=args.archive_path)
+                                         archive_repository=args.archive_repository, archive_path=args.archive_path,
+                                         local_delivery=args.local_delivery)
         return core.publication_status(args.id, args.max_age_seconds)
     if args.command == 'approval':
         if args.action == 'record-upload':

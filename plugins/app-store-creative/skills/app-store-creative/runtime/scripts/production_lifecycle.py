@@ -84,26 +84,35 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                                               inputs=dependencies, logical_path=output['name'])['id'])
             if video:
                 from managed_preview import portable_receipt
-                preview_path = Path(video['path'])
-                receipt_path = Path(video['receipt_path'])
-                frames_path = Path(video['frames_path'])
-                video_outputs = [(preview_path, 'preview', 'preview/app_preview.mp4'),
-                                 (receipt_path, 'producer-evidence', 'evidence/preview-receipt.json'),
-                                 (frames_path, 'producer-evidence', 'evidence/preview-frames.png')]
-                receipt_path.write_bytes(canonical(portable_receipt(
-                    json.loads(receipt_path.read_bytes()), input_root, video_outputs, input_prefix='')))
-                frames = core.register(attempt['id'], frames_path, 'producer-evidence', inputs=source_ids,
-                                       logical_path='evidence/preview-frames.png')
-                receipt = core.register(attempt['id'], receipt_path, 'producer-evidence',
-                                        inputs=source_ids + [frames['id']], logical_path='evidence/preview-receipt.json')
-                selected.append(core.register(attempt['id'], preview_path, 'preview',
-                                              inputs=source_ids + [receipt['id']],
-                                              logical_path='preview/app_preview.mp4')['id'])
+                video_items = video['videos'].values() if 'videos' in video else [video]
+                for v in video_items:
+                    preview_path = Path(v['path'])
+                    receipt_path = Path(v['receipt_path'])
+                    frames_path = Path(v['frames_path'])
+                    logical_preview = v.get('logical_path', 'preview/app_preview.mp4')
+                    preview_dir = Path(logical_preview).parent.as_posix()
+                    evidence_prefix = f'evidence/{preview_dir}' if preview_dir != 'preview' else 'evidence'
+                    logical_receipt = f'{evidence_prefix}/preview-receipt.json'
+                    logical_frames = f'{evidence_prefix}/preview-frames.png'
+                    video_outputs = [(preview_path, 'preview', logical_preview),
+                                     (receipt_path, 'producer-evidence', logical_receipt),
+                                     (frames_path, 'producer-evidence', logical_frames)]
+                    receipt_path.write_bytes(canonical(portable_receipt(
+                        json.loads(receipt_path.read_bytes()), input_root, video_outputs, input_prefix='')))
+                    frames = core.register(attempt['id'], frames_path, 'producer-evidence', inputs=source_ids,
+                                           logical_path=logical_frames)
+                    receipt = core.register(attempt['id'], receipt_path, 'producer-evidence',
+                                            inputs=source_ids + [frames['id']], logical_path=logical_receipt)
+                    selected.append(core.register(attempt['id'], preview_path, 'preview',
+                                                  inputs=source_ids + [receipt['id']],
+                                                  logical_path=logical_preview)['id'])
         core.finish_attempt(attempt['id'], 'succeeded')
         if poster_timestamp is not None:
             from managed_poster import produce as produce_poster
-            poster = produce_poster(core, run['id'], selected[-1], poster_timestamp, 'creative-producer')
-            selected.append(poster['poster_artifact_id'])
+            preview_ids = [item for item in selected if core._read('artifacts', item)['role'] == 'preview']
+            for p_id in preview_ids:
+                poster = produce_poster(core, run['id'], p_id, poster_timestamp, 'creative-producer')
+                selected.append(poster['poster_artifact_id'])
             core._live_configuration()
             if cfg.read_bytes() != raw or any(digest(contract.local_asset(root, name, config)) != sha
                                              for name, sha in original_hashes.items()):

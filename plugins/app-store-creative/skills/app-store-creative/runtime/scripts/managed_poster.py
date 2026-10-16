@@ -60,25 +60,31 @@ def produce(core, run_id, preview_id, timestamp, owner, retry_of=None):
     attempt = core.start_attempt(run_id, 'poster', owner, retry_of=retry_of)
     work = Path(attempt['work_path']); output = work / 'poster.png'
     dependencies = [preview_id]
+    source_logical = source.get('logical_path') or 'preview/app_preview.mp4'
+    preview_dir = Path(source_logical).parent.as_posix()
+    logical_poster = f'{preview_dir}/poster.png' if preview_dir != '.' else 'preview/poster.png'
+    evidence_prefix = f'evidence/{preview_dir}' if preview_dir != 'preview' else 'evidence'
+    logical_plan = f'{evidence_prefix}/poster-plan.json'
+    logical_receipt = f'{evidence_prefix}/poster-receipt.json'
     try:
         with core.keep_lease(attempt['id']):
             plan_path = work / 'poster-plan.json'
             plan_path.write_bytes(canonical({'schema_version':1, 'kind':'preview-poster-plan',
                 'source_artifact_id':preview_id, 'source_sha256':source['sha256'],
-                'timestamp_seconds':timestamp, 'output':'media/preview/poster.png'}))
+                'timestamp_seconds':timestamp, 'output':f'media/{logical_poster}'}))
             plan = core.register(attempt['id'], plan_path, 'source', inputs=[preview_id],
-                                 logical_path='evidence/poster-plan.json')
+                                 logical_path=logical_plan)
             dependencies.append(plan['id'])
             media = extract(core.object_path(source['sha256']), output, timestamp)
             receipt_path = work / 'poster-receipt.json'
             receipt_path.write_bytes(canonical({'schema_version':1, 'kind':'preview-poster',
                 'source_artifact_id':preview_id, 'source_sha256':source['sha256'],
-                'timestamp_seconds':timestamp, 'media':media, 'output':'media/preview/poster.png',
+                'timestamp_seconds':timestamp, 'media':media, 'output':f'media/{logical_poster}',
                 'uploaded':False, 'visual_approval_granted':False}))
             receipt = core.register(attempt['id'], receipt_path, 'producer-evidence',
-                inputs=dependencies, logical_path='evidence/poster-receipt.json')
+                inputs=dependencies, logical_path=logical_receipt)
             poster = core.register(attempt['id'], output, 'poster',
-                inputs=dependencies + [receipt['id']], logical_path='preview/poster.png')
+                inputs=dependencies + [receipt['id']], logical_path=logical_poster)
             core.finish_attempt(attempt['id'], 'succeeded')
             return {'run_id':run_id, 'attempt_id':attempt['id'], 'status':'succeeded',
                     'poster_artifact_id':poster['id'], 'evidence_artifact_id':receipt['id'],
@@ -87,7 +93,7 @@ def produce(core, run_id, preview_id, timestamp, owner, retry_of=None):
         try:
             if output.is_file():
                 core.register(attempt['id'], output, 'poster', partial=True,
-                    inputs=dependencies, logical_path='preview/poster.png')
+                    inputs=dependencies, logical_path=logical_poster)
             core.finish_attempt(attempt['id'], 'cancelled' if isinstance(error, KeyboardInterrupt)
                                 else 'failed', str(error) or type(error).__name__)
         except Exception as evidence_error:

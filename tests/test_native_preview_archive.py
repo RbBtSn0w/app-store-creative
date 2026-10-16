@@ -32,7 +32,7 @@ class NativePreviewArchiveTests(unittest.TestCase):
             shot = project / 'fixture.png'; create_mock_png(shot,2880,1800)
             cfg = {'project':{'id':'synthetic-fixture','name':'Test Only','bundleId':'test.fixture','locales':['en-US']},
                 'targets':['mac_16_10'],'cards':[{'id':'hero','screenshot':'fixture.png'}],
-                'previewVideo':{'enabled':True,'posterRequired':True,'duration':15,'source':'sources/input-0.mp4','locales':['en-US']}}
+                'previewVideo':{'enabled':True,'posterRequired':True,'duration':15,'source':'sources/input-0.mp4','locales':['en-US'],'allowSilentAudio':True}}
             cfg['archivePolicy'] = {'schema_version': 1, 'mediaMode': 'git'}
             cfg['artifactPolicy'] = {'schema_version': 1, 'mediaBudgetBytes': 1073741824}
             (project / 'creative.config.json').write_text(json.dumps(cfg))

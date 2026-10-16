@@ -92,3 +92,30 @@ class AscObservationCliTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('regular file', result.stderr + result.stdout)
         self.assertFalse(self.store.paths.workspace.exists())
+
+    def test_normalize_screenshots_cli(self):
+        target = {'app_id': 'app', 'version_id': 'version', 'platform': 'MAC_OS'}
+        with self.store.transaction():
+            plan = self.store._record('publications', {'id': 'd' * 32, 'target': target,
+                'assets': [{'artifact_id': 'e' * 32, 'role': 'screenshot',
+                            'source_checksum': 'f' * 32}]}, 'plan')
+        (self.root / 'creative.config.json').write_text(json.dumps(self.cfg))
+        response = {'versionLocalizationId': 'localization', 'sets': [{'screenshots': [
+            {'type': 'appScreenshots', 'id': 'remote-shot', 'attributes': {
+                'sourceFileChecksum': 'f' * 32, 'assetDeliveryState': {'state': 'COMPLETE'},
+                'imageAsset': {'width': 2880, 'height': 1800}}}]}]}
+        from datetime import datetime, timezone
+        scope = {'target': target,
+                 'artifact_id': 'e' * 32, 'localization_id': 'localization', 'remote_id': 'remote-shot',
+                 'observed_at': datetime.now(timezone.utc).isoformat(), 'evidence_reference': 'asc:read:shot'}
+        (self.root / 'shot-response.json').write_text(json.dumps(response))
+        (self.root / 'shot-scope.json').write_text(json.dumps(scope))
+        cli = Path(__file__).parents[1] / 'plugins/app-store-creative/scripts/app_store_creative.py'
+        result = subprocess.run([sys.executable, str(cli), 'publication', 'normalize-asc-screenshots',
+            '--repo', str(self.root), '--id', plan['id'], '--response', 'shot-response.json', '--scope', 'shot-scope.json'],
+            capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        output = json.loads(result.stdout)
+        self.assertFalse(output['remote_write'])
+        self.assertEqual(len(output['observations']), 3)
+        self.assertEqual([o['gate'] for o in output['observations']], ['upload', 'processing', 'media'])

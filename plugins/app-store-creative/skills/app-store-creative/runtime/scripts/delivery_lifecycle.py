@@ -226,7 +226,20 @@ def verify_archive(package, expected_sha256=None):
         raise ValueError('Manifest archive policy differs from recipe declaration')
     _, findings = studio_contract.input_hashes(package / 'recipe', recipe_config)
     preview = recipe_config.get('previewVideo', {})
-    if preview.get('enabled'):
+    localizations = recipe_config.get('localizations', {})
+    locale_sources = []
+    if isinstance(localizations, dict):
+        for locale, l_cfg in localizations.items():
+            if isinstance(l_cfg, dict) and 'previewVideo' in l_cfg:
+                src = l_cfg['previewVideo'].get('source')
+                if src:
+                    locale_sources.append(src)
+    if locale_sources:
+        for src in locale_sources:
+            source = relative_name(src)
+            if 'recipe/' + source not in names:
+                findings.append(f'Missing preview recipe source: {source}')
+    elif preview.get('enabled') and preview.get('source'):
         source = relative_name(preview.get('source', ''))
         if 'recipe/' + source not in names:
             findings.append('Missing preview recipe source')
@@ -529,7 +542,7 @@ class DeliveryOperations:
                 'approval_id': approval['id'] if approval else None,
                 'delivery_id': delivery['id'] if delivery else None, 'remote_write': False}
 
-    def validate_candidate(self, candidate_id):
+    def validate_candidate(self, candidate_id, allow_silent_audio: bool = False):
         from artifact_lifecycle import canonical, identifier
         import hashlib
         import validator
@@ -543,9 +556,27 @@ class DeliveryOperations:
                 cfg = recipe / 'creative.config.json'; cfg.write_bytes(canonical(run['config']))
                 errors = []
                 expected = set(validator.declared_screenshots(run['config']))
-                if run['config'].get('previewVideo', {}).get('enabled'):
+                preview_cfg = run['config'].get('previewVideo', {})
+                localizations = run['config'].get('localizations', {})
+                locale_previews = []
+                if isinstance(localizations, dict):
+                    for locale, l_cfg in localizations.items():
+                        if isinstance(l_cfg, dict) and 'previewVideo' in l_cfg:
+                            lp = l_cfg['previewVideo']
+                            if lp.get('source') or preview_cfg.get('source'):
+                                locale_previews.append(locale)
+                if locale_previews:
+                    for locale in locale_previews:
+                        expected.add(f'{locale}/preview/app_preview.mp4')
+                        lp = {**preview_cfg, **localizations[locale].get('previewVideo', {})}
+                        if (lp.get('posterRequired', False)
+                                or any(closure[item]['role'] == 'poster'
+                                       and closure[item]['logical_path'] == f'{locale}/preview/poster.png'
+                                       for item in candidate['artifacts'])):
+                            expected.add(f'{locale}/preview/poster.png')
+                elif preview_cfg.get('enabled'):
                     expected.add('preview/app_preview.mp4')
-                    if (run['config']['previewVideo'].get('posterRequired', False)
+                    if (preview_cfg.get('posterRequired', False)
                             or any(closure[item]['role'] == 'poster' for item in candidate['artifacts'])):
                         expected.add('preview/poster.png')
                 selected = {closure[item]['logical_path'] for item in candidate['artifacts']}
@@ -553,19 +584,24 @@ class DeliveryOperations:
                     errors.append(f'Missing declared output: {missing}')
                 for unexpected in sorted(selected - expected):
                     errors.append(f'Output not declared in release matrix: {unexpected}')
-                selected_previews = {identity for identity in candidate['artifacts']
+                selected_previews = {identity: closure[identity] for identity in candidate['artifacts']
                                      if closure[identity]['role'] == 'preview'}
                 for identity in candidate['artifacts']:
                     record = closure[identity]
                     if record['role'] == 'poster':
                         bound_previews = {parent for parent in record['inputs']
                                           if closure[parent]['role'] == 'preview'}
-                        if len(selected_previews) != 1 or bound_previews != selected_previews:
+                        poster_dir = Path(record['logical_path']).parent
+                        matching_previews = {p for p, data in selected_previews.items()
+                                            if Path(data['logical_path']).parent == poster_dir}
+                        if not matching_previews:
+                            matching_previews = set(selected_previews)
+                        if len(bound_previews) != 1 or bound_previews != (bound_previews & matching_previews):
                             errors.append('Poster must reference the selected preview: ' + record['logical_path'])
                     if not record['inputs']:
                         errors.append(f'Missing source provenance: {record["logical_path"]}')
                 with contextlib.redirect_stdout(io.StringIO()):
-                    probe = validator.run_validation(recipe, cfg, media)
+                    probe = validator.run_validation(recipe, cfg, media, allow_silent_audio=allow_silent_audio)
                 errors.extend(probe['errors'])
                 # Recheck producer bytes after inspecting the materialized copy.
                 self._closure(candidate['artifacts'])
