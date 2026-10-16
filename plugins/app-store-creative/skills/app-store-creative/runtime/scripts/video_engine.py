@@ -159,7 +159,7 @@ def produce_preview_from_config(
             "logical_path": first["logical_path"],
             "videos": videos,
         }
-    elif global_enabled:
+    elif global_enabled and not has_locale_previews:
         logical_path = "preview/app_preview.mp4"
         target_out = out_root / "preview" / "app_preview.mp4"
         return _produce_single(preview_cfg, target_out, logical_path)

@@ -141,52 +141,60 @@ class PublicationOperations:
         receipt_file = local_dir / 'receipt.json'
         expected_manifest_sha = manifest.get('manifest_sha256') or digest(package / 'manifest.json')
 
+        declared_files = [f for f in (manifest.get('files') or manifest.get('assets', []))
+                          if f.get('path') not in ('manifest.json', 'receipt.json')]
+
         if manifest_file.exists() and receipt_file.exists():
             if digest(manifest_file) != expected_manifest_sha:
                 raise ValueError('Existing local delivery manifest differs from sealed delivery')
             receipt_data = json.loads(receipt_file.read_text())
             if receipt_data.get('status') != 'PASS' or receipt_data.get('delivery_id') != delivery_id:
                 raise ValueError('Existing local delivery receipt is invalid')
-            for asset in manifest.get('assets', []):
-                rel_path = asset['path']
+            for item in declared_files:
+                rel_path = item['path']
                 dst = local_dir / rel_path
-                if not dst.is_file() or digest(dst) != asset['sha256']:
-                    raise ValueError(f'Existing local delivery asset missing or corrupted: {rel_path}')
+                if not dst.is_file() or digest(dst) != item['sha256']:
+                    raise ValueError(f'Existing local delivery file missing or corrupted: {rel_path}')
             return local_dir
 
-        local_dir.mkdir(parents=True, exist_ok=True)
-        for asset in manifest.get('assets', []):
-            rel_path = asset['path']
-            src = package / rel_path
-            dst = local_dir / rel_path
-            if src.is_file():
-                dst.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(src, dst)
-                if digest(dst) != asset['sha256']:
-                    raise ValueError(f'Copied local delivery asset failed hash verification: {rel_path}')
-            else:
-                raise ValueError(f'Sealed package missing declared asset: {rel_path}')
+        try:
+            local_dir.mkdir(parents=True, exist_ok=True)
+            for item in declared_files:
+                rel_path = item['path']
+                src = package / rel_path
+                dst = local_dir / rel_path
+                if src.is_file():
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(src, dst)
+                    if digest(dst) != item['sha256']:
+                        raise ValueError(f'Copied local delivery file failed hash verification: {rel_path}')
+                else:
+                    raise ValueError(f'Sealed package missing declared file: {rel_path}')
 
-        manifest_file.write_text(json.dumps(manifest, indent=2))
-        receipt = {
-            'schema_version': 1,
-            'publication_id': publication_id,
-            'delivery_id': delivery_id,
-            'manifest_sha256': expected_manifest_sha,
-            'verified_at': now(),
-            'status': 'PASS',
-            'target': target,
-            'media_mode': 'local',
-            'assets_count': len(manifest.get('assets', [])),
-            'files_verified': True,
-            'offline_validation': {
-                'package_verified': True,
-                'recipe_verified': True,
-                'provenance_verified': True,
+            manifest_file.write_text(json.dumps(manifest, indent=2))
+            receipt = {
+                'schema_version': 1,
+                'publication_id': publication_id,
+                'delivery_id': delivery_id,
+                'manifest_sha256': expected_manifest_sha,
+                'verified_at': now(),
+                'status': 'PASS',
+                'target': target,
+                'media_mode': 'local',
+                'assets_count': len(manifest.get('assets', [])),
+                'files_verified': True,
+                'offline_validation': {
+                    'package_verified': True,
+                    'recipe_verified': True,
+                    'provenance_verified': True,
+                }
             }
-        }
-        receipt_file.write_text(json.dumps(receipt, indent=2))
-        return local_dir
+            receipt_file.write_text(json.dumps(receipt, indent=2))
+            return local_dir
+        except Exception:
+            if local_dir.exists():
+                shutil.rmtree(local_dir, ignore_errors=True)
+            raise
 
     def plan_publication(self, delivery_id, archive_commit=None, remote_target=None, archive_remote=None,
                          *, archive_repository=None, archive_path=None, local_delivery=False):
