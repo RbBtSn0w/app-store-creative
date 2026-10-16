@@ -49,6 +49,22 @@ class WorkspaceLayersTests(unittest.TestCase):
         self.assertTrue(gitignore.is_file(), ".cache/.gitignore must be created")
         self.assertEqual(gitignore.read_text(), "*\n")
 
+    def test_ensure_cache_isolation_rejects_symlinks(self):
+        target = self.root / "real_dir"
+        target.mkdir()
+        symlink_dir = self.root / "sym_cache"
+        symlink_dir.symlink_to(target)
+
+        with self.assertRaisesRegex(ValueError, "Symlinked cache directory"):
+            StoragePaths.ensure_cache_isolation(symlink_dir)
+
+        cache_dir = self.root / "cache_with_sym_ignore"
+        cache_dir.mkdir()
+        symlink_ignore = cache_dir / ".gitignore"
+        symlink_ignore.symlink_to(target)
+        with self.assertRaisesRegex(ValueError, "Symlinked cache ignore file"):
+            StoragePaths.ensure_cache_isolation(cache_dir)
+
     def test_cache_gitignore_injection_on_workspace_transaction(self):
         store = Lifecycle(self.root, self.config)
         run = store.start_run({"version": "1.0", "platform": "MAC_OS"})

@@ -177,13 +177,10 @@ class PublicationOperations:
             manifest = json.loads((package / 'manifest.json').read_text())
             config = json.loads((package / 'recipe/config.json').read_text())
             check_remote_target(remote_target, delivery, config)
-            del_policy = delivery.get('archive_policy') or config.get('archivePolicy') or {}
-            is_local = (
-                local_delivery is True
-                or del_policy.get('mediaMode') == 'local'
-                or archive_commit == 'local'
-                or (archive_commit is None and del_policy.get('mediaMode') == 'local')
-            )
+            del_policy = delivery.get('archive_policy') or {}
+            is_local = del_policy.get('mediaMode') == 'local'
+            if (local_delivery or archive_commit == 'local') and not is_local:
+                raise ValueError('Local delivery requires a local archive policy')
             if not is_local:
                 if not archive_commit:
                     raise ValueError('Archive commit is required for git/lfs publication')

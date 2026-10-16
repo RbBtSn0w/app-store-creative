@@ -73,6 +73,7 @@ func run() async throws {
     config.width = width; config.height = height
     let captureAudio = plan["capture_audio"] as? Bool ?? true
     config.showsCursor = false; config.capturesAudio = captureAudio; config.scalesToFit = true
+    config.minimumFrameInterval = CMTime(value: 1, timescale: Int32(fps))
     let delegate = RecordingDelegate()
     let outputConfig = SCRecordingOutputConfiguration()
     outputConfig.outputURL = URL(fileURLWithPath: destination)

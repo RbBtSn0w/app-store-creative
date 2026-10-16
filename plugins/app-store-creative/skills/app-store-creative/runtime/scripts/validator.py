@@ -131,8 +131,8 @@ def inspect_audio_loudness(path: Path) -> Dict[str, float]:
            "-vn", "-af", "volumedetect", "-f", "null", "-"]
     res = subprocess.run(cmd, capture_output=True, text=True)
     result = {}
-    mean_match = re.search(r"mean_volume:\s*(-?[0-9.]+)\s*dB", res.stderr)
-    max_match = re.search(r"max_volume:\s*(-?[0-9.]+)\s*dB", res.stderr)
+    mean_match = re.search(r"mean_volume:\s*(-?(?:[0-9.]+|inf))\s*dB", res.stderr)
+    max_match = re.search(r"max_volume:\s*(-?(?:[0-9.]+|inf))\s*dB", res.stderr)
     if mean_match:
         result["mean_volume"] = float(mean_match.group(1))
     if max_match:

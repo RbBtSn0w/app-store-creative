@@ -69,12 +69,9 @@ def produce_preview_from_config(
         if not src_path.exists():
             raise FileNotFoundError(f"Source video not found: {src_path}")
 
-        try:
-            probe = probe_video(src_path)
-            streams = probe.get("streams", [])
-            has_audio = any(s.get("codec_type") == "audio" for s in streams)
-        except Exception:
-            has_audio = False
+        probe = probe_video(src_path)
+        streams = probe.get("streams", [])
+        has_audio = any(s.get("codec_type") == "audio" for s in streams)
 
         audio_src_rel = p_cfg.get("audioSource") or p_cfg.get("audio_source")
         audio_src_path = (repo_root / audio_src_rel).resolve() if audio_src_rel else None

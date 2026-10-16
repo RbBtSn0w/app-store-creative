@@ -78,7 +78,7 @@ extension NSImage {
 Before executing any capture journey, run an alignment verification to guarantee that screenshot automation renders the latest SwiftUI views:
 1. Verify that capture test fixtures directly instantiate the production SwiftUI view hierarchy rather than isolated mocks or frozen mock copies.
 2. Confirm that changes to typography, glass effects, layout padding, and status chrome in the application source tree immediately reflect in test renders.
-3. Validate exported PNGs with `validator.py` before sealing candidates to ensure color type 2 (24-bit RGB) and zero alpha channels.
+3. Validate exported PNGs with `validator.py` before sealing candidates to ensure absence of alpha transparency (unless explicitly permitted by `allowAlpha`).
 
 
 Do not claim success from a focused test alone when the product boundary requires a real window, device, permission, or cross-process interaction. Preserve raw captures; downstream design may frame or annotate them but must not alter their UI content.

@@ -152,8 +152,14 @@ class StoragePaths:
     @staticmethod
     def ensure_cache_isolation(cache_path: Path) -> Path:
         p = Path(cache_path)
+        if p.is_symlink():
+            raise ValueError('Symlinked cache directory')
         p.mkdir(parents=True, exist_ok=True)
+        if p.is_symlink():
+            raise ValueError('Symlinked cache directory')
         gitignore = p / '.gitignore'
+        if gitignore.is_symlink():
+            raise ValueError('Symlinked cache ignore file')
         if not gitignore.exists() or gitignore.read_text() != '*\n':
             gitignore.write_text('*\n')
         return p

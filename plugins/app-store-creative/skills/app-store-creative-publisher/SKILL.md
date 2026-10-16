@@ -88,7 +88,7 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 - **Authoritative Verification**: Never verify upload progress or completion via the ASC web dashboard mid-upload. Rely exclusively on authoritative ASC CLI listings:
   ```sh
   asc screenshots list --app <app_id> --version <version> --platform <platform>
-  asc video-previews list --app <app_id> --version <version> --platform <platform>
+  asc video-previews list --version-localization <resource-id> --output json
   ```
   Verify all expected screenshot and preview records are acknowledged by ASC before declaring completion.
 
@@ -103,7 +103,7 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 - For multi-locale releases with `inheritDefault: true`, ensure each locale either receives its localized video with an explicit timecode or explicitly references the primary storefront's approved preview set.
 
 ### 4. `asc video-previews upload` Replacement Flags and Device Types (Issue #40)
-- When replacing existing preview videos via `asc video-previews upload`, always supply `--replace --confirm` for non-interactive atomic remote replacement.
+- For an authorized non-interactive replacement, supply `--replace --confirm`. ASC purges existing previews before new uploads attach, so this operation is not atomic.
 - For macOS desktop App Previews, specify `--device-type DESKTOP` (Apple API uses `DESKTOP`, not `APP_DESKTOP`).
 
 
