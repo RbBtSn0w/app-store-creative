@@ -80,6 +80,8 @@ Before executing any capture journey, run an alignment verification to guarantee
 2. Confirm that changes to typography, glass effects, layout padding, and status chrome in the application source tree immediately reflect in test renders.
 3. Validate exported PNGs with `validator.py` before sealing candidates to ensure absence of alpha transparency (unless explicitly permitted by `allowAlpha`).
 
+See the reference blueprint: [swiftui-headless-capture-template.swift](references/swiftui-headless-capture-template.swift) for a complete, standalone headless macOS SwiftUI capture pipeline mapped to RFC #46 4-layer workspace directories (`.creative/inputs/screenshots/raw/` and `.creative/.cache/raw_scenes/`).
+
 
 Do not claim success from a focused test alone when the product boundary requires a real window, device, permission, or cross-process interaction. Preserve raw captures; downstream design may frame or annotate them but must not alter their UI content.
 

@@ -58,7 +58,19 @@ Run without `--execute` to inspect the derived media command. Add `--execute` on
 Preview voiceover commentary and background audio must comply with [audio-standards.md](references/audio-standards.md):
 - **3-Tier Hierarchy**: Tier 1 Cloud Neural TTS (Azure/Edge-TTS) -> Tier 2 macOS Native Enhanced Voice (`macos_speech_synthesizer.swift`) -> Tier 3 Silent Fallback (requires explicit `allowSilentAudio: true`).
 - **Ducking Mix**: Background music must duck by `-12 dB` under narration with smooth 150ms/400ms envelopes.
-- **Loudness Compliance**: Final preview audio tracks must target `-14 LUFS` integrated loudness and pass the anti-silence gate (`mean_volume >= -80 dB`).
+- **Loudness Compliance**: Final preview audio tracks must target `-14 LUFS` to `-16 LUFS` integrated loudness and pass the anti-silence gate (`mean_volume >= -80 dB`).
+- **Packaged Audio Utilities**:
+  - `synthesize_ambient_bgm.py`: Algorithmic royalty-free Keynote ambient BGM generator (with 1kHz-4kHz speech notch filter):
+    ```sh
+    python3 <runtime-root>/scripts/synthesize_ambient_bgm.py --duration 24.0 --output .creative/.cache/bgm.wav
+    ```
+  - `audio_ducking_mixer.py`: Sidechain audio ducking mixer with smooth lookahead envelope and automatic loudness normalization:
+    ```sh
+    python3 <runtime-root>/scripts/audio_ducking_mixer.py --bgm bgm.wav --voice voice.wav -o master.wav --ducking-db -12.0 --target-lufs -16.0
+    ```
+- **Reference Blueprints**:
+  - [swiftui-scene-compositor-template.swift](references/swiftui-scene-compositor-template.swift): 1920x1080 scene layout with glass subtitle HUD and presenter card.
+  - [build-preview-pipeline.sh](references/build-preview-pipeline.sh): End-to-end assembly script connecting scene frames, audio, and FFmpeg muxing.
 
 For changed story, interaction, pacing, or locale, use the [iteration contract](../app-store-creative/references/iteration-contract.md) to isolate affected real UI segments. Register current source takes, final intervals, output hashes, and producer evidence against a new managed attempt. Do not upload or request either approval from this skill.
 
