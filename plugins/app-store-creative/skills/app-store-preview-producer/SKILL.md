@@ -60,7 +60,7 @@ Preview voiceover commentary and background audio must comply with [audio-standa
 - **Ducking Mix**: Background music must duck by `-12 dB` under narration with smooth 150ms/400ms envelopes.
 - **Loudness Compliance**: Final preview audio tracks must target `-14 LUFS` to `-16 LUFS` integrated loudness and pass the anti-silence gate (`mean_volume >= -80 dB`).
 - **Packaged Audio Utilities**:
-  - `synthesize_ambient_bgm.py`: Algorithmic royalty-free Keynote ambient BGM generator (with 1kHz-4kHz speech notch filter):
+  - `synthesize_ambient_bgm.py`: Algorithmic royalty-free Keynote ambient BGM generator (with 1.2kHz-3.5kHz speech notch filter):
     ```sh
     python3 <runtime-root>/scripts/synthesize_ambient_bgm.py --duration 24.0 --output .creative/.cache/bgm.wav
     ```

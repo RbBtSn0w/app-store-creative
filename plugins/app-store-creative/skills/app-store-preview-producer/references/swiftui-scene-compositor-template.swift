@@ -22,7 +22,7 @@ struct VideoSceneCompositorPipeline {
         let poseDir = rootURL.appendingPathComponent(".creative/inputs/presenter")
         let outDir = rootURL.appendingPathComponent(".creative/.cache/scenes")
         
-        try! FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
+        try! FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true, attributes: nil)
 
         func loadImage(from url: URL) -> NSImage {
             guard let img = NSImage(contentsOf: url) else {

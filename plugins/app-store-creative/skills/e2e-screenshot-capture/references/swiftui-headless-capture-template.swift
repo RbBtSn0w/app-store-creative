@@ -22,10 +22,14 @@ struct HeadlessCapturePipeline {
         let rawInputsDir = rootURL.appendingPathComponent(".creative/inputs/screenshots/raw")
         let cacheScenesDir = rootURL.appendingPathComponent(".creative/.cache/raw_scenes")
         
-        try! FileManager.default.createDirectory(at: rawInputsDir, withIntermediateDirectories: true)
-        try! FileManager.default.createDirectory(at: cacheScenesDir, withIntermediateDirectories: true)
+        try! FileManager.default.createDirectory(at: rawInputsDir, withIntermediateDirectories: true, attributes: nil)
+        try! FileManager.default.createDirectory(at: cacheScenesDir, withIntermediateDirectories: true, attributes: nil)
 
         // 2. High-Fidelity 24-Bit RGB (Zero-Alpha) Image Exporter
+        // Note: ImageRenderer renders pure SwiftUI view hierarchies with high fidelity.
+        // If your production view incorporates layer-backed AppKit/UIKit components (e.g., WKWebView,
+        // AVPlayerView, MapKit), ImageRenderer cannot capture hardware-composited layers. For such views,
+        // use live window capture via CGWindowListCreateImage or `screencapture -l<window_id>`.
         func export24BitRGB<V: View>(_ view: V, to urls: [URL]) {
             let renderer = ImageRenderer(content: view)
             renderer.scale = 2.0 // 1440x900 base @2x Retina = 2880x1800 exact Mac App Store resolution
@@ -73,8 +77,14 @@ struct HeadlessCapturePipeline {
             }
         }
 
-        // 3. Render Sample / Production Views
-        // Replace with your real app SwiftUI views:
+        // 3. Render Views
+        // PRODUCTION WORKFLOW:
+        // Replace sampleHeroView below with your shipping app's views (e.g., AppContentView() or InspectorView()).
+        // When capturing real app UI, direct output to `rawInputsDir` and `cacheScenesDir`.
+        // To protect raw inputs from unedited placeholders, the default demo writes to `.creative/.cache/sample_capture/`.
+        let sampleDir = rootURL.appendingPathComponent(".creative/.cache/sample_capture")
+        try! FileManager.default.createDirectory(at: sampleDir, withIntermediateDirectories: true, attributes: nil)
+
         let sampleHeroView = ZStack {
             Color(red: 0.10, green: 0.12, blue: 0.16)
             VStack(spacing: 24) {
@@ -93,8 +103,10 @@ struct HeadlessCapturePipeline {
         .environment(\.colorScheme, .dark)
 
         export24BitRGB(sampleHeroView, to: [
-            rawInputsDir.appendingPathComponent("01-hero-explorer.png"),
-            cacheScenesDir.appendingPathComponent("scene1.png")
+            sampleDir.appendingPathComponent("01-hero-explorer-sample.png"),
+            // Uncomment when wired to real app UI:
+            // rawInputsDir.appendingPathComponent("01-hero-explorer.png"),
+            // cacheScenesDir.appendingPathComponent("scene1.png")
         ])
     }
 }

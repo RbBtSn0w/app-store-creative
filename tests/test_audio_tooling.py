@@ -1,10 +1,12 @@
 """Unit tests for TASK-203: Audio Tooling & Capture Templates (Issue #48)."""
 from pathlib import Path
 import math
+import struct
 import subprocess
 import sys
 import tempfile
 import unittest
+import wave
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "plugins/app-store-creative/skills/app-store-creative/runtime/scripts"))
 
@@ -77,6 +79,32 @@ class AudioToolingTests(unittest.TestCase):
         self.assertEqual(res["duration_seconds"], 2.0)
         # Measured loudness should be in the realm of target (-16 +/- 3 dB)
         self.assertAlmostEqual(res["measured_lufs"], -16.0, delta=3.0)
+
+    def test_multichannel_downmix(self):
+        # Create a 6-channel (5.1 surround) WAV file and verify downmixing
+        surround_wav = self.root / "surround.wav"
+        n_channels = 6
+        sr = 48000
+        n_frames = 4800
+        raw_bytes = bytearray()
+        for _ in range(n_frames):
+            # L, R, C, LFE, Ls, Rs
+            # Put 0.5 amplitude on center channel (channel index 2)
+            c_int = int(0.5 * 32767.0)
+            raw_bytes.extend(struct.pack("<6h", 0, 0, c_int, 0, 0, 0))
+
+        with wave.open(str(surround_wav), "wb") as w:
+            w.setnchannels(n_channels)
+            w.setsampwidth(2)
+            w.setframerate(sr)
+            w.writeframes(raw_bytes)
+
+        read_sr, frames = read_wav_frames(surround_wav)
+        self.assertEqual(read_sr, sr)
+        self.assertEqual(len(frames), n_frames)
+        # Center channel should be mixed into both L and R with ~0.7071 factor: 0.5 * 0.7071 ≈ 0.3535
+        self.assertAlmostEqual(frames[0][0], 0.3535, places=2)
+        self.assertAlmostEqual(frames[0][1], 0.3535, places=2)
 
     def test_audio_ducking_mixer_cli(self):
         bgm_wav = self.root / "cli_bgm.wav"

@@ -2,7 +2,8 @@
 """
 Synthesize an ambient electronic BGM track for App Store Preview videos.
 Generates warm, wide stereo pad chords tailored for Apple Keynote / developer-tool previews,
-with gentle vocal-band notch filtering to leave 1kHz-4kHz headroom for narration.
+with gentle vocal-band notch filtering (1.2kHz-3.5kHz, applied when SciPy is available)
+to leave headroom for narration. Pure-stdlib mode synthesizes pad chord voices directly.
 """
 
 from __future__ import annotations
