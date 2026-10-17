@@ -6,6 +6,8 @@ lookahead ducking envelope, applying -12 dB attenuation under narration,
 and normalizing the master mix to strict Apple App Store audio standards (-16.0 LUFS).
 """
 
+from __future__ import annotations
+
 import argparse
 import math
 import struct

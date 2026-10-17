@@ -5,6 +5,8 @@ Generates warm, wide stereo pad chords tailored for Apple Keynote / developer-to
 with gentle vocal-band notch filtering to leave 1kHz-4kHz headroom for narration.
 """
 
+from __future__ import annotations
+
 import argparse
 import math
 import struct
@@ -185,7 +187,7 @@ def generate_ambient_bgm(output_path: Path, duration: float = 24.0, sample_rate:
         left, right = synthesize_bgm_numpy(duration, sample_rate, vocal_notch)
         if HAVE_SCIPY:
             audio_data = np.column_stack((left, right))
-            int_data = np.int16(audio_data * 32767.0)
+            int_data = (audio_data * 32767.0).astype("int16")
             wavfile.write(str(output_path), sample_rate, int_data)
         else:
             write_stereo_wav(output_path, sample_rate, left.tolist(), right.tolist())
