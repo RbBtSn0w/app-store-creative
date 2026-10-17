@@ -45,14 +45,9 @@ fi
 # 3. Render video track across scenes with smooth transitions (example: 4 scenes x 6s = 24s)
 echo "==> Stitching video scenes with FFmpeg..."
 if [ -f "$SCENES_DIR/scene_01.png" ]; then
-  ffmpeg -y -v error -loop 1 -framerate 30 -t 6.0 -i "$SCENES_DIR/scene_01.png" \
-    -vf "format=yuv420p,fade=t=in:st=0:d=0.3" -c:v libx264 -preset fast -crf 17 -r 30 "$WORK_DIR/v1.mp4"
-
-  # Concatenate video segments
-  cat > "$WORK_DIR/vconcat.txt" <<EOF
-file '$WORK_DIR/v1.mp4'
-EOF
-  ffmpeg -y -v error -f concat -safe 0 -i "$WORK_DIR/vconcat.txt" -c copy "$WORK_DIR/video_only.mp4"
+  # For demo purposes, loop scene_01 for the full 24.0s duration (in production, concatenate scene_01..04)
+  ffmpeg -y -v error -loop 1 -framerate 30 -t 24.0 -i "$SCENES_DIR/scene_01.png" \
+    -vf "format=yuv420p,fade=t=in:st=0:d=0.3" -c:v libx264 -preset fast -crf 17 -r 30 "$WORK_DIR/video_only.mp4"
 
   # 4. Mux final video and master audio into App Store compliant MP4
   echo "==> Muxing final App Preview into .creative/inputs/video/..."

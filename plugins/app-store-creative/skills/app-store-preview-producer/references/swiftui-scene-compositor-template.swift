@@ -24,11 +24,8 @@ struct VideoSceneCompositorPipeline {
         
         try! FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true, attributes: nil)
 
-        func loadImage(from url: URL) -> NSImage {
-            guard let img = NSImage(contentsOf: url) else {
-                fatalError("Missing source visual asset: \(url.path)")
-            }
-            return img
+        func loadImage(from url: URL) -> NSImage? {
+            return NSImage(contentsOf: url)
         }
 
         struct SceneSpec {
@@ -48,8 +45,8 @@ struct VideoSceneCompositorPipeline {
                 filename: "scene_01.png",
                 stepBadge: "01 / 04 • OVERVIEW",
                 headline: "Instant Package & Receipt Inspection",
-                appWindowImage: try? loadImage(from: rawDir.appendingPathComponent("01-hero-explorer.png")),
-                presenterImage: try? loadImage(from: poseDir.appendingPathComponent("pose1_inspect.png")),
+                appWindowImage: loadImage(from: rawDir.appendingPathComponent("01-hero-explorer.png")),
+                presenterImage: loadImage(from: poseDir.appendingPathComponent("pose1_inspect.png")),
                 subtitleText: "Inspect every receipt and bill of materials deposited on your Mac in milliseconds.",
                 accentColor: Color.cyan,
                 soundwaveHeights: [10, 22, 16, 26, 14, 24, 18, 12, 20]

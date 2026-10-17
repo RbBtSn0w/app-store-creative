@@ -175,13 +175,14 @@ def duck_and_mix_audio(
     for ml, mr in mixed_frames:
         nl = ml * norm_factor
         nr = mr * norm_factor
-        # Soft-limit peak
+        # Peak limiter enforcing strict -0.2 dBFS ceiling (10 ** (-0.2 / 20) ≈ 0.9772)
+        peak_ceiling = 10.0 ** (-0.2 / 20.0)
         peak_sample = max(abs(nl), abs(nr))
-        if peak_sample > 0.98:
-            scale = 0.98 / peak_sample
+        if peak_sample > peak_ceiling:
+            scale = peak_ceiling / peak_sample
             nl *= scale
             nr *= scale
-            peak_sample = 0.98
+            peak_sample = peak_ceiling
         if peak_sample > max_peak:
             max_peak = peak_sample
         normalized_frames.append((nl, nr))
