@@ -57,21 +57,25 @@ def read_wav_frames(path: Path) -> tuple[int, list[tuple[float, float]]]:
         for i in range(0, total_samples, n_channels):
             ch = [ints[i + c] / 32768.0 for c in range(n_channels)]
             if n_channels == 3:
-                # L, R, C
-                l = ch[0] + 0.7071 * ch[2]
-                r = ch[1] + 0.7071 * ch[2]
+                # 3.0: L, R, C
+                left_val = ch[0] + 0.7071 * ch[2]
+                right_val = ch[1] + 0.7071 * ch[2]
             elif n_channels == 4:
                 # Quad: L, R, Ls, Rs
-                l = ch[0] + 0.7071 * ch[2]
-                r = ch[1] + 0.7071 * ch[3]
+                left_val = ch[0] + 0.7071 * ch[2]
+                right_val = ch[1] + 0.7071 * ch[3]
+            elif n_channels == 5:
+                # 5.0 Surround: L (0), R (1), C (2), Ls (3), Rs (4)
+                left_val = ch[0] + 0.7071 * ch[2] + 0.7071 * ch[3]
+                right_val = ch[1] + 0.7071 * ch[2] + 0.7071 * ch[4]
             elif n_channels >= 6:
                 # 5.1 Surround: L (0), R (1), C (2), LFE (3), Ls (4), Rs (5)
-                l = ch[0] + 0.7071 * ch[2] + 0.7071 * ch[4]
-                r = ch[1] + 0.7071 * ch[2] + 0.7071 * ch[5]
+                left_val = ch[0] + 0.7071 * ch[2] + 0.7071 * ch[4]
+                right_val = ch[1] + 0.7071 * ch[2] + 0.7071 * ch[5]
             else:
-                l = sum(ch[0::2]) / max(1, len(ch[0::2]))
-                r = sum(ch[1::2]) / max(1, len(ch[1::2]))
-            frames.append((l, r))
+                left_val = sum(ch[0::2]) / max(1, len(ch[0::2]))
+                right_val = sum(ch[1::2]) / max(1, len(ch[1::2]))
+            frames.append((left_val, right_val))
 
     return sr, frames
 

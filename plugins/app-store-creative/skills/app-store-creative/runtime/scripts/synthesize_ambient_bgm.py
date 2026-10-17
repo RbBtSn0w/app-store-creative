@@ -116,13 +116,19 @@ def synthesize_bgm_numpy(duration: float, sample_rate: int = 48000, vocal_notch:
 
     if vocal_notch:
         if HAVE_SCIPY:
-            sos_lp = butter(4, 8500.0 / (sample_rate * 0.5), btype="low", output="sos")
-            left_channel = sosfiltfilt(sos_lp, left_channel)
-            right_channel = sosfiltfilt(sos_lp, right_channel)
+            nyquist = sample_rate * 0.5
+            if nyquist > 1000.0:
+                lp_cutoff = min(8500.0, nyquist * 0.9)
+                sos_lp = butter(4, lp_cutoff / nyquist, btype="low", output="sos")
+                left_channel = sosfiltfilt(sos_lp, left_channel)
+                right_channel = sosfiltfilt(sos_lp, right_channel)
 
-            sos_notch = butter(2, [1200.0 / (sample_rate * 0.5), 3500.0 / (sample_rate * 0.5)], btype="bandstop", output="sos")
-            left_channel = 0.7 * sosfiltfilt(sos_notch, left_channel) + 0.3 * left_channel
-            right_channel = 0.7 * sosfiltfilt(sos_notch, right_channel) + 0.3 * right_channel
+            notch_low = 1200.0
+            notch_high = min(3500.0, nyquist * 0.9)
+            if notch_low < notch_high and nyquist > 1400.0:
+                sos_notch = butter(2, [notch_low / nyquist, notch_high / nyquist], btype="bandstop", output="sos")
+                left_channel = 0.7 * sosfiltfilt(sos_notch, left_channel) + 0.3 * left_channel
+                right_channel = 0.7 * sosfiltfilt(sos_notch, right_channel) + 0.3 * right_channel
         else:
             sys.stderr.write("Note: SciPy is not available; speech band notch filter is bypassed.\n")
 

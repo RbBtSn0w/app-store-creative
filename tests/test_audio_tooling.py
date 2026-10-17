@@ -103,8 +103,33 @@ class AudioToolingTests(unittest.TestCase):
         self.assertEqual(read_sr, sr)
         self.assertEqual(len(frames), n_frames)
         # Center channel should be mixed into both L and R with ~0.7071 factor: 0.5 * 0.7071 ≈ 0.3535
-        self.assertAlmostEqual(frames[0][0], 0.3535, places=2)
-        self.assertAlmostEqual(frames[0][1], 0.3535, places=2)
+        # Test 5.0 surround downmix (L, R, C, Ls, Rs)
+        surround_50_wav = self.root / "surround_50.wav"
+        raw_bytes_50 = bytearray()
+        for _ in range(n_frames):
+            c_int = int(0.5 * 32767.0)
+            raw_bytes_50.extend(struct.pack("<5h", 0, 0, c_int, 0, 0))
+
+        with wave.open(str(surround_50_wav), "wb") as w:
+            w.setnchannels(5)
+            w.setsampwidth(2)
+            w.setframerate(sr)
+            w.writeframes(raw_bytes_50)
+
+        read_sr_50, frames_50 = read_wav_frames(surround_50_wav)
+        self.assertEqual(read_sr_50, sr)
+        self.assertEqual(len(frames_50), n_frames)
+        self.assertAlmostEqual(frames_50[0][0], 0.3535, places=2)
+        self.assertAlmostEqual(frames_50[0][1], 0.3535, places=2)
+
+    def test_synthesize_ambient_bgm_low_sample_rate(self):
+        output_wav = self.root / "test_bgm_16k.wav"
+        # 16000 Hz has Nyquist 8000 Hz, testing lowpass & notch adaptation
+        generate_ambient_bgm(output_wav, duration=1.0, sample_rate=16000, vocal_notch=True)
+        self.assertTrue(output_wav.is_file())
+        sr, frames = read_wav_frames(output_wav)
+        self.assertEqual(sr, 16000)
+        self.assertEqual(len(frames), 16000)
 
     def test_audio_ducking_mixer_cli(self):
         bgm_wav = self.root / "cli_bgm.wav"
