@@ -33,7 +33,7 @@ def portable_receipt(data, inputs, outputs, input_prefix="sources/"):
     return visit(data)
 
 
-def produce(core, run_id, contract_path, logical_path, owner):
+def produce(core, run_id, contract_path, logical_path, owner, bgm_loop=None):
     import produce_app_preview
     from delivery_lifecycle import relative_name
     logical_path = relative_name(logical_path)
@@ -46,6 +46,10 @@ def produce(core, run_id, contract_path, logical_path, owner):
     outputs = [(work / 'preview.mp4', 'preview', logical_path),
                (work / 'receipt.json', 'producer-evidence', 'evidence/preview-receipt.json'),
                (work / 'frames.png', 'producer-evidence', 'evidence/preview-frames.png')]
+    bgm_receipt_path = None
+    if bgm_loop is not None:
+        bgm_receipt_path = work / 'bgm-receipt.json'
+        outputs.append((bgm_receipt_path, 'producer-evidence', 'evidence/bgm-receipt.json'))
     try:
         with core.keep_lease(attempt['id']):
             inputs.mkdir()
@@ -88,8 +92,27 @@ def produce(core, run_id, contract_path, logical_path, owner):
                 if 'path' in item:
                     item['path'] = str(inputs / item['path'])
             produce_app_preview.execute(execution, *(path for path, _, _ in outputs))
+            if bgm_loop is not None:
+                import bgm_lifecycle
+                loop_source = Path(bgm_loop).resolve()
+                shutil.copyfile(loop_source, inputs / 'bgm-loop.caf')
+                bgm_input = core.register(attempt['id'], inputs / 'bgm-loop.caf', 'capture',
+                                          logical_path='sources/bgm-loop.caf')
+                dependencies.append(bgm_input['id'])
+                bgm_output = work / 'bgm-preview.mp4'
+                bgm_receipt = bgm_lifecycle.compose(
+                    loop_path=inputs / 'bgm-loop.caf',
+                    video_path=outputs[0][0],
+                    output_path=bgm_output,
+                )
+                shutil.copyfile(bgm_output, outputs[0][0])
+                bgm_receipt_path.write_text(json.dumps(bgm_receipt, indent=2, sort_keys=True))
             receipt_path = outputs[1][0]
             receipt_path.write_bytes(canonical(portable_receipt(json.loads(receipt_path.read_text()), inputs, outputs)))
+            extra_evidence = [core.register(attempt['id'], path, role, inputs=dependencies,
+                                            logical_path=logical)
+                              for path, role, logical in outputs[3:]]
+            dependencies.extend(item['id'] for item in extra_evidence)
             frames = core.register(attempt['id'], outputs[2][0], outputs[2][1],
                                    inputs=dependencies, logical_path=outputs[2][2])
             evidence = core.register(attempt['id'], receipt_path, outputs[1][1],

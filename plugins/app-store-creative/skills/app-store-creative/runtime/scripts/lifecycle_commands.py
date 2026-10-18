@@ -41,6 +41,7 @@ def add_commands(subparsers):
     produce.add_argument('--contract', type=Path, required=True)
     produce.add_argument('--logical-path', required=True)
     produce.add_argument('--owner', required=True)
+    produce.add_argument('--bgm-loop', type=Path, help='Optional Apple Loop CAF path; renders background music onto the preview')
     produce.add_argument('--confirm', choices=['EXECUTE'], required=True)
     poster = preview.add_parser('poster')
     poster.add_argument('--run-id', required=True)
@@ -405,7 +406,8 @@ def execute(args):
             from managed_poster import produce
             return produce(core, args.run_id, args.preview_id, args.timestamp, args.owner, retry_of=args.retry_of)
         from managed_preview import produce
-        return produce(core, args.run_id, local(args.contract), args.logical_path, args.owner)
+        bgm_loop = local(args.bgm_loop) if args.bgm_loop else None
+        return produce(core, args.run_id, local(args.contract), args.logical_path, args.owner, bgm_loop=bgm_loop)
     if args.command == 'storage':
         if args.action == 'relocate-configuration':
             from configuration_location import relocate_configuration
