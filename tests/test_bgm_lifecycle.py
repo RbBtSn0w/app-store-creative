@@ -9,9 +9,11 @@ from unittest import mock
 import sys
 sys.path.insert(0, str(Path(__file__).parents[1] / "plugins/app-store-creative/skills/app-store-creative/runtime/scripts"))
 
+import bgm_lifecycle
 from bgm_lifecycle import (
     APPLE_LOOPS_ROOT,
     CAF_INFO_UUID,
+    compose,
     _parse_caf_header,
     _parse_info_pairs,
     recommend,
@@ -75,6 +77,13 @@ class BGMScanTests(unittest.TestCase):
         self.assertAlmostEqual(entry["bpm_derived"], 48.0, places=1)
         self.assertEqual(entry["tags"]["descriptors"], "Relaxed,Clean,Melodic")
 
+    def test_scan_rejects_zero_frame_caf(self):
+        pack = self.root / "Apple" / "01 Test Pack"
+        pack.mkdir(parents=True)
+        _make_caf(pack / "Empty Loop.caf", frames=0)
+        catalog = scan_catalog(library_root=self.root)
+        self.assertEqual(catalog["total_files"], 0)
+
     def test_scan_records_per_file_errors(self):
         pack = self.root / "Apple" / "01 Test Pack"
         pack.mkdir(parents=True)
@@ -137,6 +146,42 @@ class BGMRecommendTests(unittest.TestCase):
         result = recommend(self._catalog(), {"genre": "test genre"})
         self.assertEqual(len(result["candidates"]), 1)
         self.assertEqual(result["candidates"][0]["mapping"].get("genre"), "Test Genre")
+
+    def test_recommends_resamplable_stereo_rates(self):
+        result = recommend(self._catalog(sample_rate=48000.0), {
+            "mood": ["relaxed"], "video_duration_seconds": 20,
+        })
+        self.assertEqual(len(result["candidates"]), 1)
+
+    def test_recommends_rejects_invalid_sample_rate(self):
+        result = recommend(self._catalog(sample_rate=0.0), {
+            "mood": ["relaxed"], "video_duration_seconds": 20,
+        })
+        self.assertEqual(result["candidates"], [])
+
+
+class BGMComposeTests(unittest.TestCase):
+    def _run_compose(self, **kwargs):
+        with mock.patch.object(bgm_lifecycle, "_ensure_swift_binary") as ensure_binary, \
+             mock.patch.object(bgm_lifecycle.subprocess, "run") as run:
+            ensure_binary.return_value = Path("/fake/swift-bgm")
+            run.return_value = mock.Mock(returncode=0, stdout="{}", stderr="")
+            compose(
+                Path("/test/loop.caf"),
+                Path("/test/video.mp4"),
+                Path("/test/output.mp4"),
+                **kwargs,
+            )
+        return run.call_args.args[0]
+
+    def test_compose_forwards_explicit_fade_out_start(self):
+        command = self._run_compose(fade_out_start=17.5)
+        self.assertIn("--fade-out-start", command)
+        self.assertEqual(command[command.index("--fade-out-start") + 1], "17.5")
+
+    def test_compose_uses_duration_derived_fade_out_start_by_default(self):
+        command = self._run_compose()
+        self.assertNotIn("--fade-out-start", command)
 
 
 class BGMCAFHeaderTests(unittest.TestCase):

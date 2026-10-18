@@ -105,7 +105,7 @@ def _parse_caf_header(path: Path) -> dict | None:
             elif chunk_type == b"uuid" and data[:16].hex() == CAF_INFO_UUID:
                 _parse_info_pairs(data[20:], tags)
 
-    if sample_rate is None or channels is None or frames is None:
+    if sample_rate is None or channels is None or frames is None or frames <= 0:
         return None
 
     duration = frames / sample_rate if frames is not None and sample_rate else None
@@ -171,9 +171,10 @@ def recommend(
     scored: list[tuple[float, dict]] = []
     for entry in catalog.get("entries", []):
         tags = entry.get("tags", {})
-        if entry.get("sample_rate") != 44100.0:
-            continue
         if entry.get("channels") != 2:
+            continue
+        sample_rate = entry.get("sample_rate")
+        if not isinstance(sample_rate, (int, float)) or isinstance(sample_rate, bool) or sample_rate <= 0:
             continue
         descriptors = [d.strip().lower() for d in tags.get("descriptors", "").split(",")]
         score = 0.0
@@ -252,6 +253,7 @@ def compose(
     output_path: Path,
     *,
     fade_in: float = 0.35,
+    fade_out_start: float | None = None,
     fade_out_duration: float = 1.5,
     target_lufs: float = -16.0,
     true_peak_ceiling: float = -1.0,
@@ -269,6 +271,8 @@ def compose(
         "--target-lufs", str(target_lufs),
         "--true-peak-ceiling", str(true_peak_ceiling),
     ]
+    if fade_out_start is not None:
+        command += ["--fade-out-start", str(fade_out_start)]
     result = subprocess.run(command, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         raise RuntimeError(

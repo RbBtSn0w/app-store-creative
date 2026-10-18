@@ -169,9 +169,9 @@ def _run_bgm(args, bgm_lifecycle, project_path):
         return catalog
 
     if args.bgm_action == "recommend":
-        catalog = json.loads(args.catalog.read_text())
+        catalog = json.loads(project_path(args.catalog).read_text())
         if args.context:
-            context = json.loads(args.context.read_text())
+            context = json.loads(project_path(args.context).read_text())
         elif args.context_json:
             context = json.loads(args.context_json)
         else:
@@ -187,10 +187,11 @@ def _run_bgm(args, bgm_lifecycle, project_path):
 
     if args.bgm_action == "compose":
         receipt = bgm_lifecycle.compose(
-            loop_path=args.loop,
-            video_path=args.video,
-            output_path=args.output,
+            loop_path=project_path(args.loop),
+            video_path=project_path(args.video),
+            output_path=project_path(args.output),
             fade_in=args.fade_in,
+            fade_out_start=args.fade_out_start,
             fade_out_duration=args.fade_out_duration,
             target_lufs=args.target_lufs,
             true_peak_ceiling=args.true_peak_ceiling,
