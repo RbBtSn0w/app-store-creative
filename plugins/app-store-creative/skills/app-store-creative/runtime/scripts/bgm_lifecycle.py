@@ -105,6 +105,9 @@ def _parse_caf_header(path: Path) -> dict | None:
             elif chunk_type == b"uuid" and data[:16].hex() == CAF_INFO_UUID:
                 _parse_info_pairs(data[20:], tags)
 
+    if sample_rate is None or channels is None or frames is None:
+        return None
+
     duration = frames / sample_rate if frames is not None and sample_rate else None
     beat_count = tags.get("beat count")
     bpm = None
