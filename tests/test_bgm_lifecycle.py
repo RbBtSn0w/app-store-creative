@@ -1,5 +1,6 @@
 """Unit tests for PRD-002 / ADR-003: Apple Loops BGM engine."""
 import json
+import subprocess
 import struct
 import tempfile
 import unittest
@@ -182,6 +183,16 @@ class BGMComposeTests(unittest.TestCase):
     def test_compose_uses_duration_derived_fade_out_start_by_default(self):
         command = self._run_compose()
         self.assertNotIn("--fade-out-start", command)
+
+    def test_compose_converts_timeout_to_runtime_error(self):
+        with mock.patch.object(bgm_lifecycle, "_ensure_swift_binary"), \
+             mock.patch.object(
+                 bgm_lifecycle.subprocess,
+                 "run",
+                 side_effect=subprocess.TimeoutExpired(cmd="swift-bgm", timeout=300),
+             ):
+            with self.assertRaisesRegex(RuntimeError, "compose timed out after 300 seconds"):
+                compose(Path("/test/loop.caf"), Path("/test/video.mp4"), Path("/test/output.mp4"))
 
 
 class BGMCAFHeaderTests(unittest.TestCase):

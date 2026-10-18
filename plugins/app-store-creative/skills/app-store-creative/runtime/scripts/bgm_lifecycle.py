@@ -22,6 +22,8 @@ from pathlib import Path
 APPLE_LOOPS_ROOT = Path("/Library/Audio/Apple Loops")
 CAF_INFO_UUID = "29819273b5bf4aefb78d62d1ef90bb2c"
 SWIFT_SOURCE = Path(__file__).parent / "swift_bgm_compose.swift"
+SWIFT_COMPILE_TIMEOUT_SECONDS = 120
+SWIFT_COMPOSE_TIMEOUT_SECONDS = 300
 
 
 def scan_catalog(
@@ -273,7 +275,18 @@ def compose(
     ]
     if fade_out_start is not None:
         command += ["--fade-out-start", str(fade_out_start)]
-    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=SWIFT_COMPOSE_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError(
+            f"swift-bgm compose timed out after {SWIFT_COMPOSE_TIMEOUT_SECONDS} seconds"
+        ) from error
     if result.returncode != 0:
         raise RuntimeError(
             f"swift-bgm compose failed (exit {result.returncode}): {result.stderr.strip()}"
@@ -305,11 +318,16 @@ def _ensure_swift_binary() -> Path:
             capture_output=True,
             text=True,
             check=True,
+            timeout=SWIFT_COMPILE_TIMEOUT_SECONDS,
         )
     except FileNotFoundError as error:
         raise RuntimeError("swiftc is unavailable; install Xcode Command Line Tools") from error
     except subprocess.CalledProcessError as error:
         raise RuntimeError(f"Swift compilation failed: {error.stderr}") from error
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError(
+            f"Swift compilation timed out after {SWIFT_COMPILE_TIMEOUT_SECONDS} seconds"
+        ) from error
     _swift_binary_cache = binary
     return binary
 
