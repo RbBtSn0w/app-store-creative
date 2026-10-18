@@ -49,12 +49,17 @@ swift-bgm compose \
   --loop <caf-path> \
   --video <mp4-path> \
   --output <mp4-path> \
-  [--fade-in-seconds 0.35] \
-  [--fade-out-start-seconds 18.5] \
-  [--fade-out-duration-seconds 1.5] \
+  [--fade-in 0.35] \
+  [--fade-out-duration 1.5] \
   [--target-lufs -16.0] \
-  [--true-peak-ceiling-dbtp -1.0]
+  [--true-peak-ceiling -1.0]
 ```
+
+Note: the implemented flags are `--fade-in`, `--fade-out-start`,
+`--fade-out-duration`, `--target-lufs`, and `--true-peak-ceiling` (matching the
+parser in `swift_bgm_compose.swift`). When `--fade-out-start` is omitted, the
+binary derives it from the video duration (`duration - fade-out-duration`) so
+the fade-out window adapts to each preview.
 
 Behavior:
 

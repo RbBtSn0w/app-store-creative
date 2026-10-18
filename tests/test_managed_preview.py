@@ -94,7 +94,8 @@ class ManagedPreviewTests(unittest.TestCase):
                     'presentation_frames': 882000, 'restored_priming_frames': 2112,
                     'duration_seconds': 20.0, 'output': str(output_path), 'attempts': []}
         with patch('produce_app_preview.execute', side_effect=executor), \
-             patch.object(bgm_lifecycle, 'compose', side_effect=compose):
+             patch.object(bgm_lifecycle, 'compose', side_effect=compose), \
+             patch('produce_app_preview.validate_output', return_value={'format': {'duration': '20'}, 'streams': []}):
             result = produce(self.store, run['id'], contract, 'preview/app_preview.mp4', 'agent', bgm_loop=loop)
         self.assertEqual(result['status'], 'succeeded')
         preview = self.store.verify_artifact(result['preview_artifact_id'])

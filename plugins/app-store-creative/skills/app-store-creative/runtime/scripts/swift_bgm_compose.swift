@@ -18,7 +18,7 @@ struct Arguments {
     var video: URL
     var output: URL
     var fadeIn: Double = 0.35
-    var fadeOutStart: Double = 18.5
+    var fadeOutStart: Double? = nil
     var fadeOutDuration: Double = 1.5
     var targetLufs: Double = -16.0
     var truePeakCeiling: Double = -1.0
@@ -321,6 +321,7 @@ func restorePriming(source: URL, output: URL) throws -> Int32 {
             guard totalFrames > 0 else {
                 throw ComposeError.render("Video duration is zero or unreadable")
             }
+            let resolvedFadeOutStart = args.fadeOutStart ?? max(0.0, durationSeconds - args.fadeOutDuration)
 
             let decodedLoop = try readPCM(args.loop)
             guard decodedLoop.format.channelCount == 2 else {
@@ -340,8 +341,8 @@ func restorePriming(source: URL, output: URL) throws -> Int32 {
                 for i in 0..<totalFrames {
                     let t = Double(i) / sampleRate
                     let fadeIn = min(1.0, t / max(args.fadeIn, 0.001))
-                    let fadeOutEnd = args.fadeOutStart + args.fadeOutDuration
-                    let fadeOut = t >= args.fadeOutStart ? max(0.0, 1.0 - (t - args.fadeOutStart) / max(args.fadeOutDuration, 0.001)) : 1.0
+                    let fadeOutEnd = resolvedFadeOutStart + args.fadeOutDuration
+                    let fadeOut = t >= resolvedFadeOutStart ? max(0.0, 1.0 - (t - resolvedFadeOutStart) / max(args.fadeOutDuration, 0.001)) : 1.0
                     let fadeOutClamped = t >= fadeOutEnd ? 0.0 : fadeOut
                     let envelope = max(0.0, min(1.0, min(fadeIn, fadeOutClamped)))
                     source.floatChannelData![ch][i] = raw.floatChannelData![ch][i % sourceFrames] * Float(envelope)

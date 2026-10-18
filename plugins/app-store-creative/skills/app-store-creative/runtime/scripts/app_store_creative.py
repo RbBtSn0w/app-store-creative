@@ -191,7 +191,6 @@ def _run_bgm(args, bgm_lifecycle, project_path):
             video_path=args.video,
             output_path=args.output,
             fade_in=args.fade_in,
-            fade_out_start=args.fade_out_start,
             fade_out_duration=args.fade_out_duration,
             target_lufs=args.target_lufs,
             true_peak_ceiling=args.true_peak_ceiling,
@@ -283,7 +282,7 @@ def build_parser():
     bgm_compose.add_argument("--video", type=Path, required=True, help="Path to the preview video")
     bgm_compose.add_argument("--output", type=Path, required=True, help="Output path for the composed MP4")
     bgm_compose.add_argument("--fade-in", type=float, default=0.35, help="Fade-in duration in seconds (default 0.35)")
-    bgm_compose.add_argument("--fade-out-start", type=float, default=18.5, help="Fade-out start in seconds (default 18.5)")
+    bgm_compose.add_argument("--fade-out-start", type=float, default=None, help="Fade-out start in seconds (default: video duration minus fade-out duration)")
     bgm_compose.add_argument("--fade-out-duration", type=float, default=1.5, help="Fade-out duration in seconds (default 1.5)")
     bgm_compose.add_argument("--target-lufs", type=float, default=-16.0, help="Target integrated LUFS (default -16)")
     bgm_compose.add_argument("--true-peak-ceiling", type=float, default=-1.0, help="True-peak ceiling in dBTP (default -1)")

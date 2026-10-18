@@ -106,7 +106,15 @@ def produce(core, run_id, contract_path, logical_path, owner, bgm_loop=None):
                     video_path=outputs[0][0],
                     output_path=bgm_output,
                 )
-                shutil.copyfile(bgm_output, outputs[0][0])
+                final_preview = outputs[0][0]
+                shutil.copyfile(bgm_output, final_preview)
+                bgm_receipt_path.write_text(json.dumps(bgm_receipt, indent=2, sort_keys=True))
+                from media_tool_identity import MediaTools
+                tools = MediaTools()
+                from produce_app_preview import validate_output
+                refreshed = validate_output(final_preview, execution, tools)
+                bgm_receipt['output'] = 'media/' + logical_path
+                bgm_receipt['probe'] = refreshed
                 bgm_receipt_path.write_text(json.dumps(bgm_receipt, indent=2, sort_keys=True))
             receipt_path = outputs[1][0]
             receipt_path.write_bytes(canonical(portable_receipt(json.loads(receipt_path.read_text()), inputs, outputs)))
