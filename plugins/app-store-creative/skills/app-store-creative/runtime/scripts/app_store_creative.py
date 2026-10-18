@@ -148,7 +148,65 @@ def run(args):
                 output_path=out_path,
             )
 
+    if args.command == "bgm":
+        import bgm_lifecycle
+        return _run_bgm(args, bgm_lifecycle, project_path)
+
     raise AssertionError(args.command)
+
+
+def _run_bgm(args, bgm_lifecycle, project_path):
+    """Dispatch bgm subcommands (scan / recommend / compose)."""
+    if args.bgm_action == "scan":
+        catalog = bgm_lifecycle.scan_catalog(library_root=args.library)
+        output = project_path(args.output)
+        if output:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(json.dumps(catalog, indent=2, ensure_ascii=False))
+            return {"status": "ok", "catalog_path": str(output),
+                    "total_files": catalog["total_files"], "music_loops": catalog["music_loops"],
+                    "available": catalog["available"]}
+        return catalog
+
+    if args.bgm_action == "recommend":
+        catalog = json.loads(project_path(args.catalog).read_text())
+        if args.context:
+            context = json.loads(project_path(args.context).read_text())
+        elif args.context_json:
+            context = json.loads(args.context_json)
+        else:
+            context = {}
+        result = bgm_lifecycle.recommend(catalog, context, count=args.count)
+        output = project_path(args.output)
+        if output:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(json.dumps(result, indent=2, ensure_ascii=False))
+            return {"status": "ok", "recommendations_path": str(output),
+                    "available": result["available"], "candidates": len(result["candidates"])}
+        return result
+
+    if args.bgm_action == "compose":
+        receipt = bgm_lifecycle.compose(
+            loop_path=project_path(args.loop),
+            video_path=project_path(args.video),
+            output_path=project_path(args.output),
+            fade_in=args.fade_in,
+            fade_out_start=args.fade_out_start,
+            fade_out_duration=args.fade_out_duration,
+            target_lufs=args.target_lufs,
+            true_peak_ceiling=args.true_peak_ceiling,
+        )
+        receipt_path = project_path(args.receipt)
+        if receipt_path:
+            receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False))
+        return {"status": "ok", "output": receipt["output"],
+                "final_lufs": receipt["final_native_lufs"],
+                "final_peak_dbtp": receipt["final_native_guarded_peak_dbtp"],
+                "duration_seconds": receipt["duration_seconds"],
+                "priming_frames": receipt["restored_priming_frames"]}
+
+    raise AssertionError(f"Unknown bgm action: {args.bgm_action}")
 
 
 def build_parser():
@@ -205,6 +263,31 @@ def build_parser():
     ppo_handoff.add_argument("--baseline-delivery", type=str, help="Delivery ID of baseline / control")
     ppo_handoff.add_argument("--treatment-delivery", action="append", dest="treatment_deliveries", help="Treatment delivery mapping (treatment_id:delivery_id)")
     ppo_handoff.add_argument("--output", type=Path, help="Output path for ppo-handoff.json")
+
+    bgm = cmd("bgm")
+    bgm_sub = bgm.add_subparsers(dest="bgm_action", required=True)
+
+    bgm_scan = bgm_sub.add_parser("scan", help="Scan installed Apple Loops and output a catalog")
+    bgm_scan.add_argument("--output", type=Path, help="Output path for catalog JSON (default: stdout)")
+    bgm_scan.add_argument("--library", type=Path, default=Path("/Library/Audio/Apple Loops"), help="Apple Loops library root")
+
+    bgm_recommend = bgm_sub.add_parser("recommend", help="Score catalog entries against product context")
+    bgm_recommend.add_argument("--catalog", type=Path, required=True, help="Path to catalog JSON from bgm scan")
+    bgm_recommend.add_argument("--context", type=Path, help="Path to product-context JSON (or inline with --context-json)")
+    bgm_recommend.add_argument("--context-json", type=str, help="Inline product-context JSON string")
+    bgm_recommend.add_argument("--count", type=int, default=3, help="Maximum candidates to return (default 3)")
+    bgm_recommend.add_argument("--output", type=Path, help="Output path for recommendations JSON (default: stdout)")
+
+    bgm_compose = bgm_sub.add_parser("compose", help="Render background music onto a preview video")
+    bgm_compose.add_argument("--loop", type=Path, required=True, help="Path to the chosen CAF loop")
+    bgm_compose.add_argument("--video", type=Path, required=True, help="Path to the preview video")
+    bgm_compose.add_argument("--output", type=Path, required=True, help="Output path for the composed MP4")
+    bgm_compose.add_argument("--fade-in", type=float, default=0.35, help="Fade-in duration in seconds (default 0.35)")
+    bgm_compose.add_argument("--fade-out-start", type=float, default=None, help="Fade-out start in seconds (default: video duration minus fade-out duration)")
+    bgm_compose.add_argument("--fade-out-duration", type=float, default=1.5, help="Fade-out duration in seconds (default 1.5)")
+    bgm_compose.add_argument("--target-lufs", type=float, default=-16.0, help="Target integrated LUFS (default -16)")
+    bgm_compose.add_argument("--true-peak-ceiling", type=float, default=-1.0, help="True-peak ceiling in dBTP (default -1)")
+    bgm_compose.add_argument("--receipt", type=Path, help="Optional path to write the Swift receipt JSON")
 
     return p
 
