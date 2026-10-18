@@ -171,6 +171,10 @@ def recommend(
     scored: list[tuple[float, dict]] = []
     for entry in catalog.get("entries", []):
         tags = entry.get("tags", {})
+        if entry.get("sample_rate") != 44100.0:
+            continue
+        if entry.get("channels") != 2:
+            continue
         descriptors = [d.strip().lower() for d in tags.get("descriptors", "").split(",")]
         score = 0.0
         mapping: dict[str, str] = {}

@@ -322,10 +322,13 @@ func restorePriming(source: URL, output: URL) throws -> Int32 {
                 throw ComposeError.render("Video duration is zero or unreadable")
             }
 
-            let raw = try readPCM(args.loop)
-            guard raw.format.channelCount == 2 else {
-                throw ComposeError.render("Loop must be stereo, found \(raw.format.channelCount) channels")
+            let decodedLoop = try readPCM(args.loop)
+            guard decodedLoop.format.channelCount == 2 else {
+                throw ComposeError.render("Loop must be stereo, found \(decodedLoop.format.channelCount) channels")
             }
+            let raw = decodedLoop.format.sampleRate == sampleRate
+                ? decodedLoop
+                : try resample(decodedLoop, to: sampleRate)
             let sourceFrames = Int(raw.frameLength)
             guard sourceFrames > 0 else {
                 throw ComposeError.render("Loop has no frames")
