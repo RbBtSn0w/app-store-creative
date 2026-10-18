@@ -77,6 +77,41 @@ class ManagedPreviewTests(unittest.TestCase):
         self.assertNotIn('/opt/homebrew', data)
         self.assertEqual(json.loads(data)['output']['path'], 'media/preview/app_preview.mp4')
 
+    def test_bgm_loop_branch_registers_loop_and_receipt(self):
+        from managed_preview import produce
+        import bgm_lifecycle
+        run = self.store.start_run({}); contract = self.contract()
+        loop = self.root / 'loop.caf'; loop.write_bytes(b'caf-loop-bytes')
+        def executor(recipe, output, receipt, snapshot):
+            self.assertEqual(len((recipe, output, receipt, snapshot)), 4)
+            output.write_bytes(b'encoded'); receipt.write_text('{}'); snapshot.write_bytes(b'frames')
+        def compose(loop_path, video_path, output_path, **kwargs):
+            self.assertTrue(str(loop_path).endswith('bgm-loop.caf'))
+            self.assertEqual(loop_path.read_bytes(), b'caf-loop-bytes')
+            self.assertTrue(str(video_path).endswith('preview.mp4'))
+            output_path.write_bytes(b'encoded-with-bgm')
+            return {'final_native_lufs': -16.0, 'final_native_guarded_peak_dbtp': -1.2,
+                    'presentation_frames': 882000, 'restored_priming_frames': 2112,
+                    'duration_seconds': 20.0, 'output': str(output_path), 'attempts': []}
+        with patch('produce_app_preview.execute', side_effect=executor), \
+             patch.object(bgm_lifecycle, 'compose', side_effect=compose):
+            result = produce(self.store, run['id'], contract, 'preview/app_preview.mp4', 'agent', bgm_loop=loop)
+        self.assertEqual(result['status'], 'succeeded')
+        preview = self.store.verify_artifact(result['preview_artifact_id'])
+        self.assertEqual(preview['role'], 'preview')
+        closure = self.store._closure([preview['id']])
+        loop_artifacts = [item for item in closure.values() if item['logical_path'] == 'sources/bgm-loop.caf']
+        self.assertEqual(len(loop_artifacts), 1)
+        self.assertEqual(self.store.object_path(loop_artifacts[0]['sha256']).read_bytes(), b'caf-loop-bytes')
+        bgm_receipts = [item for item in closure.values()
+                        if item['logical_path'] == 'evidence/bgm-receipt.json']
+        self.assertEqual(len(bgm_receipts), 1)
+        receipt_data = json.loads(self.store.object_path(bgm_receipts[0]['sha256']).read_text())
+        self.assertEqual(receipt_data['final_native_lufs'], -16.0)
+        self.assertEqual(receipt_data['restored_priming_frames'], 2112)
+        # The rendered preview contains the composed bytes, not the original timeline output.
+        self.assertEqual(self.store.object_path(preview['sha256']).read_bytes(), b'encoded-with-bgm')
+
     def test_artifact_input_keeps_original_evidence_in_closure(self):
         from managed_preview import produce
         run = self.store.start_run({}); contract = self.contract()

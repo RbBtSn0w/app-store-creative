@@ -50,6 +50,7 @@ def produce(core, run_id, contract_path, logical_path, owner, bgm_loop=None):
     if bgm_loop is not None:
         bgm_receipt_path = work / 'bgm-receipt.json'
         outputs.append((bgm_receipt_path, 'producer-evidence', 'evidence/bgm-receipt.json'))
+    preview_outputs = outputs[:3]
     try:
         with core.keep_lease(attempt['id']):
             inputs.mkdir()
@@ -91,7 +92,7 @@ def produce(core, run_id, contract_path, logical_path, owner, bgm_loop=None):
             for item in [*execution.get('segments', []), *execution.get('overlays', []), execution.get('end_card') or {}]:
                 if 'path' in item:
                     item['path'] = str(inputs / item['path'])
-            produce_app_preview.execute(execution, *(path for path, _, _ in outputs))
+            produce_app_preview.execute(execution, *(path for path, _, _ in preview_outputs))
             if bgm_loop is not None:
                 import bgm_lifecycle
                 loop_source = Path(bgm_loop).resolve()
