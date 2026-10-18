@@ -39,11 +39,16 @@ func parseArguments() throws -> Arguments {
             args.video = URL(fileURLWithPath: raw[index])
         case "--output": index += 1; guard index < raw.count else { throw ComposeError.usage("Missing --output value") }
             args.output = URL(fileURLWithPath: raw[index])
-        case "--fade-in": index += 1; args.fadeIn = Double(raw[index]) ?? 0.35
-        case "--fade-out-start": index += 1; args.fadeOutStart = Double(raw[index]) ?? 18.5
-        case "--fade-out-duration": index += 1; args.fadeOutDuration = Double(raw[index]) ?? 1.5
-        case "--target-lufs": index += 1; args.targetLufs = Double(raw[index]) ?? -16.0
-        case "--true-peak-ceiling": index += 1; args.truePeakCeiling = Double(raw[index]) ?? -1.0
+        case "--fade-in": index += 1; guard index < raw.count, let value = Double(raw[index]) else { throw ComposeError.usage("Missing or invalid --fade-in value") }
+            args.fadeIn = value
+        case "--fade-out-start": index += 1; guard index < raw.count, let value = Double(raw[index]) else { throw ComposeError.usage("Missing or invalid --fade-out-start value") }
+            args.fadeOutStart = value
+        case "--fade-out-duration": index += 1; guard index < raw.count, let value = Double(raw[index]) else { throw ComposeError.usage("Missing or invalid --fade-out-duration value") }
+            args.fadeOutDuration = value
+        case "--target-lufs": index += 1; guard index < raw.count, let value = Double(raw[index]) else { throw ComposeError.usage("Missing or invalid --target-lufs value") }
+            args.targetLufs = value
+        case "--true-peak-ceiling": index += 1; guard index < raw.count, let value = Double(raw[index]) else { throw ComposeError.usage("Missing or invalid --true-peak-ceiling value") }
+            args.truePeakCeiling = value
         default: throw ComposeError.usage("Unknown argument: \(raw[index])")
         }
         index += 1
