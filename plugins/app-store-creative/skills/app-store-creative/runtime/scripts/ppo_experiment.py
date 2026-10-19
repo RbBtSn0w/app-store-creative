@@ -410,8 +410,8 @@ def ppo_reproduce_plan(
     derived = derive_treatment_config(base_config, experiment_id, variant_id)
     project = base_config.get("project", {})
     publishing = base_config.get("publishing", {})
-    locales = derived.get("project", {}).get("locales", [])
-    targets = derived.get("targets", [])
+    locales = derived.get("project", {}).get("locales", ["en-US"])
+    targets = derived.get("targets", ["iphone_6_9"])
     plan = {
         "schema_version": 1,
         "generated_by": "app-store-creative:ppo-reproduce",
