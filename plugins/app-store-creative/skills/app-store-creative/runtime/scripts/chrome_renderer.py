@@ -140,7 +140,7 @@ def render_native(cmd, profile: Path, output: Path, timeout_seconds):
     # DevTools owns the screenshot action; virtual time must not expire image decoding.
     excluded = ('--screenshot=', '--virtual-time-budget=')
     flags = [value for value in cmd[1:-1] if not value.startswith(excluded)
-             and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--default-background-color=ffffffff', '--disable-gpu', '--disable-dev-shm-usage')]
+             and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--default-background-color=ffffffff', '--disable-dev-shm-usage')]
     launch = ['/usr/bin/open', '-n', '-g', '--stdout', str(profile / 'browser.stdout'),
               '--stderr', str(profile / 'browser.stderr'), '-a', str(app), '--args', *flags,
               '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', 'about:blank']
