@@ -200,13 +200,57 @@ def _run_bgm(args, bgm_lifecycle, project_path):
         if receipt_path:
             receipt_path.parent.mkdir(parents=True, exist_ok=True)
             receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False))
-        return {"status": "ok", "output": receipt["output"],
-                "final_lufs": receipt["final_native_lufs"],
-                "final_peak_dbtp": receipt["final_native_guarded_peak_dbtp"],
-                "duration_seconds": receipt["duration_seconds"],
-                "priming_frames": receipt["restored_priming_frames"]}
+        result = {"status": "ok", "output": receipt["output"],
+                  "final_lufs": receipt["final_native_lufs"],
+                  "final_peak_dbtp": receipt["final_native_guarded_peak_dbtp"],
+                  "duration_seconds": receipt["duration_seconds"],
+                  "priming_frames": receipt["restored_priming_frames"]}
+        if getattr(args, "managed", False):
+            result["artifact"] = _register_bgm_compose(args, project_path, receipt)
+        return result
 
     raise AssertionError(f"Unknown bgm action: {args.bgm_action}")
+
+
+def _register_bgm_compose(args, project_path, receipt):
+    """PRD-004: register a standalone BGM compose output into the lifecycle."""
+    import shutil
+    from artifact_lifecycle import Lifecycle
+    root = project_path(Path("."))
+    core = Lifecycle.from_configuration(root, None)
+    run = core.start_run({"workflow": "bgm-compose"})
+    attempt = core.start_attempt(run["id"], "compose", "bgm-standalone")
+    try:
+        loop = project_path(args.loop)
+        video = project_path(args.video)
+        output = Path(receipt["output"])
+        work = core.work_path(attempt["id"])
+        inputs = work / "inputs"
+        with core.keep_lease(attempt["id"]):
+            inputs.mkdir()
+            dependencies = []
+            for index, (source, logical) in enumerate(((loop, "sources/bgm-loop.caf"),
+                                                       (video, "sources/preview-source.mp4"))):
+                name = f"input-{index}{source.suffix.lower()}"
+                snapshot = inputs / name
+                shutil.copyfile(source, snapshot)
+                registered = core.register(attempt["id"], snapshot, "capture",
+                                           logical_path=logical)
+                dependencies.append(registered["id"])
+            receipt_file = work / "bgm-receipt.json"
+            receipt_file.write_text(json.dumps(receipt, indent=2, sort_keys=True))
+            receipt_artifact = core.register(attempt["id"], receipt_file, "producer-evidence",
+                                             inputs=dependencies,
+                                             logical_path="evidence/bgm-receipt.json")
+            composed = core.register(attempt["id"], output, "preview",
+                                     inputs=dependencies + [receipt_artifact["id"]],
+                                     logical_path="preview/bgm-compose.mp4")
+        core.finish_attempt(attempt["id"], "succeeded")
+        return {"run_id": run["id"], "attempt_id": attempt["id"],
+                "artifact_id": composed["id"], "receipt_artifact_id": receipt_artifact["id"]}
+    except BaseException:
+        core.finish_attempt(attempt["id"], "failed", reason="BGM standalone compose registration failed")
+        raise
 
 
 def build_parser():
@@ -288,6 +332,7 @@ def build_parser():
     bgm_compose.add_argument("--target-lufs", type=float, default=-16.0, help="Target integrated LUFS (default -16)")
     bgm_compose.add_argument("--true-peak-ceiling", type=float, default=-1.0, help="True-peak ceiling in dBTP (default -1)")
     bgm_compose.add_argument("--receipt", type=Path, help="Optional path to write the Swift receipt JSON")
+    bgm_compose.add_argument("--managed", action="store_true", help="Register the composed output in the artifact lifecycle (PRD-004)")
 
     return p
 

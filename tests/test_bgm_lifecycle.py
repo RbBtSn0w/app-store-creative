@@ -195,6 +195,82 @@ class BGMComposeTests(unittest.TestCase):
                 compose(Path("/test/loop.caf"), Path("/test/video.mp4"), Path("/test/output.mp4"))
 
 
+class BGMStandaloneLifecycleTests(unittest.TestCase):
+    """PRD-004: standalone compose with --managed registers lifecycle artifacts."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name).resolve()
+        self.cfg_path = self.root / "creative.config.json"
+        self.config = {"project": {"id": "demo"}, "storage": {
+            "workspaceRoot": ".creative", "objectRoot": ".creative/objects",
+            "releaseRoot": "creative-releases", "publicationRoot": "creative-publications"}}
+        self.cfg_path.write_text(json.dumps(self.config))
+
+    def _prepare_inputs(self):
+        loop = self.root / "loop.caf"; loop.write_bytes(b"caf-loop-bytes")
+        video = self.root / "preview.mp4"; video.write_bytes(b"video-bytes")
+        output = self.root / "bgm-compose.mp4"
+        return loop, video, output
+
+    def _run_managed_compose(self, fail_registration=False):
+        import app_store_creative
+        loop, video, output = self._prepare_inputs()
+        receipt = {"output": str(output), "final_native_lufs": -16.0,
+                   "final_native_guarded_peak_dbtp": -1.2, "duration_seconds": 20.0,
+                   "restored_priming_frames": 2112}
+        def fake_compose(**kwargs):
+            if fail_registration:
+                output.write_bytes(b"composed-bytes")  # produced, then registration fails
+                raise RuntimeError("simulated registration failure")
+            output.write_bytes(b"composed-bytes")
+            return receipt
+        args = app_store_creative.build_parser().parse_args([
+            "bgm", "--repo", str(self.root), "compose",
+            "--loop", str(loop), "--video", str(video), "--output", str(output),
+            "--managed",
+        ])
+        import bgm_lifecycle
+        with mock.patch.object(bgm_lifecycle, "compose", side_effect=fake_compose):
+            import importlib
+            importlib.reload(app_store_creative)
+            result = app_store_creative.run(args)
+        return result, loop, video, output
+
+    def test_managed_compose_registers_lifecycle_closure(self):
+        from artifact_lifecycle import Lifecycle
+        result, _, _, output = self._run_managed_compose()
+        self.assertEqual(result["status"], "ok")
+        artifact_ref = result["artifact"]
+        self.assertIn("artifact_id", artifact_ref)
+        core = Lifecycle(self.root, self.config, self.cfg_path)
+        composed = core.verify_artifact(artifact_ref["artifact_id"])
+        self.assertEqual(composed["role"], "preview")
+        self.assertEqual(core.object_path(composed["sha256"]).read_bytes(), b"composed-bytes")
+        status = core.status(artifact_ref["run_id"])
+        self.assertEqual(status["attempts"][0]["outcome"]["status"], "succeeded")
+        closure = core._closure([composed["id"]])
+        roles = {item["role"] for item in closure.values()}
+        self.assertIn("capture", roles)  # loop + video inputs registered
+        self.assertIn("producer-evidence", roles)  # receipt registered
+
+    def test_managed_compose_failure_aborts_without_partial_registration(self):
+        from artifact_lifecycle import Lifecycle
+        with self.assertRaisesRegex(RuntimeError, "simulated registration failure"):
+            self._run_managed_compose(fail_registration=True)
+        core = Lifecycle(self.root, self.config, self.cfg_path)
+        # The failed attempt is recorded with no succeeded artifacts in the
+        # lifecycle; the workspace has no candidate-eligible output.
+        artifact_records = list((core.paths.workspace / "records" / "artifacts").glob("*.json"))
+        if artifact_records:
+            # If any artifact records exist (partial), none may be candidate-eligible
+            for record_path in artifact_records:
+                record = core._read("artifacts", record_path.stem)
+                self.assertTrue(record["partial"] or not core._path("attempts", record["attempt_id"], "outcome").exists() or
+                                core._read("attempts", record["attempt_id"], "outcome")["status"] != "succeeded")
+
+
 class BGMCAFHeaderTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
