@@ -170,11 +170,19 @@ def derive_treatment_config(
                     locale_dest[cid] = copy.deepcopy(card_copy)
 
     # 4. Storage namespace isolation for the treatment
-    if "storage" in derived and isinstance(derived["storage"], dict):
-        ws = derived["storage"].get("workspaceRoot", ".creative")
-        obj = derived["storage"].get("objectRoot", ".creative/objects")
-        derived["storage"]["workspaceRoot"] = f"{ws}-{treatment_id}"
-        derived["storage"]["objectRoot"] = f"{obj}-{treatment_id}"
+    storage = derived.setdefault("storage", {})
+    ws = storage.get("workspaceRoot", ".creative")
+    obj = storage.get("objectRoot", str(Path(ws) / "objects"))
+    # IDs are data, not paths; retain existing simple namespaces for compatibility.
+    import re
+    import hashlib
+    namespace = treatment_id
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", namespace):
+        namespace = hashlib.sha256(treatment_id.encode()).hexdigest()[:16]
+    storage["workspaceRoot"] = f"{ws}-{namespace}"
+    storage["objectRoot"] = f"{obj}-{namespace}"
+    if exp.platform:
+        derived.setdefault("publishing", {})["platform"] = exp.platform
 
     # 5. Metadata stamp
     derived["_experiment"] = {
@@ -421,6 +429,7 @@ def ppo_reproduce_plan(
         },
         "scope": {
             "locales": locales,
+            "by_locale": [{"locale": locale, "targets": list(targets)} for locale in locales],
             "targets": targets,
             "locale_count": len(locales),
             "target_count": len(targets),

@@ -94,7 +94,9 @@ class ArtifactLifecycleTests(unittest.TestCase):
         read_back = self.store.verify_artifact(artifact['id'])
         self.assertEqual(read_back['experiment_provenance'], provenance)
         # Records without provenance omit the field entirely (backward compat).
-        plain = self.store.register(attempt['id'], self.root / 'plain.bin' if (self.root / 'plain.bin').write_bytes(b'x') is None else self.root / 'plain.bin', 'capture')
+        plain_path = self.root / 'plain.bin'
+        plain_path.write_bytes(b'x')
+        plain = self.store.register(attempt['id'], plain_path, 'capture')
         self.assertNotIn('experiment_provenance', plain)
 
     def test_cli_uses_the_same_directory_and_record_contract(self):

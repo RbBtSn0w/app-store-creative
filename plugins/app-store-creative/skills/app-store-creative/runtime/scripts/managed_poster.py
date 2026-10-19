@@ -73,7 +73,7 @@ def produce(core, run_id, preview_id, timestamp, owner, retry_of=None):
                 'source_artifact_id':preview_id, 'source_sha256':source['sha256'],
                 'timestamp_seconds':timestamp, 'output':f'media/{logical_poster}'}))
             plan = core.register(attempt['id'], plan_path, 'source', inputs=[preview_id],
-                                 logical_path=logical_plan)
+                                 logical_path=logical_plan, experiment_provenance=source.get('experiment_provenance'))
             dependencies.append(plan['id'])
             media = extract(core.object_path(source['sha256']), output, timestamp)
             receipt_path = work / 'poster-receipt.json'
@@ -82,9 +82,9 @@ def produce(core, run_id, preview_id, timestamp, owner, retry_of=None):
                 'timestamp_seconds':timestamp, 'media':media, 'output':f'media/{logical_poster}',
                 'uploaded':False, 'visual_approval_granted':False}))
             receipt = core.register(attempt['id'], receipt_path, 'producer-evidence',
-                inputs=dependencies, logical_path=logical_receipt)
+                inputs=dependencies, logical_path=logical_receipt, experiment_provenance=source.get('experiment_provenance'))
             poster = core.register(attempt['id'], output, 'poster',
-                inputs=dependencies + [receipt['id']], logical_path=logical_poster)
+                inputs=dependencies + [receipt['id']], logical_path=logical_poster, experiment_provenance=source.get('experiment_provenance'))
             core.finish_attempt(attempt['id'], 'succeeded')
             return {'run_id':run_id, 'attempt_id':attempt['id'], 'status':'succeeded',
                     'poster_artifact_id':poster['id'], 'evidence_artifact_id':receipt['id'],
@@ -93,7 +93,7 @@ def produce(core, run_id, preview_id, timestamp, owner, retry_of=None):
         try:
             if output.is_file():
                 core.register(attempt['id'], output, 'poster', partial=True,
-                    inputs=dependencies, logical_path=logical_poster)
+                    inputs=dependencies, logical_path=logical_poster, experiment_provenance=source.get('experiment_provenance'))
             core.finish_attempt(attempt['id'], 'cancelled' if isinstance(error, KeyboardInterrupt)
                                 else 'failed', str(error) or type(error).__name__)
         except Exception as evidence_error:
