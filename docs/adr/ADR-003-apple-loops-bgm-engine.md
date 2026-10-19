@@ -247,7 +247,7 @@ stateless subcommand.
 
 ## Action Items
 
-1. [x] Slice 1: implement `bgm scan` (Python) + tests + artifact registration.
+1. [x] Slice 1: implement `bgm scan` (Python) + tests.
 2. [x] Slice 2: implement `bgm recommend` (Python) + scoring + receipts + tests.
 3. [x] Slice 3: implement `swift-bgm compose` (Swift source in runtime) +
        compile-on-demand wrapper + Python invocation + artifact registration.
