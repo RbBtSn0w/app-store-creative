@@ -1,6 +1,10 @@
 # Sprint 001: PRD Batch Implementation
 
 **Dates:** 2026-10-20 — 2026-11-02 | **Team:** 1 developer (rbbtsn0w)
+**Status date:** 2026-10-19. Implementation started ahead of the planned sprint;
+items below are implemented in open PRs, pending review and product sign-off.
+Key dates remain the original planning targets, not actual completion dates.
+
 **Sprint Goal:** Close the measurement→production loop: fix the macOS GPU
 export invariant, register standalone BGM compose into the lifecycle, and
 ship `ppo reproduce` v1 (CLI-only) so a winning variant can be reproduced
@@ -55,14 +59,14 @@ degradations are documented fallbacks, not silent scope cuts.
 | Risk | Impact | Mitigation |
 |------|--------|------------|
 | PRD-006 schema change (R1a) touches the lifecycle kernel, which has known cross-module coupling | Delays subtasks 2–5; may surface hidden record-store dependencies | Time-box subtask 1 to 2 days; if the schema change expands beyond provenance fields, stop and split into a separate contract PR rather than blocking the sprint |
-| PRD-006 scope is underestimated (engineering review flagged the decision-data gap late) | Sprint goal at risk if reproduce grows beyond CLI-only | v1 boundary is explicit `--variant`, no decision recording, no BGM, no Studio action; any addition goes to the next sprint backlog |
+| PRD-006 scope is underestimated (engineering review flagged the decision-data gap late) | Sprint goal at risk if reproduce grows beyond CLI-only | v1 boundary is explicit `--variant`, no decision-data auto-selection (receipts still record experiment ID, variant, and decision_basis), no BGM, no Studio action; any addition goes to the next sprint backlog |
 | Solo maintainer interrupt (production issue, urgent review) | Capacity drops below the 7.5-pt plan | Stretch (PRD-007) is the designated cut; if interrupts exceed 2 days, PRD-006 subtasks 4–5 carry over and the sprint goal narrows to "schema + CLI core landed" |
 | PRD-003 GPU fix changes export behavior in unexpected ways on non-`.app` Chrome | Blocks confidence in the fix; may require rollback | Acceptance tests cover both bundle and bare paths before merge; a manual macOS smoke export validates quality before PRD-005 showcase work starts next sprint |
 
 ## Definition of Done
 
 - [x] Code self-reviewed against the PRD acceptance criteria (working-tree
-      implementation, not yet committed: PRD-003/004/006/007 complete,
+      implementation committed in open PRs: PRD-003/004/006/007 implemented,
       PRD-005 deferred)
 - [x] Targeted Python tests passing: `test_chrome_renderer.py`,
       `test_bgm_lifecycle.py`, `test_ppo_experiment.py`,
@@ -73,8 +77,8 @@ degradations are documented fallbacks, not silent scope cuts.
       sandbox socket restrictions affecting 12 Studio HTTP tests (known
       environment issue, not introduced by this batch)
 - [x] Documentation updated: ADR-003 implementation status (PRD-004),
-      sprint plan status. New CLI docs for `ppo reproduce` and
-      `audit report` remain open
+      sprint plan status and CLI docs for `ppo reproduce` and
+      `audit report` are complete
 - [ ] Product sign-off: each PRD's acceptance criteria verified and noted in the PR description
 - [x] No dist bundle changes (Studio source unchanged in this batch)
 
@@ -102,10 +106,10 @@ degradations are documented fallbacks, not silent scope cuts.
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| PRD-003 GPU export invariant | Done | `build_gpu_flag()` platform policy; bundle vs bare-path export tests; 12/12 renderer tests |
-| PRD-004 BGM standalone lifecycle | Done | `bgm compose --managed` registers composed media + Swift receipt as producer-evidence; 21/21 BGM lifecycle tests |
-| PRD-006 v1 `ppo reproduce` | Done (v1 scope) | `ppo reproduce --experiment --variant [--execute]`; provenance flows from plan to every registered artifact via `production_lifecycle.produce(experiment_provenance=...)`; 21/21 experiment tests, provenance flow test green |
-| PRD-007 audit report | Done | `audit report --run-id` Markdown via public query surfaces (`status()`, `delivery_status()`, `list_deliveries()`, `list_publications()`); machine-checkable integrity line; gap-first summary; 21/21 audit tests |
+| PRD-003 GPU export invariant | Implemented; review pending | `build_gpu_flag()` platform policy; bundle vs bare-path export tests; 12/12 renderer tests |
+| PRD-004 BGM standalone lifecycle | Implemented; review pending | `bgm compose --managed` registers composed media + Swift receipt as producer-evidence; 21/21 BGM lifecycle tests |
+| PRD-006 v1 `ppo reproduce` | Implemented (v1 scope); review pending | `ppo reproduce --experiment --variant [--execute]`; provenance flows from plan to every registered artifact via `production_lifecycle.produce(experiment_provenance=...)`; 21/21 experiment tests, provenance flow test green |
+| PRD-007 audit report | Implemented; review pending | `audit report --run-id` Markdown via public query surfaces (`status()`, `delivery_status()`, `list_deliveries()`, `list_publications()`); machine-checkable integrity line; gap-first summary; 21/21 audit tests |
 | PRD-005 Studio example project | Deferred to Sprint 002 | Not started; depends on PRD-003 export quality trust |
 
 Remaining sprint-closing work (not blocking the implementation goal):

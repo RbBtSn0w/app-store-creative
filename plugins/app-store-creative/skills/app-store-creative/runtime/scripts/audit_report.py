@@ -15,6 +15,12 @@ def _all_pages(fetch, key, limit=100):
     return items
 
 
+def _cell(value):
+    return (str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            .replace("\\", "\\\\").replace("|", "\\|").replace("`", "&#96;")
+            .replace("\r\n", "\n").replace("\r", "\n").replace("\n", "<br>"))
+
+
 def _abbrev(sha256, length=12):
     return sha256[:length] if isinstance(sha256, str) and len(sha256) >= length else str(sha256)
 
@@ -49,8 +55,12 @@ def generate_report(core, run_id):
     """Generate a Markdown provenance audit report for a lifecycle run."""
     generated = datetime.now(timezone.utc).isoformat()
     state = core.status(run_id)
-    deliveries = _all_pages(core.list_deliveries, 'deliveries')
-    publications = _all_pages(core.list_publications, 'publications')
+    candidate_ids = {candidate['id'] for candidate in state['candidates']}
+    deliveries = [delivery for delivery in _all_pages(core.list_deliveries, 'deliveries')
+                  if delivery.get('candidate_id') in candidate_ids]
+    delivery_ids = {delivery['id'] for delivery in deliveries}
+    publications = [publication for publication in _all_pages(core.list_publications, 'publications')
+                    if publication.get('delivery_id') in delivery_ids]
 
     artifacts = state['artifacts']
     candidates = state['candidates']
@@ -80,7 +90,7 @@ def generate_report(core, run_id):
         lines.append('| # | Type | ID | Detail |')
         lines.append('|---|------|----|--------|')
         for i, (kind, identity, detail) in enumerate(gaps, 1):
-            lines.append(f'| {i} | {kind} | `{identity}` | {detail} |')
+            lines.append(f'| {i} | {_cell(kind)} | `{_cell(identity)}` | {_cell(detail)} |')
     else:
         lines.append('No gaps detected.')
     lines.append('')
@@ -123,8 +133,8 @@ def generate_report(core, run_id):
         lines.append('|----------|------------|------|')
         for receipt in receipts:
             consumers = [a['id'] for a in artifacts if receipt['id'] in (a.get('inputs') or [])]
-            ref = ', '.join(f'`{c}`' for c in consumers) if consumers else '—'
-            lines.append(f"| `{receipt['id']}` | {ref} | `{receipt.get('logical_path', '—')}` |")
+            ref = ', '.join(f'`{_cell(c)}`' for c in consumers) if consumers else '—'
+            lines.append(f"| `{_cell(receipt['id'])}` | {ref} | `{_cell(receipt.get('logical_path', '—'))}` |")
     else:
         lines.append('No producer-evidence receipts in this run.')
     lines.append('')
@@ -153,8 +163,8 @@ def generate_report(core, run_id):
             target_str = f"{target.get('platform', '?')} {target.get('version', '?')}"
             parent = d.get('parent_revision') or '—'
             status = core.delivery_status(d['id'])
-            lines.append(f"| `{d['id']}` | {d.get('created_at', '—')} | {target_str} | `{parent}` |"
-                         f" {status.get('local_status', '—')} |")
+            lines.append(f"| `{_cell(d['id'])}` | {_cell(d.get('created_at', '—'))} | {_cell(target_str)} | `{_cell(parent)}` |"
+                         f" {_cell(status.get('local_status', '—'))} |")
     else:
         lines.append('No deliveries recorded.')
     lines.append('')
@@ -165,7 +175,7 @@ def generate_report(core, run_id):
         lines.append('| Publication | Delivery | Created |')
         lines.append('|-------------|----------|---------|')
         for p in publications:
-            lines.append(f"| `{p['id']}` | `{p.get('delivery_id', '—')}` | {p.get('created_at', '—')} |")
+            lines.append(f"| `{_cell(p['id'])}` | `{_cell(p.get('delivery_id', '—'))}` | {_cell(p.get('created_at', '—'))} |")
     else:
         lines.append('No publications recorded.')
     lines.append('')

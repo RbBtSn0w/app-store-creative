@@ -448,7 +448,7 @@ class DeliveryOperations:
     def list_deliveries(self, limit=20, cursor=None):
         selected, cursor = self._record_page('deliveries', limit, cursor)
         return {'deliveries': [{key: record[key] for key in
-                ('id', 'created_at', 'project_id', 'target', 'parent_revision', 'manifest_sha256')}
+                ('id', 'created_at', 'project_id', 'candidate_id', 'target', 'parent_revision', 'manifest_sha256')}
                 for record in selected], 'next_cursor': cursor}
 
     def delivery_status(self, delivery_id):

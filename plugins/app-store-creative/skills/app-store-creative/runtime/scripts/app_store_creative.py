@@ -377,7 +377,7 @@ def main(argv=None):
     try:
         res = run(args)
         if res is not None:
-            print(json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
+            print(res if isinstance(res, str) else json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2

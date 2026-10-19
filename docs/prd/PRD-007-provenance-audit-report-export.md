@@ -51,17 +51,16 @@ evaluate.
 
 ### Must-Have (P0)
 
-- **R1**: A CLI command (e.g. `audit report`) takes a release (or artifact)
-  ID and emits a Markdown report covering: artifact inventory, per-artifact
+- **R1**: A CLI command (e.g. `audit report`) takes a lifecycle run ID (`--run-id`) and emits a Markdown report covering: artifact inventory, per-artifact
   source lineage, receipts, approvals, and delivery/publication references.
-  The report is summary-first: a top block with release ID, generation time,
+  The report is summary-first: a top block with run ID, generation time,
   artifact/receipt counts, and gap summary precedes per-artifact detail.
   - *Acceptance*: Unit test with a fixture record store produces a report
     containing all sections with correct IDs and no "unknown" placeholders
     for data that exists in the store; the gap summary appears at the top.
 - **R1a (P0)**: Records are read via the existing public query surfaces —
   per-run `status()` and per-delivery `delivery_status()` /
-  `list_deliveries()` — composed into the report; no manual record
+  `list_deliveries()` / `list_publications()` — composed into the report; no manual record
   traversal.
   - *Acceptance*: Report generation uses only those public query surfaces in
     the implementation under test.

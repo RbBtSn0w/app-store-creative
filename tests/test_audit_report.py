@@ -3,6 +3,10 @@ import json
 from pathlib import Path
 import re
 import unittest
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] /
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts"))
 
 import test_delivery_lifecycle as fixtures
 
@@ -31,6 +35,28 @@ class AuditReportTests(fixtures.DeliveryLifecycleTests):
         self.assertIn('Status |', report)
         self.assertIn('PASS', report)
         self.assertIn('No publications recorded.', report)
+
+    def test_report_excludes_other_run_deliveries_and_publications(self):
+        from audit_report import generate_report
+        from unittest.mock import patch
+        delivery = self.sealed()
+        other_run = self.store.start_run({'version': '1.6', 'platform': 'MAC_OS'})
+        with patch.object(self.store, 'list_publications', return_value={
+                'publications': [{'id': 'unrelated-publication', 'delivery_id': delivery['id']}],
+                'next_cursor': None}):
+            report = generate_report(self.store, other_run['id'])
+        self.assertNotIn(delivery['id'], report)
+        self.assertNotIn('unrelated-publication', report)
+
+    def test_dynamic_table_cells_escape_pipes_and_newlines(self):
+        from audit_report import generate_report
+        from unittest.mock import patch
+        state = self.store.status(self.run['id'])
+        state['candidates'][0]['disposition'] = {'reason': 'first|second\nnew row'}
+        with patch.object(self.store, 'status', return_value=state):
+            report = generate_report(self.store, self.run['id'])
+        self.assertIn('first\\|second<br>new row', report)
+        self.assertNotIn('second\nnew row', report)
 
     def test_missing_receipt_and_approval_are_explicit_gaps(self):
         from audit_report import generate_report
@@ -75,7 +101,7 @@ class AuditReportTests(fixtures.DeliveryLifecycleTests):
             [sys.executable, str(cli), 'audit', '--repo', str(self.root), 'report', '--run-id', self.run['id']],
             capture_output=True, text=True)
         self.assertEqual(process.returncode, 0, process.stderr)
-        self.assertIn('# Provenance Audit Report', process.stdout)
+        self.assertTrue(process.stdout.startswith('# Provenance Audit Report\n'))
 
 
 if __name__ == '__main__':
