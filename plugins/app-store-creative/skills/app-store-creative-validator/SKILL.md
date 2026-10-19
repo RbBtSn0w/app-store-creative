@@ -1,6 +1,8 @@
 ---
 name: app-store-creative-validator
 description: Validate App Store screenshot and App Preview artifacts, receipts, manifests, visual acceptance evidence, and upload readiness without mutating App Store Connect. Use before design approval, promotion, upload approval, or publishing, and when diagnosing missing locales, bad dimensions, alpha, color, naming, ordering, codec, duration, stale hashes, or incomplete provenance.
+metadata:
+  feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
 
 # App Store Creative Validator

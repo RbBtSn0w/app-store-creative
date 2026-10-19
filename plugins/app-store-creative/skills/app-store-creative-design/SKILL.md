@@ -1,6 +1,8 @@
 ---
 name: app-store-creative-design
 description: Compose and localize App Store screenshot frames in Figma using real captured product UI, release copy, and repository-defined dimensions and scene order. Use when creating or updating editable screenshot layouts, themes, safe areas, localized typography, product framing, or design-review exports for an App Store creative run.
+metadata:
+  feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
 
 # App Store Creative Design

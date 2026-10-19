@@ -1,6 +1,8 @@
 ---
 name: app-store-creative
 description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload.
+metadata:
+  feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
 
 # App Store Creative

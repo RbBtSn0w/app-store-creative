@@ -1,6 +1,8 @@
 ---
 name: app-store-creative-publisher
 description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state.
+metadata:
+  feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
 
 # App Store Creative Publisher

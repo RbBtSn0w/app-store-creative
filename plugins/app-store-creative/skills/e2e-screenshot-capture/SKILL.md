@@ -1,6 +1,8 @@
 ---
 name: e2e-screenshot-capture
 description: Capture deterministic, named screenshots of real product UI through an application's existing E2E or UI-test journeys. Use when an App Store creative plan needs raw screenshot inputs, capture coverage must change, or stale, mocked, nondeterministic, incorrectly sized, or visually corrupted source pixels must be diagnosed and recaptured.
+metadata:
+  feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
 
 # E2E Screenshot Capture

@@ -1,6 +1,8 @@
 ---
 name: app-store-preview-producer
 description: Produce App Store Preview videos from deterministic recordings of real app UI, with optional titles, transitions, audio treatment, and standards-compliant encoding. Use when a creative plan requires preview capture, editing, localization, transcoding, poster-frame review, or repair of timing, codec, dimension, or UI-authenticity defects.
+metadata:
+  feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
 
 # App Store Preview Producer
