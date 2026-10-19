@@ -186,7 +186,8 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                     'attempt_id': attempt['id'], 'stage': 'export', 'status': terminal,
                     'failure_type': type(error).__name__}))
                 core.register(attempt['id'], diagnostic_path, 'diagnostic', partial=True,
-                              inputs=source_ids, logical_path='diagnostics/export-failure.json')
+                              inputs=source_ids, logical_path='diagnostics/export-failure.json',
+                              experiment_provenance=experiment_provenance)
             except Exception as diagnostic_error:
                 error.add_note('Could not register export diagnostic: ' + str(diagnostic_error))
             for path, role, logical in (
@@ -195,7 +196,8 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                 try:
                     if path.is_file():
                         core.register(attempt['id'], path, role, partial=True,
-                                      inputs=source_ids, logical_path=logical)
+                                      inputs=source_ids, logical_path=logical,
+                                      experiment_provenance=experiment_provenance)
                 except Exception as partial_error:
                     error.add_note('Could not register partial export: ' + str(partial_error))
             try:

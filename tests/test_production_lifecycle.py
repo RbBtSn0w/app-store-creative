@@ -74,6 +74,16 @@ class ProductionLifecycleTests(unittest.TestCase):
         artifacts = [json.loads(path.read_text()) for path in (self.root / 'managed/records/artifacts').glob('*.json')]
         self.assertTrue(any(item['role'] == 'diagnostic' and item['partial'] for item in artifacts))
 
+    def test_failed_renderer_retains_experiment_provenance(self):
+        provenance = {'experiment_id': 'exp', 'variant_id': 'variant', 'decision_basis': 'selected'}
+        with mock.patch('export_engine.run_export', side_effect=RuntimeError('Font failed')):
+            with self.assertRaisesRegex(RuntimeError, 'Font failed'):
+                production.produce(self.root, experiment_provenance=provenance)
+        artifacts = [json.loads(p.read_text()) for p in
+                     (self.root / 'managed/records/artifacts').glob('*.json')]
+        diagnostic = next(item for item in artifacts if item['role'] == 'diagnostic')
+        self.assertEqual(diagnostic['experiment_provenance'], provenance)
+
     def test_failed_renderer_has_persistent_reason(self):
         with mock.patch('export_engine.run_export', side_effect=RuntimeError('Font failed')):
             with self.assertRaisesRegex(RuntimeError, 'Font failed'):
