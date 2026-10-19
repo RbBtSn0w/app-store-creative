@@ -24,6 +24,9 @@ def add_commands(subparsers):
     abandon.add_argument('--actor', required=True)
     abandon.add_argument('--reason', required=True)
     abandon.add_argument('--confirm', choices=['ABANDON'], required=True)
+    audit = group('audit')
+    audit_report = audit.add_parser('report')
+    audit_report.add_argument('--run-id', required=True)
     preview = group('preview')
     recording = preview.add_parser('record')
     recording.add_argument('--run-id', required=True)
@@ -397,6 +400,9 @@ def execute(args):
         if args.action == 'abandon':
             return core.abandon_commit(args.event_id, args.actor, args.reason)
         return core.operation_journals() if args.action == 'operations' else core.verify_history()
+    if args.command == 'audit' and args.action == 'report':
+        from audit_report import generate_report
+        return generate_report(core, args.run_id)
     if args.command == 'preview':
         if args.action == 'record':
             from managed_recording import record

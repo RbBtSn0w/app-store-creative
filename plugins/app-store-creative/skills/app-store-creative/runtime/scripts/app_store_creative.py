@@ -29,7 +29,7 @@ def run(args):
     def project_path(value):
         return (value if value.is_absolute() else root / value).resolve() if value else None
 
-    if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input"):
+    if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input", "audit"):
         return lifecycle_commands.execute(args)
 
     # Modern v2 commands
