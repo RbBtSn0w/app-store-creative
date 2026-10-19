@@ -164,12 +164,14 @@ def run(args):
             if args.execute:
                 from production_lifecycle import produce as managed_produce
                 derived = ppo_experiment.derive_treatment_config(base_config, exp_id, variant)
-                cfg_path = root / f"ppo-reproduce-{variant}.json"
-                cfg_path.write_text(json.dumps(derived, indent=2, ensure_ascii=False))
-                try:
-                    result = managed_produce(root, cfg_path, experiment_provenance=plan['provenance'])
-                finally:
-                    cfg_path.unlink(missing_ok=True)
+                import tempfile
+                # Keep the configuration authority available for later lifecycle commands.
+                with tempfile.NamedTemporaryFile(mode="w", prefix="ppo-reproduce-", suffix=".json",
+                                                 dir=root, encoding="utf-8", delete=False) as config_file:
+                    json.dump(derived, config_file, indent=2, ensure_ascii=False)
+                    cfg_path = Path(config_file.name)
+                result = managed_produce(root, cfg_path, experiment_provenance=plan['provenance'])
+                result["config_path"] = str(cfg_path)
                 result["provenance"] = plan["provenance"]
                 return result
             return plan
@@ -377,7 +379,16 @@ def main(argv=None):
     try:
         res = run(args)
         if res is not None:
-            print(json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
+            if (args.command == "ppo" and args.ppo_action == "reproduce"
+                    and not args.execute and not args.json):
+                provenance = res["provenance"]
+                print(f"Experiment: {provenance['experiment_id']} | Variant: {provenance['variant_id']}")
+                print(f"Decision basis: {provenance['decision_basis']}")
+                for group in res["scope"]["by_locale"]:
+                    print(f"{group['locale']}: {', '.join(group['targets'])}")
+                print(f"Planned deliveries: {res['scope']['planned_delivery_count']}")
+            else:
+                print(json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2

@@ -79,10 +79,9 @@ differentiation opportunity.
   targets); `--json` provides the agent-readable equivalent.
   - *Acceptance*: Dry-run output contains the provenance header, locale-
     grouped plan, and counts; no storage mutation occurs.
-- **R3**: If any per-locale reproduction fails, the command reports partial
-  success with per-locale status and does not mark the run complete.
-  - *Acceptance*: Forced-failure unit test asserts per-locale status
-    reporting and a non-complete run marker.
+- **R3 (deferred)**: Per-locale partial-success reporting is deferred. v1
+  preserves the run-level failed attempt and propagates the original error;
+  it does not claim per-locale completion or return a partial-success report.
 
 ### Future Considerations (P2)
 
