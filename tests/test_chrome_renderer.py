@@ -129,9 +129,9 @@ class TargetScalingTests(unittest.TestCase):
 
 class LaunchFlagsTests(unittest.TestCase):
     def test_launch_flags_preserve_scale_factor_and_window_size(self):
-        # GPU and dev-shm flags no longer appear: export_engine keeps them
-        # platform-gated (Linux only), so the native macOS launcher must not
-        # re-filter them defensively.
+        # export_engine gates GPU disabling to Linux. The native macOS
+        # launcher still filters the Linux-only dev-shm flag supplied below,
+        # while preserving Retina scale and window dimensions.
         cmd = [
             '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
             '--headless=new',
