@@ -230,6 +230,15 @@ class TestPPOExperiment(unittest.TestCase):
             self.assertEqual(res_plan["experiment"]["id"], "visual_style_cro")
             self.assertIn("quartz_titanium", res_plan["treatments"])
 
+    def test_reproduce_plan_matches_production_scope_defaults(self):
+        cfg = copy.deepcopy(SAMPLE_CONFIG)
+        cfg["project"].pop("locales", None)
+        cfg.pop("targets", None)
+        plan = ppo_experiment.ppo_reproduce_plan(cfg, "visual_style_cro", "quartz_titanium")
+        self.assertEqual(plan["scope"]["locales"], ["en-US"])
+        self.assertEqual(plan["scope"]["targets"], ["iphone_6_9"])
+        self.assertEqual(plan["scope"]["planned_delivery_count"], 1)
+
     def test_reproduce_defaults_platform_and_locale_groups(self):
         cfg = copy.deepcopy(SAMPLE_CONFIG)
         cfg.pop("storage")

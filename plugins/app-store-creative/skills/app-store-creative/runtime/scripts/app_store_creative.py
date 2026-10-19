@@ -353,7 +353,7 @@ def build_parser():
     ppo_reproduce.add_argument("--variant", type=str, required=True, help="Winning treatment ID (explicit selection; no auto-selection in v1)")
     ppo_reproduce.add_argument("--decision-basis", type=str, help="Human-readable decision basis recorded in receipts")
     ppo_reproduce.add_argument("--execute", action="store_true", help="Execute the reproduction (default is dry-run)")
-    ppo_reproduce.add_argument("--json", action="store_true", help="Emit machine-readable JSON (default output is already JSON)")
+    ppo_reproduce.add_argument("--json", action="store_true", help="Emit machine-readable JSON instead of the default review plan")
 
     bgm = cmd("bgm")
     bgm_sub = bgm.add_subparsers(dest="bgm_action", required=True)
