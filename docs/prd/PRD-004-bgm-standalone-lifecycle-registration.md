@@ -23,7 +23,7 @@ silently produces untraceable artifacts.
 
 ## Goals
 
-1. `bgm compose` (standalone) produces the same lifecycle-visible result as
+1. Standalone managed `bgm compose` produces the same lifecycle-visible result as
    the managed preview path: a registered artifact with a receipt.
 2. A failed registration aborts the compose cleanly: no managed artifact is
    registered and no generated file is left in workspace outputs.
@@ -48,13 +48,13 @@ silently produces untraceable artifacts.
 
 ### Must-Have (P0)
 
-- **R1**: Standalone `bgm compose` creates a managed attempt (or equivalent
+- **R1**: Standalone `bgm compose --managed` creates a managed attempt (or equivalent
   lifecycle record) identical in shape to what `managed_preview.py` creates
   for the same operation.
   - *Acceptance*: Unit test runs standalone compose against a temp repo and
     asserts a receipt + inventory entry exist with a source reference to the
     composed audio file.
-- **R2**: If lifecycle registration fails, the standalone compose reports
+- **R2**: If lifecycle registration fails, the standalone managed compose reports
   failure and does not leave a partially-registered artifact.
   - *Acceptance*: Unit test forces a registration failure (e.g. invalid
     storage root) and asserts the command exits non-zero with no managed

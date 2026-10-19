@@ -223,7 +223,7 @@ def _register_bgm_compose(args, project_path, receipt):
     try:
         loop = project_path(args.loop)
         video = project_path(args.video)
-        output = Path(receipt["output"])
+        output = project_path(Path(receipt["output"]))
         work = core.work_path(attempt["id"])
         inputs = work / "inputs"
         with core.keep_lease(attempt["id"]):
@@ -248,8 +248,18 @@ def _register_bgm_compose(args, project_path, receipt):
         core.finish_attempt(attempt["id"], "succeeded")
         return {"run_id": run["id"], "attempt_id": attempt["id"],
                 "artifact_id": composed["id"], "receipt_artifact_id": receipt_artifact["id"]}
-    except BaseException:
-        core.finish_attempt(attempt["id"], "failed", reason="BGM standalone compose registration failed")
+    except BaseException as error:
+        resolved_output = project_path(Path(receipt["output"])).resolve()
+        workspace = core.paths.workspace.resolve()
+        if resolved_output.is_relative_to(workspace):
+            resolved_output.unlink(missing_ok=True)
+        terminal = ('cancelled' if isinstance(error, KeyboardInterrupt) else
+                    'interrupted' if isinstance(error, SystemExit) else 'failed')
+        try:
+            core.finish_attempt(attempt["id"], terminal,
+                                reason=str(error) or type(error).__name__)
+        except Exception:
+            pass
         raise
 
 

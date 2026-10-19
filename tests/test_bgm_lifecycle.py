@@ -211,7 +211,8 @@ class BGMStandaloneLifecycleTests(unittest.TestCase):
     def _prepare_inputs(self):
         loop = self.root / "loop.caf"; loop.write_bytes(b"caf-loop-bytes")
         video = self.root / "preview.mp4"; video.write_bytes(b"video-bytes")
-        output = self.root / "bgm-compose.mp4"
+        output = self.root / ".creative" / "bgm-compose.mp4"
+        output.parent.mkdir(parents=True, exist_ok=True)
         return loop, video, output
 
     def _run_managed_compose(self, fail_registration=False):
@@ -221,22 +222,33 @@ class BGMStandaloneLifecycleTests(unittest.TestCase):
                    "final_native_guarded_peak_dbtp": -1.2, "duration_seconds": 20.0,
                    "restored_priming_frames": 2112}
         def fake_compose(**kwargs):
-            if fail_registration:
-                output.write_bytes(b"composed-bytes")  # produced, then registration fails
-                raise RuntimeError("simulated registration failure")
             output.write_bytes(b"composed-bytes")
-            return receipt
+            return dict(receipt)
         args = app_store_creative.build_parser().parse_args([
             "bgm", "--repo", str(self.root), "compose",
             "--loop", str(loop), "--video", str(video), "--output", str(output),
             "--managed",
         ])
         import bgm_lifecycle
-        with mock.patch.object(bgm_lifecycle, "compose", side_effect=fake_compose):
-            import importlib
-            importlib.reload(app_store_creative)
-            result = app_store_creative.run(args)
-        return result, loop, video, output
+        from artifact_lifecycle import Lifecycle
+        if fail_registration:
+            original_register = Lifecycle.register
+            def failing_register(self, attempt_id, source, role, **kwargs):
+                if role == "preview":
+                    raise RuntimeError("simulated registration failure")
+                return original_register(self, attempt_id, source, role, **kwargs)
+            context = mock.patch.object(Lifecycle, "register", failing_register)
+            with context, mock.patch.object(bgm_lifecycle, "compose", side_effect=fake_compose):
+                import importlib
+                importlib.reload(app_store_creative)
+                app_store_creative.run(args)
+            return None, loop, video, output
+        else:
+            with mock.patch.object(bgm_lifecycle, "compose", side_effect=fake_compose):
+                import importlib
+                importlib.reload(app_store_creative)
+                result = app_store_creative.run(args)
+            return result, loop, video, output
 
     def test_managed_compose_registers_lifecycle_closure(self):
         from artifact_lifecycle import Lifecycle
@@ -260,15 +272,11 @@ class BGMStandaloneLifecycleTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "simulated registration failure"):
             self._run_managed_compose(fail_registration=True)
         core = Lifecycle(self.root, self.config, self.cfg_path)
-        # The failed attempt is recorded with no succeeded artifacts in the
-        # lifecycle; the workspace has no candidate-eligible output.
-        artifact_records = list((core.paths.workspace / "records" / "artifacts").glob("*.json"))
-        if artifact_records:
-            # If any artifact records exist (partial), none may be candidate-eligible
-            for record_path in artifact_records:
-                record = core._read("artifacts", record_path.stem)
-                self.assertTrue(record["partial"] or not core._path("attempts", record["attempt_id"], "outcome").exists() or
-                                core._read("attempts", record["attempt_id"], "outcome")["status"] != "succeeded")
+        outcomes = list((core.paths.workspace / "records" / "attempts").glob("*/outcome.json"))
+        self.assertEqual(len(outcomes), 1)
+        self.assertEqual(json.loads(outcomes[0].read_text())["status"], "failed")
+        composed = self.root / ".creative" / "bgm-compose.mp4"
+        self.assertFalse(composed.exists(), "workspace output must be removed on registration failure")
 
 
 class BGMCAFHeaderTests(unittest.TestCase):
