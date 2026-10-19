@@ -495,7 +495,7 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
         except ValueError as error:
             raise ValueError('Object storage is owned by another workspace; shared storage is unsupported') from error
 
-    def register(self, attempt_id, source, role, media_type=None, partial=False, inputs=None, logical_path=None, lease_token=None):
+    def register(self, attempt_id, source, role, media_type=None, partial=False, inputs=None, logical_path=None, lease_token=None, experiment_provenance=None):
         source = Path(source)
         if logical_path is not None:
             logical_path = relative_name(logical_path)
@@ -520,12 +520,15 @@ class Lifecycle(DeliveryOperations, PublicationOperations, RetentionOperations, 
                     if digest(destination) != sha:
                         raise ValueError('Object integrity failure')
                 self._check_lease(attempt_id, lease_token)
-                return self._record('artifacts', {'id': identifier(), 'run_id': attempt['run_id'],
+                record = {'id': identifier(), 'run_id': attempt['run_id'],
                     'attempt_id': attempt_id, 'sha256': sha, 'size_bytes': size,
                     'role': role, 'media_type': media_type or mimetypes.guess_type(source.name)[0] or 'application/octet-stream',
                     'workspace_path': source.resolve().relative_to(self.paths.workspace).as_posix()
                         if source.resolve().is_relative_to(self.paths.workspace / 'work') else None,
-                    'name': source.name, 'partial': bool(partial), 'inputs': inputs or [], 'logical_path': logical_path},
+                    'name': source.name, 'partial': bool(partial), 'inputs': inputs or [], 'logical_path': logical_path}
+                if experiment_provenance is not None:
+                    record['experiment_provenance'] = experiment_provenance
+                return self._record('artifacts', record,
                     precommit=lambda: self._check_lease(attempt_id, lease_token))
 
     def verify_artifact(self, identity):

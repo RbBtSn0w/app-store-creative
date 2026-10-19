@@ -230,6 +230,50 @@ class TestPPOExperiment(unittest.TestCase):
             self.assertEqual(res_plan["experiment"]["id"], "visual_style_cro")
             self.assertIn("quartz_titanium", res_plan["treatments"])
 
+    def test_ppo_reproduce_dry_run_plan(self):
+        # PRD-006 R2: dry-run output contains provenance header, locale-grouped
+        # plan, and summary counts without storage mutation.
+        import app_store_creative
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg_file = tmp_path / "creative.config.json"
+            with open(cfg_file, "w", encoding="utf-8") as f:
+                json.dump(SAMPLE_CONFIG, f)
+            res = app_store_creative.run(
+                app_store_creative.build_parser().parse_args([
+                    "ppo", "--repo", str(tmp_path), "reproduce",
+                    "--config", str(cfg_file),
+                    "--experiment", "visual_style_cro",
+                    "--variant", "quartz_titanium",
+                    "--decision-basis", "test decision",
+                ])
+            )
+        self.assertEqual(res["provenance"]["experiment_id"], "visual_style_cro")
+        self.assertEqual(res["provenance"]["variant_id"], "quartz_titanium")
+        self.assertEqual(res["provenance"]["decision_basis"], "test decision")
+        self.assertTrue(res["dry_run"])
+        self.assertIn("planned_delivery_count", res["scope"])
+        # Per-treatment namespace (R1b) matches derive_treatment_config layout.
+        self.assertEqual(res["treatment_config"]["storage_workspace"], ".creative-quartz_titanium")
+        self.assertEqual(res["treatment_config"]["experiment_stamp"]["treatment_id"], "quartz_titanium")
+
+    def test_ppo_reproduce_rejects_unknown_variant(self):
+        import app_store_creative
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            cfg_file = tmp_path / "creative.config.json"
+            with open(cfg_file, "w", encoding="utf-8") as f:
+                json.dump(SAMPLE_CONFIG, f)
+            with self.assertRaisesRegex(KeyError, "not found"):
+                app_store_creative.run(
+                    app_store_creative.build_parser().parse_args([
+                        "ppo", "--repo", str(tmp_path), "reproduce",
+                        "--config", str(cfg_file),
+                        "--experiment", "visual_style_cro",
+                        "--variant", "does_not_exist",
+                    ])
+                )
+
             # 3. ppo handoff
             out_json = tmp_path / "out-handoff.json"
             res_handoff = app_store_creative.run(

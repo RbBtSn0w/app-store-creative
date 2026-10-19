@@ -148,6 +148,32 @@ def run(args):
                 output_path=out_path,
             )
 
+        if args.ppo_action == "reproduce":
+            exp_id = args.experiment
+            experiments = ppo_experiment.parse_experiments(base_config)
+            if exp_id not in experiments:
+                raise KeyError(f"Experiment '{exp_id}' not found in configuration")
+            variant = args.variant
+            decision_basis = args.decision_basis or "explicit --variant selection"
+            plan = ppo_experiment.ppo_reproduce_plan(
+                base_config=base_config,
+                experiment_id=exp_id,
+                variant_id=variant,
+                decision_basis=decision_basis,
+            )
+            if args.execute:
+                from production_lifecycle import produce as managed_produce
+                derived = ppo_experiment.derive_treatment_config(base_config, exp_id, variant)
+                cfg_path = root / f"ppo-reproduce-{variant}.json"
+                cfg_path.write_text(json.dumps(derived, indent=2, ensure_ascii=False))
+                try:
+                    result = managed_produce(root, cfg_path, experiment_provenance=plan['provenance'])
+                finally:
+                    cfg_path.unlink(missing_ok=True)
+                result["provenance"] = plan["provenance"]
+                return result
+            return plan
+
     if args.command == "bgm":
         import bgm_lifecycle
         return _run_bgm(args, bgm_lifecycle, project_path)
@@ -307,6 +333,15 @@ def build_parser():
     ppo_handoff.add_argument("--baseline-delivery", type=str, help="Delivery ID of baseline / control")
     ppo_handoff.add_argument("--treatment-delivery", action="append", dest="treatment_deliveries", help="Treatment delivery mapping (treatment_id:delivery_id)")
     ppo_handoff.add_argument("--output", type=Path, help="Output path for ppo-handoff.json")
+
+    ppo_reproduce = ppo_sub.add_parser("reproduce", help="Reproduce a winning variant into production deliveries (PRD-006)")
+    ppo_reproduce.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
+    ppo_reproduce.add_argument("--config", type=Path, help="Path to creative.config.json")
+    ppo_reproduce.add_argument("--experiment", type=str, required=True, help="Experiment ID")
+    ppo_reproduce.add_argument("--variant", type=str, required=True, help="Winning treatment ID (explicit selection; no auto-selection in v1)")
+    ppo_reproduce.add_argument("--decision-basis", type=str, help="Human-readable decision basis recorded in receipts")
+    ppo_reproduce.add_argument("--execute", action="store_true", help="Execute the reproduction (default is dry-run)")
+    ppo_reproduce.add_argument("--json", action="store_true", help="Emit machine-readable JSON (default output is already JSON)")
 
     bgm = cmd("bgm")
     bgm_sub = bgm.add_subparsers(dest="bgm_action", required=True)
