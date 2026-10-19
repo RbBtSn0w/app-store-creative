@@ -376,3 +376,61 @@ def compile_ppo_handoff(
             json.dump(handoff, f, ensure_ascii=False, indent=2)
 
     return handoff
+
+
+def ppo_reproduce_plan(
+    base_config: dict[str, Any],
+    experiment_id: str,
+    variant_id: str,
+    decision_basis: str = "explicit --variant selection",
+) -> dict[str, Any]:
+    """Compile a dry-run reproduction plan for the winning variant (PRD-006 R2).
+
+    Returns a human- and agent-readable plan: provenance header, per-treatment
+    derived configs (per-treatment storage namespace per R1b), and summary
+    counts. No storage mutation.
+    """
+    experiments = parse_experiments(base_config)
+    if experiment_id not in experiments:
+        raise KeyError(f"Experiment '{experiment_id}' not found in configuration")
+    exp = experiments[experiment_id]
+    if variant_id not in exp.treatments:
+        raise KeyError(
+            f"Variant '{variant_id}' not found in experiment '{experiment_id}'. "
+            f"Known treatments: {sorted(exp.treatments.keys())}"
+        )
+    derived = derive_treatment_config(base_config, experiment_id, variant_id)
+    project = base_config.get("project", {})
+    publishing = base_config.get("publishing", {})
+    locales = derived.get("project", {}).get("locales", [])
+    targets = derived.get("targets", [])
+    plan = {
+        "schema_version": 1,
+        "generated_by": "app-store-creative:ppo-reproduce",
+        "provenance": {
+            "experiment_id": exp.id,
+            "experiment_name": exp.name,
+            "variant_id": variant_id,
+            "variant_name": exp.treatments[variant_id].name,
+            "decision_basis": decision_basis,
+        },
+        "project": {
+            "id": project.get("id"),
+            "platform": exp.platform or publishing.get("platform", "MAC_OS"),
+            "version": publishing.get("version", "1.0"),
+        },
+        "scope": {
+            "locales": locales,
+            "targets": targets,
+            "locale_count": len(locales),
+            "target_count": len(targets),
+            "planned_delivery_count": len(locales) * len(targets),
+        },
+        "treatment_config": {
+            "storage_workspace": derived.get("storage", {}).get("workspaceRoot"),
+            "storage_objects": derived.get("storage", {}).get("objectRoot"),
+            "experiment_stamp": derived.get("_experiment"),
+        },
+        "dry_run": True,
+    }
+    return plan

@@ -13,7 +13,7 @@ import video_engine
 
 
 def produce(root, config_path=None, targets=None, locales=None, with_video=False,
-            progress=None, expected_revision=None):
+            progress=None, expected_revision=None, experiment_provenance=None):
     root = Path(root).resolve(); cfg = Path(config_path or root / 'creative.config.json').resolve()
     core = Lifecycle.from_configuration(root, cfg)
     raw = core._configuration_layers.project_bytes
@@ -81,7 +81,8 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
             for name, sha in sources.items():
                 path = contract.local_asset(root, name, config)
                 parents = [core.resolve_import(name)[0]['artifact_id']] if imported_identity(name) else []
-                artifact = core.register(attempt['id'], path, 'source', logical_path=name, inputs=parents)
+                artifact = core.register(attempt['id'], path, 'source', logical_path=name,
+                                         inputs=parents, experiment_provenance=experiment_provenance)
                 if artifact['sha256'] != sha:
                     raise ValueError('Source changed while preparing production')
                 destination = input_root / name; destination.parent.mkdir(parents=True, exist_ok=True)
@@ -90,7 +91,9 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
             # Text-only compositions still bind their output to the reviewed recipe.
             recipe = json.loads(canonical(config)); recipe.pop('storage', None)
             recipe_source = work / 'reviewed-recipe.json'; recipe_source.write_bytes(canonical(recipe))
-            recipe_artifact = core.register(attempt['id'], recipe_source, 'source', logical_path='reviewed-recipe.json')
+            recipe_artifact = core.register(attempt['id'], recipe_source, 'source',
+                                            logical_path='reviewed-recipe.json',
+                                            experiment_provenance=experiment_provenance)
             source_ids.append(recipe_artifact['id'])
             (input_root / 'reviewed-recipe.json').write_bytes(recipe_source.read_bytes())
             write_snapshot_index(input_root, sources)
@@ -110,11 +113,13 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
             evidence_id = None
             if evidence.is_file():
                 evidence_id = core.register(attempt['id'], evidence, 'render-evidence', inputs=source_ids,
-                                            logical_path='.export-evidence.json')['id']
+                                            logical_path='.export-evidence.json',
+                                            experiment_provenance=experiment_provenance)['id']
             dependencies = source_ids + ([evidence_id] if evidence_id else [])
             for output in result['artifacts']:
                 selected.append(core.register(attempt['id'], Path(output['path']), 'screenshot',
-                                              inputs=dependencies, logical_path=output['name'])['id'])
+                                              inputs=dependencies, logical_path=output['name'],
+                                              experiment_provenance=experiment_provenance)['id'])
             if video:
                 from managed_preview import portable_receipt
                 video_items = video['videos'].values() if 'videos' in video else [video]
@@ -133,12 +138,15 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                     receipt_path.write_bytes(canonical(portable_receipt(
                         json.loads(receipt_path.read_bytes()), input_root, video_outputs, input_prefix='')))
                     frames = core.register(attempt['id'], frames_path, 'producer-evidence', inputs=source_ids,
-                                           logical_path=logical_frames)
+                                           logical_path=logical_frames,
+                                           experiment_provenance=experiment_provenance)
                     receipt = core.register(attempt['id'], receipt_path, 'producer-evidence',
-                                            inputs=source_ids + [frames['id']], logical_path=logical_receipt)
+                                            inputs=source_ids + [frames['id']], logical_path=logical_receipt,
+                                            experiment_provenance=experiment_provenance)
                     selected.append(core.register(attempt['id'], preview_path, 'preview',
                                                   inputs=source_ids + [receipt['id']],
-                                                  logical_path=logical_preview)['id'])
+                                                  logical_path=logical_preview,
+                                                  experiment_provenance=experiment_provenance)['id'])
         core.finish_attempt(attempt['id'], 'succeeded')
         if with_video:
             from managed_poster import produce as produce_poster, timestamp_from_time_code

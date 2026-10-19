@@ -125,5 +125,16 @@ class ProductionLifecycleTests(unittest.TestCase):
         self.assertEqual(result['run_id'], 'managed')
         self.assertEqual(produce.call_args.args[0], self.root)
 
+    def test_experiment_provenance_flows_to_registered_outputs(self):
+        provenance = {'experiment_id': 'visual_style_cro', 'variant_id': 'quartz_titanium',
+                      'decision_basis': 'winner selected in ASC'}
+        with mock.patch('export_engine.run_export', side_effect=self.renderer):
+            result = production.produce(self.root, experiment_provenance=provenance)
+        self.assertEqual(result['validation']['status'], 'PASS')
+        artifacts = [json.loads(path.read_text())
+                     for path in (self.root / 'managed/records/artifacts').glob('*.json')]
+        self.assertTrue(artifacts)
+        self.assertTrue(all(item.get('experiment_provenance') == provenance for item in artifacts))
+
 if __name__ == '__main__':
     unittest.main()
