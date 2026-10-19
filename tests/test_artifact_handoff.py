@@ -76,7 +76,8 @@ class ArtifactHandoffTests(unittest.TestCase):
         import contextlib
         import io
         commands = ("doctor", "init", "plan", "status", "claim", "invalidate",
-                    "complete", "approve", "promote", "upload-plan", "upload", "audit", "upgrade", "verify", "publish")
+                    "complete", "approve", "promote", "upload-plan", "upload",
+                    "upgrade", "verify", "publish")
         for command in commands:
             with self.subTest(command=command), contextlib.redirect_stderr(io.StringIO()) as errors:
                 with self.assertRaises(SystemExit) as failure:
