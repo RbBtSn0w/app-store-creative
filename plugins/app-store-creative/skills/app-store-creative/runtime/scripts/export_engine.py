@@ -202,6 +202,11 @@ def get_target_scaling(target: str) -> Tuple[int, int, float, int, int]:
     return phys_w, phys_h, 1.0, phys_w, phys_h
 
 
+def build_gpu_flag(platform: str) -> Optional[str]:
+    """PRD-003: GPU is never disabled on macOS; other platforms keep it off."""
+    return None if platform == 'darwin' else "--disable-gpu"
+
+
 def export_single_card(
     chrome_bin: str,
     port: int,
@@ -219,6 +224,8 @@ def export_single_card(
     url = f"http://127.0.0.1:{port}/?" + urllib.parse.urlencode({"export": "true", "card": card_id, "target": target, "locale": locale})
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    gpu_flag = build_gpu_flag(sys.platform)
+
     cmd = [
         chrome_bin,
         "--headless=new",
@@ -231,12 +238,13 @@ def export_single_card(
         "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1",
         "--hide-scrollbars",
         f"--force-device-scale-factor={scale}",
-        "--disable-gpu",
         "--disable-dev-shm-usage",
         "--run-all-compositor-stages-before-draw",
         "--virtual-time-budget=10000",
         url,
     ]
+    if gpu_flag:
+        cmd.insert(-1, gpu_flag)
 
     def fail(message):
         if diagnostics is not None:

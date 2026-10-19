@@ -129,6 +129,9 @@ class TargetScalingTests(unittest.TestCase):
 
 class LaunchFlagsTests(unittest.TestCase):
     def test_launch_flags_preserve_scale_factor_and_window_size(self):
+        # GPU and dev-shm flags no longer appear: export_engine keeps them
+        # platform-gated (Linux only), so the native macOS launcher must not
+        # re-filter them defensively.
         cmd = [
             '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
             '--headless=new',
@@ -140,7 +143,6 @@ class LaunchFlagsTests(unittest.TestCase):
             '--disable-background-networking',
             '--hide-scrollbars',
             '--force-device-scale-factor=4.0',
-            '--disable-gpu',
             '--disable-dev-shm-usage',
             '--run-all-compositor-stages-before-draw',
             '--virtual-time-budget=10000',
@@ -148,9 +150,9 @@ class LaunchFlagsTests(unittest.TestCase):
         ]
         excluded = ('--screenshot=', '--virtual-time-budget=')
         flags = [value for value in cmd[1:-1] if not value.startswith(excluded)
-                 and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--default-background-color=ffffffff', '--disable-gpu', '--disable-dev-shm-usage')]
+                 and value not in ('--dump-dom', '--run-all-compositor-stages-before-draw', '--default-background-color=ffffffff', '--disable-dev-shm-usage')]
         self.assertIn('--force-device-scale-factor=4.0', flags)
         self.assertIn('--window-size=720,450', flags)
-        self.assertNotIn('--disable-gpu', flags)
+        self.assertNotIn('--disable-gpu', cmd[1:-1])
         self.assertNotIn('--screenshot=/tmp/out.png', flags)
 

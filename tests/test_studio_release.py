@@ -97,6 +97,52 @@ class StudioReleaseTests(unittest.TestCase):
         with mock.patch('export_engine.subprocess.run', side_effect=screenshot):
             self.assertFalse(export_engine.export_single_card('chrome', 3100, 'hero', 'iphone_6_9', 'en-US', output))
 
+    def test_build_gpu_flag_platform_policy(self):
+        # PRD-003 R1/R2: one platform-level GPU policy, testable without
+        # invoking Chrome or binding a socket.
+        self.assertIsNone(export_engine.build_gpu_flag('darwin'))
+        self.assertEqual(export_engine.build_gpu_flag('linux'), '--disable-gpu')
+        self.assertEqual(export_engine.build_gpu_flag('win32'), '--disable-gpu')
+
+    def test_export_argv_gpu_policy_macos_bundle_and_bare_paths(self):
+        # PRD-003 R1: bundle and bare Chrome installs both keep GPU enabled on
+        # macOS — the flag is simply never built for the darwin platform.
+        for chrome in ('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+                       '/opt/homebrew/bin/chrome'):
+            captured = {}
+            def fake_subprocess(command, **kwargs):
+                captured['argv'] = list(command)
+                return mock.Mock(returncode=0, stdout='<html><body data-export-ready="true"></body></html>', stderr='')
+
+            def fake_native(command, profile, out, timeout):
+                captured['argv'] = list(command)
+                return mock.Mock(returncode=0, stdout='<html><body data-export-ready="true"></body></html>', stderr='')
+
+            output = self.root / 'argv-check-macos.png'
+            create_mock_png(output, 1320, 2868)  # iphone_6_9 physical size
+            with mock.patch('export_engine.subprocess.run', side_effect=fake_subprocess), \
+                 mock.patch('export_engine.run_native_browser', side_effect=fake_native), \
+                 mock.patch('export_engine.stop_owned_browser'), \
+                 mock.patch('export_engine.shutil.which', return_value=None), \
+                 mock.patch('export_engine.sys.platform', 'darwin'):
+                self.assertTrue(export_engine.export_single_card(chrome, 3100, 'hero', 'iphone_6_9', 'en-US', output))
+            self.assertNotIn('--disable-gpu', captured['argv'])
+
+    def test_export_argv_gpu_policy_linux_keeps_flag(self):
+        # PRD-003 R2: Linux keeps --disable-gpu for headless determinism.
+        captured = {}
+        def fake_subprocess(command, **kwargs):
+            captured['argv'] = list(command)
+            return mock.Mock(returncode=0, stdout='<html><body data-export-ready="true"></body></html>', stderr='')
+
+        output = self.root / 'argv-check-linux.png'
+        create_mock_png(output, 1320, 2868)  # iphone_6_9 physical size
+        with mock.patch('export_engine.subprocess.run', side_effect=fake_subprocess), \
+             mock.patch('export_engine.shutil.which', return_value=None), \
+             mock.patch('export_engine.sys.platform', 'linux'):
+            self.assertTrue(export_engine.export_single_card('/usr/bin/chromium', 3100, 'hero', 'iphone_6_9', 'en-US', output))
+        self.assertIn('--disable-gpu', captured['argv'])
+
     def test_source_change_during_export_cannot_publish_outputs(self):
         source = self.root / 'capture.png'
         create_mock_png(source, 12, 24)
