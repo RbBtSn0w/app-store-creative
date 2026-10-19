@@ -195,6 +195,90 @@ class BGMComposeTests(unittest.TestCase):
                 compose(Path("/test/loop.caf"), Path("/test/video.mp4"), Path("/test/output.mp4"))
 
 
+class BGMStandaloneLifecycleTests(unittest.TestCase):
+    """PRD-004: standalone compose with --managed registers lifecycle artifacts."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name).resolve()
+        self.cfg_path = self.root / "creative.config.json"
+        self.config = {"project": {"id": "demo"}, "storage": {
+            "workspaceRoot": ".creative", "objectRoot": ".creative/objects",
+            "releaseRoot": "creative-releases", "publicationRoot": "creative-publications"}}
+        self.cfg_path.write_text(json.dumps(self.config))
+
+    def _prepare_inputs(self):
+        loop = self.root / "loop.caf"; loop.write_bytes(b"caf-loop-bytes")
+        video = self.root / "preview.mp4"; video.write_bytes(b"video-bytes")
+        output = self.root / ".creative" / "bgm-compose.mp4"
+        output.parent.mkdir(parents=True, exist_ok=True)
+        return loop, video, output
+
+    def _run_managed_compose(self, fail_registration=False):
+        import app_store_creative
+        loop, video, output = self._prepare_inputs()
+        receipt = {"output": str(output), "final_native_lufs": -16.0,
+                   "final_native_guarded_peak_dbtp": -1.2, "duration_seconds": 20.0,
+                   "restored_priming_frames": 2112}
+        def fake_compose(**kwargs):
+            output.write_bytes(b"composed-bytes")
+            return dict(receipt)
+        args = app_store_creative.build_parser().parse_args([
+            "bgm", "--repo", str(self.root), "compose",
+            "--loop", str(loop), "--video", str(video), "--output", str(output),
+            "--managed",
+        ])
+        import bgm_lifecycle
+        from artifact_lifecycle import Lifecycle
+        if fail_registration:
+            original_register = Lifecycle.register
+            def failing_register(self, attempt_id, source, role, **kwargs):
+                if role == "preview":
+                    raise RuntimeError("simulated registration failure")
+                return original_register(self, attempt_id, source, role, **kwargs)
+            context = mock.patch.object(Lifecycle, "register", failing_register)
+            with context, mock.patch.object(bgm_lifecycle, "compose", side_effect=fake_compose):
+                import importlib
+                importlib.reload(app_store_creative)
+                app_store_creative.run(args)
+            return None, loop, video, output
+        else:
+            with mock.patch.object(bgm_lifecycle, "compose", side_effect=fake_compose):
+                import importlib
+                importlib.reload(app_store_creative)
+                result = app_store_creative.run(args)
+            return result, loop, video, output
+
+    def test_managed_compose_registers_lifecycle_closure(self):
+        from artifact_lifecycle import Lifecycle
+        result, _, _, output = self._run_managed_compose()
+        self.assertEqual(result["status"], "ok")
+        artifact_ref = result["artifact"]
+        self.assertIn("artifact_id", artifact_ref)
+        core = Lifecycle(self.root, self.config, self.cfg_path)
+        composed = core.verify_artifact(artifact_ref["artifact_id"])
+        self.assertEqual(composed["role"], "preview")
+        self.assertEqual(core.object_path(composed["sha256"]).read_bytes(), b"composed-bytes")
+        status = core.status(artifact_ref["run_id"])
+        self.assertEqual(status["attempts"][0]["outcome"]["status"], "succeeded")
+        closure = core._closure([composed["id"]])
+        roles = {item["role"] for item in closure.values()}
+        self.assertIn("capture", roles)  # loop + video inputs registered
+        self.assertIn("producer-evidence", roles)  # receipt registered
+
+    def test_managed_compose_failure_aborts_without_partial_registration(self):
+        from artifact_lifecycle import Lifecycle
+        with self.assertRaisesRegex(RuntimeError, "simulated registration failure"):
+            self._run_managed_compose(fail_registration=True)
+        core = Lifecycle(self.root, self.config, self.cfg_path)
+        outcomes = list((core.paths.workspace / "records" / "attempts").glob("*/outcome.json"))
+        self.assertEqual(len(outcomes), 1)
+        self.assertEqual(json.loads(outcomes[0].read_text())["status"], "failed")
+        composed = self.root / ".creative" / "bgm-compose.mp4"
+        self.assertFalse(composed.exists(), "workspace output must be removed on registration failure")
+
+
 class BGMCAFHeaderTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

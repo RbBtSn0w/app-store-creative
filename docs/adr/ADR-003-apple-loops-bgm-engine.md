@@ -1,6 +1,6 @@
 # ADR-003: Apple Loops BGM Engine - Swift CLI Contract and Slice Boundaries
 
-**Status:** Proposed
+**Status:** Accepted (Slices 1–4 implemented; slice 5 pending manual validation)
 **Date:** 2026-10-18
 **Deciders:** rbbtsn0w, Codex Agent
 **Depends on:** PRD-002
@@ -247,12 +247,13 @@ stateless subcommand.
 
 ## Action Items
 
-1. [ ] Slice 1: implement `bgm scan` (Python) + tests + artifact registration.
-2. [ ] Slice 2: implement `bgm recommend` (Python) + scoring + receipts + tests.
-3. [ ] Slice 3: implement `swift-bgm compose` (Swift source in runtime) +
+1. [x] Slice 1: implement `bgm scan` (Python) + tests.
+2. [x] Slice 2: implement `bgm recommend` (Python) + scoring + receipts + tests.
+3. [x] Slice 3: implement `swift-bgm compose` (Swift source in runtime) +
        compile-on-demand wrapper + Python invocation + artifact registration.
-4. [ ] Integration: wire `bgm compose` output into `preview produce` candidate
-       validation with BGM receipt dependency.
+4. [x] Integration: standalone `bgm compose --managed` registers composed
+       media, loop/video inputs and the Swift receipt as producer-evidence in
+       the artifact lifecycle (PRD-004).
 5. [ ] Validate slice 3 on the Levelory preview and compare against the
        temporary-experiment outputs (byte-identical not required; metrics
        within tolerance).

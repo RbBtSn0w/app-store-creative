@@ -170,11 +170,19 @@ def derive_treatment_config(
                     locale_dest[cid] = copy.deepcopy(card_copy)
 
     # 4. Storage namespace isolation for the treatment
-    if "storage" in derived and isinstance(derived["storage"], dict):
-        ws = derived["storage"].get("workspaceRoot", ".creative")
-        obj = derived["storage"].get("objectRoot", ".creative/objects")
-        derived["storage"]["workspaceRoot"] = f"{ws}-{treatment_id}"
-        derived["storage"]["objectRoot"] = f"{obj}-{treatment_id}"
+    storage = derived.setdefault("storage", {})
+    ws = storage.get("workspaceRoot", ".creative")
+    obj = storage.get("objectRoot", str(Path(ws) / "objects"))
+    # IDs are data, not paths; retain existing simple namespaces for compatibility.
+    import re
+    import hashlib
+    namespace = treatment_id
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", namespace):
+        namespace = hashlib.sha256(treatment_id.encode()).hexdigest()[:16]
+    storage["workspaceRoot"] = f"{ws}-{namespace}"
+    storage["objectRoot"] = f"{obj}-{namespace}"
+    if exp.platform:
+        derived.setdefault("publishing", {})["platform"] = exp.platform
 
     # 5. Metadata stamp
     derived["_experiment"] = {
@@ -376,3 +384,62 @@ def compile_ppo_handoff(
             json.dump(handoff, f, ensure_ascii=False, indent=2)
 
     return handoff
+
+
+def ppo_reproduce_plan(
+    base_config: dict[str, Any],
+    experiment_id: str,
+    variant_id: str,
+    decision_basis: str = "explicit --variant selection",
+) -> dict[str, Any]:
+    """Compile a dry-run reproduction plan for the winning variant (PRD-006 R2).
+
+    Returns a human- and agent-readable plan: provenance header, per-treatment
+    derived configs (per-treatment storage namespace per R1b), and summary
+    counts. No storage mutation.
+    """
+    experiments = parse_experiments(base_config)
+    if experiment_id not in experiments:
+        raise KeyError(f"Experiment '{experiment_id}' not found in configuration")
+    exp = experiments[experiment_id]
+    if variant_id not in exp.treatments:
+        raise KeyError(
+            f"Variant '{variant_id}' not found in experiment '{experiment_id}'. "
+            f"Known treatments: {sorted(exp.treatments.keys())}"
+        )
+    derived = derive_treatment_config(base_config, experiment_id, variant_id)
+    project = base_config.get("project", {})
+    publishing = base_config.get("publishing", {})
+    locales = derived.get("project", {}).get("locales", ["en-US"])
+    targets = derived.get("targets", ["iphone_6_9"])
+    plan = {
+        "schema_version": 1,
+        "generated_by": "app-store-creative:ppo-reproduce",
+        "provenance": {
+            "experiment_id": exp.id,
+            "experiment_name": exp.name,
+            "variant_id": variant_id,
+            "variant_name": exp.treatments[variant_id].name,
+            "decision_basis": decision_basis,
+        },
+        "project": {
+            "id": project.get("id"),
+            "platform": exp.platform or publishing.get("platform", "MAC_OS"),
+            "version": publishing.get("version", "1.0"),
+        },
+        "scope": {
+            "locales": locales,
+            "by_locale": [{"locale": locale, "targets": list(targets)} for locale in locales],
+            "targets": targets,
+            "locale_count": len(locales),
+            "target_count": len(targets),
+            "planned_delivery_count": len(locales) * len(targets),
+        },
+        "treatment_config": {
+            "storage_workspace": derived.get("storage", {}).get("workspaceRoot"),
+            "storage_objects": derived.get("storage", {}).get("objectRoot"),
+            "experiment_stamp": derived.get("_experiment"),
+        },
+        "dry_run": True,
+    }
+    return plan

@@ -81,6 +81,24 @@ class ArtifactLifecycleTests(unittest.TestCase):
         self.cfg['project']['id'] = 'edited-after-start'
         self.assertEqual(self.store.status(run['id'])['run']['config']['project']['id'], 'demo')
 
+    def test_experiment_provenance_round_trip_in_artifact_records(self):
+        # PRD-006 R1a: experiment-provenance fields survive write/read in the
+        # lifecycle record store.
+        provenance = {'experiment_id': 'visual_style_cro', 'variant_id': 'quartz_titanium',
+                      'decision_basis': 'measured winner'}
+        run = self.store.start_run({})
+        attempt = self.store.start_attempt(run['id'], 'compose', 'agent')
+        source = self.root / 'output.bin'; source.write_bytes(b'reproduced bytes')
+        artifact = self.store.register(attempt['id'], source, 'preview',
+                                       experiment_provenance=provenance)
+        read_back = self.store.verify_artifact(artifact['id'])
+        self.assertEqual(read_back['experiment_provenance'], provenance)
+        # Records without provenance omit the field entirely (backward compat).
+        plain_path = self.root / 'plain.bin'
+        plain_path.write_bytes(b'x')
+        plain = self.store.register(attempt['id'], plain_path, 'capture')
+        self.assertNotIn('experiment_provenance', plain)
+
     def test_cli_uses_the_same_directory_and_record_contract(self):
         cli = Path(__file__).parents[1] / 'plugins/app-store-creative/scripts/app_store_creative.py'
         (self.root / 'creative.config.json').write_text(json.dumps(self.cfg))

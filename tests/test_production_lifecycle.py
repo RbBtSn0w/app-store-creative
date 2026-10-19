@@ -74,6 +74,16 @@ class ProductionLifecycleTests(unittest.TestCase):
         artifacts = [json.loads(path.read_text()) for path in (self.root / 'managed/records/artifacts').glob('*.json')]
         self.assertTrue(any(item['role'] == 'diagnostic' and item['partial'] for item in artifacts))
 
+    def test_failed_renderer_retains_experiment_provenance(self):
+        provenance = {'experiment_id': 'exp', 'variant_id': 'variant', 'decision_basis': 'selected'}
+        with mock.patch('export_engine.run_export', side_effect=RuntimeError('Font failed')):
+            with self.assertRaisesRegex(RuntimeError, 'Font failed'):
+                production.produce(self.root, experiment_provenance=provenance)
+        artifacts = [json.loads(p.read_text()) for p in
+                     (self.root / 'managed/records/artifacts').glob('*.json')]
+        diagnostic = next(item for item in artifacts if item['role'] == 'diagnostic')
+        self.assertEqual(diagnostic['experiment_provenance'], provenance)
+
     def test_failed_renderer_has_persistent_reason(self):
         with mock.patch('export_engine.run_export', side_effect=RuntimeError('Font failed')):
             with self.assertRaisesRegex(RuntimeError, 'Font failed'):
@@ -124,6 +134,17 @@ class ProductionLifecycleTests(unittest.TestCase):
             result = cli.run(args)
         self.assertEqual(result['run_id'], 'managed')
         self.assertEqual(produce.call_args.args[0], self.root)
+
+    def test_experiment_provenance_flows_to_registered_outputs(self):
+        provenance = {'experiment_id': 'visual_style_cro', 'variant_id': 'quartz_titanium',
+                      'decision_basis': 'winner selected in ASC'}
+        with mock.patch('export_engine.run_export', side_effect=self.renderer):
+            result = production.produce(self.root, experiment_provenance=provenance)
+        self.assertEqual(result['validation']['status'], 'PASS')
+        artifacts = [json.loads(path.read_text())
+                     for path in (self.root / 'managed/records/artifacts').glob('*.json')]
+        self.assertTrue(artifacts)
+        self.assertTrue(all(item.get('experiment_provenance') == provenance for item in artifacts))
 
 if __name__ == '__main__':
     unittest.main()

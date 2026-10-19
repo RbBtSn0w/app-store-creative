@@ -29,7 +29,7 @@ def run(args):
     def project_path(value):
         return (value if value.is_absolute() else root / value).resolve() if value else None
 
-    if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input"):
+    if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input", "audit"):
         return lifecycle_commands.execute(args)
 
     # Modern v2 commands
@@ -148,6 +148,34 @@ def run(args):
                 output_path=out_path,
             )
 
+        if args.ppo_action == "reproduce":
+            exp_id = args.experiment
+            experiments = ppo_experiment.parse_experiments(base_config)
+            if exp_id not in experiments:
+                raise KeyError(f"Experiment '{exp_id}' not found in configuration")
+            variant = args.variant
+            decision_basis = args.decision_basis or "explicit --variant selection"
+            plan = ppo_experiment.ppo_reproduce_plan(
+                base_config=base_config,
+                experiment_id=exp_id,
+                variant_id=variant,
+                decision_basis=decision_basis,
+            )
+            if args.execute:
+                from production_lifecycle import produce as managed_produce
+                derived = ppo_experiment.derive_treatment_config(base_config, exp_id, variant)
+                import tempfile
+                # Keep the configuration authority available for later lifecycle commands.
+                with tempfile.NamedTemporaryFile(mode="w", prefix="ppo-reproduce-", suffix=".json",
+                                                 dir=root, encoding="utf-8", delete=False) as config_file:
+                    json.dump(derived, config_file, indent=2, ensure_ascii=False)
+                    cfg_path = Path(config_file.name)
+                result = managed_produce(root, cfg_path, experiment_provenance=plan['provenance'])
+                result["config_path"] = str(cfg_path)
+                result["provenance"] = plan["provenance"]
+                return result
+            return plan
+
     if args.command == "bgm":
         import bgm_lifecycle
         return _run_bgm(args, bgm_lifecycle, project_path)
@@ -200,13 +228,67 @@ def _run_bgm(args, bgm_lifecycle, project_path):
         if receipt_path:
             receipt_path.parent.mkdir(parents=True, exist_ok=True)
             receipt_path.write_text(json.dumps(receipt, indent=2, ensure_ascii=False))
-        return {"status": "ok", "output": receipt["output"],
-                "final_lufs": receipt["final_native_lufs"],
-                "final_peak_dbtp": receipt["final_native_guarded_peak_dbtp"],
-                "duration_seconds": receipt["duration_seconds"],
-                "priming_frames": receipt["restored_priming_frames"]}
+        result = {"status": "ok", "output": receipt["output"],
+                  "final_lufs": receipt["final_native_lufs"],
+                  "final_peak_dbtp": receipt["final_native_guarded_peak_dbtp"],
+                  "duration_seconds": receipt["duration_seconds"],
+                  "priming_frames": receipt["restored_priming_frames"]}
+        if getattr(args, "managed", False):
+            result["artifact"] = _register_bgm_compose(args, project_path, receipt)
+        return result
 
     raise AssertionError(f"Unknown bgm action: {args.bgm_action}")
+
+
+def _register_bgm_compose(args, project_path, receipt):
+    """PRD-004: register a standalone BGM compose output into the lifecycle."""
+    import shutil
+    from artifact_lifecycle import Lifecycle
+    root = project_path(Path("."))
+    core = Lifecycle.from_configuration(root, None)
+    run = core.start_run({"workflow": "bgm-compose"})
+    attempt = core.start_attempt(run["id"], "compose", "bgm-standalone")
+    try:
+        loop = project_path(args.loop)
+        video = project_path(args.video)
+        output = project_path(Path(receipt["output"]))
+        work = core.work_path(attempt["id"])
+        inputs = work / "inputs"
+        with core.keep_lease(attempt["id"]):
+            inputs.mkdir()
+            dependencies = []
+            for index, (source, logical) in enumerate(((loop, "sources/bgm-loop.caf"),
+                                                       (video, "sources/preview-source.mp4"))):
+                name = f"input-{index}{source.suffix.lower()}"
+                snapshot = inputs / name
+                shutil.copyfile(source, snapshot)
+                registered = core.register(attempt["id"], snapshot, "capture",
+                                           logical_path=logical)
+                dependencies.append(registered["id"])
+            receipt_file = work / "bgm-receipt.json"
+            receipt_file.write_text(json.dumps(receipt, indent=2, sort_keys=True))
+            receipt_artifact = core.register(attempt["id"], receipt_file, "producer-evidence",
+                                             inputs=dependencies,
+                                             logical_path="evidence/bgm-receipt.json")
+            composed = core.register(attempt["id"], output, "preview",
+                                     inputs=dependencies + [receipt_artifact["id"]],
+                                     logical_path="preview/bgm-compose.mp4")
+        core.finish_attempt(attempt["id"], "succeeded")
+        return {"run_id": run["id"], "attempt_id": attempt["id"],
+                "artifact_id": composed["id"], "receipt_artifact_id": receipt_artifact["id"]}
+    except BaseException as error:
+        resolved_output = project_path(Path(receipt["output"])).resolve()
+        workspace = core.paths.workspace.resolve()
+        if resolved_output.is_relative_to(workspace):
+            resolved_output.unlink(missing_ok=True)
+        terminal = ('cancelled' if isinstance(error, KeyboardInterrupt) else
+                    'interrupted' if isinstance(error, SystemExit) else 'failed')
+        try:
+            core.finish_attempt(attempt["id"], terminal,
+                                reason=str(error) or type(error).__name__)
+        except Exception:
+            pass
+        raise
 
 
 def build_parser():
@@ -264,6 +346,15 @@ def build_parser():
     ppo_handoff.add_argument("--treatment-delivery", action="append", dest="treatment_deliveries", help="Treatment delivery mapping (treatment_id:delivery_id)")
     ppo_handoff.add_argument("--output", type=Path, help="Output path for ppo-handoff.json")
 
+    ppo_reproduce = ppo_sub.add_parser("reproduce", help="Reproduce a winning variant into production deliveries (PRD-006)")
+    ppo_reproduce.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
+    ppo_reproduce.add_argument("--config", type=Path, help="Path to creative.config.json")
+    ppo_reproduce.add_argument("--experiment", type=str, required=True, help="Experiment ID")
+    ppo_reproduce.add_argument("--variant", type=str, required=True, help="Winning treatment ID (explicit selection; no auto-selection in v1)")
+    ppo_reproduce.add_argument("--decision-basis", type=str, help="Human-readable decision basis recorded in receipts")
+    ppo_reproduce.add_argument("--execute", action="store_true", help="Execute the reproduction (default is dry-run)")
+    ppo_reproduce.add_argument("--json", action="store_true", help="Emit machine-readable JSON instead of the default review plan")
+
     bgm = cmd("bgm")
     bgm_sub = bgm.add_subparsers(dest="bgm_action", required=True)
 
@@ -288,6 +379,7 @@ def build_parser():
     bgm_compose.add_argument("--target-lufs", type=float, default=-16.0, help="Target integrated LUFS (default -16)")
     bgm_compose.add_argument("--true-peak-ceiling", type=float, default=-1.0, help="True-peak ceiling in dBTP (default -1)")
     bgm_compose.add_argument("--receipt", type=Path, help="Optional path to write the Swift receipt JSON")
+    bgm_compose.add_argument("--managed", action="store_true", help="Register the composed output in the artifact lifecycle (PRD-004)")
 
     return p
 
@@ -297,7 +389,16 @@ def main(argv=None):
     try:
         res = run(args)
         if res is not None:
-            print(json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
+            if (args.command == "ppo" and args.ppo_action == "reproduce"
+                    and not args.execute and not args.json):
+                provenance = res["provenance"]
+                print(f"Experiment: {provenance['experiment_id']} | Variant: {provenance['variant_id']}")
+                print(f"Decision basis: {provenance['decision_basis']}")
+                for group in res["scope"]["by_locale"]:
+                    print(f"{group['locale']}: {', '.join(group['targets'])}")
+                print(f"Planned deliveries: {res['scope']['planned_delivery_count']}")
+            else:
+                print(res if isinstance(res, str) else json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2
