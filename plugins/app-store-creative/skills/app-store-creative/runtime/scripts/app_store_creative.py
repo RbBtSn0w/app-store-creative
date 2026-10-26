@@ -65,7 +65,8 @@ def run(args):
             raise ValueError('export --output-dir is unsupported for managed attempts; configure storage.workspaceRoot in creative.config.json instead (and storage.objectRoot for retained media)')
         cfg = project_path(getattr(args, 'config', None))
         return production_lifecycle.produce(root, cfg, targets=getattr(args, 'targets', None),
-            locales=getattr(args, 'locales', None), with_video=getattr(args, 'with_video', False))
+            locales=getattr(args, 'locales', None), with_video=getattr(args, 'with_video', False),
+            require_declared_video=True)
 
     if args.command == "ppo":
         cfg = project_path(getattr(args, "config", None))
