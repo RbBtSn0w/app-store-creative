@@ -28,6 +28,8 @@ try:
 except ImportError:
     HAVE_SCIPY = False
 
+APPLE_LOOPS_ROOT = Path("/Library/Audio/Apple Loops")
+
 
 def midi_to_freq(m: float) -> float:
     return 440.0 * (2.0 ** ((m - 69.0) / 12.0))
@@ -202,10 +204,23 @@ def generate_ambient_bgm(output_path: Path, duration: float = 24.0, sample_rate:
         else:
             write_stereo_wav(output_path, sample_rate, left.tolist(), right.tolist())
     else:
+        sys.stderr.write(basic_fallback_notice())
         left, right = synthesize_bgm_pure_python(duration, sample_rate)
         write_stereo_wav(output_path, sample_rate, left, right)
 
     return output_path
+
+
+def basic_fallback_notice() -> str:
+    """Explain that the stdlib pad is a placeholder and point to better sources."""
+    notice = ("Warning: numpy is unavailable; writing a basic sine-chord pad that is a placeholder, "
+              "not release-quality music. Review it by ear before use.\n")
+    if APPLE_LOOPS_ROOT.is_dir():
+        notice += ("Apple Loops are installed: prefer `app_store_creative.py bgm scan`, `bgm recommend`, "
+                   "and `bgm compose` to build the preview soundtrack from royalty-free loops.\n")
+    else:
+        notice += "Install numpy (and scipy for the speech notch) for the full ambient synthesizer.\n"
+    return notice
 
 
 def main():

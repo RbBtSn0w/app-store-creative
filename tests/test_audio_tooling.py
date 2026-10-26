@@ -122,6 +122,26 @@ class AudioToolingTests(unittest.TestCase):
         self.assertAlmostEqual(frames_50[0][0], 0.3535, places=2)
         self.assertAlmostEqual(frames_50[0][1], 0.3535, places=2)
 
+    def test_basic_bgm_fallback_warns_and_points_to_apple_loops(self):
+        # The stdlib pad must not pass silently as release music (#58).
+        import contextlib
+        import io
+        from unittest import mock
+        import synthesize_ambient_bgm
+        loops = self.root / "Apple Loops"
+        for installed, expected in ((True, "bgm compose"), (False, "Install numpy")):
+            with self.subTest(installed=installed):
+                if installed:
+                    loops.mkdir(exist_ok=True)
+                stderr = io.StringIO()
+                with mock.patch.object(synthesize_ambient_bgm, "HAVE_NUMPY", False), \
+                     mock.patch.object(synthesize_ambient_bgm, "APPLE_LOOPS_ROOT",
+                                       loops if installed else self.root / "missing"), \
+                     contextlib.redirect_stderr(stderr):
+                    generate_ambient_bgm(self.root / "fallback.wav", duration=0.1, sample_rate=8000)
+                self.assertIn("placeholder", stderr.getvalue())
+                self.assertIn(expected, stderr.getvalue())
+
     def test_synthesize_ambient_bgm_low_sample_rate(self):
         output_wav = self.root / "test_bgm_16k.wav"
         # 16000 Hz has Nyquist 8000 Hz, testing lowpass & notch adaptation
