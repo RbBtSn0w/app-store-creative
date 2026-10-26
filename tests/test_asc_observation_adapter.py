@@ -43,6 +43,16 @@ class AscObservationAdapterTests(unittest.TestCase):
         self.assertEqual(self.processing(assetDeliveryState={'state': 'UPLOADING'},
                                          videoDeliveryState=None, videoUrl=None), 'UPLOADING')
 
+    def test_modern_response_without_deprecated_asset_state_completes(self):
+        self.assertEqual(self.processing(assetDeliveryState=None), 'COMPLETE')
+        self.assertEqual(self.processing(assetDeliveryState=None,
+                                         videoDeliveryState={'state': 'PROCESSING'}), 'PROCESSING')
+
+    def test_apple_in_flight_states_are_not_unknown(self):
+        self.assertEqual(self.processing(videoDeliveryState={'state': 'UPLOAD_COMPLETE'}, videoUrl=''),
+                         'PROCESSING')
+        self.assertEqual(self.processing(assetDeliveryState={'state': 'AWAITING_UPLOAD'}), 'UPLOADING')
+
     def test_missing_video_state_is_unknown_not_success(self):
         self.assertEqual(self.processing(videoDeliveryState=None), 'UNKNOWN')
 

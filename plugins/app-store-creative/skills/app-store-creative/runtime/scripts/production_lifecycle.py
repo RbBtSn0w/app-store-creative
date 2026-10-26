@@ -14,7 +14,9 @@ import video_engine
 
 def _effective_previews(config, locales=None):
     """Return the merged previewVideo declarations enabled for the selected locales."""
-    global_pv = config.get('previewVideo', {})
+    global_pv = config.get('previewVideo') or {}
+    if not isinstance(global_pv, dict):
+        raise ValueError('Configuration previewVideo must be an object')
     global_enabled = global_pv.get('enabled', False)
     localizations = config.get('localizations', {})
     has_locale_previews = isinstance(localizations, dict) and any(
@@ -50,7 +52,7 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
     config = contract.check_config(core.config)
     effective_pvs = _effective_previews(config, locales)
     if require_declared_video and effective_pvs and not with_video:
-        raise ValueError('creative.config.json enables previewVideo; rerun export with --with-video '
+        raise ValueError(f'{cfg.name} enables previewVideo; rerun export with --with-video '
                          '(or set previewVideo.enabled to false) so the declared preview is produced')
     if with_video:
         from managed_poster import timestamp_from_time_code

@@ -52,8 +52,10 @@ After delivery, inspect the current preview resource through official ASC:
   upload lands, while `videoDeliveryState` stays `PROCESSING` with an empty
   `videoUrl`, typically for 1–3 minutes, until Apple finishes transcoding.
   `publication normalize-asc-preview` reports `processing_state: COMPLETE` only
-  when both states are `COMPLETE` and `videoUrl` is non-empty; a missing
-  `videoDeliveryState` yields `UNKNOWN`, and either `FAILED` state yields `FAILED`.
+  when `videoDeliveryState` is `COMPLETE`, `videoUrl` is non-empty, and any
+  reported `assetDeliveryState` is also `COMPLETE`; a missing `videoDeliveryState`
+  yields `UNKNOWN`, and either `FAILED` state yields `FAILED`. Apple's
+  `AWAITING_UPLOAD` and `UPLOAD_COMPLETE` map to `UPLOADING` and `PROCESSING`.
   Poll the same `/v1/appPreviews/{id}` resource with bounded, spaced reads
   instead of re-uploading.
 - Verify the returned `videoUrl` is playable, with expected duration and valid

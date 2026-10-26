@@ -2,6 +2,8 @@
 import re
 
 _DELIVERY_STATES = ('COMPLETE', 'FAILED', 'PROCESSING', 'UPLOADING')
+# Apple's in-flight media states, folded into the lifecycle vocabulary.
+_IN_FLIGHT_STATES = {'AWAITING_UPLOAD': 'UPLOADING', 'UPLOAD_COMPLETE': 'PROCESSING'}
 
 
 def _delivery_state(attributes, field):
@@ -11,7 +13,9 @@ def _delivery_state(attributes, field):
     if not isinstance(state, dict):
         raise ValueError('Invalid ASC delivery state')
     value = state.get('state')
-    return value if value in _DELIVERY_STATES else 'UNKNOWN'
+    if value in _DELIVERY_STATES:
+        return value
+    return _IN_FLIGHT_STATES.get(value, 'UNKNOWN')
 
 
 def _preview_processing(attributes):
@@ -19,16 +23,17 @@ def _preview_processing(attributes):
 
     `assetDeliveryState` reaches COMPLETE as soon as the upload lands, while
     `videoDeliveryState` stays PROCESSING with an empty `videoUrl` until Apple
-    finishes transcoding, so only both states plus a URL establish completion.
+    finishes transcoding, so only the video state plus a URL establish completion.
+    The deprecated asset state may be absent from API 3.7+ responses.
     """
-    asset = _delivery_state(attributes, 'assetDeliveryState') or 'UNKNOWN'
+    asset = _delivery_state(attributes, 'assetDeliveryState')
     video = _delivery_state(attributes, 'videoDeliveryState')
     url = attributes.get('videoUrl')
     if url is not None and not isinstance(url, str):
         raise ValueError('Invalid ASC video URL')
     if 'FAILED' in (asset, video):
         return 'FAILED'
-    if asset != 'COMPLETE':
+    if asset not in (None, 'COMPLETE'):
         return asset
     if video is None:
         return 'UNKNOWN'

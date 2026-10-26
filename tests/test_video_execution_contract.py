@@ -125,6 +125,7 @@ class VideoExecutionContractTests(unittest.TestCase):
         import production_lifecycle
         configs = [
             ({'previewVideo': {'enabled': False, 'source': 'capture.mov'}}, None),
+            ({'previewVideo': None}, None),
             ({'localizations': {'de-DE': {'previewVideo': {'enabled': True,
                                                            'source': 'capture.mov'}}}}, ['en-US']),
         ]
@@ -137,7 +138,7 @@ class VideoExecutionContractTests(unittest.TestCase):
                     'targets': ['mac_16_10'], 'cards': [{'id': 'hero'}], **extra}))
                 sentinel = RuntimeError('reached rendering')
                 with mock.patch('export_engine.run_export', side_effect=sentinel):
-                    with self.assertRaises(RuntimeError):
+                    with self.assertRaisesRegex(RuntimeError, 'reached rendering'):
                         production_lifecycle.produce(root, locales=locales, require_declared_video=True)
 
     def test_export_cli_reports_missing_video_flag(self):
