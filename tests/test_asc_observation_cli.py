@@ -23,6 +23,8 @@ class AscObservationCliTests(unittest.TestCase):
         response = {'versionLocalizationId': 'localization', 'sets': [{'previews': [
             {'type': 'appPreviews', 'id': 'remote', 'attributes': {
                 'sourceFileChecksum': 'c' * 32, 'assetDeliveryState': {'state': 'COMPLETE'},
+                'videoDeliveryState': {'state': 'COMPLETE'},
+                'videoUrl': 'https://apptrailers.example.invalid/preview.m3u8',
                 'previewFrameTimeCode': '00:00:05:01', 'previewImage': {'width': 0, 'height': 0}}}]}]}
         from datetime import datetime, timezone
         scope = {'target': {'app_id': 'foreign'} if foreign else target,
