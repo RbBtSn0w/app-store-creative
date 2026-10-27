@@ -16,8 +16,9 @@ concurrency:
 jobs:
   validate-tests:
     name: Unit tests (Shard ${{ matrix.shard }}/4)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # The plugin only runs on macOS, so tests exercise the darwin code paths.
+    runs-on: macos-15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -26,10 +27,19 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
       - name: Install media tools
+        timeout-minutes: 10
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+          HOMEBREW_NO_INSTALL_CLEANUP: '1'
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: '1'
         run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y ffmpeg
+          command -v ffmpeg >/dev/null || brew install ffmpeg
           ffmpeg -version
           ffprobe -version
 
@@ -38,11 +48,16 @@ jobs:
 
   validate-distribution:
     name: Validate distribution & frontend
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: macos-15
+    timeout-minutes: 15
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
 
       - name: Validate plugin package
         run: python3 .github/validate_plugin.py

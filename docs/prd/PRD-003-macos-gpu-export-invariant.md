@@ -90,6 +90,9 @@ provenance-first product.
 - *(engineering, resolved)* All CI jobs run on `ubuntu-latest`
   (`.github/workflows/ci.yml`); no macOS runner exists, so Linux keeps
   `--disable-gpu` for determinism and nothing depends on the macOS change.
+  *Update:* CI test and validation jobs now run on `macos-15` because the
+  plugin is macOS-only; the Linux `--disable-gpu` branch remains covered by
+  the patched-platform unit tests.
 - *(engineering, resolved)* The `.app`-bundle filter branch is removed; the
   platform check becomes the single GPU policy (folded into R1).
 

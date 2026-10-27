@@ -16,6 +16,7 @@ This document outlines the architectural rules, CI invariants, testing standards
       ...
   ```
 - **Exception Assertions**: Use `self.assertRaises(...)` or `self.assertRaisesRegex(...)` for exception assertions.
+- **macOS-Only CI**: The plugin only runs on macOS, so CI test and validation jobs run on `macos-15` runners (ffmpeg via Homebrew). Do not move them back to Linux or rely on Linux-only behavior.
 - **Authoritative CI Test Command**: In CI, unit tests are sharded across parallel matrix runners via:
   ```bash
   python3 .github/run_sharded_tests.py --shard ${{ matrix.shard }} --total 4
