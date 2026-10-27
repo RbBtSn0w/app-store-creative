@@ -96,6 +96,13 @@ class AudioAndTTSCapabilitiesTests(unittest.TestCase):
         self.assertIn("Usage: macos_speech_synthesizer", res.stdout)
         self.assertIn("--list-voices", res.stdout)
         self.assertIn("--output", res.stdout)
+        self.assertIn("1.15", res.stdout)
+
+    def test_macos_speech_synthesizer_declares_rate_ceiling(self):
+        script = Path(__file__).parents[1] / "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/macos_speech_synthesizer.swift"
+        source = script.read_text(encoding="utf-8")
+        self.assertIn("let maxSpeechRate: Float = 1.15", source)
+        self.assertIn("rate = min(val, maxSpeechRate)", source)
 
 
 if __name__ == "__main__":

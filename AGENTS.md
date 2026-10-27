@@ -16,10 +16,12 @@ This document outlines the architectural rules, CI invariants, testing standards
       ...
   ```
 - **Exception Assertions**: Use `self.assertRaises(...)` or `self.assertRaisesRegex(...)` for exception assertions.
+- **macOS-Only CI**: The plugin only runs on macOS, so CI test and validation jobs run on `macos-15` runners (ffmpeg via Homebrew). Do not move them back to Linux or rely on Linux-only behavior.
 - **Authoritative CI Test Command**: In CI, unit tests are sharded across parallel matrix runners via:
   ```bash
-  python3 .github/run_sharded_tests.py --shard ${{ matrix.shard }} --total 4
+  python3 .github/run_sharded_tests.py --shard ${{ matrix.shard }} --total 4 --report test-reports/shard-${{ matrix.shard }}.json
   ```
+  Each shard runs with buffered test output, a 300s per-test hang watchdog (`--test-timeout`), and `::error` annotations for failures. The `Test report` job merges the JSON shard reports through `.github/ci_test_report.py` into a single run summary; keep that summary verdict-first and readable top-down.
   Local test verification can execute the full suite using:
   ```bash
   python3 -m unittest discover -s tests -p 'test_*.py'

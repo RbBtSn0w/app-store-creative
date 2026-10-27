@@ -21,13 +21,16 @@ mkdir -p "$WORK_DIR" "$INPUTS_DIR/video"
 
 PLUGIN_SCRIPTS="$REPO_ROOT/plugins/app-store-creative/skills/app-store-creative/runtime/scripts"
 
-# 1. Synthesize 24.0s Studio Ambient BGM (48kHz stereo, vocal notch filter)
+# 1. Synthesize 24.0s Studio Ambient BGM (48kHz stereo, vocal notch filter).
+#    Prefer `app_store_creative.py bgm scan/recommend/compose` (Apple Loops) on macOS;
+#    this synthesizer is the fallback and warns when numpy is missing.
 echo "==> Synthesizing 24s ambient electronic BGM..."
 python3 "$PLUGIN_SCRIPTS/synthesize_ambient_bgm.py" \
   --duration 24.0 \
   --output "$WORK_DIR/bgm.wav"
 
-# 2. (Optional) Synthesize or load speech voiceover narration (e.g. via edge-tts or AVSpeechSynthesizer)
+# 2. (Optional) Synthesize or load speech voiceover narration (e.g. via edge-tts or AVSpeechSynthesizer;
+#    keep speech rate at or below +15%)
 # In this template, if voiceover.wav exists, apply sidechain ducking (-12 dB) and -16.0 LUFS normalization
 if [ -f "$WORK_DIR/voiceover.wav" ]; then
   echo "==> Mixing voiceover and BGM with sidechain ducking (-12 dB, -16 LUFS)..."

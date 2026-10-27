@@ -100,6 +100,64 @@ class VideoExecutionContractTests(unittest.TestCase):
                 renderer.assert_not_called()
             self.assertFalse((root / '.creative').exists())
 
+    def test_declared_video_without_flag_refuses_before_production(self):
+        # A silently skipped preview only surfaced later as a seal failure (#59).
+        import production_lifecycle
+        base = {'project': {'id': 'video-flag', 'name': 'Video Flag',
+                'bundleId': 'example.video.flag', 'locales': ['en-US', 'de-DE']},
+                'targets': ['mac_16_10'], 'cards': [{'id': 'hero'}]}
+        declared = {
+            'global': {'previewVideo': {'enabled': True, 'source': 'capture.mov'}},
+            'locale': {'localizations': {'de-DE': {'previewVideo': {'enabled': True,
+                                                                    'source': 'capture.mov'}}}},
+        }
+        for name, extra in declared.items():
+            with self.subTest(declaration=name), tempfile.TemporaryDirectory() as scratch:
+                root = Path(scratch)
+                (root / 'creative.config.json').write_text(json.dumps({**base, **extra}))
+                with mock.patch('export_engine.run_export') as renderer:
+                    with self.assertRaisesRegex(ValueError, '--with-video'):
+                        production_lifecycle.produce(root, require_declared_video=True)
+                    renderer.assert_not_called()
+                self.assertFalse((root / '.creative').exists())
+
+    def test_declared_video_check_respects_disabled_and_unselected_locales(self):
+        import production_lifecycle
+        configs = [
+            ({'previewVideo': {'enabled': False, 'source': 'capture.mov'}}, None),
+            ({'previewVideo': None}, None),
+            ({'localizations': {'de-DE': {'previewVideo': {'enabled': True,
+                                                           'source': 'capture.mov'}}}}, ['en-US']),
+        ]
+        for extra, locales in configs:
+            with self.subTest(extra=extra), tempfile.TemporaryDirectory() as scratch:
+                root = Path(scratch)
+                (root / 'creative.config.json').write_text(json.dumps({
+                    'project': {'id': 'video-off', 'name': 'Video Off', 'bundleId': 'example.video.off',
+                                'locales': ['en-US', 'de-DE']},
+                    'targets': ['mac_16_10'], 'cards': [{'id': 'hero'}], **extra}))
+                sentinel = RuntimeError('reached rendering')
+                with mock.patch('export_engine.run_export', side_effect=sentinel):
+                    with self.assertRaisesRegex(RuntimeError, 'reached rendering'):
+                        production_lifecycle.produce(root, locales=locales, require_declared_video=True)
+
+    def test_export_cli_reports_missing_video_flag(self):
+        import subprocess
+        import sys
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            (root / 'creative.config.json').write_text(json.dumps({
+                'project': {'id': 'video-cli', 'name': 'Video CLI', 'bundleId': 'example.video.cli',
+                            'locales': ['en-US']},
+                'targets': ['mac_16_10'], 'cards': [{'id': 'hero'}],
+                'previewVideo': {'enabled': True, 'source': 'capture.mov'}}))
+            cli = Path(__file__).parents[1] / 'plugins/app-store-creative/scripts/app_store_creative.py'
+            result = subprocess.run([sys.executable, str(cli), 'export', '--repo', str(root)],
+                                    capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('--with-video', result.stderr)
+            self.assertFalse((root / '.creative').exists())
+
     def test_poster_time_code_uses_frames_and_refuses_out_of_range_values(self):
         from managed_poster import timestamp_from_time_code
         self.assertEqual(timestamp_from_time_code('00:00:05:15', 30), 5.5)

@@ -88,6 +88,12 @@ its production receipt with the project evidence. `export --with-video` then
 performs the existing store-format export. App-specific actions, demonstration
 data, copy, and locale selection remain in the consuming project. Creating an ASC
 version, uploading, and remote auditing remain the official ASC plugin's work.
+After upload, Apple transcodes in a second phase: `videoUrl` stays empty and
+`videoDeliveryState` stays `PROCESSING` even though `assetDeliveryState` already
+reports `COMPLETE`. This typically lasts 1–3 minutes, but Apple documents that
+processing can take up to 24 hours, so a longer delay is not a failed upload.
+Poll `/v1/appPreviews/{id}` with bounded, spaced reads rather than re-uploading
+or regenerating the video.
 
 ### Native take and normalized recording
 

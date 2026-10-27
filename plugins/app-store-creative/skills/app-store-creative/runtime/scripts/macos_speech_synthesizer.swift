@@ -121,6 +121,9 @@ func listVoices(filterLocale: String? = nil) {
     }
 }
 
+// Testing showed +8% to +15% keeps diction clear; +24% clipped leading syllables.
+let maxSpeechRate: Float = 1.15
+
 func printUsage() {
     let usage = """
     Usage: macos_speech_synthesizer [options]
@@ -131,7 +134,8 @@ func printUsage() {
       --output <file.wav>    Destination linear PCM audio file (WAV)
       --locale <locale>      Target language/locale (e.g. en-US, zh-CN, ja-JP; default: en-US)
       --voice <id_or_name>   Specific AVSpeechSynthesisVoice identifier or name
-      --rate <float>         Speed multiplier (default: 1.0)
+      --rate <float>         Speed multiplier (default: 1.0; values above 1.15 are clamped
+                             because faster speech truncates short technical words)
       --pitch <float>        Pitch multiplier (default: 1.0)
       --list-voices [locale] List installed macOS neural and standard voices
       -h, --help             Show this help message
@@ -185,7 +189,10 @@ func main() {
         case "--rate":
             idx += 1
             guard idx < args.count, let val = Float(args[idx]) else { fputs("Error: --rate requires a float\n", stderr); exit(1) }
-            rate = val
+            if val > maxSpeechRate {
+                fputs("Warning: --rate \(val) exceeds \(maxSpeechRate); clamping to keep speech intelligible\n", stderr)
+            }
+            rate = min(val, maxSpeechRate)
         case "--pitch":
             idx += 1
             guard idx < args.count, let val = Float(args[idx]) else { fputs("Error: --pitch requires a float\n", stderr); exit(1) }

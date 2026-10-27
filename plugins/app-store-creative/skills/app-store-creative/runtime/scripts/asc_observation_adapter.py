@@ -1,6 +1,46 @@
 """Normalize official ASC preview-list facts; never execute remote operations."""
 import re
 
+_DELIVERY_STATES = ('COMPLETE', 'FAILED', 'PROCESSING', 'UPLOADING')
+# Apple's in-flight media states, folded into the lifecycle vocabulary.
+_IN_FLIGHT_STATES = {'AWAITING_UPLOAD': 'UPLOADING', 'UPLOAD_COMPLETE': 'PROCESSING'}
+
+
+def _delivery_state(attributes, field):
+    state = attributes.get(field)
+    if state is None:
+        return None
+    if not isinstance(state, dict):
+        raise ValueError('Invalid ASC delivery state')
+    value = state.get('state')
+    if value in _DELIVERY_STATES:
+        return value
+    return _IN_FLIGHT_STATES.get(value, 'UNKNOWN')
+
+
+def _preview_processing(attributes):
+    """Combine file delivery with video transcoding.
+
+    `assetDeliveryState` reaches COMPLETE as soon as the upload lands, while
+    `videoDeliveryState` stays PROCESSING with an empty `videoUrl` until Apple
+    finishes transcoding, so only the video state plus a URL establish completion.
+    The deprecated asset state may be absent from API 3.7+ responses.
+    """
+    asset = _delivery_state(attributes, 'assetDeliveryState')
+    video = _delivery_state(attributes, 'videoDeliveryState')
+    url = attributes.get('videoUrl')
+    if url is not None and not isinstance(url, str):
+        raise ValueError('Invalid ASC video URL')
+    if 'FAILED' in (asset, video):
+        return 'FAILED'
+    if asset not in (None, 'COMPLETE'):
+        return asset
+    if video is None:
+        return 'UNKNOWN'
+    if video != 'COMPLETE':
+        return video
+    return 'COMPLETE' if url else 'PROCESSING'
+
 
 def preview_facts(response, localization_id, remote_id):
     """Select an explicit remote resource within an executor-resolved localization.
@@ -35,12 +75,7 @@ def preview_facts(response, localization_id, remote_id):
         if not isinstance(checksum, str) or not re.fullmatch(r'[0-9a-f]{32}', checksum):
             raise ValueError('Invalid ASC source checksum')
         upload['source_checksum'] = checksum
-    state = attributes.get('assetDeliveryState') or {}
-    if not isinstance(state, dict):
-        raise ValueError('Invalid ASC delivery state')
-    processing = state.get('state')
-    result = {'upload': upload, 'processing': {'processing_state': processing
-        if processing in ('COMPLETE', 'FAILED', 'PROCESSING', 'UPLOADING') else 'UNKNOWN'}}
+    result = {'upload': upload, 'processing': {'processing_state': _preview_processing(attributes)}}
     poster = {}
     time_code = attributes.get('previewFrameTimeCode')
     if time_code is not None:

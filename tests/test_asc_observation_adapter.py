@@ -5,14 +5,67 @@ from asc_observation_adapter import preview_facts
 
 
 class AscObservationAdapterTests(unittest.TestCase):
-    def response(self, image=None):
+    def response(self, image=None, **overrides):
+        attributes = {'sourceFileChecksum': 'a' * 32,
+                      'assetDeliveryState': {'state': 'COMPLETE'},
+                      'videoDeliveryState': {'state': 'COMPLETE'},
+                      'videoUrl': 'https://apptrailers.example.invalid/preview.m3u8',
+                      'previewFrameTimeCode': '00:00:05:01',
+                      'previewImage': image or {'width': 0, 'height': 0}}
+        for key, value in overrides.items():
+            if value is None:
+                attributes.pop(key, None)
+            else:
+                attributes[key] = value
         return {'versionLocalizationId': 'localization', 'sets': [
             {'set': {'type': 'appPreviewSets', 'id': 'set'}, 'previews': [
-                {'type': 'appPreviews', 'id': 'preview', 'attributes': {
-                    'sourceFileChecksum': 'a' * 32,
-                    'assetDeliveryState': {'state': 'COMPLETE'},
-                    'previewFrameTimeCode': '00:00:05:01',
-                    'previewImage': image or {'width': 0, 'height': 0}}}]}]}
+                {'type': 'appPreviews', 'id': 'preview', 'attributes': attributes}]}]}
+
+    def processing(self, **overrides):
+        facts = preview_facts(self.response(**overrides), 'localization', 'preview')
+        return facts['processing']['processing_state']
+
+    def test_delivered_asset_with_transcoding_video_is_processing(self):
+        # Apple reports the uploaded file before the playable video exists (#57).
+        self.assertEqual(self.processing(videoDeliveryState={'state': 'PROCESSING'}, videoUrl=''),
+                         'PROCESSING')
+
+    def test_complete_requires_both_states_and_video_url(self):
+        self.assertEqual(self.processing(), 'COMPLETE')
+        self.assertEqual(self.processing(videoUrl=''), 'PROCESSING')
+        self.assertEqual(self.processing(videoUrl=None), 'PROCESSING')
+
+    def test_in_flight_asset_blocks_completion_even_with_complete_video(self):
+        for state in ('PROCESSING', 'UPLOADING'):
+            with self.subTest(state=state):
+                self.assertEqual(self.processing(assetDeliveryState={'state': state}), state)
+
+    def test_any_failed_state_is_failure(self):
+        self.assertEqual(self.processing(videoDeliveryState={'state': 'FAILED'}), 'FAILED')
+        self.assertEqual(self.processing(assetDeliveryState={'state': 'FAILED'}), 'FAILED')
+
+    def test_upload_in_progress_is_not_completion(self):
+        self.assertEqual(self.processing(assetDeliveryState={'state': 'UPLOADING'},
+                                         videoDeliveryState=None, videoUrl=None), 'UPLOADING')
+
+    def test_modern_response_without_deprecated_asset_state_completes(self):
+        self.assertEqual(self.processing(assetDeliveryState=None), 'COMPLETE')
+        self.assertEqual(self.processing(assetDeliveryState=None,
+                                         videoDeliveryState={'state': 'PROCESSING'}), 'PROCESSING')
+
+    def test_apple_in_flight_states_are_not_unknown(self):
+        self.assertEqual(self.processing(videoDeliveryState={'state': 'UPLOAD_COMPLETE'}, videoUrl=''),
+                         'PROCESSING')
+        self.assertEqual(self.processing(assetDeliveryState={'state': 'AWAITING_UPLOAD'}), 'UPLOADING')
+
+    def test_missing_video_state_is_unknown_not_success(self):
+        self.assertEqual(self.processing(videoDeliveryState=None), 'UNKNOWN')
+
+    def test_malformed_video_fields_are_rejected(self):
+        for overrides in ({'videoDeliveryState': 'COMPLETE'}, {'videoUrl': 42}):
+            with self.subTest(overrides=overrides):
+                with self.assertRaisesRegex(ValueError, 'Invalid ASC'):
+                    preview_facts(self.response(**overrides), 'localization', 'preview')
 
     def test_complete_upload_with_zero_size_poster_is_not_poster_success(self):
         facts = preview_facts(self.response(), 'localization', 'preview')

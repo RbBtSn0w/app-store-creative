@@ -19,6 +19,16 @@ Do not delete the old remote set until verified replacements are locally availab
 
 When `--replace` is used, App Store Connect initiates an asynchronous pre-deletion phase that empties remote galleries before new uploads attach. Do not rely on web dashboard inspection during this transient state; verify completion using authoritative `asc screenshots list` / `asc video-previews list`. For manual web audits, use Incognito mode or hard refresh (`Cmd+Shift+R`) strictly for client-side browser cache troubleshooting, recognizing that client clearing does not purge intermediary edge CDN caches.
 
+## In-review media lock
+
+While the app version's review submission is `WAITING_FOR_REVIEW` or
+`IN_REVIEW`, App Store Connect refuses to delete or replace its screenshots and
+previews. `asc video-previews upload --replace` then fails with HTTP 409 (`Can't
+Delete Preview while Waiting For Review`). Read the submission state before any
+replacement. Cancelling the review submission is a separate human decision outside
+the upload approval: stop and report the lock instead of cancelling, retrying, or
+deleting media to work around it.
+
 ## Completion report
 
 Report the approved local plan, attempted operations, successful writes, failed or skipped operations, and fresh remote state independently. Upload completion does not authorize submitting the app version for review or changing release settings.
@@ -38,6 +48,16 @@ After delivery, inspect the current preview resource through official ASC:
   exposes them. Apple deprecated `assetDeliveryState` and `previewImage` in API
   3.7. A missing modern field is unknown, not success or failure. An empty legacy
   `previewImage` must not be treated as evidence that processing is pending.
+- Processing is two-phase. `assetDeliveryState` turns `COMPLETE` as soon as the
+  upload lands, while `videoDeliveryState` stays `PROCESSING` with an empty
+  `videoUrl`, typically for 1–3 minutes, until Apple finishes transcoding.
+  `publication normalize-asc-preview` reports `processing_state: COMPLETE` only
+  when `videoDeliveryState` is `COMPLETE`, `videoUrl` is non-empty, and any
+  reported `assetDeliveryState` is also `COMPLETE`; a missing `videoDeliveryState`
+  yields `UNKNOWN`, and either `FAILED` state yields `FAILED`. Apple's
+  `AWAITING_UPLOAD` and `UPLOAD_COMPLETE` map to `UPLOADING` and `PROCESSING`.
+  Poll the same `/v1/appPreviews/{id}` resource with bounded, spaced reads
+  instead of re-uploading.
 - Verify the returned `videoUrl` is playable, with expected duration and valid
   video/audio streams. Report poster-image readiness separately. If modern image
   state is unavailable, retain that limitation; verify the acknowledged

@@ -40,7 +40,17 @@ flowchart TD
 
 ---
 
+### Speech Rate Ceiling
+Keep synthetic speech at or below **+15%** of the engine's default rate (edge-tts `--rate=+15%`; `macos_speech_synthesizer.swift --rate 1.15`, which clamps larger values with a warning). Field testing showed +8% to +15% keeps diction clear, while +24% truncated the first syllables of short technical words. When a sentence does not fit its scene, shorten the script or extend the scene instead of speeding up speech.
+
+---
+
 ## 2. Sidechain Ducking BGM & Loudness Standards
+
+### BGM Source Order
+1. **Apple Loops (preferred on macOS)**: `app_store_creative.py bgm scan`, then `bgm recommend`, then `bgm compose --managed` builds the soundtrack from royalty-free installed loops and registers it with the lifecycle. Never bundle the loop files themselves.
+2. **Algorithmic synthesis**: `synthesize_ambient_bgm.py` with numpy (and scipy for the speech notch).
+3. **Basic placeholder**: without numpy the synthesizer writes a plain sine-chord pad and warns on stderr. Review it by ear before use; it is not release-quality music by default.
 
 To maintain intelligibility of feature commentary while preserving an engaging musical backdrop, previews mixing BGM and voiceover must adhere to standard ducking and loudness targets:
 

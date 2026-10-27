@@ -59,10 +59,12 @@ Run without `--execute` to inspect the derived media command. Add `--execute` on
 
 Preview voiceover commentary and background audio must comply with [audio-standards.md](references/audio-standards.md):
 - **3-Tier Hierarchy**: Tier 1 Cloud Neural TTS (Azure/Edge-TTS) -> Tier 2 macOS Native Enhanced Voice (`macos_speech_synthesizer.swift`) -> Tier 3 Silent Fallback (requires explicit `allowSilentAudio: true`).
+- **Speech Rate Ceiling**: Keep TTS speed at or below `+15%` (edge-tts `--rate=+15%`, `macos_speech_synthesizer.swift --rate 1.15`, which clamps higher values). Faster speech truncates short technical words; shorten the script instead.
+- **Background Music Order**: On macOS, build the soundtrack from installed Apple Loops first with `app_store_creative.py bgm scan` → `bgm recommend` → `bgm compose --managed`. Use `synthesize_ambient_bgm.py` only when no usable loops exist. Without numpy it writes a basic sine-chord placeholder and warns on stderr; review that output by ear and do not ship it as release music by default.
 - **Ducking Mix**: Background music must duck by `-12 dB` under narration with smooth 150ms/400ms envelopes.
 - **Loudness Compliance**: Final preview audio tracks must target `-14 LUFS` to `-16 LUFS` integrated loudness and pass the anti-silence gate (`mean_volume >= -80 dB`).
 - **Packaged Audio Utilities**:
-  - `synthesize_ambient_bgm.py`: Algorithmic royalty-free Keynote ambient BGM generator (with 1.2kHz-3.5kHz speech notch filter):
+  - `synthesize_ambient_bgm.py`: Fallback algorithmic ambient BGM generator when Apple Loops are unavailable (numpy for full synthesis, scipy for the 1.2kHz-3.5kHz speech notch filter):
     ```sh
     python3 <runtime-root>/scripts/synthesize_ambient_bgm.py --duration 24.0 --output .creative/.cache/bgm.wav
     ```

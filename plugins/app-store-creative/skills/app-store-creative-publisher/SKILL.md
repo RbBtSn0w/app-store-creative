@@ -23,7 +23,7 @@ Resolve live ASC resource IDs and reconcile the exported plan with fresh ASC sta
 
 Read [asc-recovery.md](references/asc-recovery.md) before reconciling a partial upload. Refuse CI or unattended external execution. Resolve live app, version, localization, display type, and preview set IDs. Compare the approved publication plan with fresh remote state and use the official ASC plugin to execute only those authorized operations. Register bound observations through the managed publication commands and retain failures or missing evidence explicitly.
 
-Never submit the app version for review, change release options, or delete an old remote set before verified replacements are available. Stop when live ambiguity could target the wrong version or localization.
+Never submit the app version for review, change release options, or delete an old remote set before verified replacements are available. Stop when live ambiguity could target the wrong version or localization. Media cannot be replaced while the review submission is `WAITING_FOR_REVIEW` or `IN_REVIEW` (HTTP 409); report the lock rather than cancelling the submission yourself. A delivered preview is not processed until `videoDeliveryState` is `COMPLETE`, `videoUrl` is non-empty, and any reported `assetDeliveryState` is also `COMPLETE`; see [asc-recovery.md](references/asc-recovery.md).
 
 ## Preview observation normalization
 

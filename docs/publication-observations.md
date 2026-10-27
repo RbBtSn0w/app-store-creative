@@ -40,7 +40,7 @@ evidence_reference使用可追溯的执行记录身份，不能填本机绝对�
 | 门禁 | 接受事实 | 判定 |
 | --- | --- | --- |
 | upload | found、source_checksum | ASC API/CLI确认资源存在且源MD5匹配才通过；缺失或不匹配失败 |
-| processing | processing_state | COMPLETE通过，FAILED失败，处理中或未知保持未知 |
+| processing | processing_state | COMPLETE通过，FAILED失败，处理中或未知保持未知；Preview需`videoDeliveryState`为COMPLETE、`videoUrl`非空，且如有`assetDeliveryState`也须为COMPLETE才算COMPLETE；缺少`videoDeliveryState`为未知 |
 | media/playback | media_verified | browser/media-probe/human-review的实际验证通过；API处理完成不替代解码或播放 |
 | poster | poster_verified、poster_frame_time_code、poster_width、poster_height | 解码或复查通过、尺寸非零、时间码与计划一致才通过；尺寸存在本身不足 |
 

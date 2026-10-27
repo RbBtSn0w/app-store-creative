@@ -11,13 +11,16 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: false
+  # Superseded PR pushes are cancelled so checks reflect the latest commit;
+  # main pushes always finish because they gate the release.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate-tests:
     name: Unit tests (Shard ${{ matrix.shard }}/4)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # The plugin only runs on macOS, so tests exercise the darwin code paths.
+    runs-on: macos-15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -26,23 +29,73 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
       - name: Install media tools
+        timeout-minutes: 10
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+          HOMEBREW_NO_INSTALL_CLEANUP: '1'
         run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y ffmpeg
-          ffmpeg -version
-          ffprobe -version
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          ffmpeg -hide_banner -version | head -n 1
+          ffprobe -hide_banner -version | head -n 1
 
       - name: Run sharded unit tests
-        run: python3 .github/run_sharded_tests.py --shard ${{ matrix.shard }} --total 4
+        run: >-
+          python3 .github/run_sharded_tests.py
+          --shard ${{ matrix.shard }} --total 4
+          --report test-reports/shard-${{ matrix.shard }}.json
 
-  validate-distribution:
-    name: Validate distribution & frontend
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+      - name: Upload shard report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report-shard-${{ matrix.shard }}
+          path: test-reports/shard-${{ matrix.shard }}.json
+          if-no-files-found: ignore
+          retention-days: 1
+
+  test-report:
+    name: Test report
+    needs: validate-tests
+    if: always()
+    # Pinned so the summary page is not prefixed by runner-label migration notices.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github
+
+      - name: Download shard reports
+        uses: actions/download-artifact@v8
+        with:
+          pattern: test-report-shard-*
+          path: test-reports
+          merge-multiple: true
+
+      - name: Write combined summary
+        env:
+          REPORT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 .github/ci_test_report.py test-reports --shards 4
+
+  validate-distribution:
+    name: Validate distribution & frontend
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
 
       - name: Validate plugin package
         run: python3 .github/validate_plugin.py
@@ -87,6 +140,7 @@ jobs:
           retention-days: 7
 
   release:
+    name: Release (main only)
     needs: [validate-tests, validate-distribution]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
