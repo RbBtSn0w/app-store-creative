@@ -39,7 +39,6 @@ jobs:
         env:
           HOMEBREW_NO_AUTO_UPDATE: '1'
           HOMEBREW_NO_INSTALL_CLEANUP: '1'
-          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: '1'
         run: |
           command -v ffmpeg >/dev/null || brew install ffmpeg
           ffmpeg -hide_banner -version | head -n 1
@@ -58,13 +57,14 @@ jobs:
           name: test-report-shard-${{ matrix.shard }}
           path: test-reports/shard-${{ matrix.shard }}.json
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 1
 
   test-report:
     name: Test report
     needs: validate-tests
     if: always()
-    runs-on: ubuntu-latest
+    # Pinned so the summary page is not prefixed by runner-label migration notices.
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Check out repository
