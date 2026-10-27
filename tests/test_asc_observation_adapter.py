@@ -35,6 +35,11 @@ class AscObservationAdapterTests(unittest.TestCase):
         self.assertEqual(self.processing(videoUrl=''), 'PROCESSING')
         self.assertEqual(self.processing(videoUrl=None), 'PROCESSING')
 
+    def test_in_flight_asset_blocks_completion_even_with_complete_video(self):
+        for state in ('PROCESSING', 'UPLOADING'):
+            with self.subTest(state=state):
+                self.assertEqual(self.processing(assetDeliveryState={'state': state}), state)
+
     def test_any_failed_state_is_failure(self):
         self.assertEqual(self.processing(videoDeliveryState={'state': 'FAILED'}), 'FAILED')
         self.assertEqual(self.processing(assetDeliveryState={'state': 'FAILED'}), 'FAILED')
