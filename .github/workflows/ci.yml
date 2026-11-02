@@ -59,9 +59,54 @@ jobs:
           if-no-files-found: ignore
           retention-days: 1
 
+  validate-crossfs:
+    name: Cross-filesystem relocation tests
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install media tools
+        timeout-minutes: 10
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+          HOMEBREW_NO_INSTALL_CLEANUP: '1'
+        run: |
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          ffmpeg -hide_banner -version | head -n 1
+          ffprobe -hide_banner -version | head -n 1
+
+      - name: Run real cross-filesystem tests
+        run: >-
+          python3 .github/run_crossfs_tests.py run
+          --state "$RUNNER_TEMP/creative-crossfs-state.json"
+          --report crossfs-reports/crossfs.json
+
+      - name: Clean up owned cross-filesystem image
+        if: always()
+        run: >-
+          python3 .github/run_crossfs_tests.py cleanup
+          --state "$RUNNER_TEMP/creative-crossfs-state.json"
+          --report crossfs-reports/crossfs.json
+
+      - name: Upload cross-filesystem evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: crossfs-evidence
+          path: crossfs-reports/crossfs.json
+          if-no-files-found: error
+          retention-days: 1
+
   test-report:
     name: Test report
-    needs: validate-tests
+    needs: [validate-tests, validate-crossfs]
     if: always()
     # Pinned so the summary page is not prefixed by runner-label migration notices.
     runs-on: ubuntu-24.04
@@ -79,10 +124,20 @@ jobs:
           path: test-reports
           merge-multiple: true
 
+      - name: Download cross-filesystem report
+        if: always()
+        uses: actions/download-artifact@v8
+        with:
+          name: crossfs-evidence
+          path: crossfs-reports
+
       - name: Write combined summary
+        if: always()
         env:
           REPORT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python3 .github/ci_test_report.py test-reports --shards 4
+        run: >-
+          python3 .github/ci_test_report.py test-reports --shards 4
+          --crossfs-report crossfs-reports/crossfs.json --require-crossfs
 
   validate-distribution:
     name: Validate distribution & frontend
@@ -115,6 +170,9 @@ jobs:
           npx tsc --noEmit
           npm run build
 
+      - name: Check Studio runtime dist matches committed assets
+        run: python3 .github/check_studio_dist.py
+
       - name: Smoke-test complete plugin distribution
         run: python3 .github/package_plugin.py --output /tmp/app-store-creative.zip
 
@@ -141,7 +199,7 @@ jobs:
 
   release:
     name: Release (main only)
-    needs: [validate-tests, validate-distribution]
+    needs: [validate-tests, validate-distribution, validate-crossfs, test-report]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15

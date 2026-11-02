@@ -101,7 +101,7 @@ def preview_facts(response, localization_id, remote_id):
 
 def preview_observations(plan, response, scope):
     """Prepare observations from an explicit ASC executor scope, without writes."""
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     import json
     if not isinstance(response, bytes) or not response:
         raise ValueError('ASC evidence must be nonempty response bytes')
@@ -197,7 +197,7 @@ def screenshot_facts(response, localization_id, remote_id):
 
 def screenshot_observations(plan, response, scope):
     """Prepare screenshot observations from an explicit ASC executor scope, without writes."""
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     import json
     if not isinstance(response, bytes) or not response:
         raise ValueError('ASC evidence must be nonempty response bytes')

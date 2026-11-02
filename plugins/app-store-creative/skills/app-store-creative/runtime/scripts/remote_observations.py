@@ -90,7 +90,7 @@ def retrieve_observation_evidence(path, expected_sha256, backend_root, destinati
             or not isinstance(locator['reference'], dict)
             or locator['reference'].get('sha256') != locator['evidence_sha256']):
         raise ValueError('Invalid portable observation evidence locator')
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     summary = locator['summary']
     summary_fields = {'schema_version', 'id', 'publication_id', 'plan_sha256', 'artifact_id',
         'gate', 'source', 'observed_at', 'evidence_sha256', 'facts', 'observation_id'}
@@ -126,7 +126,7 @@ def retrieve_observation_evidence(path, expected_sha256, backend_root, destinati
 
 class ObservationOperations:
     def record_observation(self, publication_id, observation, evidence):
-        from artifact_lifecycle import canonical, identifier
+        from record_primitives import canonical, identifier
         allowed = {'plan_sha256', 'target', 'artifact_id', 'remote_id', 'gate', 'source',
                    'observed_at', 'evidence_reference', 'evidence_sha256', 'facts', 'supersedes'}
         if not isinstance(observation, dict) or set(observation) - allowed or not allowed - {'supersedes'} <= set(observation):
@@ -167,7 +167,7 @@ class ObservationOperations:
                 'verdict': gate_result(asset, gate, facts, source)})
 
     def retain_observation_evidence(self, observation_id, evidence, actor):
-        from artifact_lifecycle import canonical, identifier
+        from record_primitives import canonical, identifier
         from pathlib import Path
         with self.transaction():
             observation = self._read('remote-observations', observation_id)
@@ -209,7 +209,7 @@ class ObservationOperations:
             raise
 
     def _verify_observation_summary(self, binding, observation):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         if (not isinstance(binding.get('summary_artifact_id'), str)
                 or not re.fullmatch('[0-9a-f]{32}', binding['summary_artifact_id'])
                 or not isinstance(binding.get('summary_sha256'), str)
@@ -245,9 +245,9 @@ class ObservationOperations:
         return persist_managed(self, artifact['id'], backend, backend_root)
 
     def _publication_state(self, publication_id, max_age_seconds=86400):
-        from artifact_lifecycle import safe_id
+        from record_primitives import safe_id
         safe_id(publication_id)
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         if isinstance(max_age_seconds, bool) or not isinstance(max_age_seconds, int) or max_age_seconds <= 0:
             raise ValueError('Observation freshness must be positive seconds')
         try:
@@ -382,7 +382,7 @@ class ObservationOperations:
         return exports
 
     def _export_observation_records(self, publication_id, plan_hash):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         root = self.paths.publications / publication_id
         count = 0
         def export(category, identity, data):

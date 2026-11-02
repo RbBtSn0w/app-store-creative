@@ -1,0 +1,51 @@
+export interface CritiqueCardDraft {
+  notes: string;
+  dirty: boolean;
+  sequence: number;
+  touched: boolean;
+}
+
+export interface CritiqueDraftState {
+  cards: Record<string, CritiqueCardDraft>;
+  generation: number;
+  active: boolean;
+}
+
+export type CritiqueDraftAction =
+  | { type: 'start' }
+  | { type: 'invalidate' }
+  | { type: 'edit'; cardId: string; notes: string }
+  | { type: 'loaded'; generation: number; notes: Record<string, string> }
+  | { type: 'saved'; generation: number; cardId: string; sequence: number }
+  | { type: 'failed'; generation: number };
+
+export const initialCritiqueDraft = (): CritiqueDraftState => ({ cards: {}, generation: 0, active: false });
+
+export function currentCritiqueSession(state: CritiqueDraftState, generation: number): boolean {
+  return state.active && state.generation === generation;
+}
+
+export function critiqueDraft(state: CritiqueDraftState, action: CritiqueDraftAction): CritiqueDraftState {
+  if (action.type === 'start') return { ...state, active: true, generation: state.generation + 1 };
+  if (action.type === 'invalidate') return { ...state, active: false };
+  if (action.type === 'edit') {
+    const previous = state.cards[action.cardId];
+    return { ...state, cards: { ...state.cards, [action.cardId]: {
+      notes: action.notes, dirty: true, touched: true, sequence: (previous?.sequence || 0) + 1,
+    } } };
+  }
+  if (!currentCritiqueSession(state, action.generation)) return state;
+  if (action.type === 'loaded') {
+    const cards = { ...state.cards };
+    for (const [id, notes] of Object.entries(action.notes)) {
+      if (!cards[id]?.touched) cards[id] = { notes, dirty: false, touched: false, sequence: 0 };
+    }
+    return { ...state, cards };
+  }
+  if (action.type === 'saved') {
+    const card = state.cards[action.cardId];
+    if (!card || card.sequence !== action.sequence) return state;
+    return { ...state, cards: { ...state.cards, [action.cardId]: { ...card, dirty: false } } };
+  }
+  return state;
+}

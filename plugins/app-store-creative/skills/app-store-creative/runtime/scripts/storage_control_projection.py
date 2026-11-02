@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import secrets
 
-from artifact_lifecycle import canonical, safe_id
+from record_primitives import canonical, safe_id
 
 
 def _sync(directory):

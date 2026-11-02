@@ -78,9 +78,12 @@ def render(
         start = min(report["started_at"] for report in reports)
         wall = max(report["started_at"] + report["elapsed"] for report in reports) - start
 
-    ok = not problems and not missing
+    unsuccessful = [report for report in reports if report.get("successful") is False]
+    ok = not problems and not missing and not unsuccessful
     lines = ["## ✅ Unit tests passed" if ok else "## ❌ Unit tests failed", ""]
     facts = []
+    if unsuccessful:
+        facts.append(f"**{len(unsuccessful)} failed shard(s)**")
     if problems:
         facts.append(f"**{len(problems):,} failed**")
     facts.append(f"**{passed:,} passed**" if ok else f"{passed:,} passed")
@@ -123,7 +126,8 @@ def render(
             lines.append(f"| {shard}/{expected_shards} | ⚠️ No report | — | — | — |")
             continue
         failed = len(report["problems"])
-        result = "✅ Passed" if not failed else f"❌ {failed} failed"
+        result = (f"❌ {failed} failed" if failed else
+                  "❌ Failed" if report.get("successful") is False else "✅ Passed")
         lines.append(
             f"| {shard}/{expected_shards} | {result} | {report['tests_run']:,} "
             f"| {len(report['skipped']):,} | {format_duration(report['elapsed'])} |"
@@ -165,10 +169,51 @@ def render(
     return "\n".join(lines)
 
 
+def crossfs_verdict(path: Path | None) -> tuple[bool, str]:
+    """Validate dedicated real-volume evidence without treating it as a shard."""
+    if path is None:
+        return False, "Cross-filesystem report is missing."
+    try:
+        report = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(report, dict) or report.get("schema_version") != 1:
+            raise ValueError("unsupported report schema")
+        context = report["context"]
+        if not isinstance(context, dict) or not isinstance(context.get("source_sha"), str) or not context["source_sha"]:
+            raise ValueError("missing source SHA context")
+        for key, env_key in (("source_sha", "GITHUB_SHA"), ("run_id", "GITHUB_RUN_ID")):
+            if os.environ.get(env_key) and context.get(key) != os.environ[env_key]:
+                raise ValueError(f"{key} does not match current run")
+        volume, tests, cleanup = report["volume"], report["tests"], report["cleanup"]
+        if not all(isinstance(value, dict) for value in (volume, tests, cleanup)):
+            raise ValueError("volume, tests and cleanup evidence must be objects")
+        count = tests["tests_run"]
+        if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
+            raise ValueError("no executed tests")
+        for key in ("problems", "skipped"):
+            if not isinstance(tests[key], list):
+                raise ValueError(f"invalid tests.{key}")
+        devices = (volume.get("source_device"), volume.get("target_device"))
+        if (volume.get("verified") is not True
+                or any(isinstance(value, bool) or not isinstance(value, int) for value in devices)
+                or devices[0] == devices[1]):
+            raise ValueError("distinct filesystem identity was not verified")
+        ok = (report.get("status") == "passed" and cleanup.get("status") == "passed"
+              and not tests["problems"] and not tests["skipped"])
+        if not ok:
+            return False, (f"Cross-filesystem tests failed or cleanup failed: "
+                           f"status={report.get('status')}, cleanup={cleanup.get('status')}; "
+                           f"{_cell(str(report.get('error', cleanup.get('error', ''))))}")
+        return True, f"Cross-filesystem tests passed: {count} tests, 0 skipped; owned volume cleanup passed."
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        return False, f"Cross-filesystem report missing or malformed: {_cell(str(error))}"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Merge shard reports into a job summary.")
     parser.add_argument("report_dir", type=Path)
     parser.add_argument("--shards", type=int, required=True)
+    parser.add_argument("--crossfs-report", type=Path)
+    parser.add_argument("--require-crossfs", action="store_true")
     args = parser.parse_args()
     if args.shards < 1:
         parser.error(f"--shards must be >= 1, got {args.shards}")
@@ -180,14 +225,27 @@ def main() -> int:
     source_url = f"{server}/{repository}/blob/{sha}" if server and repository and sha else None
     run_url = f"{server}/{repository}/actions/runs/{run_id}" if server and repository and run_id else None
 
-    markdown = render(load_reports(args.report_dir), args.shards, source_url, run_url)
+    reports = load_reports(args.report_dir)
+    markdown = render(reports, args.shards, source_url, run_url)
+    crossfs_ok = True
+    if args.crossfs_report or args.require_crossfs:
+        crossfs_ok, message = crossfs_verdict(args.crossfs_report)
+        regular_ok = not any(report["problems"] or report.get("successful") is False for report in reports) and {
+            report["shard"] for report in reports
+        } == set(range(1, args.shards + 1))
+        combined_ok = regular_ok and crossfs_ok
+        markdown = ("## ✅ CI tests passed\n\n" if combined_ok else "## ❌ CI tests failed\n\n") + (
+            message + "\n\n" + markdown
+        )
+    else:
+        regular_ok = True
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
         with open(summary_path, "a", encoding="utf-8") as summary:
             summary.write(markdown)
     else:
         print(markdown)
-    return 0
+    return 1 if args.require_crossfs and not (crossfs_ok and regular_ok) else 0
 
 
 if __name__ == "__main__":

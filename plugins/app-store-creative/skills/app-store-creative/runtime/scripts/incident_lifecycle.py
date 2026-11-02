@@ -3,7 +3,7 @@
 
 class IncidentOperations:
     def open_incident(self, actor, reason, artifacts=None, candidates=None, deliveries=None):
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Incident requires actor and reason')
         references = {'artifacts': artifacts or [], 'candidates': candidates or [], 'deliveries': deliveries or []}

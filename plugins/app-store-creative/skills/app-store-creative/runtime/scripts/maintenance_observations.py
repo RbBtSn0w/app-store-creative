@@ -1,6 +1,6 @@
 """Read-only maintenance effect verification; recorded status is not sufficient."""
 import hashlib
-from artifact_lifecycle import canonical, digest
+from record_primitives import canonical, digest
 from operation_history import read_lock
 
 

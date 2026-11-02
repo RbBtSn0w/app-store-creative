@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import stat
 
-from artifact_lifecycle import canonical, safe_id
+from record_primitives import canonical, safe_id
 from configuration_layers import _identity, _read_regular, verify_local_git_protection, verify_storage_change
 
 

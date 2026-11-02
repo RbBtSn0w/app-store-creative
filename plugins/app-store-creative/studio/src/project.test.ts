@@ -13,6 +13,33 @@ const config: CreativeConfig = {
 };
 
 describe('reviewed target and locale assignments', () => {
+  it('edits direct default-language target copy without changing shared copy', () => {
+    const existing = structuredClone(config);
+    Object.assign(existing.cards[0].variants!.mac_16_10!, { headline: 'Mac title', subheadline: '' });
+    const edited = updateVariant(existing, 'hero', 'mac_16_10', 'en-US', { headline: 'New Mac', subheadline: 'Mac subtitle' });
+    expect(resolveCard(edited, edited.cards[0], 'mac_16_10', 'en-US')).toMatchObject({ headline: 'New Mac', subheadline: 'Mac subtitle' });
+    expect(edited.cards[0].headline).toBe('English');
+    expect(edited.cards[0].subheadline).toBeUndefined();
+    expect(edited.cards[0].variants!.mac_16_10!.localizations?.['en-US']).toBeUndefined();
+  });
+  it('routes each default-language field to its effective owner', () => {
+    const existing = structuredClone(config);
+    Object.assign(existing.cards[0].variants!.mac_16_10!, { headline: 'Mac title', subheadline: 'Mac subtitle' });
+    existing.localizations = { 'en-US': { hero: { headline: '' } } };
+    const edited = updateVariant(existing, 'hero', 'mac_16_10', 'en-US', { headline: 'Localized title', subheadline: '' });
+    expect(edited.cards[0].headline).toBe('English');
+    expect(edited.cards[0].subheadline).toBeUndefined();
+    expect(edited.cards[0].variants!.mac_16_10!.headline).toBe('Mac title');
+    expect(edited.cards[0].variants!.mac_16_10!.subheadline).toBe('');
+    expect(resolveCard(edited, edited.cards[0], 'mac_16_10', 'en-US')).toMatchObject({ headline: 'Localized title', subheadline: '' });
+  });
+  it('does not let an unrelated locale capture override take ownership of shared text', () => {
+    const existing = structuredClone(config);
+    existing.localizations = { 'en-US': { hero: { screenshot: '/localized.png' } } };
+    const edited = updateVariant(existing, 'hero', 'mac_16_10', 'en-US', { headline: 'Shared edit' });
+    expect(edited.cards[0].headline).toBe('Shared edit');
+    expect(edited.cards[0].variants!.mac_16_10!.localizations?.['en-US'] || {}).not.toHaveProperty('headline');
+  });
   it.each(['target', 'project'])('edits existing %s default-language overrides', scope => {
     const existing = structuredClone(config);
     const fields = { headline: 'Old text', screenshot: '/old.png' };

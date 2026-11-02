@@ -1,0 +1,1121 @@
+{
+  "date": "2026-11-02",
+  "status": "passed_locally",
+  "baseline": "90f2aec686282c62537786425c4379b1d71e90f6",
+  "working_tree_modified": true,
+  "remote_ci_executed": false,
+  "environment": {
+    "system": "Darwin",
+    "python": "3.14.4",
+    "node": "22.22.2",
+    "ci_python": "3.12"
+  },
+  "source_identity": {
+    "scheme": "source-payload-sha256-v1",
+    "sha256": "731938a163ff03404414e5eae0a6fe24945096a9eee343db88d6a621265f08af",
+    "file_count": 73
+  },
+  "files_sha256": {
+    ".github/check_studio_dist.py": "63982bab06bdfe8c35adeaca9fd6253a7a1839f587c18deab3a651424859fa47",
+    ".github/ci_test_report.py": "657d0c5db54eee1326f8604ec34e6cd8bd85434572908ad258e7a2f1b26897ea",
+    ".github/dependabot.yml": "47d57dfdf1970e83fda45e235b7dd432a8e74901c73d924bfa390d92c8020b16",
+    ".github/package_plugin.py": "12b43bd9967823791f8cbb1614433a87bf4f46e5fcc24d62d1fb92060e556eed",
+    ".github/release.cjs": "682c60a6df39597d2774e331c0a51389f9baab636635a3d150b8ce02141b128c",
+    ".github/release.test.cjs": "163eb52623f8e884554fb887bfdfaa0d494d3a8b5b93547cf1df660e6b20f30b",
+    ".github/run_crossfs_tests.py": "89277541e5d854a7d86b26fc0f323d560fc13ce3d2440bc5dfd37b1d0d8bde85",
+    ".github/run_sharded_tests.py": "597d265411bf9bc93dff1d5b51f3a972ddc82628ba02e5b19a39db29e254c3f2",
+    ".github/stubs/@semantic-release/npm/index.js": "3d461d553ee16ecf6b0d64ad81af98db335a1dfda54efce7c569c4daa59bda00",
+    ".github/stubs/@semantic-release/npm/package.json": "7bff6ec9bbf67b8fb28f15fe61352e0e5eb3029e7ee68d306af71810f5ae9f6a",
+    ".github/validate_plugin.py": "3aeed6f07ec3c97cfc4b5a8dc501c7a508832f41c2a75d3e224b8d5b38b1c962",
+    ".github/workflows/ci.yml": "b30c36d88474b091ee3124ac8ed19c64f5eecd80b6a1fb9b266b4bd132892f51",
+    "package-lock.json": "9099d98c744500cb7008407ed3964346d1873c688f0011aa77e946c3541dcc34",
+    "package.json": "e53756d08d5878ced51fef918056382bce72b31579d77a51dccd8d18d010cf5e",
+    "plugins/app-store-creative/.agents/.plugin.json": "b33cc9174d1782cfad87402d160e5374cae70ac19ad04c83ffcd7ac56a0caf9a",
+    "plugins/app-store-creative/.codex-plugin/plugin.json": "177f0d1d85d869c3259dc1d09be3c46e04e60ff51d27d58103e73628f3402819",
+    "plugins/app-store-creative/sidecars/studio/sidecar.json": "b76151839c58be97822c45ce462e7ed8f2bc9a8a41256fc41e7b42fadca45fbe",
+    "plugins/app-store-creative/skills/app-store-creative-design/SKILL.md": "a8bab105df379a95f0427bfb0b1eac1d2d4617f10d92e3dd6889cf4e91695de2",
+    "plugins/app-store-creative/skills/app-store-creative-design/agents/openai.yaml": "87cfb0348d8e88a41fc87ff22ca7623ebeecf73087c430784dd676d0fc3de297",
+    "plugins/app-store-creative/skills/app-store-creative-design/references/figma-design-contract.md": "02aca8e0347ae95fa44ae235e8c6dbe233c01ff11efa08838bc2159e167c4041",
+    "plugins/app-store-creative/skills/app-store-creative-publisher/SKILL.md": "66e619bbf6702a97beee8c685aecf51acc57910cdffd79cd581a329753f7d60b",
+    "plugins/app-store-creative/skills/app-store-creative-publisher/agents/openai.yaml": "d0c7558796e1da1459fd3211d8d6a91c5cdd7e79d529dca7725d79b2c26d43fd",
+    "plugins/app-store-creative/skills/app-store-creative-publisher/references/asc-recovery.md": "55a19f1e026291bb3c5c1b935c807d16456c421961806cf823d793552aaea12f",
+    "plugins/app-store-creative/skills/app-store-creative-validator/SKILL.md": "a946989efd759b1882ffcad8d4ba4969ff6d97a3653f089650c1f7ecaaa1830e",
+    "plugins/app-store-creative/skills/app-store-creative-validator/agents/openai.yaml": "1ee746b63cd00e72a51e2788a196dcea9725dde7161e5ee8f23da4f9d363db87",
+    "plugins/app-store-creative/skills/app-store-creative-validator/references/validation.md": "695a5c5b8208d6301bc812873df0f4ed99e863179d410849eb3a7bf63cdf8d39",
+    "plugins/app-store-creative/skills/app-store-creative/SKILL.md": "16d955aa6ab037b412e85beadacf887e8305ea760088cff85e1f4e8e0dfbdb23",
+    "plugins/app-store-creative/skills/app-store-creative/agents/openai.yaml": "594327f626178a2d7cc51f6a965aa794241cf1281a7865064235efd829009ef8",
+    "plugins/app-store-creative/skills/app-store-creative/references/agent-handoff.md": "ddb7d0bb99d5c53cd5e775595edd1d7bdebe67c91715efc949201e52fbc49a61",
+    "plugins/app-store-creative/skills/app-store-creative/references/benchmark-protocol.md": "bee4ecbad4989d5c2692bb386b059c13eea00b32aa8c16214438a74ecce4a596",
+    "plugins/app-store-creative/skills/app-store-creative/references/iteration-contract.md": "36899cbbf240540485c5222b6200271b014070ff96ac83a721611a3c146b9c39",
+    "plugins/app-store-creative/skills/app-store-creative/references/lifecycle-contract.md": "56aee394894795e9f15b3a14f39a76b4235c305a485fbf2d31b26ddd75d0ffa8",
+    "plugins/app-store-creative/skills/app-store-creative/references/specialist-lifecycle.md": "120a5965c81ba9fc5c759240a5034428868633aa69903639de6cbae07cdff3a6",
+    "plugins/app-store-creative/skills/app-store-creative/references/workflow-contract.md": "dc87de92a56f30184be1ef7fe4f968fdfa8a227abe707d21d782d2a5b958af82",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/assets/templates/creative.config.json": "bae34246de0fc5371d336685bbe0409c59177999de005492e0e7d42cad385fbb",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/assets/templates/validate-app-store-creative.sh": "c075d4badb9d15e007600a6e29b60dbbe0fa58d01e971a93149b927d06f88603",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/schemas/creative.config.schema.json": "e9e9dcfd48553212f81982af3ffc4f571e3e5f3c9078ca280d9cc5e71af22a78",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app-store-creative": "21f085b5a55d7d487bad403722de278dad5044ba7bf7268353769d2215c72aea",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/app_store_creative.py": "c872fec7a61d2585cd2816e876495285b48f896ab16348439231b5633fa2f590",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/apply_critique.py": "099a30de0254f2462a9142c6d6086ef78ab747fbbce82859686599373a32965d",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/archive_policy.py": "d6767f1c2b7cb57d9a462a96562d9eacf3a568fa6950a10753deb3cf14b26315",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_lifecycle.py": "70958b454fa90f28a0e06cdeb8bcaa55dceda49184a6f3953cf0d7e9835b6dbe",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/artifact_policy.py": "dc05a41a304457f25f1456944bedd3532080f0cb92f7df87e29b9a011b0a5fe1",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/asc_observation_adapter.py": "61dec9ffc8b240837923156cb30a6c0e6efa0214f2cf069bcf71a04988055d97",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/audio_ducking_mixer.py": "5759dbd7499445e96b86523ed9ea4f0bd593d5255df8e1892f61f2ba74ad5ac9",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/audit_report.py": "760e24b8d1ff265f13b01b2afa5696ddb6b9f36ae0db3ae5dd25d4bdbccb5a50",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/bgm_lifecycle.py": "dadc6afbf95e9a90226f8c1a3c5647a9846a31ddc31bc078cb23b5aca6876eda",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/chrome_renderer.py": "7baa47edb3b05fdfb9af5b04348549b5d7eb79fa96d2d13453ec97482d7a068b",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/companion_generator.py": "b3242f9b8c3f7d7b697e7b25bf3352fe19f4d20199909a8bcba49580b9bf530e",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_installation.py": "2b43edc7504ddf8da199e1c58e38def0229baa26d794325e0a7aa555c928a4e9",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_layers.py": "8b0833cfb888541e3548cb0354ee79b51f0007eab88e277c87b6f0996f8da7c0",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_location.py": "a2d664b2108010a4920e57bf612d4f2a2ba6f4d4795fd92563f5fc9b95247b33",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/configuration_preparation.py": "524182084f99af589139e07ddb6770fe4a5eed8a188d864c0924fe93dbe28d06",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/delivery_lifecycle.py": "0fe4b8ddf107a4f88865a437a23768ae0cb8a8db283ad7bc636f87891699e776",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/export_engine.py": "c52c2b53d34d9a19a5664923d9e3d954ea96f926e23101979d1434daa984d27f",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_delivery_archive.py": "613dc79e6e3168e6407593030d95b5fada6100c53e61302d54129ac3da67285b",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/external_media_store.py": "4effd3bda5800c05156c8ce566703c86f098ee07a4fb824063478c6e4861841b",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/forward_source_copies.py": "a942053999daa181173da033b54d47ff06cdf70e682b5f256f59e695312c9f82",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/incident_lifecycle.py": "36f5123398a0fbfc44aac3cbbcbbe5126310753da33c2868802c343d7a5a99b6",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/input_lifecycle.py": "03aed92cc9c83430797bffbb2698ba19384a4f12050b105a97bbb428d27d9755",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/inventory_lifecycle.py": "1af4e649944e197368e5d9eb28cfddedf9c00540d1b796e5778a7cd3125611be",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lease_lifecycle.py": "36ddfbe7352605892da22a3f1fac7d4f289781f16e6dce2a0d2c6894599233ab",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/lifecycle_commands.py": "718d4af87c8d870434bbb8c928e1d5d165f0fc45eddb97de0275d41c7da9d303",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/macos_speech_synthesizer.swift": "c31fdc10df78b59bb3c7666d28e4e2f3f570e22de392ef7c3ce3c9d04b62f917",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_fences.py": "ba67fcfeee5d066b7b2451c50818d2e825ee4ad3639386257ae3e6078a7f3bae",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/maintenance_observations.py": "0661e4344ba7d3faef458ffbf9ef2ef36b7c32d3768b8aa704ca251d4f6763ca",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_poster.py": "e4e82883faf840b52d990c86a3d55ec554afc3b5bf628126ebcf56eb26f538a7",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_preview.py": "a682ebb195f3e6eee70fb832d16e247666a7d87e36ea8309deaf6edc5fb83b5b",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/managed_recording.py": "5152ad5fcae0a52b9a61dcb3972e40a9fd8eb439b1bafe0e76263391c2c84982",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_budget.py": "13c6a2bde2f5a958f2a1b4d899c5bfcd93c317982489371ed375a0a6b48e0edd",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/media_tool_identity.py": "197a1859a8af075ec3c5db094fdac512a098380d70ffba36088dee35deb8ca92",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/operation_history.py": "c300f17520991461264332109f01f84be795f3ffa8de0efae168e9eaa5233a80",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/ppo_experiment.py": "5c8d9fc87e3b917466880a96573c3cf9be1fd1900866b1d13cf0cd4bf8380c64",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/produce_app_preview.py": "7698ceb435110b1d0732515c6a065ec3ce41ff472b089992ccad7922d56181a6",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/production_lifecycle.py": "c90964db0c867a05a4c26b99b44d75c7c16ee5a862c9cc6c74e2ef3a766f5bde",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/project_identity.py": "602c7114ceaed27be4ab29aa45bedc89ae1983a0d8a43b90fe32f50f530500bc",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/publication_lifecycle.py": "917422a83380ad0821ffc167d71d2cf9e3e49c2e6af3d3866fc5fbaa84c84968",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_execution.py": "7293a32a1cdb2a96ada3d11207ca642d8750a7b336bdeb61329e67fe5015545d",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_guards.py": "d1e98c3d019bd6f83c3f1a6c14a6e0144d95763e83381974dcb204bdd9a59dab",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/purge_observations.py": "4afff23a957ba4f92572cc8d675283d540ae299c92211131a6190f3a0595bb74",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_commit.py": "2604e0a78cc91bc8abf5d72d8f7098459478e624137e5e5699091adbedd8a1b1",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_inventory.py": "66c2309aee8a674165a100e32a6691b25636973757f18f236cf2e71f48c1cc4f",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/quarantine_locations.py": "12bb87c25f524f3bbcbef82e1d18ec1b979041818c3753f36150d76970ef14be",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.py": "1a1972600ae51af6142cb9014e53947d37d550ac0038df25d169c90b4421e653",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_app_window.swift": "530086383f200c58d745924b05828bef1475dccd6da47e595bf25c872509c1b5",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/record_primitives.py": "0cefdfc94f7ee62f0b96fcd71e757115e31291e44a8c37fec956845a5a565411",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_adapters.py": "e4d94e8c6ddb1e0de8939b6d777e40e60e4528576dda28fba3086d5cb30890c1",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/recording_normalization.py": "4372db64a647a4edb421e28c34d443e941591e41a04725aa3ac02a98660004b1",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_inventory.py": "bc39e00b0ae62bb4134daeaa7d570f107ec3302c161852a745e0460e2740474c",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_lifecycle.py": "cc669b7fa44bba3ca19bbe9f55bb117f0947a5b39bc006734f94d300998623d9",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_object_observations.py": "7dd2ced65d66fcce5473ff85d01319695f5a05ea1e71b8a577b4d0c6155b1f0f",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_purge.py": "7f49f33b9723e8e97eaad386f64be7f2c2d04ee87789149fef72967997a6cbcd",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_quarantine.py": "d2338b04bb9e9b51d0056f014f8e77aca767b0569f149ba5df143651adc1c6b1",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/relocation_retention.py": "5e0390f0dad732bb20f3888896490e86509c301a034c686414ee5ea430359963",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/remote_observations.py": "5f31aef75039a17a2e008b31a535b5b725871f39936ebb29f7259f49f6a061f2",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/retention_lifecycle.py": "3e2034fe0fe74760c1ea4ea705a448e5e03c8f3385bc75c6ec6347d930ca0878",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/reverse_relocation.py": "814284078c3991332af06dd8c8a4f0125c683cc330dcc3b0cda36e3da67a656e",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/runtime_identity.py": "2063590b6d0d86a0e3b866bc0ee66bb32a5d9f6944de9791c91af6699c8d5163",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/safe_staging.py": "c9dbb9035775e606e74154bdb549eb0d47a82147083e3a1c12416bdc7c41263a",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/source_dispositions.py": "cfe17519dfefb968925b9a200aeac8bacddefecda38ae49f49ba9329bd1f55e8",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/staging_inventory.py": "d0835d445fad7b397e5264a0be3d342c31095b9498904fd70362f462d387a33a",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_configuration.py": "698288273ac8e80c15be0759495ccaafe0e500ba51c1d1f14c4e8bbdbbc0ef87",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_control_projection.py": "e89bc602c0258764458e912396f0eba0060063c6c3e6e8ae675351120061006f",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_git_policy.py": "108ea3552622f93ef521c46e1a03d523ede0f738b7990b15437ff4cf57771e7d",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/storage_paths.py": "ff98d7d8c9aaf1fc8a6c47ccddad65ecec759ba85d9c44eaff1b608e58f08135",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_contract.py": "6de0e63f2b0e9838cd6cd6ae35552fabb777da97828793bbb09e9aaa8cb71c49",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py": "4313db6459873ca9c7c7d1debd4b34b11d0cebd545fcb534074a5e7dbb796340",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/swift_bgm_compose.swift": "69e9aff435827f43b92e4c1510d5398e3879e1b3baa926522118295a9edbf5c3",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/synthesize_ambient_bgm.py": "aeebf71d2300f22e22a594491264721737b32c5be536f586f1f527f621d9e202",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/validator.py": "b6b6863161316deee9e91fec2f463e5f74cd3091e04bb68524c8af2c5313e307",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/video_engine.py": "50a2500611cd62ee4fda987afc57a764712bf07f11fade55bdc8a043b92b5ad6",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/assets/index-BxhTfImR.css": "e0f761cccb7d4e1e9c5de93e5969a77a5b5f7703349e8e16e90bf28920de9e85",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/assets/index-Vtp5tNCn.js": "c92057d21c0a3d685eb15f53b563f6a2128410647635bbe5149b88e91b0f2f69",
+    "plugins/app-store-creative/skills/app-store-creative/runtime/studio/dist/index.html": "cafde90ccc436954642f6d24b48a7b5c5231d64eeaefbbd26dc67e08156cdceb",
+    "plugins/app-store-creative/skills/app-store-preview-producer/SKILL.md": "79c913cc2530c4a993ebb759c0e973261b6fbe5c7627a58037d7ea68b912dbe6",
+    "plugins/app-store-creative/skills/app-store-preview-producer/agents/openai.yaml": "15a4cc01496f4e524837ec5c649862b72e06e18c419eb16d4e7d6e302dd52422",
+    "plugins/app-store-creative/skills/app-store-preview-producer/references/audio-standards.md": "221597a8af9e17f9ff18165a8390b218bd0d36b6d3d2184e7f95637153877309",
+    "plugins/app-store-creative/skills/app-store-preview-producer/references/build-preview-pipeline.sh": "354b463efb4de5f9e176db8bab1586fa0fff736b88d6f99fa4272645f5ae7c13",
+    "plugins/app-store-creative/skills/app-store-preview-producer/references/swiftui-scene-compositor-template.swift": "c98570342f0856bd636f65e2e196c2cddfeab35654b8d4894fb9ed5fb4b8e03c",
+    "plugins/app-store-creative/skills/app-store-preview-producer/references/video-capture.md": "3af8d288b8a54325f177ad8de63b7cf8075031c6d274302fb48e2c05b13505f9",
+    "plugins/app-store-creative/skills/e2e-screenshot-capture/SKILL.md": "1014c726c34cd32ec17b0354dae0cf1588367d14a754809251aa3379c3c719ab",
+    "plugins/app-store-creative/skills/e2e-screenshot-capture/agents/openai.yaml": "f6b12c2c702691ceb2553dc34e221f433a7164ee417a7753925498618bf45153",
+    "plugins/app-store-creative/skills/e2e-screenshot-capture/references/capture-contract.md": "ec6b06a418a2b6b9f2f47cce361fe57c53c9c5ccb6d6550a44b91db5edcacd09",
+    "plugins/app-store-creative/skills/e2e-screenshot-capture/references/swiftui-headless-capture-template.swift": "640815716c92fe0b7ddc06e39bd5f568b45e071f4fc1e81117691ed38de33106",
+    "plugins/app-store-creative/studio/index.html": "df4a9627f493ff658b370c6c846e9402ea0e71f53a5e7aac67e2cf57c2236ef2",
+    "plugins/app-store-creative/studio/package-lock.json": "f3c178dfa6d8995121cfc6db27b8e78100cf5c3237273bcb545b967a388a0fbd",
+    "plugins/app-store-creative/studio/package.json": "bcb7ac57b557db995d44ef174c0ef27877e0b5b414a9eacdb140c5cc322ff3d7",
+    "plugins/app-store-creative/studio/src/App.tsx": "6150bf4725c96206c8d5942f2b451a833597ee31e31a9f47b6a443693aca5ace",
+    "plugins/app-store-creative/studio/src/ArchivePolicySettings.test.tsx": "0e780e00850aa4f331f9c1da126d35954472bbbe90753d2ebdff3e4a22af9b29",
+    "plugins/app-store-creative/studio/src/ArchivePolicySettings.tsx": "10795fff563a6115d7571ce5230273d74ed84ccc577bda7223fc91301695b813",
+    "plugins/app-store-creative/studio/src/CandidateApproval.test.tsx": "01567cb0b04b8ccb04d50a863960351ae9f646dc14dd414902fb370f314e8426",
+    "plugins/app-store-creative/studio/src/CandidateApproval.tsx": "85aa1dbfe5ccf0e4992fe0cb8d34f243032a0fee8a61c254f966b325a1ca8273",
+    "plugins/app-store-creative/studio/src/CandidatePreviewMedia.test.tsx": "4879e67a26189982fca8a35255eb07f038cf68681472294d39c1a921c81ae66e",
+    "plugins/app-store-creative/studio/src/CandidatePreviewMedia.tsx": "3184f2a644c5009c806bf7e1b1dbba3037f64ef3a01e8c0e800c652a46605fae",
+    "plugins/app-store-creative/studio/src/DeliveryHistory.tsx": "0c5d75879956b50352eb100c1593100b6542117e3f4211b33c14009c67f93cec",
+    "plugins/app-store-creative/studio/src/EvidencePersistence.tsx": "86971a19cfc2f82c8d244fd76cfe57d458862c4cd0c3b29f4bb4dc1bd804dad0",
+    "plugins/app-store-creative/studio/src/ExportView.test.ts": "1695143ced42700feb53c5dbb6185ad7656de397bff0e0da71065164a039e058",
+    "plugins/app-store-creative/studio/src/ExportView.tsx": "04f0c6a032094745ede544d97b406a87643b2337b561a51dd439cbaa8bf2d152",
+    "plugins/app-store-creative/studio/src/InventoryView.test.tsx": "985baffcdd89a88cd4e3ebd7fcaf15736049884acabc7c1f47a64f803be9dc47",
+    "plugins/app-store-creative/studio/src/InventoryView.tsx": "8cd202dbf0a3aea9017f5ed4067104776e59a2d5a884dae7cdd5d4647a0269b1",
+    "plugins/app-store-creative/studio/src/MaintenancePanel.tsx": "700af8974f30b906ad063d30c593363f599ea6b75745462e0b4d2da4ac419c1c",
+    "plugins/app-store-creative/studio/src/MediaBudgetPanel.test.tsx": "d8cbbd664a12d729c0a4019012f3adf04f509d4fdd1e83f10d98df5118afdcfa",
+    "plugins/app-store-creative/studio/src/MediaBudgetPanel.tsx": "b03110d4cc33ddb3fabbecfeb273e67f3dd88378c71a5940a0ad08ccada924a1",
+    "plugins/app-store-creative/studio/src/ObservationEvidence.tsx": "4e2d3f3857d68f085b9843f723104a7bade767d6049425f5d8855918db685947",
+    "plugins/app-store-creative/studio/src/OperationHistory.test.tsx": "57ab9834b9e82889d6279ba6ad0cc37daef8de207782248d577b8f602f46878b",
+    "plugins/app-store-creative/studio/src/OperationHistory.tsx": "4ff10c5582b16fa1e14048afbf87b9cfe630981b6913d540e03b1ce647f3baf3",
+    "plugins/app-store-creative/studio/src/PublicationHandoff.tsx": "f127c74ee460e413e53c2dc8f85656d6e392cf05e32f2475e93a7a35f998bd21",
+    "plugins/app-store-creative/studio/src/PublicationHistory.test.tsx": "ad1f34160e9866389e78ee5f53268557172e73396109a27b2ce3ecf27587a3ae",
+    "plugins/app-store-creative/studio/src/PublicationHistory.tsx": "24cf793a0807554277b03c4d16b6e2c0dbb2e823ed00510c954bbfb662dfb41d",
+    "plugins/app-store-creative/studio/src/RelocationActions.tsx": "54642827640bbbf6530e2e212bd43a76f75e1aa3c4aa33bc399dc5a6f9d6e68d",
+    "plugins/app-store-creative/studio/src/RelocationMaintenance.tsx": "2fa8f02a277b99fd494a06190c82af2bd5591a36c3c13c4ba80fd414eb804b86",
+    "plugins/app-store-creative/studio/src/RelocationMaintenanceHistory.tsx": "dca10a8717359a1f034ca312bfd839c14381c9415feeee96d7e5532651988b51",
+    "plugins/app-store-creative/studio/src/RelocationPurgeReview.test.tsx": "19e1ad70315bb01015e441f22f4d79c7ff782edc38c75568d43781040bae8c21",
+    "plugins/app-store-creative/studio/src/RelocationPurgeReview.tsx": "b45fb64f44c19d9b1509e83b0979cdc39b31c193d04915d80dada6164753dafe",
+    "plugins/app-store-creative/studio/src/RelocationRecovery.tsx": "1368557bb601b3d7c4ef678f41acb83cf9936921ce3f107310c4d1f0d911b315",
+    "plugins/app-store-creative/studio/src/RelocationStatusPanel.tsx": "824f6a5d726ede6ee5d10574d37de6ad85b0d34c2d13e77af6eef5d51a7b3277",
+    "plugins/app-store-creative/studio/src/RunHistory.test.ts": "82e84bc53cdbccd5eb2434787cab6755c58e0b9365dd2aa9560b3c14a1f8afcf",
+    "plugins/app-store-creative/studio/src/RunHistory.tsx": "3beceb286471e34e6b449121660cf0f5a6fd7af33ae75d419e9fc29f3a86cba6",
+    "plugins/app-store-creative/studio/src/StorageSettings.test.tsx": "4c5bf776161c995472516b4015d34cbc1291842c5ea2054611647fb8c032d9e7",
+    "plugins/app-store-creative/studio/src/StorageSettings.tsx": "a0f7ba946b0b98eb4161df0162b57f698904730f37f4f4b8b58958fdf2c96a49",
+    "plugins/app-store-creative/studio/src/artifactPolicy.test.ts": "af8a033bc447e106238f112548d2d001ec76c0b2cca366fda76381a74a9e1a8d",
+    "plugins/app-store-creative/studio/src/artifactPolicy.ts": "d4d98d50c7770950a9a7f9d8d6a7b144119a83c0e3c08b64cc8421fe5ce9ae74",
+    "plugins/app-store-creative/studio/src/components/CardView.test.tsx": "b970f24748c18e2ee3aa6e79a826dd25c84204b9a461f6ea8cde4ac75f5d3a87",
+    "plugins/app-store-creative/studio/src/components/CardView.tsx": "f76902b9843db5c16f97d1f843cf30892e7d55fe600695ad8e97a0d74974fe2b",
+    "plugins/app-store-creative/studio/src/components/DeviceFrame.test.tsx": "8920a21e85eab263a6508f7aaee3fc46d9b47862f11007e61cf7933c5c4e758f",
+    "plugins/app-store-creative/studio/src/components/DeviceFrame.tsx": "5263c6dc8b8b0b67f42e15578850e3382582a6d68c2e0c81d5a5e8b1e858c401",
+    "plugins/app-store-creative/studio/src/copyFormulas.test.ts": "2e6254fb071b77f9c3a9da8d3afb8a17abd3bb011a23711618c8350e22c70eed",
+    "plugins/app-store-creative/studio/src/copyFormulas.ts": "149d2ff88e3976a779d072975c95b93a0a0638f76fff54d3ada9eecf3cf392c4",
+    "plugins/app-store-creative/studio/src/critiqueDraft.test.ts": "4d1fb07d28a8059f1685f5d562a0e1d5247b922db52f586450ff56a2f95e4b0f",
+    "plugins/app-store-creative/studio/src/critiqueDraft.ts": "eb44c4cd0519056250794eb5170784e8419a3613f86b6c87d54d513780f662b9",
+    "plugins/app-store-creative/studio/src/deliveryStatus.test.ts": "5ad03ce8b4a9908001fb9d6e8f2782c9951cf07241cacfe8125cde5af713c712",
+    "plugins/app-store-creative/studio/src/deliveryStatus.ts": "7aa9430efef8803ab62f01cda88ba7d1d5bf1c71c8ec25def06045465b4ff005",
+    "plugins/app-store-creative/studio/src/downloadDraft.test.ts": "1e592543c956548299981430f6f3ff768d96fc4b3a8a6e2ac7802cdcc51dd533",
+    "plugins/app-store-creative/studio/src/downloadDraft.ts": "853baf09e2e3c690e1f19743f7b368190b22ba842c22fc97bd64478108606233",
+    "plugins/app-store-creative/studio/src/fontReview.test.ts": "5a365ccb52cace4d6dd955cfb7f3b73abc0b3569118b10feb5c3997a2ad14ed8",
+    "plugins/app-store-creative/studio/src/fontReview.ts": "60a5b799221ad65214f3107a5b91b0de923acec547374022a831c6959fad4b62",
+    "plugins/app-store-creative/studio/src/historyRequest.test.ts": "2709cda9b5a0d78cf97d77b0e385cf3ee72dd06d050aaa34e6ef8e076700b427",
+    "plugins/app-store-creative/studio/src/historyRequest.ts": "46ea4181a7ae41f87d46c0673fe76817f5a7f956c8e7bd90b3e78ef99f0a11a3",
+    "plugins/app-store-creative/studio/src/index.css": "d8b49d172c924fbc3a933f0089d728d4c1b48fe704b0b39893aafca0b7dfb592",
+    "plugins/app-store-creative/studio/src/inventoryPresentation.test.ts": "a5d99d715d95078d3aa276ed67a7ee5ff03b880d36df907d94fd05a244e9fb1c",
+    "plugins/app-store-creative/studio/src/inventoryPresentation.ts": "cf229d3d061c891c14136cc31e7744bd88d4eeb6322f27bb7fdd6314a00afe38",
+    "plugins/app-store-creative/studio/src/layoutReview.test.ts": "fb91bd2be9985fe03a713dbd38d6721eb1145f9e126c164ca8633c73b97cc025",
+    "plugins/app-store-creative/studio/src/layoutReview.ts": "4485709819fc01909c1c8c22c6cff999af03f8d69232500ec8bb928d47097e5c",
+    "plugins/app-store-creative/studio/src/main.tsx": "79faf095f462c11b5dc445dac9043c06809247d25c47f6693fccd656d1a1d35a",
+    "plugins/app-store-creative/studio/src/maintenanceInspection.test.ts": "38f8c282e0db54584acd24b37bb9005ed1ddaca5ba64bd098cfe09f87e591cc9",
+    "plugins/app-store-creative/studio/src/maintenanceInspection.ts": "22a1574a43e3d58ba023a2aa3e73ea79a92c3bb36c44abd7fc1f7169e660714f",
+    "plugins/app-store-creative/studio/src/maintenanceRequest.test.ts": "4da8d711dc50bb3a503594af674e980dff4cb801fefd1671c1f69e703b7f50c9",
+    "plugins/app-store-creative/studio/src/maintenanceRequest.ts": "9a3d631c721e2f1dad024a106bd1e92e8210ff2478ef588a1baa3065db1854bb",
+    "plugins/app-store-creative/studio/src/maintenanceState.test.ts": "f28cbd166b4b6c47e6d2c33502d957ad9db078a7ec9ea64a2934c17db5fc9037",
+    "plugins/app-store-creative/studio/src/maintenanceState.ts": "191291b5e6d2150f351d1f970764be39154548b0506429842eb6b0c2f6af9133",
+    "plugins/app-store-creative/studio/src/mediaBudget.test.ts": "9bffe9084e52855e5f66707e2ada15d15c99d811b3738ca370339c825b4349ce",
+    "plugins/app-store-creative/studio/src/mediaBudget.ts": "75fd3a90418a396b835d46759f45e18a766092e020851191031bf08fda421b03",
+    "plugins/app-store-creative/studio/src/project.test.ts": "5c82c2dc1a8efdd846533310e9b088f111e0d687badc848800a5715a9cfd3d9f",
+    "plugins/app-store-creative/studio/src/project.ts": "34dc0ce2d763403daf5d0cca49148333f0a67960b9d39d1e46390b2e84943f76",
+    "plugins/app-store-creative/studio/src/publicationHandoffState.test.ts": "4bad0eeee51b96fe78776b85bbf7e3fb28b9972024c74873f3a02eeb90490f30",
+    "plugins/app-store-creative/studio/src/publicationHandoffState.ts": "23d3470a8120d9aa8d0d4aee1502650987c50f5cd103affc3761907727f2417e",
+    "plugins/app-store-creative/studio/src/releaseState.test.ts": "2e1ea68078666d939e71622c8afddf7097b2559c5cd1a0a598cde00b8043076b",
+    "plugins/app-store-creative/studio/src/releaseState.ts": "a795fa5be76c51c95520e48fee4c8af9325f02f0ffe8d9b0a27f6a970d2819cd",
+    "plugins/app-store-creative/studio/src/relocatedObjects.test.ts": "1f2bba07cec51fba2d44dcac8a9f095a137ebb7a60025f7f74c1cbbcdb73819c",
+    "plugins/app-store-creative/studio/src/relocatedObjects.ts": "d170ec5b19751f149257d66a976dbb4d32c13945f8bf7aed73595f046e78b0a0",
+    "plugins/app-store-creative/studio/src/relocationMaintenanceState.test.ts": "4c7c781f3215b9b03065438d7b46cc26c14d6726b9b81bf0d37c0d5b82fe13a7",
+    "plugins/app-store-creative/studio/src/relocationMaintenanceState.ts": "3a733bdfbf8fe6d7653278f02c83c2a934bf9afd6067e6328492e563705adfac",
+    "plugins/app-store-creative/studio/src/relocationPurgeState.test.ts": "1e5cf4d0365a2e87658a42b53d29be35750b17aa12cc723019bb9a42a8e1c309",
+    "plugins/app-store-creative/studio/src/relocationPurgeState.ts": "b7203db1bfdb033706bbcf51685ee30d52624ab694aa929c12453577106ee58a",
+    "plugins/app-store-creative/studio/src/relocationState.test.ts": "aa3b5304920fd5008f5928c7bcdaec3fac94e1fa700f309164653471d9ea183e",
+    "plugins/app-store-creative/studio/src/relocationState.ts": "cfe414d6a5c2bff37d900239235b477db40fb398a236873409944c6a818ce1e6",
+    "plugins/app-store-creative/studio/src/scaling.test.ts": "11744ef0e33c0b36cc77e546ff41953d60336a28dbde369034839e8b449a259a",
+    "plugins/app-store-creative/studio/src/storagePreview.fixture.ts": "42f001b4cd372a152a46d27144e44c06ad19a1f5dfa4d811e3e9fd438302c471",
+    "plugins/app-store-creative/studio/src/storagePreview.test.ts": "22d281db958c762b4636c4921ae3e7f1c0c90331c91a8a30fa5f411209c27b4d",
+    "plugins/app-store-creative/studio/src/storagePreview.ts": "7a6824ff564305f6d7bfcc824e40ebedda14e27eece6473ab13719f0261576dd",
+    "plugins/app-store-creative/studio/src/stylePresets.test.ts": "e60103f1af70916978f5d3a37267c42216c8bf80a5fe1508619e0f687033099f",
+    "plugins/app-store-creative/studio/src/stylePresets.ts": "32f030de58270a7572e0f5bd12998e4b926e0559eea16365aa15121a1ffc0870",
+    "plugins/app-store-creative/studio/src/types.ts": "03a4006a090e6d051131012e696a8f1c69c79976df450330dc09f8df8b1f53ae",
+    "plugins/app-store-creative/studio/tsconfig.json": "1103540815beff5bd5ee7c657bdf30c87f5692de58bd983721bcd4f088207887",
+    "plugins/app-store-creative/studio/vite.config.ts": "c65131ca5dd5e0d97701341eaba20d2a4372b88d9a030f90d50d6098cd8064b1",
+    "tests/fixtures/README.md": "d45963be6ef4a3e98c850cd0307be7712eb4cea60fe24b7b85408dbdf4a071e4",
+    "tests/fixtures/studio_capture.html": "feaea12dc0b026ec361001eabe60354fd15a3afad9ceb0e804f76eba4951df17",
+    "tests/fixtures/studio_matrix.config.json": "de3c5a9ee8ba5349f462c075a10197b2fc7d5519c3fbcff40f6a2387c88c3390",
+    "tests/test_apply_critique.py": "dcd93f49f4cf40b0750c4f748bb8f419bb6825d3c29690bd9c16bbc5dff17ed1",
+    "tests/test_approval_commit_integrity.py": "2dd6ce1d4bdbf10039fe6390b055bb38216b3efed8c2f565685a0cca869b8950",
+    "tests/test_archive_manifest_contract.py": "66cc90d835f23d819011984fcd064e8b2561dd69ded4fb8fc0a4fa362d197b94",
+    "tests/test_archive_policy_configuration.py": "52394dc764ef58b33576c524f904c043252f14cb9daf60eb239a421fe822a4c9",
+    "tests/test_archive_policy_independent_retrieval.py": "2aedbbdb0ce788672983a25153c66316109160f47b1a0ed3b3bb892ee19d8861",
+    "tests/test_archive_policy_validation.py": "c3e0b6c0d208c47cc4d982d3cc0d6a04a18624a2417c684adc0ce7c8b6fb8195",
+    "tests/test_archive_provenance.py": "e1e90aac99b5466261827a742420f5c1666d93fb41a2ed5fa8e195ec6f8febad",
+    "tests/test_artifact_commit_integrity.py": "ff90a07ca284bba15b5850773f3622c706f36cf58bab94954e6b3822a1c75f26",
+    "tests/test_artifact_handoff.py": "6424e4d828fa2ad2825ed4cf8feddd9fa58c53be1ad27cf4ec8e1d2555b27508",
+    "tests/test_artifact_lifecycle.py": "fa11655aff0b0a4acd87bb2b5c46af796c7d9f0d1196829ecfab3d45648366e7",
+    "tests/test_artifact_policy.py": "b527dd7d843d656c2f8bdc8be4681a9f7a0b58db136d5ee56a834104c068204f",
+    "tests/test_asc_observation_adapter.py": "b277093419a5a03bcb2044f27786200a01d119183dc0077cf86fdc846cd963a9",
+    "tests/test_asc_observation_cli.py": "fe10b8138e2fb6643c80a2865ee2b01a2e6d65b5708857cc509b7177e9226004",
+    "tests/test_attempt_audit_contract.py": "d2fd393a8a93337a7f5955c5f68288dd7f3c613b827951f5f06fcc895060761e",
+    "tests/test_audio_tooling.py": "bc5eb434b07f964f4f3ddf635a722943b160e54416fe3406922814c734bf2602",
+    "tests/test_audio_tts_capabilities.py": "f8a6b146c39cb2468480605c57e606f0cbc0c7f45368b8bba76362d126e41c9a",
+    "tests/test_audit_report.py": "2d307df9af26201a3eb6245d2bbfd7a407ccd0539e6cdc65effaa27874c0d56f",
+    "tests/test_bgm_lifecycle.py": "4e1c2efd291169f93a02c5584bd30538fba0d20cf03a9ec1dec071745f2600c4",
+    "tests/test_candidate_dependency_invalidation.py": "d72316641066456af1c2259c7297154b1905515e98f94e3990e9b437eb82d8fa",
+    "tests/test_candidate_review.py": "2080918502a3d6092683d7707077002ab2df7265e60106cca5cc03251525483a",
+    "tests/test_capture_artifact_import.py": "4127d7f8a0e9927009898407abc21a1b0b4cd800f79f3264d05a289e33e36fa1",
+    "tests/test_chrome_renderer.py": "81deed66e99240a4a072bb4885636c4ccfb0cba63e81d4ae74448866a856477c",
+    "tests/test_ci_distribution_gates.py": "20466d4185e66be051a7a2636b38f025e7cbd04816283e7db0afbf7b2b042741",
+    "tests/test_ci_test_report.py": "20cd193db098aca8e2e4165bc6b1e8aba2589e32acf415f7801ee61457d3c339",
+    "tests/test_commit_abandonment.py": "a7f1b6b8d8a1a3899eef929bc6f8c22c3e121e6ef633c92e3c9b349b3d65f1e5",
+    "tests/test_companion_generator.py": "c3a795972cd36f9d28baaae6abf33e14cb47026fbd8442e4a9cfcd519ad08db8",
+    "tests/test_configuration_cli.py": "151d63f7ad1daacb6433e2c7ca0a49d095eb4c700500b05b44aaeaf0d4dbc6f1",
+    "tests/test_configuration_identity.py": "a15f6e62412ce6c3ce31344564d59d5df8db97de0004a70a826d6aebee97b230",
+    "tests/test_configuration_installation_recovery.py": "e1ca2b4d16ba53c363ba47cc16f47062e56d5acb466fbdb752a8a4ab3c5f71f8",
+    "tests/test_configuration_layer_changes.py": "915f51c211ba188c141d7cdc8fe4d62ad9b71131bc9741fd0899d013c4a04772",
+    "tests/test_configuration_layers.py": "1232ecc2d6bf9bd5903659aaf4f92476f2ed59512ec2eb9d491f6f6293cb6d5f",
+    "tests/test_configuration_local_forward_execution.py": "c029ffe76a7834652bdc994e8849a698bfe37563137cc25f47b8004b6924a7d9",
+    "tests/test_configuration_local_installation.py": "ad5e1b3e461ac791a666a4922ff7801980907ef9a8c7057b589b6ffe299671a0",
+    "tests/test_configuration_local_relocation_plan.py": "4af17c985054becbde2f6e2572c18e3d842e2e570e036b5fe7d95389ef4e61d0",
+    "tests/test_configuration_local_reverse_execution.py": "e9b6b1c9b00565b9063f636d3c22d3985e4ac4306168822aad866a752968e867",
+    "tests/test_configuration_location_migration.py": "74557bd6e8a760c9376b0522f5fe1a7c6ef5b86e2bfe9d186993639e07735001",
+    "tests/test_configuration_owning_document.py": "ae8ea1ffa11ad7c56f95f15985b4576a4a689a8435e198dba6575ee90089a491",
+    "tests/test_configuration_preparation.py": "45c817d5b1746b7d0a1b2533d16ab9c3616c51d4be6361c006d1ef436ca80b38",
+    "tests/test_configuration_production.py": "cfcce0c4f8f28088634c5bfc7ea21332a0f98e176da8d9110bac8866307c085b",
+    "tests/test_configuration_recovery_source.py": "7305eb2604bbe7b39a8858c3c6091f604745b53367fd338ecd81c54c92d7e548",
+    "tests/test_configuration_rollback_identity.py": "627fdae656d4572679fbf3ce0cdbba817a07d7ec79536cfcd6ccede07aa28c45",
+    "tests/test_configuration_runtime.py": "7ec427bbb43f18180f83b4b78537367af10c1d9063b4c1eaae9c9ff1739f1875",
+    "tests/test_configuration_studio_inputs.py": "2bc4792c8273b7291ac3cacee8b7255872474486ed3576ff969d02b31165a6c0",
+    "tests/test_configuration_studio_poster.py": "aa31d7c75bdc18833de1147a7b1f467bdf2fe36f4a2fe04dadcd51b9989bad30",
+    "tests/test_configuration_studio_save.py": "4d5ea7b9514fa4c91cb341a019b14beaf75a4a23381581110879160c2d2c1fc4",
+    "tests/test_consumer_validation_template.py": "64cea1096e87ba322815a4600b032b813c92ac0cade5d26a5bb66ce5933148e9",
+    "tests/test_cross_filesystem_observation_evidence.py": "4f41ddf317a262e404756580037ccab17e2337af81a1e38016d0568982779a3b",
+    "tests/test_cross_filesystem_process_crash.py": "63c7ced6e70e5b02a132931737951e829d9e4cdcda9824379b039912830df4dd",
+    "tests/test_delivery_lifecycle.py": "3aa3108313c340f2231aebdb3bd1faf7bbd88dddfebc77578839625fa9306218",
+    "tests/test_delivery_locations.py": "53f7038f4ef58659ee673fffe92a72b40afae12318e3ee3035c1dae8b5ddf269",
+    "tests/test_delivery_status.py": "f2deb7dba9f3493af8b483eb083a19b8e2df1cbcdf739460143460e85eb8fe74",
+    "tests/test_design_target_binding.py": "4da112c0aef520b7e7c49d26d074deb2589a3dea9876b440284f09843db65625",
+    "tests/test_diagnostic_retention.py": "71e98dc45f90510054c7f965cc0031ca5d4cd4759f3e9d5dbeb9530a1323532d",
+    "tests/test_directory_change_recovery.py": "fcf530fe178f2e974d1c063103d40c87f2f6a6088722a360773e409ca137a9c7",
+    "tests/test_directory_exchange.py": "12563d09bbdc85a30d8331a8afc2e89479ee19d8a6a1c58c99bc53100078db8e",
+    "tests/test_export_server_cleanup.py": "d6e90534c7d61a02bce4b5560e886145fef561d0f86c844f44d01625a699c704",
+    "tests/test_external_archive_roundtrip.py": "e57fcd10ecf5f3d24c7d501cd7448afe8ab6dd9db1310fd9833768407d00bf82",
+    "tests/test_external_delivery_archive.py": "7d5c597290e4b5fc9c4d132f91730536d8c777d8c3329e3f4fa30f46327c9a98",
+    "tests/test_external_delivery_identity.py": "6389e0d626c729df804b8befefa89b4dcf3bfd21b0600336df9a0a0a63b5eea0",
+    "tests/test_external_media_store.py": "a1b0dc0c40138e4f58b75123dd7256fd6b9cba812c26edc74f0dd5fb87be7025",
+    "tests/test_external_media_store_primitives.py": "166de6079b9e1c85c3aa8301d9ddb22c763c25e5b78196086a80ff0ecc55c060",
+    "tests/test_external_publication.py": "f69f3782613a0e065b915e64a81c5e8040e41e8dac1ffe3585f515a491a801b5",
+    "tests/test_external_reference_contract.py": "8609c1365018363d88b033f3b6944fe69611fbfbeebb0cfeddecd829bcaefbd1",
+    "tests/test_filesystem_permission_acceptance.py": "08e9d4dda2015f28acaa7579ae0783ad84c86a1a289207e91ee77f2227d6073a",
+    "tests/test_forward_source_inventory.py": "fe9ad25f1a4195a3706ba090248db32348500940325b0559317c147165b58eb0",
+    "tests/test_foundation_boundaries.py": "39a3ddbdb136122df5446d8663bb7db3a3d8c3d9333e775c07fd7814ede4fb54",
+    "tests/test_git_archive_retrieval.py": "e5c1e2335dbea6b84328393f4805efca874373a74b5797de2beff258858c45d6",
+    "tests/test_git_lfs_retrieval.py": "978fe7900265dfa82365f73c30477992a68703603af1d0b16c6f2fcd1df06979",
+    "tests/test_git_remote_retrieval.py": "3fb62d72be2280f173148f60632be5a461b3897777745cba33b9683125d98e17",
+    "tests/test_history_scan_contract.py": "eaa5707131de8135b6f343fc3e35fd0cd5009af7295108f0676e26b29ec90b71",
+    "tests/test_human_approval_contract.py": "e95243751c9a889267bbdc033ae04e041d97e1c8d8c3faa15a1e2b3c01183b2f",
+    "tests/test_incident_lifecycle.py": "bd47140051ed5273d4d503978628a83882dba27f8be3835494ea44417f88f734",
+    "tests/test_input_lifecycle.py": "54a4719a619d86da0a0eada9c9f36daff5e5939085c1df5983fc29943467718b",
+    "tests/test_inventory_lifecycle.py": "6459c9782f3933a44f55d3bcedde869988377f1e6069a6496c17c3ba8aeaacad",
+    "tests/test_inventory_observation_failures.py": "320a844247f25eb8dee4abc781076a273bffbf1d0dfe726650b6ac5a8763a677",
+    "tests/test_layered_archive_portability.py": "d7bbb58ac6de1a849a12a91bffd9db57d99ef6f64bd65c9d8a922a2cfbca28ba",
+    "tests/test_lease_lifecycle.py": "c71205f0654cde685724d9362902707d99d0728d88be59d4ca300aba541a724a",
+    "tests/test_lifecycle_record_schema.py": "768aafa24d3c9758ef4492f621fd3b9acfe6df4218b7bce96af041bcc2e19974",
+    "tests/test_local_media_delivery.py": "e4c2e4ae7c76d4e5055dd79919bbc0e1b6f116dbfb2ee645ed9a967aaac10399",
+    "tests/test_maintenance_execution_status.py": "ca902c2a6cebf67e828da8154c96f689843628a281fe0b3439182f4e3760010b",
+    "tests/test_maintenance_relocation_coordination.py": "905f6e8b2dffb4af40caec59ffa80c55a8dc9660d65d63f81d8472b5b40d6d09",
+    "tests/test_managed_poster.py": "0dad08722b9067d072ca093683f8866817d8a2fd79f3ef7249dd06f7fb30b9e5",
+    "tests/test_managed_preview.py": "7433eef755bc76df36c5ee0891afe5dcb9e6a46b69f0fbac2b66eccc83640552",
+    "tests/test_managed_recording.py": "813fe3143949c5346f91becd72da25b419239e057f1ed9fb1c510c33dcf2b141",
+    "tests/test_media_budget.py": "8e68fbc88c08efed05405430840da7bea35cf16506f4378a339d34841d4d84c6",
+    "tests/test_media_tool_identity.py": "a99ae46c0642cf408de41c5e6703e89d98d132e3e946073a6c35ea43421c7237",
+    "tests/test_multi_locale_preview.py": "a75823d565b748828fce4f726c0fc03a4502356e9271c4d41ee317ba49986219",
+    "tests/test_native_capture_cadence.py": "d30a77e8ac0f3a290ef878c0eda01488e7749fea7a83712d1f39c21d7872c10a",
+    "tests/test_native_preview_archive.py": "50b1dfce5484e89e5f026a44783ff93db505e0dbc86732a6e08325afbba646df",
+    "tests/test_native_recording_signals.py": "3384de8377bc918630ec084e743deb96a4abacc3bfb5c9da111ac870c0415d4f",
+    "tests/test_object_ownership_relocation.py": "d1fe749008dc0f5ca3364127166f59a621c8ca69c71cfa0b704152eb93d0f962",
+    "tests/test_object_purge_process_crash.py": "a7d493afaef5415f4a567775c5c615ebe64f29ae555324e19c94b6fad6ee848c",
+    "tests/test_observation_evidence_retrieval.py": "69459b5f6543fbea2762f2e73713dfe68cba74ac304ce8b66b43aaf05c12d519",
+    "tests/test_operation_history.py": "1bced81c3e02c1cd7511d1b4e8ebbfea16a498a7ce9e07e7b0821ffed7b82f91",
+    "tests/test_operation_journals.py": "4822291194e91b3c71455a137ed95235dbabd217bc604093ecf549a32efe15f7",
+    "tests/test_ordinary_restore_intent.py": "4720909b10a1fac61a1505a6fa245f43b6c9312e83d5ea0145a1a686aeacdf7e",
+    "tests/test_package_runtime.py": "709ab72c9b83501d8749cb36a03b071914c871a7844e3d0936a0fe72a6a0d224",
+    "tests/test_portable_probe_privacy.py": "f28b81511aaeeb9ab4193a61372cfb80929116cce3f20bd6b9a4e4fa0fd5f4c1",
+    "tests/test_post_merge_archive_binding.py": "a00154421a0d075afd425097514bb8020ca725590823a35e052d266ec3f93805",
+    "tests/test_post_purge_retrieval.py": "23a8ec9f2dbe4def28d0f9b0f5a599a8c9f98dcf6c5a94872cb843b78171d290",
+    "tests/test_poster_validation.py": "5b39a1c3a111b14838eaeb64d5708905b09682e9c56c9333e2c360fec846906b",
+    "tests/test_ppo_experiment.py": "c3b384e394d70113657bfed5655fac576c840c2b548f98321ece3620b564d284",
+    "tests/test_preview_overlay_coordinates.py": "258432530a55a15f5dcaf10794e00be4194442a830670e1a54d42f70062bd196",
+    "tests/test_preview_production.py": "06b4f74903284544ad866ee855771fb579f974b84c3a328f1bedee88a18edae5",
+    "tests/test_producer_contracts.py": "5b80af7f37182f20fa987a51aa1f51bab21fbbd361023c7dbe9c83996d8023a1",
+    "tests/test_production_lifecycle.py": "ec098dac3d1d0ca41f91e37acb5b9728f6f6853932155830b2b45b7633e293d2",
+    "tests/test_project_identity.py": "55b1a93ff1ee7e2be1b51e7620ee1290a6c2709ce7b74e799fda95c937493995",
+    "tests/test_publication_lifecycle.py": "4dee37974c68c3df4e1e9f0a8dcca255c44321b2bb2a226b44da8408a48035a8",
+    "tests/test_publication_relocation.py": "94de2aead3c3f75eff2387d683653a2cc5a9aa4eda9d31b92496cee858c19d9d",
+    "tests/test_publication_retrieval_proof.py": "83e49188c11b27cb03164ba6c46036be9179bbd63b65dc18a9e4bc420e45471f",
+    "tests/test_publication_target_consumption.py": "ef950818e3311512865dd5e92946b9c32153770d1fd403b9dcec342ccc6f87ae",
+    "tests/test_purge_process_crash.py": "b7789f521aa0617d96c6dfbebcaf5bd5211f1232fd80d1f9cf32e2a77d4e265a",
+    "tests/test_python_requirement.py": "b3629f326459050e48ccea8f682d3fd153737391fd1b5fdd29c11728c54580b0",
+    "tests/test_quarantine_location_projection.py": "6d62e338953e3e0990e715fe9b5220216a87963d04296242a76e35aa4b27d3fe",
+    "tests/test_quarantine_location_recovery.py": "b413ca4adcab123ccb27da7e43be52b04654ad0fd504d4481ef5c493345c7f2f",
+    "tests/test_quarantine_process_crash.py": "02f1c353de7d4bf0a31daf2d74ae22aaab1060146b8065a20eb4ddbe4e7305a8",
+    "tests/test_quarantine_resume_boundary.py": "bf9488b5f1823a3471eca566cfdfd87cb482e8fa26496227e521beec7680af5d",
+    "tests/test_record_commit_consumption.py": "dca6cc383f95bae33cff456180162a573d37976ff9d0d4b3cdcc9207f970a757",
+    "tests/test_record_file_identity.py": "f87d397be3f3b39d1656d10a6994e2293d5224fe9bd86a1f465c936927871a41",
+    "tests/test_recorder_execution_identity.py": "a2d72e0eacfae488b5b7f3f11f32a6149b45c69a55ddfd2081525929bf3e0b12",
+    "tests/test_recording_normalization.py": "115bd91085f2ba421322b772a344c59e1de42e1b283b1b02e99dd2d8eeceab79",
+    "tests/test_recording_probe_contract.py": "2be1c03426f3f50d49ebb73bffcfe7103dbe142c2d8fb2d5ed439c25c6fc1415",
+    "tests/test_recording_receipt_boundary.py": "7598e26ac112c426f5ec5cb4fb4073b4f08a3e8e610daafd36b38dd55700b5cd",
+    "tests/test_relocation_activation.py": "1854a575316bb21931a4a63b167a84c4b8af1079677d10951b4117505e87391c",
+    "tests/test_relocation_backup_inventory.py": "f614bcfe3eaa5d33e569d849b9f0ac4ae328163038aad7e5a0b0537ba78b5baa",
+    "tests/test_relocation_concurrency.py": "47c148c38e9bb0df7d4cbd5ba1c06d8b16944dcfbc35b59f59283c406c5d0c92",
+    "tests/test_relocation_config_durability.py": "283444143bd8dbf7f6c09c99629618c9e36e69eb5218a4b37d0f4085eae97187",
+    "tests/test_relocation_configuration_layers.py": "edbeea5608bd99e5f36aa62e139edfb3537e0d43300e5282b9579384b2162fa0",
+    "tests/test_relocation_configuration_preparation.py": "054ba0a44468f777f3aa3ac388ab1d734e57b6c333470a6e9ff1c68cceec8b5b",
+    "tests/test_relocation_configuration_resume.py": "0c115586d65579010c1eecd6b829f255e47a32c7d4feabbba1e64a700642cc75",
+    "tests/test_relocation_fences.py": "f3ccd403e18899ca63db7c23312bfa1d0f4e571208d4fa1f96ca41da070ab896",
+    "tests/test_relocation_git_policy.py": "17701c32629a050733ae8403f08e8fa20bc91e4503186393b4ec1d409c42580d",
+    "tests/test_relocation_history_readiness.py": "0b677792438548370f5428f136f79aec3e36c8195fa244df2f9bbfea4f66c022",
+    "tests/test_relocation_lifecycle.py": "087d5a642732b48f88624946354f2775320517f3a65d8d945c8bb9b8f7b1dc7d",
+    "tests/test_relocation_preparation_process_crash.py": "34c79b10706dccc1e30d1b6cfa86d617e2a8b74be1d2c49faac764c78f8b8db1",
+    "tests/test_relocation_process_crash.py": "981ab158ef00c74b3ae6b24c616949149501b77405c094cda471ee9724b651d3",
+    "tests/test_relocation_purge_execution.py": "391999a01a7581d7fc78222a2dbdcda4b485e29db1ea668b942e8ac14a549958",
+    "tests/test_relocation_purge_plan.py": "f515c04d290ac5642e337c6fe10f48f981cd0f290f26cb4d8de565f2e7d482d5",
+    "tests/test_relocation_quarantine_commit.py": "4094488c6a360cdc4fe1fc307fc3892d937e5b2785f1dec1595613d3cf2974e5",
+    "tests/test_relocation_quarantine_inventory.py": "e31a49a3c199635ce968b3e1b7d33369855f091005ad2609335f73372f1f7cd1",
+    "tests/test_relocation_quarantine_preparation.py": "974e3afae4cdc33e7fa236989340fc5199f8196d13b82ded9c89a269a5c941f2",
+    "tests/test_relocation_recovery.py": "5d99fec08ea7aa451ea71faf3a5536f50acca56d47a147d008f9fcd24f25b076",
+    "tests/test_relocation_recovery_cli.py": "ba8c31a9308bfa8f71e712d13ac2c0a1fe740d1621bd085e51d68d45c0546026",
+    "tests/test_relocation_recovery_lock.py": "aabca2225e1baca504c546eb5af21afb8de34f4d845566c17da2f9817711d1a7",
+    "tests/test_relocation_resume.py": "1446504988369117ed575acb2f326655b4916dcc710575459f0a9bd2a89962c0",
+    "tests/test_relocation_retention_plan.py": "fdf4dc0d60e7c112c4c37b965a0ddb6f4c88fa724cdbf66ac3887f71524f587b",
+    "tests/test_relocation_retention_verification.py": "eaaa156b1f7792f216c64dade7b4a17263694b6e1a05eaf6d7327948a592de6d",
+    "tests/test_relocation_rollback.py": "19aeb9c4a9c216a9abda2a4f2370e52cb100cb4c9f6bffa384338e670e413b56",
+    "tests/test_relocation_source_dispositions.py": "50f900e53972ffaf7e753e66f7ad12ca5071c3d34b6d9a3933ce1a59cc6ecf27",
+    "tests/test_relocation_staging_inventory.py": "28584efe2e6ed9a9db0ee20c757d2da72ba877ebab3dcc52c604452b6a21ba90",
+    "tests/test_relocation_status.py": "e1caf5d0acedcb1ff79c9f38bacccca6a373fe9a604337743fc5998dce843426",
+    "tests/test_relocation_switch.py": "6438e06486cec8f8a942c7a950c98d4504d5e3c75df110d5e850d1bf5fa2cda2",
+    "tests/test_relocation_switch_cli.py": "89bb7ee072e8d757d4ee79733ee27a3e1124854a4ff7a3466d1c1ad150f763fe",
+    "tests/test_remote_observations.py": "fc6c105cc6991d76148aa09bbc6d826c10253fd61630b71a48aa34a4f8a8a2e4",
+    "tests/test_repeated_relocation.py": "1473f201dafd3460679e4cf1210d1780358be62be958ceacde4d48fa02db2787",
+    "tests/test_retention_dependency_contract.py": "729cd6cad7ad8848289e551c9d936f0e50bd7533671e26137c50b3248f8daf71",
+    "tests/test_retention_lifecycle.py": "8c991ab45638ae785c1109506225c3120700046bec17e999918e81903cfb4927",
+    "tests/test_retrieval_process_budget.py": "9b81ad109754ecb125343049ad2eb816587051b58f9a217b1ba9da696ab5988f",
+    "tests/test_reverse_configuration_installation.py": "9717d9ade940a7a32c8d3698183789e5152bb19492e2f2791a501949033fb843",
+    "tests/test_reverse_configuration_layers.py": "61d97062ef023029848fd03dd1cb69992e75172a9ef4008d2894b0420a87f203",
+    "tests/test_reverse_configuration_rollback.py": "ee4f073887efced3a4ed8f5a1cfb8e3e29b74fe268500a596ba2f0a8b7dcd6be",
+    "tests/test_reverse_interruption_lock_boundary.py": "eaebbf6be1cb0cb68026c1a00d24fba4b8a40c386e2be8abe5211faffe0e9592",
+    "tests/test_reverse_relocation_cycles.py": "cbc830098f7bb054148ca34d1f5c1f9b6d8b05c4d7889001423ad2f06a22d4fd",
+    "tests/test_reverse_relocation_plan.py": "6319b128bf394037d948e559fcbdc42ba130b348483edc2845d53dde054ce6d8",
+    "tests/test_reverse_relocation_rollback.py": "6c6052c6978b4bc8f10f1e91a1879f6bef26744b52fd74baafeef8cc84deadf4",
+    "tests/test_reverse_relocation_switch.py": "201a9fea4d22c6e35dfe4c6f1ca10727e36da404dba79397f14c66cf757ddbd9",
+    "tests/test_run_sharded_tests.py": "1f93ae1cf2f2a7807eb1103b975cb8b576a7ec25c9b0bcc4dd7508e349c26240",
+    "tests/test_run_workflow_snapshot.py": "952b66c5d78c64e00017a561323ba9c13a5d1efc82c3452ede279c28c001aa88",
+    "tests/test_runtime_distribution.py": "dc22ec94212fd7cc8d005a52d28ae209be21d5c986b688bce137f28c4fec1fc7",
+    "tests/test_runtime_identity.py": "d48e692deb666915d538f42fc59816ad577039b84cbebbd0744b618be6450d21",
+    "tests/test_safe_staging.py": "095d5d87b1982ff2b30b20d1265b8da5b8320019340a54c293d74d959b7f26af",
+    "tests/test_staging_layout_validation.py": "5cdefba49bb6e51e1d7435057e0f410f145e3ce43cda811ff58e3114d0ded780",
+    "tests/test_staging_proof_binding.py": "927cb8dfde0940b0d0f1e6826ea877870ab6fe4c524fd88b2173e3174c243beb",
+    "tests/test_status_input_contract.py": "4fcae964c0f98197f88963158bca92eb31d546571cea042c2094c9916c42ecdb",
+    "tests/test_storage_bindings.py": "ab4eae595e6a1360c7d055e59d4a96fecf4a40eaf535941b34be246a026d5002",
+    "tests/test_storage_configuration_preview.py": "982f77f6293db7e089622cba3aa921aae589d1a85a96ad5d2267f73f9dde1251",
+    "tests/test_storage_control_projection.py": "0fd1931812a48113093a90425ee205425940acc282f5fab57fcbac0ce1b0f62b",
+    "tests/test_storage_preview_mapping.py": "c624082790409fb650f36bd6f8ec0a41b85c337ee2c2273571abb8e565b62cb0",
+    "tests/test_studio_approval_flow.py": "76a32b212030b22516523ee2594404ab66158823725e35474aa89bff62d16ab8",
+    "tests/test_studio_atomic_json.py": "949120d62e93be68eaf225f39bd29019a5a3f0a542a7cd8ad65cd3f0221ad96e",
+    "tests/test_studio_delivery_status.py": "ed71208c515f12ce5ef0fd1ca9cb336a1eb4e2cc65202e5716fd9b96cc22a96a",
+    "tests/test_studio_maintenance.py": "ec319e63c23b90a28e6efd11d37637a5018d2e01f519471e41c0a8493b7d012d",
+    "tests/test_studio_publications.py": "d6e47228caa4c9fb9f3b733f17bbb1bc321c1e62471b35341ccba13e1dc9d5b4",
+    "tests/test_studio_read_origins.py": "3a814ce5e6689c1b87ee8f6c2efb839b24c8cdfa1b9a5b63bccec6c2c4edd182",
+    "tests/test_studio_release.py": "171584096ac0fdc1064bb2990dfbe9a8e8beb03a150b9853910f5c15c5c723cb",
+    "tests/test_studio_relocation_maintenance.py": "3742737520eae97e442da7fca60bb192f408fe134ba399936dda5804160e34d9",
+    "tests/test_studio_relocation_status.py": "d2e957a82d1a092daaeab57e91663b7217c6e3b8af0c31a94621520c4ada7e15",
+    "tests/test_studio_reverse_recovery.py": "3a88efaacfebe071a081b996eca78f4324300f2889d0cc981149c0fe99205c06",
+    "tests/test_upload_approval_commit_integrity.py": "f0b52274d5be27f95d3e590de8fc77f17d492362aa406926eb57d289c9035667",
+    "tests/test_v2_workflow.py": "3d048dc9e41cd6bd30313d64f2bf60c078fd9fc2e9c134d9f22b4ef6353878d8",
+    "tests/test_validation_policy_binding.py": "9ba186c8dc0cc4e2f8b5f390525f01bb37a2faf93655259d77e1a0321398a83d",
+    "tests/test_validator.py": "0d8ae1f8dd64e47950a07f4ec863770afab7d67bd319260f00e59524d44bfc4e",
+    "tests/test_validator_png_integrity.py": "636cfb71c1b5c3efa19e3a12ae75a8e9b7afc4d02349b270d993b3431509f586",
+    "tests/test_video_engine.py": "76aac2ef2ab239a3462aabb05c020c7ce8d5ae32fdee2d36f8f01c2875530302",
+    "tests/test_video_execution_contract.py": "658d78f14be67eea1b299040f9a35e65b6b0504cda903b42067bdb6f03da8b01",
+    "tests/test_workspace_layers.py": "45751e4d4a4e9856f716d4d56bdc1db7693ca20a6a137282c5483cb7cc77cfb8"
+  },
+  "studio": {
+    "clean_locked_install": true,
+    "unit_files": 36,
+    "unit_tests": 131,
+    "typecheck": "passed",
+    "production_build": "passed",
+    "lockfile_changed": false
+  },
+  "release_tool_tests": {
+    "tests": 4,
+    "status": "passed"
+  },
+  "installed_media_acceptance": {
+    "scope": "Synthetic media and test approval only; no real product or ASC acceptance.",
+    "package_sha256": "9bd1394d00eb7fda749e5debd626cce2c43dc4758d1487f8321f24e859585718",
+    "runtime_identity": {
+      "scheme": "source-payload-sha256-v1",
+      "sha256": "731938a163ff03404414e5eae0a6fe24945096a9eee343db88d6a621265f08af",
+      "file_count": 73
+    },
+    "roles": [
+      "screenshot",
+      "preview",
+      "poster"
+    ],
+    "validation": "PASS",
+    "delivery_manifest_sha256": "6716be7c547edbf3fca785ec4a8f7e3e1dff5972b245f40de69d62e77cfe7fd8",
+    "restored_files": 18,
+    "recipe_unchanged": true,
+    "independent_restore_verified": true
+  },
+  "cross_filesystem": {
+    "status": "passed",
+    "volume": {
+      "verified": true,
+      "source_device": 16777234,
+      "target_device": 16777259
+    },
+    "tests": {
+      "shard": 1,
+      "total": 1,
+      "started_at": 1793628733.945652,
+      "elapsed": 330.3283611250008,
+      "tests_run": 33,
+      "successful": true,
+      "expected_failures": [],
+      "problems": [],
+      "skipped": [],
+      "slowest": [
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_configuration_sigkill_resumes",
+          "seconds": 59.580234667002514
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_receipt_sigkill_rollback",
+          "seconds": 45.879898457998934
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_configuration_sigkill_rolls_back",
+          "seconds": 22.56867204199807
+        },
+        {
+          "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_receipt_process_death_rollback",
+          "seconds": 18.145860292002908
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_intent_sigkill_resume",
+          "seconds": 14.860693750000792
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_directory_sigkill_resumes",
+          "seconds": 13.900468542000453
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_receipt_sigkill_resume",
+          "seconds": 12.527940624997427
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_forward_intent_sigkill_resume",
+          "seconds": 11.547954957997717
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_intent_sigkill_rollback",
+          "seconds": 10.461858417002077
+        },
+        {
+          "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_forward_receipt_sigkill_resume",
+          "seconds": 10.241253624997626
+        }
+      ],
+      "fail_on_skip": true
+    },
+    "cleanup": {
+      "status": "passed"
+    },
+    "always_cleanup_retry": "passed"
+  },
+  "browser": {
+    "scope": "Isolated synthetic project only",
+    "target_copy_saved": true,
+    "shared_copy_unchanged": true,
+    "other_target_retains_shared_copy": true,
+    "old_get_was_pending_at_save": true,
+    "late_old_get_did_not_overwrite_saved_edit": true,
+    "saved_text_and_notes_survive_reopen": true,
+    "service_and_tab_closed": true,
+    "screenshot": "tech-debt-browser-acceptance-2026-11-02.jpg",
+    "screenshot_sha256": "37b4f8295214659865a3b9c2c3eb1d1903c96232079c8e3df2dbdeb70adcae26"
+  },
+  "limits": [
+    "Local macOS Python 3.14.4 evidence does not establish macos-15/Python 3.12 remote CI.",
+    "Synthetic inputs and test approval do not establish real-product or human approval/ASC acceptance."
+  ],
+  "initial_parallel_attempt": {
+    "ordinary_shards_plus_crossfs_ran_on_one_host": true,
+    "results": [
+      {
+        "shard": 1,
+        "tests_run": 334,
+        "elapsed": 791.9451539169968,
+        "successful": true,
+        "skipped": 0,
+        "problems": []
+      },
+      {
+        "shard": 2,
+        "tests_run": 420,
+        "elapsed": 1058.1107331669991,
+        "successful": false,
+        "skipped": 1,
+        "problems": [
+          {
+            "id": "test_production_lifecycle.ProductionLifecycleTests.test_studio_and_cli_share_managed_output_and_readonly_status",
+            "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/export_engine.py",
+            "line": 92,
+            "classification": "address_in_use"
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_forward_receipt_sigkill_rollback",
+            "file": "tests/test_relocation_process_crash.py",
+            "line": 69,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_relocation_directory_sigkill_resumes_through_public_cli",
+            "file": "tests/test_relocation_process_crash.py",
+            "line": 69,
+            "classification": "timeout"
+          }
+        ]
+      },
+      {
+        "shard": 3,
+        "tests_run": 270,
+        "elapsed": 920.7213352920007,
+        "successful": false,
+        "skipped": 16,
+        "problems": [
+          {
+            "id": "test_operation_journals.OperationJournalTests.test_public_journal_read_rejects_unknown_control_schemas_without_rewriting (category='maintenance', version=True)",
+            "file": "tests/test_operation_journals.py",
+            "line": 62,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_operation_journals.OperationJournalTests.test_public_journal_read_rejects_unknown_control_schemas_without_rewriting (category='maintenance', version=1.0)",
+            "file": "tests/test_operation_journals.py",
+            "line": 62,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_operation_journals.OperationJournalTests.test_public_journal_read_rejects_unknown_control_schemas_without_rewriting (category='maintenance', version='1')",
+            "file": "tests/test_operation_journals.py",
+            "line": 62,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_operation_journals.OperationJournalTests.test_public_journal_read_rejects_unknown_control_schemas_without_rewriting (category='maintenance', version=2)",
+            "file": "tests/test_operation_journals.py",
+            "line": 62,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_operation_journals.OperationJournalTests.test_public_journal_read_rejects_unknown_control_schemas_without_rewriting (category='relocations', version=True)",
+            "file": "tests/test_operation_journals.py",
+            "line": 62,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_operation_journals.OperationJournalTests.test_public_journal_read_rejects_unknown_control_schemas_without_rewriting (category='relocations', version=1.0)",
+            "file": "tests/test_operation_journals.py",
+            "line": 62,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_studio_relocation_status.StudioRelocationStatusTests.test_http_plan_verify_prepare_and_switch_require_exact_confirmation",
+            "file": "tests/test_studio_release.py",
+            "line": 37,
+            "classification": "timeout"
+          },
+          {
+            "id": "test_studio_relocation_status.StudioRelocationStatusTests.test_http_reverse_plan_prepare_switch_preserves_new_artifact",
+            "file": "tests/test_studio_release.py",
+            "line": 37,
+            "classification": "timeout"
+          }
+        ]
+      },
+      {
+        "shard": 4,
+        "tests_run": 298,
+        "elapsed": 645.4123960409997,
+        "successful": true,
+        "skipped": 17,
+        "problems": []
+      }
+    ],
+    "action": "Retain failures; rerun shards 3 and 2 serially on unchanged sources with unchanged timeouts and assertions."
+  },
+  "isolated_http_comparison": {
+    "same_two_tests_and_original_deadlines": true,
+    "diagnostic_not_a_performance_benchmark": true,
+    "results": {
+      "baseline": {
+        "tests": 2,
+        "errors": 0,
+        "failures": 0,
+        "elapsed": 5.569416291997186,
+        "selected_request_seconds": {
+          "/api/config": 0.42278049999731593,
+          "/api/export": 2.467741874999774,
+          "/api/status": 0.34729533399513457,
+          "/api/assets": 0.764816791001067
+        }
+      },
+      "current": {
+        "tests": 2,
+        "errors": 0,
+        "failures": 0,
+        "elapsed": 3.662366041004134,
+        "selected_request_seconds": {
+          "/api/config": 0.07170283299637958,
+          "/api/export": 1.615630542000872,
+          "/api/status": 0.14066695799556328,
+          "/api/assets": 0.46147129200107884
+        }
+      }
+    }
+  },
+  "environment_observation": {
+    "logical_cpus": 10,
+    "sample_process_count": 2266,
+    "sample_runnable_processes": 820,
+    "uptime_reported_load_averages": [
+      756.51,
+      1001.14,
+      887.29
+    ],
+    "interpretation": "Host saturation is a plausible contributor; no implementation regression reproduced by the isolated baseline/current comparison."
+  },
+  "findings": {
+    "target_copy_ownership": "implemented_and_locally_verified",
+    "critique_draft_races": "implemented_and_locally_verified",
+    "atomic_json_cleanup": "implemented_and_locally_verified",
+    "studio_dist_freshness": "implemented_and_locally_verified",
+    "mandatory_real_crossfs_gate": "implemented_and_locally_verified",
+    "foundation_dependency_direction": "implemented_and_locally_verified"
+  },
+  "ordinary_python_suite": {
+    "status": "passed",
+    "tests_run": 1322,
+    "passed": 1288,
+    "skipped": 34,
+    "skip_reasons": {
+      "Requires an explicitly authorized seeded native window": 1,
+      "Explicit independently mounted test volume required": 33
+    },
+    "reports": [
+      {
+        "shard": 1,
+        "total": 4,
+        "started_at": 1793628711.726028,
+        "elapsed": 791.9451539169968,
+        "tests_run": 334,
+        "successful": true,
+        "expected_failures": [],
+        "problems": [],
+        "skipped": [],
+        "slowest": [
+          {
+            "id": "test_native_preview_archive.NativePreviewArchiveTests.test_sealed_recipe_replays_after_original_workspace_is_removed",
+            "seconds": 86.98807500000112
+          },
+          {
+            "id": "test_native_preview_archive.NativePreviewArchiveTests.test_registered_recording_recipe_replays_after_workspace_removal",
+            "seconds": 50.29187808399729
+          },
+          {
+            "id": "test_relocation_quarantine_preparation.RelocationQuarantinePreparationTests.test_preparation_copies_media_and_keeps_source",
+            "seconds": 31.388623625003675
+          },
+          {
+            "id": "test_relocation_quarantine_preparation.RelocationQuarantinePreparationTests.test_complete_payload_sync_interruption_can_resume",
+            "seconds": 28.42488924999634
+          },
+          {
+            "id": "test_relocation_quarantine_preparation.RelocationQuarantinePreparationTests.test_completed_preparation_resumes_without_rewriting_payload",
+            "seconds": 21.980191249997006
+          },
+          {
+            "id": "test_relocation_quarantine_preparation.RelocationQuarantinePreparationTests.test_configuration_changes_during_copy_refuse_prepared_receipt",
+            "seconds": 21.552957625004638
+          },
+          {
+            "id": "test_relocation_quarantine_preparation.RelocationQuarantinePreparationTests.test_preparation_requires_actor_and_reason",
+            "seconds": 20.928408125000715
+          },
+          {
+            "id": "test_reverse_relocation_rollback.ReverseRollbackTests.test_cli_rollback_uses_explicit_original_active_workspace",
+            "seconds": 20.881899666994286
+          },
+          {
+            "id": "test_relocation_quarantine_preparation.RelocationQuarantinePreparationTests.test_partial_copy_preserved_and_resume_refuses_overwrite",
+            "seconds": 18.20311220899748
+          },
+          {
+            "id": "test_reverse_relocation_rollback.ReverseRollbackTests.test_shared_workspace_rollback_retires_pending_controls",
+            "seconds": 15.565062665998994
+          }
+        ],
+        "fail_on_skip": false
+      },
+      {
+        "shard": 2,
+        "total": 4,
+        "started_at": 1793630644.6192288,
+        "elapsed": 445.8558036250033,
+        "tests_run": 420,
+        "successful": true,
+        "expected_failures": [],
+        "problems": [],
+        "skipped": [
+          {
+            "id": "test_native_recording_signals.NativeRecordingSignalTests.test_ready_signal_precedes_completion_and_stdout_is_json",
+            "reason": "Requires an explicitly authorized seeded native window"
+          }
+        ],
+        "slowest": [
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_forward_receipt_sigkill_rollback",
+            "seconds": 22.395420041997568
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_and_summary_survive_four_root_relocation",
+            "seconds": 15.840521292004269
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_relocation_directory_sigkill_resumes_through_public_cli",
+            "seconds": 14.14824866699928
+          },
+          {
+            "id": "test_quarantine_location_projection.QuarantineLocationProjectionTests.test_unknown_file_is_reported_and_retained",
+            "seconds": 11.492448166995018
+          },
+          {
+            "id": "test_external_publication.ExternalPublicationTests.test_preparation_record_survives_restart_and_detects_changed_files",
+            "seconds": 10.2364075420046
+          },
+          {
+            "id": "test_relocation_purge_plan.RelocationPurgePlanTests.test_plan_lists_two_redundant_copies_and_current_recovery",
+            "seconds": 9.640057791999425
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_reverse_intent_sigkill_resume",
+            "seconds": 9.458091958003934
+          },
+          {
+            "id": "test_external_publication.ExternalPublicationTests.test_plan_approval_export_and_status_share_external_contract",
+            "seconds": 9.219589915999677
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_evidence_reverse_receipt_sigkill_rollback",
+            "seconds": 9.059945332999632
+          },
+          {
+            "id": "test_remote_observations.RemoteObservationTests.test_reverse_evidence_relocation_configuration_sigkill_rolls_back",
+            "seconds": 8.415574582999398
+          }
+        ],
+        "fail_on_skip": false
+      },
+      {
+        "shard": 3,
+        "total": 4,
+        "started_at": 1793631091.4378932,
+        "elapsed": 241.64970541700313,
+        "tests_run": 270,
+        "successful": true,
+        "expected_failures": [],
+        "problems": [],
+        "skipped": [
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_forward_intent_sigkill_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_forward_intent_sigkill_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_forward_receipt_sigkill_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_forward_receipt_sigkill_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_relocation_directory_sigkill_resumes_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_relocation_directory_sigkill_rolls_back_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_relocation_sigkill_resumes_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_relocation_sigkill_rolls_back_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_intent_sigkill_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_intent_sigkill_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_receipt_sigkill_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_evidence_reverse_receipt_sigkill_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_configuration_sigkill_resumes",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_configuration_sigkill_rolls_back",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_directory_sigkill_resumes",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_observation_evidence.CrossFilesystemObservationEvidenceTests.test_reverse_evidence_relocation_directory_sigkill_rolls_back",
+            "reason": "Explicit independently mounted test volume required"
+          }
+        ],
+        "slowest": [
+          {
+            "id": "test_configuration_local_reverse_execution.LocalReverseExecutionTests.test_real_git_public_reverse_cli_completes_three_round_trip_switches",
+            "seconds": 28.041547875000106
+          },
+          {
+            "id": "test_configuration_local_reverse_execution.LocalReverseExecutionTests.test_local_forward_and_three_reverse_switches_preserve_recipe_and_media",
+            "seconds": 11.748169083002722
+          },
+          {
+            "id": "test_reverse_relocation_cycles.ReverseRelocationCycleTests.test_multiple_activated_reverse_cycles_keep_all_runs",
+            "seconds": 7.840565416001482
+          },
+          {
+            "id": "test_reverse_relocation_cycles.ReverseRelocationCycleTests.test_repeated_return_can_resume_after_exchange",
+            "seconds": 6.654672750002646
+          },
+          {
+            "id": "test_configuration_local_reverse_execution.LocalReverseExecutionTests.test_local_reverse_post_install_rollback",
+            "seconds": 5.87377587499941
+          },
+          {
+            "id": "test_reverse_relocation_cycles.ReverseRelocationCycleTests.test_shared_workspace_supports_multiple_activated_reverse_cycles",
+            "seconds": 4.91057191699656
+          },
+          {
+            "id": "test_configuration_local_reverse_execution.LocalReverseExecutionTests.test_local_reverse_post_install_resume",
+            "seconds": 4.629451875000086
+          },
+          {
+            "id": "test_reverse_relocation_cycles.ReverseRelocationCycleTests.test_return_after_second_outward_migration_replaces_old_activation",
+            "seconds": 4.618503334000707
+          },
+          {
+            "id": "test_reverse_relocation_cycles.ReverseRelocationCycleTests.test_repeated_return_resumes_after_configuration_changed",
+            "seconds": 4.588475541997468
+          },
+          {
+            "id": "test_reverse_relocation_cycles.ReverseRelocationCycleTests.test_copied_object_inspection_after_repeated_return",
+            "seconds": 4.3703008329976
+          }
+        ],
+        "fail_on_skip": false
+      },
+      {
+        "shard": 4,
+        "total": 4,
+        "started_at": 1793628711.91778,
+        "elapsed": 645.4123960409997,
+        "tests_run": 298,
+        "successful": true,
+        "expected_failures": [],
+        "problems": [],
+        "skipped": [
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_directory_process_death_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_directory_process_death_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_intent_process_death_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_intent_process_death_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_process_death_resumes_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_process_death_rolls_back_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_receipt_process_death_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_forward_receipt_process_death_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_missing_fence_reconstruction_refuses_changed_source",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_directory_process_death_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_directory_process_death_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_intent_process_death_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_intent_process_death_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_process_death_resumes_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_process_death_rolls_back_through_public_cli",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_receipt_process_death_resume",
+            "reason": "Explicit independently mounted test volume required"
+          },
+          {
+            "id": "test_cross_filesystem_process_crash.CrossFilesystemProcessCrashTests.test_reverse_receipt_process_death_rollback",
+            "reason": "Explicit independently mounted test volume required"
+          }
+        ],
+        "slowest": [
+          {
+            "id": "test_purge_process_crash.PurgeProcessCrashTests.test_receipt_process_death_resumes_public_purge",
+            "seconds": 41.2180017080027
+          },
+          {
+            "id": "test_relocation_quarantine_inventory.RelocationQuarantineInventoryTests.test_unknown_file_is_reported_and_preserved",
+            "seconds": 27.916687334000017
+          },
+          {
+            "id": "test_relocation_rollback.RelocationRollbackTests.test_user_configuration_edit_is_never_overwritten",
+            "seconds": 24.414170207994175
+          },
+          {
+            "id": "test_relocation_rollback.RelocationRollbackTests.test_rollback_releases_source_and_preserves_inactive_targets",
+            "seconds": 23.5243954999969
+          },
+          {
+            "id": "test_relocation_switch.RelocationSwitchTests.test_actual_switch_preserves_approval_and_existing_archive",
+            "seconds": 19.729771874997823
+          },
+          {
+            "id": "test_relocation_rollback.RelocationRollbackTests.test_failure_after_configuration_switch_restores_exact_original_bytes",
+            "seconds": 19.104654208000284
+          },
+          {
+            "id": "test_relocation_quarantine_inventory.RelocationQuarantineInventoryTests.test_unreadable_root_is_reported_as_unverified",
+            "seconds": 17.818530958000338
+          },
+          {
+            "id": "test_relocation_quarantine_inventory.RelocationQuarantineInventoryTests.test_same_byte_payload_replacement_is_identity_conflict",
+            "seconds": 15.65488537499914
+          },
+          {
+            "id": "test_configuration_local_forward_execution.LocalForwardExecutionTests.test_public_cli_switch_in_real_git_workspace_uses_local_layer",
+            "seconds": 15.273288999997021
+          },
+          {
+            "id": "test_purge_process_crash.PurgeProcessCrashTests.test_file_checkpoint_process_death_resumes_public_purge",
+            "seconds": 14.453618667001138
+          }
+        ],
+        "fail_on_skip": false
+      }
+    ],
+    "source_fingerprints_unchanged": true
+  },
+  "first_serial_shard_3_attempt": {
+    "status": "failed",
+    "tests_run": 270,
+    "elapsed": 831.892060834005,
+    "problems": [
+      {
+        "id": "test_configuration_production.LayeredProductionTests.test_studio_export_and_status_share_editor_revision_and_local_candidate",
+        "file": "tests/test_studio_release.py",
+        "line": 37,
+        "message": "TimeoutError: timed out"
+      },
+      {
+        "id": "test_configuration_studio_inputs.LayeredStudioInputTests.test_import_and_read_views_use_same_local_workspace_without_rewriting_config",
+        "file": "plugins/app-store-creative/skills/app-store-creative/runtime/scripts/studio_server.py",
+        "line": 44,
+        "message": "----------------------------------------"
+      }
+    ],
+    "resolution": "The two failing HTTP cases passed in isolated baseline/current comparison; the unchanged complete shard subsequently passed with original deadlines."
+  },
+  "combined_local_summary": {
+    "status": "passed",
+    "required_crossfs": true,
+    "markdown": "tech-debt-test-summary-2026-11-02.md"
+  },
+  "workflow_static_validation": {
+    "tool": "Homebrew actionlint",
+    "status": "passed"
+  },
+  "cleanup": {
+    "all_owned_crossfs_volumes_unmounted": true,
+    "final_owned_volume_and_workspace_absent": true,
+    "browser_service_and_tab_closed": true
+  },
+  "initial_validation_no_submission_performed": false,
+  "review_cleanup_followup": {
+    "focused_tests_passed": 37,
+    "real_crossfs_tests_passed": 33,
+    "real_crossfs_elapsed": 160.40195449999737,
+    "cleanup": "passed",
+    "full_suite_rerun": false,
+    "package_smoke": "passed",
+    "actionlint": "passed",
+    "pr_base": "0a68710490cface6fdbd80156ec7504275cbf400",
+    "submission_authorized": true,
+    "release_performed": false,
+    "files_sha256": {
+      ".github/run_crossfs_tests.py": "207c746284f6c8eddfd494e49359c24dcc8f962bd04a8c5a97ccc1f004d9ea8d",
+      "tests/test_ci_distribution_gates.py": "cef4ffe946e4a02a8e1d25db20f5fd3d74c783730ffb0c5287b8b438ea720e81"
+    }
+  }
+}

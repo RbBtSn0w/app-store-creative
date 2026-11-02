@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 from pathlib import Path
 
-from artifact_lifecycle import canonical, dependency_closure, digest, identifier
+from record_primitives import canonical, dependency_closure, digest, identifier
 from quarantine_commit import _load, _check_locations, _matches
 from relocation_quarantine import _hash, _identity
 from relocation_retention import _configured_file

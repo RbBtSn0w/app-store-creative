@@ -66,7 +66,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
         path = urllib.parse.unquote(self.path.split("?")[0])
         if path == '/api/storage/media-budget':
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query, keep_blank_values=True)
                 if set(query) - {'candidate_id'} or ('candidate_id' in query and len(query['candidate_id']) != 1):
                     raise ValueError('Media budget accepts one optional candidate_id')
@@ -91,7 +92,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query, keep_blank_values=True)
                 if set(query) != {'id'} or len(query['id']) != 1:
                     raise ValueError('Relocation status requires exactly one id')
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 safe_id(query['id'][0])
                 with contract.WRITE_LOCK:
                     core = Lifecycle.from_configuration(self.repo_root, self.config_path)
@@ -169,7 +171,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             return
         if path.startswith('/api/history/maintenance/'):
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Maintenance inspection does not accept query overrides')
                 identity = safe_id(path.removeprefix('/api/history/maintenance/'))
@@ -248,7 +251,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             return
         if path.startswith('/api/runs/'):
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 identity = safe_id(path.removeprefix('/api/runs/'))
                 with contract.WRITE_LOCK:
                     core = Lifecycle.from_configuration(self.repo_root, self.config_path)
@@ -258,7 +262,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             return
         if path.startswith('/api/candidates/') and path.endswith('/review'):
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Candidate review does not accept query overrides')
                 identity = safe_id(path.removeprefix('/api/candidates/').removesuffix('/review'))
@@ -270,7 +275,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             return
         if path.startswith('/api/publication-handoff/'):
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Handoff preview does not accept query overrides')
                 identity = safe_id(path.removeprefix('/api/publication-handoff/'))
@@ -294,7 +300,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             return
         if path.startswith('/api/publications/'):
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Publication status does not accept query overrides')
                 identity = safe_id(path.removeprefix('/api/publications/'))
@@ -318,7 +325,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             return
         if path.startswith('/api/deliveries/'):
             try:
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 identity = safe_id(path.removeprefix('/api/deliveries/'))
                 with contract.WRITE_LOCK:
                     core = Lifecycle.from_configuration(self.repo_root, self.config_path)
@@ -393,7 +401,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             if not isinstance(payload, dict):
                 raise ValueError('Request must be a JSON object')
             if path == '/api/publications/persist-evidence':
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query or set(payload) != {'evidence_id', 'backend', 'confirm'}:
                     raise ValueError('Evidence persistence requires exact fields and no path overrides')
                 safe_id(payload['evidence_id'])
@@ -405,7 +414,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 self._json(result)
                 return
             if path == '/api/publications/retain-evidence':
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 required = {'observation_id', 'actor', 'confirm', 'evidence_base64'}
                 if urllib.parse.urlsplit(self.path).query or set(payload) != required:
                     raise ValueError('Evidence retention requires exact fields and no query overrides')
@@ -422,7 +432,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 self._json(result)
                 return
             if path in ('/api/publications/approve-upload', '/api/publications/export'):
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 approve = path.endswith('/approve-upload')
                 required = {'publication_id', 'confirm'} | ({'actor', 'authorization_reference'} if approve else set())
                 if urllib.parse.urlsplit(self.path).query or set(payload) != required:
@@ -438,7 +449,7 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 return
             if path in ('/api/storage/resume-relocate', '/api/storage/rollback-relocate',
                         '/api/storage/resume-reverse-relocate', '/api/storage/rollback-reverse-relocate'):
-                from artifact_lifecycle import safe_id
+                from record_primitives import safe_id
                 from relocation_lifecycle import recovery_source
                 if urllib.parse.urlsplit(self.path).query or set(payload) != {'id', 'actor', 'reason', 'confirm', 'source_workspace'}:
                     raise ValueError('Recovery requires exact fields and no query overrides')
@@ -464,7 +475,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                         '/api/storage/prepare-relocate', '/api/storage/switch-relocate',
                         '/api/storage/plan-reverse-relocate', '/api/storage/verify-reverse-relocate',
                         '/api/storage/prepare-reverse-relocate', '/api/storage/switch-reverse-relocate'):
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Relocation actions do not accept query overrides')
                 action = path.rsplit('/', 1)[-1]
@@ -510,7 +522,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 'purge': 'purge_relocation',
             }
             if path.startswith('/api/relocation-maintenance/'):
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 action = path.rsplit('/', 1)[-1]
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Relocation maintenance does not accept query overrides')
@@ -548,7 +561,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 return
             if path in ('/api/maintenance/plan', '/api/maintenance/quarantine', '/api/maintenance/restore',
                         '/api/maintenance/plan-purge', '/api/maintenance/purge'):
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Maintenance actions do not accept query overrides')
                 action = path.rsplit('/', 1)[-1]
@@ -583,7 +597,8 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                 self._json(result)
                 return
             if path in ('/api/candidates/validate', '/api/approvals/design', '/api/deliveries/seal'):
-                from artifact_lifecycle import Lifecycle, safe_id
+                from record_primitives import safe_id
+                from artifact_lifecycle import Lifecycle
                 if urllib.parse.urlsplit(self.path).query:
                     raise ValueError('Lifecycle actions do not accept query overrides')
                 required = {'candidate_id'}

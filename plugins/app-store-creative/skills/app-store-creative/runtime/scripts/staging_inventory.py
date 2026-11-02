@@ -2,7 +2,7 @@
 from pathlib import Path
 import hashlib
 
-from artifact_lifecycle import canonical
+from record_primitives import canonical
 
 
 def _record(core, identity, suffix):

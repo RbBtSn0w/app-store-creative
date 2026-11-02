@@ -27,25 +27,29 @@ def revision(path):
 
 
 def atomic_json(path, data):
+    payload = (json.dumps(data, indent=2, ensure_ascii=False) + '\n').encode()
     path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(dir=path.parent, prefix='.' + path.name, delete=False) as out:
-        temporary = Path(out.name)
-        opened = os.fstat(out.fileno())
-        identity = (opened.st_dev, opened.st_ino)
-        out.write((json.dumps(data, indent=2, ensure_ascii=False) + '\n').encode())
+    temporary = None
+    identity = None
     try:
+        with tempfile.NamedTemporaryFile(dir=path.parent, prefix='.' + path.name, delete=False) as out:
+            temporary = Path(out.name)
+            opened = os.fstat(out.fileno())
+            identity = (opened.st_dev, opened.st_ino)
+            out.write(payload)
         observed = temporary.lstat()
         if (observed.st_dev, observed.st_ino) != identity:
             raise ValueError('Configuration temporary identity changed')
         temporary.replace(path)
     finally:
-        try:
-            observed = temporary.lstat()
-        except FileNotFoundError:
-            pass
-        else:
-            if (observed.st_dev, observed.st_ino) == identity:
-                temporary.unlink()
+        if temporary is not None and identity is not None:
+            try:
+                observed = temporary.lstat()
+            except FileNotFoundError:
+                pass
+            else:
+                if (observed.st_dev, observed.st_ino) == identity:
+                    temporary.unlink()
 
 
 def check_copy(fields, label):

@@ -15,7 +15,7 @@ def imported_identity(name):
 def write_snapshot_index(root, sources):
     aliases = {name: sha for name, sha in sources.items() if imported_identity(name)}
     if aliases:
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         (Path(root) / SNAPSHOT_INDEX).write_bytes(canonical(aliases))
 
 
@@ -118,7 +118,8 @@ class InputOperations:
 
     def _live_configuration(self):
         import json
-        from artifact_lifecycle import StoragePaths, canonical
+        from record_primitives import canonical
+        from storage_paths import StoragePaths
         if hasattr(self, '_configuration_layers'):
             from configuration_layers import load, observation
             layers = load(self.paths.project, self.config_path)

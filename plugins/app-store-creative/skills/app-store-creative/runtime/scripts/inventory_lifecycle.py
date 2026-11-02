@@ -55,7 +55,7 @@ def observe_directory(root):
 
 class InventoryOperations:
     def _object_inventory(self, work_observation=None):
-        from artifact_lifecycle import digest
+        from record_primitives import digest
         self._assert_paths()
         records = self.paths.workspace / 'records'
         _, record_links = files_without_links(records, strict=True)

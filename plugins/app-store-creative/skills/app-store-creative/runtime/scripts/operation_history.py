@@ -24,7 +24,7 @@ def sync_directory(directory):
 def before_commit(core, category, data, suffix):
     if category not in CATEGORIES:
         return
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     actor = data.get("actor", data.get("owner"))
     if actor is None and data.get("attempt_id"):
         actor = core._read("attempts", data["attempt_id"], "started").get("owner")
@@ -65,7 +65,7 @@ def read_lock(core):
 
 
 def verify(core, locked=False):
-    from artifact_lifecycle import safe_id
+    from record_primitives import safe_id
     from configuration_layers import _read_regular, _document
     from inventory_lifecycle import files_without_links
     core._assert_paths()
@@ -163,7 +163,7 @@ def verify(core, locked=False):
                     or not isinstance(decision.get('reason'), str) or not decision['reason'].strip()):
                 raise ValueError('Invalid commit abandonment decision')
             event = core._read('events', original_id)
-            from artifact_lifecycle import canonical
+            from record_primitives import canonical
             if (decision.get('event_sha256') != hashlib.sha256(canonical(event)).hexdigest()
                     or decision.get('record') != event['record']
                     or record_references(core, event['record']['id'])):
@@ -186,7 +186,7 @@ JOURNAL_CATEGORIES = frozenset({'relocations', 'maintenance', 'storage-fences', 
 def journals(core):
     """Read existing control journals without changing snapshots or verifying effects."""
     from inventory_lifecycle import files_without_links
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     core._assert_paths()
     core._live_configuration()
     root = core.paths.workspace / 'records'
@@ -238,7 +238,7 @@ def record_references(core, identity):
 
 
 def abandon(core, event_id, actor, reason):
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     if any(not isinstance(value, str) or not value.strip() for value in (actor, reason)):
         raise ValueError('Commit abandonment requires actor and reason')
     with core.transaction():

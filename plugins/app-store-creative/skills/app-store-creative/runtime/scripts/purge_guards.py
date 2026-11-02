@@ -2,7 +2,7 @@
 import hashlib
 from pathlib import Path
 
-from artifact_lifecycle import canonical, digest
+from record_primitives import canonical, digest
 from inventory_lifecycle import files_without_links
 from relocation_quarantine import _identity
 

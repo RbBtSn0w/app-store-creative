@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import sys
 
-from artifact_lifecycle import digest
+from record_primitives import digest
 from quarantine_inventory import _authority
 from relocation_quarantine import _actor, _hash, _identity
 from relocation_retention import _verify

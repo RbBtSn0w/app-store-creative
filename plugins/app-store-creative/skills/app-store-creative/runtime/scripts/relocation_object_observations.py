@@ -1,7 +1,8 @@
 """Verify planned copied object bytes independently of target activation."""
 import hashlib
 from pathlib import Path
-from artifact_lifecycle import Lifecycle, canonical, digest
+from record_primitives import canonical, digest
+from artifact_lifecycle import Lifecycle
 from delivery_lifecycle import relative_name
 from operation_history import read_lock
 

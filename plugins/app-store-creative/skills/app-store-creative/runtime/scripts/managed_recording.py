@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
-from artifact_lifecycle import canonical, digest
+from record_primitives import canonical, digest
 from recording_adapters import macos_recording_plan, validate_recording_probe, validate_execution_identity
 from delivery_lifecycle import relative_name
 from media_tool_identity import portable_probe

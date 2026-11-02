@@ -32,7 +32,7 @@ def check_delivery_manifest(manifest, delivery):
 
 
 def verify_provenance(package, manifest, file_hashes):
-    from artifact_lifecycle import safe_id
+    from record_primitives import safe_id
     name = 'evidence/provenance.json'
     if name not in file_hashes:
         raise ValueError('Archive provenance is missing')
@@ -68,7 +68,7 @@ def verify_provenance(package, manifest, file_hashes):
         if (node is None or node['path'] != record['path'] or node['sha256'] != record['sha256']
                 or ('role' in record and record['role'] != node.get('role'))):
             raise ValueError('Archive provenance binding differs from manifest')
-    from artifact_lifecycle import dependency_closure
+    from record_primitives import dependency_closure
     def load(identity):
         if identity not in nodes:
             raise ValueError('Archive provenance missing dependency')
@@ -105,7 +105,7 @@ def portable_recipe(config, input_names):
 
 
 def verify_archive(package, expected_sha256=None):
-    from artifact_lifecycle import digest, safe_id
+    from record_primitives import digest, safe_id
     import re
     package = Path(package).resolve()
     manifest_path = package / 'manifest.json'
@@ -452,7 +452,7 @@ class DeliveryOperations:
                 for record in selected], 'next_cursor': cursor}
 
     def delivery_status(self, delivery_id):
-        from artifact_lifecycle import safe_id
+        from record_primitives import safe_id
         safe_id(delivery_id)
         delivery = None
         try:
@@ -477,7 +477,7 @@ class DeliveryOperations:
         if (configuration_identity(self.config) != run['config_sha256']
                 or configuration_identity(self._live_configuration()) != run['config_sha256']):
             raise ValueError('Candidate configuration changed; create a new run')
-        from artifact_lifecycle import digest
+        from record_primitives import digest
         for name, expected in run.get('source_hashes', {}).items():
             import studio_contract
             source = studio_contract.local_asset(self.paths.project, name, run['config'])
@@ -491,7 +491,7 @@ class DeliveryOperations:
         return candidate, run
 
     def _closure(self, identities):
-        from artifact_lifecycle import dependency_closure
+        from record_primitives import dependency_closure
         return dependency_closure(identities, self.verify_artifact)
 
     def _materialize(self, candidate, directory):
@@ -543,7 +543,7 @@ class DeliveryOperations:
                 'delivery_id': delivery['id'] if delivery else None, 'remote_write': False}
 
     def validate_candidate(self, candidate_id, allow_silent_audio: bool = False):
-        from artifact_lifecycle import canonical, identifier
+        from record_primitives import canonical, identifier
         import hashlib
         import validator
         with self.transaction():
@@ -612,7 +612,7 @@ class DeliveryOperations:
                     'errors': errors, 'assets': probe['assets'], 'source_hashes': probe['source_hashes']})
 
     def _validated(self, candidate_id, validation_id):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         import hashlib
         candidate, run = self._candidate(candidate_id)
         validation = self._read('validations', validation_id)
@@ -626,7 +626,7 @@ class DeliveryOperations:
         return candidate, run, validation
 
     def approve_design(self, candidate_id, validation_id, actor, authorization_reference):
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         from artifact_lifecycle import require_human_authorization
         require_human_authorization(actor, authorization_reference)
         with self.transaction():
@@ -647,7 +647,7 @@ class DeliveryOperations:
             raise ValueError('Design approval is not bound to candidate validation')
 
     def seal(self, candidate_id, validation_id, approval_id, parent_revision=None):
-        from artifact_lifecycle import canonical, digest, identifier, safe_id
+        from record_primitives import canonical, digest, identifier, safe_id
         with self.transaction():
             candidate, run, validation = self._validated(candidate_id, validation_id)
             approval = self._read('approvals', approval_id)

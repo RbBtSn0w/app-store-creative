@@ -101,6 +101,12 @@ def build_report(
                 "file": location[0] if location else None,
                 "line": location[1] if location else None,
             })
+    for test in result.unexpectedSuccesses:
+        problems.append({
+            "id": test.id(), "kind": "unexpected_success",
+            "message": "Unexpected success: test marked as an expected failure passed",
+            "file": None, "line": None,
+        })
     slowest = sorted(result.test_durations.items(), key=lambda item: item[1], reverse=True)
     return {
         "shard": shard,
@@ -108,6 +114,8 @@ def build_report(
         "started_at": started_at,
         "elapsed": elapsed,
         "tests_run": result.testsRun,
+        "successful": result.wasSuccessful(),
+        "expected_failures": [test.id() for test, _ in result.expectedFailures],
         "problems": problems,
         "skipped": [{"id": test.id(), "reason": str(reason)} for test, reason in result.skipped],
         "slowest": [
@@ -170,6 +178,8 @@ def main() -> int:
         help="Seconds a single test may run before its stack is dumped and the "
         "run aborts; 0 disables the watchdog (default: 300)",
     )
+    parser.add_argument("--fail-on-skip", action="store_true",
+                        help="Fail on any skipped tests or an empty test suite")
     parser.add_argument(
         "--report",
         type=Path,
@@ -228,9 +238,15 @@ def main() -> int:
     result = runner.run(suite)
     elapsed = time.monotonic() - start_time
 
+    successful = result.wasSuccessful() and not (
+        args.fail_on_skip and (result.skipped or result.testsRun == 0)
+    )
+    if args.fail_on_skip and not successful:
+        print("Strict test gate failed: skips, empty suite, or test failures.", flush=True)
+
     print(
         f"[shard {args.shard}/{args.total}] Completed in {elapsed:.2f}s "
-        f"({'PASS' if result.wasSuccessful() else 'FAIL'})",
+        f"({'PASS' if successful else 'FAIL'})",
         flush=True,
     )
 
@@ -239,10 +255,12 @@ def main() -> int:
             print(github_annotation(test.id(), traceback_text, repo_root), flush=True)
     if args.report:
         report = build_report(args.shard, args.total, result, started_at, elapsed, repo_root)
+        report["fail_on_skip"] = args.fail_on_skip
+        report["successful"] = bool(successful)
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
-    return 0 if result.wasSuccessful() else 1
+    return 0 if successful else 1
 
 
 if __name__ == "__main__":

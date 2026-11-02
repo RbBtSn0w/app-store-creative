@@ -4,7 +4,7 @@ import math
 import re
 from pathlib import Path
 import subprocess
-from artifact_lifecycle import canonical
+from record_primitives import canonical
 
 
 def timestamp_from_time_code(value, fps):

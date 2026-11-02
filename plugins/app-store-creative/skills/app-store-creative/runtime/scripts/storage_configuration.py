@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 import stat
-from artifact_lifecycle import StoragePaths, STORAGE_DEFAULTS
+from storage_paths import StoragePaths, STORAGE_DEFAULTS
 from studio_contract import check_config
 
 

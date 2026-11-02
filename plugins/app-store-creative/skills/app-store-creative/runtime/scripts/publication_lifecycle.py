@@ -69,7 +69,7 @@ def committed_archive(root, package, commit, manifest, archive_path=None):
         if result.returncode:
             raise ValueError('Archive is not persisted at the specified Git commit')
         return result.stdout
-    from artifact_lifecycle import digest
+    from record_primitives import digest
     manifest_bytes = blob(relative + '/manifest.json')
     if hashlib.sha256(manifest_bytes).hexdigest() != digest(package / 'manifest.json'):
         raise ValueError('Git archive manifest differs from sealed delivery')
@@ -135,7 +135,7 @@ class PublicationOperations:
 
     def _generate_local_delivery(self, publication_id, delivery_id, target, manifest, package):
         import shutil
-        from artifact_lifecycle import now, digest
+        from record_primitives import now, digest
         local_dir = self.paths.publications / publication_id / 'local_delivery'
         manifest_file = local_dir / 'manifest.json'
         receipt_file = local_dir / 'receipt.json'
@@ -198,7 +198,7 @@ class PublicationOperations:
 
     def plan_publication(self, delivery_id, archive_commit=None, remote_target=None, archive_remote=None,
                          *, archive_repository=None, archive_path=None, local_delivery=False):
-        from artifact_lifecycle import canonical, identifier
+        from record_primitives import canonical, identifier
         from delivery_lifecycle import verify_archive
         with self.transaction():
             delivery = self._read('deliveries', delivery_id)
@@ -336,7 +336,7 @@ class PublicationOperations:
 
     def plan_external_publication(self, external_archive_id, archive_commit, archive_path,
                                   remote_target, backend_root, archive_remote=None):
-        from artifact_lifecycle import canonical, identifier
+        from record_primitives import canonical, identifier
         from delivery_lifecycle import relative_name
         from external_delivery_archive import verify_external_git
         with self.transaction():
@@ -403,7 +403,7 @@ class PublicationOperations:
                 raise ValueError('Prepared external media checksum differs from approved plan')
 
     def prepare_external_publication(self, publication_id, backend_root, destination):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         from external_delivery_archive import verify_external_git
         with self.transaction():
             plan = self._read('publications', publication_id, 'plan')
@@ -423,7 +423,7 @@ class PublicationOperations:
                 raise ValueError('Prepared external retrieval proof differs from approved plan')
             package = Path(destination)
             self._check_prepared_checksums(plan, package)
-            from artifact_lifecycle import identifier
+            from record_primitives import identifier
             return self._record('publication-preparations', {'id': identifier(),
                 'publication_id': publication_id, 'plan_sha256': plan_hash, 'remote_write': False,
                 'uploaded': False, 'executor': 'official-asc-plugin', 'retrieval_proof': proof,
@@ -431,9 +431,9 @@ class PublicationOperations:
                 'assets': [{**asset, 'path': str(package / asset['path'])} for asset in plan['assets']]})
 
     def external_preparation_status(self, preparation_id):
-        from artifact_lifecycle import safe_id
+        from record_primitives import safe_id
         safe_id(preparation_id)
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         from delivery_lifecycle import verify_archive
         from operation_history import read_lock
         with read_lock(self):
@@ -471,7 +471,7 @@ class PublicationOperations:
                 and approval.get('plan_sha256') == plan_hash and approval.get('target') == plan['target'])
 
     def approve_upload(self, publication_id, actor, authorization_reference):
-        from artifact_lifecycle import canonical, identifier
+        from record_primitives import canonical, identifier
         from artifact_lifecycle import require_human_authorization
         require_human_authorization(actor, authorization_reference)
         with self.transaction():
@@ -486,7 +486,7 @@ class PublicationOperations:
         return self._publication_state(publication_id, max_age_seconds)
 
     def export_publication(self, publication_id, write=False):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         from delivery_lifecycle import verify_archive
         with self.transaction():
             plan = self._read('publications', publication_id, 'plan')

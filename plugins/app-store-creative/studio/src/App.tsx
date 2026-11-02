@@ -25,6 +25,7 @@ import { StorageSettings } from './StorageSettings';
 import { ArchivePolicySettings } from './ArchivePolicySettings';
 import { loadStoragePreview, storageSaveConflict, assertCurrentSave, type StoragePreview } from './storagePreview';
 import { classifyPose } from './layoutReview';
+import { critiqueDraft, currentCritiqueSession, initialCritiqueDraft, type CritiqueDraftAction } from './critiqueDraft';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -73,10 +74,13 @@ export const App: React.FC = () => {
   const [canvasNarrowTab, setCanvasNarrowTab] = useState<'cards' | 'canvas' | 'inspector'>('canvas');
   const [lifecycleTab, setLifecycleTab] = useState<'approval' | 'governance'>('approval');
   const [inspectorTab, setInspectorTab] = useState<'copy' | 'spatial' | 'ambiance' | 'review'>('copy');
-  const [critiqueNotesByCard, setCritiqueNotesByCard] = useState<Record<string, string>>({});
-  const critiqueNotesByCardRef = useRef<Record<string, string>>({});
-  const [dirtyCritiqueCards, setDirtyCritiqueCards] = useState<Record<string, boolean>>({});
-  const dirtyCritiqueCardsRef = useRef<Record<string, boolean>>({});
+  const [critique, setCritique] = useState(initialCritiqueDraft);
+  const critiqueRef = useRef(critique);
+  const updateCritique = useCallback((action: CritiqueDraftAction) => {
+    const next = critiqueDraft(critiqueRef.current, action);
+    critiqueRef.current = next;
+    setCritique(next);
+  }, []);
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
   const [syncingCritique, setSyncingCritique] = useState(false);
   const [critiqueNotice, setCritiqueNotice] = useState('');
@@ -114,7 +118,12 @@ export const App: React.FC = () => {
       else setError('No project is configured');
     }).catch(reason => setError(reason.message)).finally(() => setLoading(false));
 
+  }, []);
+  useEffect(() => {
+    updateCritique({ type: 'start' });
+    const generation = critiqueRef.current.generation;
     request('/api/critique').then(({ body }) => {
+      if (!currentCritiqueSession(critiqueRef.current, generation)) return;
       if (!body || typeof body !== 'object') return;
       const directives = (body as { directives?: Record<string, { notes?: string }> }).directives || {};
       const initialNotes: Record<string, string> = {};
@@ -123,15 +132,16 @@ export const App: React.FC = () => {
           initialNotes[cardId] = item.notes;
         }
       }
-      critiqueNotesByCardRef.current = initialNotes;
-      setCritiqueNotesByCard(initialNotes);
-    }).catch(() => {});
-  }, []);
+      updateCritique({ type: 'loaded', generation, notes: initialNotes });
+    }).catch(() => {
+      if (currentCritiqueSession(critiqueRef.current, generation)) updateCritique({ type: 'failed', generation });
+    });
+    return () => {
+      critiqueRef.current = critiqueDraft(critiqueRef.current, { type: 'invalidate' });
+    };
+  }, [updateCritique]);
   useEffect(() => {
-    dirtyCritiqueCardsRef.current = dirtyCritiqueCards;
-  }, [dirtyCritiqueCards]);
-  useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current || Object.values(dirtyCritiqueCardsRef.current).some(Boolean)) { event.preventDefault(); event.returnValue = ''; } };
+    const warn = (event: BeforeUnloadEvent) => { if (draftDirty.current || Object.values(critiqueRef.current.cards).some(card => card.dirty)) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', warn); return () => window.removeEventListener('beforeunload', warn);
   }, []);
   useEffect(() => {
@@ -261,9 +271,14 @@ export const App: React.FC = () => {
 
   const syncCritique = async () => {
     if (!active) return;
+    const generation = critiqueRef.current.generation;
+    if (!currentCritiqueSession(critiqueRef.current, generation)) return;
+    const cardId = active.id;
+    const draft = critiqueRef.current.cards[cardId];
+    const sequence = draft?.sequence || 0;
     setSyncingCritique(true); setCritiqueNotice('');
     try {
-      const note = critiqueNotesByCard[active.id] || '';
+      const note = draft?.notes || '';
       const payload = {
         card_id: active.id,
         role: getCardRole(config.cards.findIndex(c => c.id === active.id)),
@@ -281,24 +296,22 @@ export const App: React.FC = () => {
         timestamp: new Date().toISOString(),
       };
       await request('/api/critique', payload);
-      setDirtyCritiqueCards(prev => {
-        if (critiqueNotesByCardRef.current[active.id] !== note) {
-          return prev;
-        }
-        return { ...prev, [active.id]: false };
-      });
+      if (!currentCritiqueSession(critiqueRef.current, generation)) return;
+      updateCritique({ type: 'saved', generation, cardId, sequence });
       setCritiqueNotice('✓ Directives saved to .creative/review-directives.json');
     } catch (reason) {
+      if (!currentCritiqueSession(critiqueRef.current, generation)) return;
+      updateCritique({ type: 'failed', generation });
       setError((reason as Error).message);
     } finally {
-      setSyncingCritique(false);
+      if (currentCritiqueSession(critiqueRef.current, generation)) setSyncingCritique(false);
     }
   };
 
   const copyCritiqueMarkdown = () => {
     if (!active) return;
     const role = getCardRole(config.cards.findIndex(c => c.id === active.id));
-    const note = critiqueNotesByCard[active.id] || '';
+    const note = critique.cards[active.id]?.notes || '';
     const md = `### [Creative Review Directive] Card: ${active.id} (Arc Role: ${role})
 - Target: ${target} | Locale: ${locale}
 - 3D Transforms:
@@ -797,13 +810,12 @@ export const App: React.FC = () => {
                       <p className="text-[10px] text-white/50">Write review notes for autonomous Agent digestion</p>
                     </div>
                     <textarea rows={3} placeholder="E.g. Tilt window 3° right, adjust headline to focus on clipboard speed..."
-                      value={active ? (critiqueNotesByCard[active.id] || '') : ''}
+                      value={active ? (critique.cards[active.id]?.notes || '') : ''}
                       onChange={e => {
                         const val = e.target.value;
                         if (active) {
-                          critiqueNotesByCardRef.current = { ...critiqueNotesByCardRef.current, [active.id]: val };
-                          setCritiqueNotesByCard(prev => ({ ...prev, [active.id]: val }));
-                          setDirtyCritiqueCards(prev => ({ ...prev, [active.id]: true }));
+                          updateCritique({ type: 'edit', cardId: active.id, notes: val });
+                          setCritiqueNotice('');
                         }
                       }} className="w-full text-xs" />
                     <div className="flex flex-col gap-2 pt-1">

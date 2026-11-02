@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 import shutil
-from artifact_lifecycle import canonical
+from record_primitives import canonical
 from media_tool_identity import portable_probe
 
 
