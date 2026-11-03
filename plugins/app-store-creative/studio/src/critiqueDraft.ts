@@ -7,6 +7,7 @@ export interface CritiqueCardDraft {
 
 export interface CritiqueDraftState {
   cards: Record<string, CritiqueCardDraft>;
+  notices: Record<string, string>;
   generation: number;
   active: boolean;
 }
@@ -17,9 +18,10 @@ export type CritiqueDraftAction =
   | { type: 'edit'; cardId: string; notes: string }
   | { type: 'loaded'; generation: number; notes: Record<string, string> }
   | { type: 'saved'; generation: number; cardId: string; sequence: number }
+  | { type: 'notice'; generation: number; cardId: string; message: string }
   | { type: 'failed'; generation: number };
 
-export const initialCritiqueDraft = (): CritiqueDraftState => ({ cards: {}, generation: 0, active: false });
+export const initialCritiqueDraft = (): CritiqueDraftState => ({ cards: {}, notices: {}, generation: 0, active: false });
 
 export function currentCritiqueSession(state: CritiqueDraftState, generation: number): boolean {
   return state.active && state.generation === generation;
@@ -36,11 +38,14 @@ export function critiqueDraft(state: CritiqueDraftState, action: CritiqueDraftAc
   if (action.type === 'invalidate') return { ...state, active: false };
   if (action.type === 'edit') {
     const previous = state.cards[action.cardId];
-    return { ...state, cards: { ...state.cards, [action.cardId]: {
+    return { ...state, notices: { ...state.notices, [action.cardId]: '' }, cards: { ...state.cards, [action.cardId]: {
       notes: action.notes, dirty: true, touched: true, sequence: (previous?.sequence || 0) + 1,
     } } };
   }
   if (!currentCritiqueSession(state, action.generation)) return state;
+  if (action.type === 'notice') {
+    return { ...state, notices: { ...state.notices, [action.cardId]: action.message } };
+  }
   if (action.type === 'loaded') {
     const cards = { ...state.cards };
     for (const [id, notes] of Object.entries(action.notes)) {
@@ -50,8 +55,10 @@ export function critiqueDraft(state: CritiqueDraftState, action: CritiqueDraftAc
   }
   if (action.type === 'saved') {
     const card = state.cards[action.cardId];
-    if (!card || card.sequence !== action.sequence) return state;
-    return { ...state, cards: { ...state.cards, [action.cardId]: { ...card, dirty: false } } };
+    const next = card && card.sequence === action.sequence
+      ? { ...state, cards: { ...state.cards, [action.cardId]: { ...card, dirty: false } } }
+      : state;
+    return { ...next, notices: { ...next.notices, [action.cardId]: critiqueSaveNotice(next, action.cardId) } };
   }
   return state;
 }

@@ -25,7 +25,7 @@ import { StorageSettings } from './StorageSettings';
 import { ArchivePolicySettings } from './ArchivePolicySettings';
 import { loadStoragePreview, storageSaveConflict, assertCurrentSave, type StoragePreview } from './storagePreview';
 import { classifyPose } from './layoutReview';
-import { critiqueDraft, critiqueSaveNotice, currentCritiqueSession, initialCritiqueDraft, type CritiqueDraftAction } from './critiqueDraft';
+import { critiqueDraft, currentCritiqueSession, initialCritiqueDraft, type CritiqueDraftAction } from './critiqueDraft';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -83,7 +83,6 @@ export const App: React.FC = () => {
   }, []);
   const [showCopyIdeas, setShowCopyIdeas] = useState(false);
   const [syncingCritique, setSyncingCritique] = useState(false);
-  const [critiqueNotice, setCritiqueNotice] = useState('');
 
   const state = useRef(config); state.current = config;
   const revision = useRef<string | undefined>(undefined);
@@ -236,6 +235,7 @@ export const App: React.FC = () => {
     target={(params.get('target') || 'iphone_6_9') as TargetDevice} locale={params.get('locale') || 'en-US'} />;
 
   const active = config.cards.find(card => card.id === selected);
+  const critiqueNotice = active ? critique.notices[active.id] : '';
   const resolved = active ? resolveCard(config, active, target, locale) : undefined;
   const fields = active ? localizedFields(config, active, target, locale) : {};
   const defaultLocale = config.project.defaultLocale || 'en-US';
@@ -276,7 +276,8 @@ export const App: React.FC = () => {
     const cardId = active.id;
     const draft = critiqueRef.current.cards[cardId];
     const sequence = draft?.sequence || 0;
-    setSyncingCritique(true); setCritiqueNotice('');
+    setSyncingCritique(true);
+    updateCritique({ type: 'notice', generation, cardId, message: '' });
     try {
       const note = draft?.notes || '';
       const payload = {
@@ -298,7 +299,6 @@ export const App: React.FC = () => {
       await request('/api/critique', payload);
       if (!currentCritiqueSession(critiqueRef.current, generation)) return;
       updateCritique({ type: 'saved', generation, cardId, sequence });
-      setCritiqueNotice(critiqueSaveNotice(critiqueRef.current, cardId));
     } catch (reason) {
       if (!currentCritiqueSession(critiqueRef.current, generation)) return;
       updateCritique({ type: 'failed', generation });
@@ -310,6 +310,8 @@ export const App: React.FC = () => {
 
   const copyCritiqueMarkdown = () => {
     if (!active) return;
+    const generation = critiqueRef.current.generation;
+    const cardId = active.id;
     const role = getCardRole(config.cards.findIndex(c => c.id === active.id));
     const note = critique.cards[active.id]?.notes || '';
     const md = `### [Creative Review Directive] Card: ${active.id} (Arc Role: ${role})
@@ -328,7 +330,7 @@ export const App: React.FC = () => {
 - Critique Notes: "${note || 'No custom notes'}"
 - Workflow Action: Ingest parameters into creative.config.json, rerun offline headless verification, and regenerate preview artifact.`;
     void navigator.clipboard.writeText(md).then(() => {
-      setCritiqueNotice('✓ Markdown directive copied to clipboard');
+      updateCritique({ type: 'notice', generation, cardId, message: '✓ Markdown directive copied to clipboard' });
     }).catch(reason => {
       setError(`Could not copy directive: ${(reason as Error).message}`);
     });
@@ -815,7 +817,6 @@ export const App: React.FC = () => {
                         const val = e.target.value;
                         if (active) {
                           updateCritique({ type: 'edit', cardId: active.id, notes: val });
-                          setCritiqueNotice('');
                         }
                       }} className="w-full text-xs" />
                     <div className="flex flex-col gap-2 pt-1">

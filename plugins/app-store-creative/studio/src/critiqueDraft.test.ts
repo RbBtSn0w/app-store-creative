@@ -4,6 +4,25 @@ import { critiqueDraft, critiqueSaveNotice, currentCritiqueSession, initialCriti
 const started = () => critiqueDraft(initialCritiqueDraft(), { type: 'start' });
 
 describe('critique drafts', () => {
+  it('retains each card save notice independently across interleaved saves and edits', () => {
+    let state = started();
+    state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes: 'Submitted' });
+    state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes: 'Newer' });
+    state = critiqueDraft(state, { type: 'saved', generation: state.generation, cardId: 'hero', sequence: 1 });
+    expect(state.notices.hero).toBe('Earlier notes saved. Newer notes still need syncing.');
+    expect(state.notices.detail).toBeUndefined();
+    state = critiqueDraft(state, { type: 'edit', cardId: 'detail', notes: 'Detail' });
+    state = critiqueDraft(state, { type: 'notice', generation: state.generation, cardId: 'detail', message: '' });
+    state = critiqueDraft(state, { type: 'saved', generation: state.generation, cardId: 'detail', sequence: 1 });
+    expect(state.notices.detail).toBe('✓ Directives saved to .creative/review-directives.json');
+    expect(state.notices.hero).toBe('Earlier notes saved. Newer notes still need syncing.');
+    state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes: 'Another edit' });
+    expect(state.notices.hero).toBe('');
+    expect(state.notices.detail).toBe('✓ Directives saved to .creative/review-directives.json');
+    const inactive = critiqueDraft(state, { type: 'invalidate' });
+    expect(critiqueDraft(inactive, { type: 'notice', generation: state.generation,
+      cardId: 'hero', message: 'Stale clipboard callback' })).toBe(inactive);
+  });
   it('reports newer unsaved edits after a pending save completes, then confirms the latest save', () => {
     let state = started();
     state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes: 'Submitted' });

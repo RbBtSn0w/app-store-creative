@@ -145,3 +145,9 @@ tests pass on Python 3.10 and 3.14. The surrounding report and runner suites pas
 22 tests. Studio passes 132 tests, TypeScript checking and production build;
 the generated distribution is included. Remote CI validates Python 3.12 and the
 combined revision.
+
+The subsequent review also scopes critique notices to their card in the draft
+state. Saving or copying another card cannot overwrite an earlier card's unsynced
+notice, and editing clears only that card's notice. Session guards reject stale
+notice callbacks. A multi-card regression covers these transitions; Studio now
+passes 133 tests plus TypeScript checking and production build.
