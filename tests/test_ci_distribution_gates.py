@@ -70,6 +70,26 @@ class StrictRunnerTests(unittest.TestCase):
 
 
 class RequiredCrossfsSummaryTests(unittest.TestCase):
+    def test_setup_failure_surfaces_original_error_and_cleanup_status(self):
+        summary = importlib.import_module('ci_test_report')
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / 'crossfs.json'
+            for cleanup in ({'status': 'passed'}, {'status': 'failed', 'error': 'detach failed'}, None):
+                with self.subTest(cleanup=cleanup):
+                    report.write_text(json.dumps({
+                        'schema_version': 1, 'context': {'source_sha': 'test-sha'},
+                        'status': 'failed', 'volume': {'verified': False}, 'tests': None,
+                        'cleanup': cleanup, 'error': 'Attach failed: device unavailable'}))
+                    with mock.patch.dict('os.environ', {}, clear=True):
+                        ok, message = summary.crossfs_verdict(report)
+                    self.assertFalse(ok)
+                    self.assertIn('Attach failed: device unavailable', message)
+                    self.assertIn('did not run', message)
+                    if isinstance(cleanup, dict):
+                        self.assertIn(f"cleanup={cleanup['status']}", message)
+                        if cleanup.get('error'):
+                            self.assertIn(cleanup['error'], message)
+
     def test_required_missing_malformed_failed_and_cleanup_failure_are_nonzero(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -175,7 +195,7 @@ class CrossfsLifecycleTests(unittest.TestCase):
     def test_lifecycle_records_realistic_external_failures_without_false_success(self):
         harness = importlib.import_module('run_crossfs_tests')
         import plistlib
-        import types
+        import os
         for outcome in ('passed', 'mount-alias', 'same-device', 'timeout', 'signal', 'skip',
                         'test-failure', 'detach-failure', 'partial-attach', 'bad-plist', 'wrong-mount'):
             with self.subTest(outcome=outcome), tempfile.TemporaryDirectory() as directory:
@@ -187,8 +207,9 @@ class CrossfsLifecycleTests(unittest.TestCase):
                 def stat(path, *args, **kwargs):
                     actual = original_stat(path, *args, **kwargs)
                     if mountpoint and path == mountpoint and active:
-                        return types.SimpleNamespace(st_dev=(actual.st_dev if outcome == 'same-device'
-                                                            else actual.st_dev + 100))
+                        fields = list(actual)
+                        fields[2] = actual.st_dev if outcome == 'same-device' else actual.st_dev + 100
+                        return os.stat_result(fields)
                     return actual
                 def entities():
                     return [{'dev-entry': '/dev/disk12'},
@@ -235,10 +256,10 @@ class CrossfsLifecycleTests(unittest.TestCase):
                         mock.patch('builtins.print'):
                     result = harness.run(ROOT, state_file, report, root)
                 evidence = json.loads(report.read_text())
-                self.assertEqual(result, 0 if outcome in ('passed', 'mount-alias') else 1)
+                self.assertEqual(result, 0 if outcome in ('passed', 'mount-alias') else 1, evidence)
                 self.assertEqual(evidence['status'], 'passed' if outcome in ('passed', 'mount-alias') else 'failed')
                 cleanup_failed = outcome in ('detach-failure', 'wrong-mount')
-                self.assertEqual(evidence['cleanup']['status'], 'failed' if cleanup_failed else 'passed')
+                self.assertEqual(evidence['cleanup']['status'], 'failed' if cleanup_failed else 'passed', evidence)
                 self.assertEqual(active, cleanup_failed)
                 self.assertEqual(Path(json.loads(state_file.read_text())['owned_dir']).exists(), cleanup_failed)
 

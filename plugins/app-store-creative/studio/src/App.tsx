@@ -25,7 +25,7 @@ import { StorageSettings } from './StorageSettings';
 import { ArchivePolicySettings } from './ArchivePolicySettings';
 import { loadStoragePreview, storageSaveConflict, assertCurrentSave, type StoragePreview } from './storagePreview';
 import { classifyPose } from './layoutReview';
-import { critiqueDraft, currentCritiqueSession, initialCritiqueDraft, type CritiqueDraftAction } from './critiqueDraft';
+import { critiqueDraft, critiqueSaveNotice, currentCritiqueSession, initialCritiqueDraft, type CritiqueDraftAction } from './critiqueDraft';
 
 const initialProject = (): CreativeConfig => ({
   project: { id: 'my-app', name: '', bundleId: '', defaultLocale: 'en-US', locales: ['en-US', 'zh-Hans'] },
@@ -298,7 +298,7 @@ export const App: React.FC = () => {
       await request('/api/critique', payload);
       if (!currentCritiqueSession(critiqueRef.current, generation)) return;
       updateCritique({ type: 'saved', generation, cardId, sequence });
-      setCritiqueNotice('✓ Directives saved to .creative/review-directives.json');
+      setCritiqueNotice(critiqueSaveNotice(critiqueRef.current, cardId));
     } catch (reason) {
       if (!currentCritiqueSession(critiqueRef.current, generation)) return;
       updateCritique({ type: 'failed', generation });

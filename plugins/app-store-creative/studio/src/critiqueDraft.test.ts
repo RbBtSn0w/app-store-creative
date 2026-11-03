@@ -1,9 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { critiqueDraft, currentCritiqueSession, initialCritiqueDraft } from './critiqueDraft';
+import { critiqueDraft, critiqueSaveNotice, currentCritiqueSession, initialCritiqueDraft } from './critiqueDraft';
 
 const started = () => critiqueDraft(initialCritiqueDraft(), { type: 'start' });
 
 describe('critique drafts', () => {
+  it('reports newer unsaved edits after a pending save completes, then confirms the latest save', () => {
+    let state = started();
+    state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes: 'Submitted' });
+    state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes: 'Newer' });
+    state = critiqueDraft(state, { type: 'saved', generation: state.generation, cardId: 'hero', sequence: 1 });
+    expect(critiqueSaveNotice(state, 'hero')).toBe('Earlier notes saved. Newer notes still need syncing.');
+    state = critiqueDraft(state, { type: 'saved', generation: state.generation, cardId: 'hero', sequence: 2 });
+    state = critiqueDraft(state, { type: 'edit', cardId: 'detail', notes: 'Independent' });
+    expect(critiqueSaveNotice(state, 'hero')).toBe('✓ Directives saved to .creative/review-directives.json');
+  });
   it.each(['typed', ''])('preserves touched notes %j against delayed GET and hydrates independent cards', notes => {
     let state = started();
     state = critiqueDraft(state, { type: 'edit', cardId: 'hero', notes });

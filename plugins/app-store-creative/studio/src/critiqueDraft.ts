@@ -25,6 +25,12 @@ export function currentCritiqueSession(state: CritiqueDraftState, generation: nu
   return state.active && state.generation === generation;
 }
 
+export function critiqueSaveNotice(state: CritiqueDraftState, cardId: string): string {
+  return state.cards[cardId]?.dirty
+    ? 'Earlier notes saved. Newer notes still need syncing.'
+    : '✓ Directives saved to .creative/review-directives.json';
+}
+
 export function critiqueDraft(state: CritiqueDraftState, action: CritiqueDraftAction): CritiqueDraftState {
   if (action.type === 'start') return { ...state, active: true, generation: state.generation + 1 };
   if (action.type === 'invalidate') return { ...state, active: false };

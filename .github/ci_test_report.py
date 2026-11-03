@@ -184,6 +184,11 @@ def crossfs_verdict(path: Path | None) -> tuple[bool, str]:
             if os.environ.get(env_key) and context.get(key) != os.environ[env_key]:
                 raise ValueError(f"{key} does not match current run")
         volume, tests, cleanup = report["volume"], report["tests"], report["cleanup"]
+        if tests is None and report.get("status") != "passed":
+            cleanup = cleanup if isinstance(cleanup, dict) else {}
+            return False, (f"Cross-filesystem tests did not run: cleanup={cleanup.get('status', 'unknown')}; "
+                           f"{_cell(str(report.get('error', 'no error recorded')))}; "
+                           f"{_cell(str(cleanup.get('error', '')))}")
         if not all(isinstance(value, dict) for value in (volume, tests, cleanup)):
             raise ValueError("volume, tests and cleanup evidence must be objects")
         count = tests["tests_run"]

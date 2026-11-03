@@ -128,3 +128,20 @@ paths. The focused runner/report/lifecycle suite passed 37 tests, and the real
 APFS suite passed all 33 cases with zero skips and successful cleanup. Package
 smoke and actionlint passed. The earlier full Python result remains scoped to its
 recorded source hashes; remote PR CI validates the combined revision.
+
+## PR 62 review follow-up
+
+The summary now preserves the original setup failure when cross-filesystem tests
+never started, together with cleanup status and any cleanup error. Critique save
+feedback distinguishes the submitted notes from newer unsynced edits and only
+confirms completion for the saved card's clean draft.
+
+The initial PR CI run failed nine subcases in the simulated volume lifecycle:
+its partial stat replacement omitted `st_mode`, which Python 3.12 path checks
+require. Python 3.10 reproduced the same failure locally. The fixture now retains
+the complete stat result while changing only the simulated device number; no
+production cleanup checks or timeouts were weakened. All 16 distribution-gate
+tests pass on Python 3.10 and 3.14. The surrounding report and runner suites pass
+22 tests. Studio passes 132 tests, TypeScript checking and production build;
+the generated distribution is included. Remote CI validates Python 3.12 and the
+combined revision.
