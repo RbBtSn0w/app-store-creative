@@ -22,7 +22,7 @@ class RelocationOperations:
             os.close(directory_fd)
 
     def _check_storage_activation(self):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         binding = self.paths.binding()
         key = hashlib.sha256(canonical(binding)).hexdigest()
         path = self._path('storage-activations', key)
@@ -45,7 +45,7 @@ class RelocationOperations:
             raise ValueError('Relocation destination is inactive; activation evidence does not match')
 
     def _check_storage_write_fence(self):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         binding = self.paths.binding()
         key = hashlib.sha256(canonical(binding)).hexdigest()
         directory = self.paths.workspace / 'records/storage-fences' / key
@@ -90,7 +90,7 @@ class RelocationOperations:
 
     def _fence_relocation_locked(self, plan_id):
         """Called under the source lock before a switch can expose new roots."""
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         from storage_git_policy import verify_staging_ignored
         self._verify_relocation_locked(plan_id)
         if not self._path('relocations', plan_id, 'prepared').exists():
@@ -111,7 +111,7 @@ class RelocationOperations:
 
     def resolve_storage_binding(self, binding):
         """Resolve immutable historical bindings through verified switch receipts."""
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         current = self.paths.binding()
         seen = set()
         while binding != current:
@@ -140,7 +140,8 @@ class RelocationOperations:
         return binding
 
     def _relocation_targets(self, storage, config):
-        from artifact_lifecycle import canonical, StoragePaths, overlaps
+        from record_primitives import canonical
+        from storage_paths import StoragePaths, overlaps
         import json
         if not isinstance(storage, dict):
             raise ValueError('Relocation storage must be an object')
@@ -167,7 +168,7 @@ class RelocationOperations:
     def _relocation_snapshot(self):
         from maintenance_fences import check_relocation
         check_relocation(self)
-        from artifact_lifecycle import canonical, digest
+        from record_primitives import canonical, digest
         from delivery_lifecycle import verify_archive
         for path in (self.paths.workspace / 'records/attempts').glob('*/started.json'):
             if not self._path('attempts', path.parent.name, 'outcome').exists():
@@ -203,7 +204,7 @@ class RelocationOperations:
             return False
 
     def _relocation_file_snapshot(self, labels=None):
-        from artifact_lifecycle import canonical, digest
+        from record_primitives import canonical, digest
         stages = []
         for path in (self.paths.workspace / 'records/relocations').glob('*/prepare-intent.json'):
             stages.extend(Path(value) for value in self._read('relocations', path.parent.name, 'prepare-intent')['staging'].values())
@@ -263,7 +264,7 @@ class RelocationOperations:
         return change
 
     def plan_relocation(self, storage):
-        from artifact_lifecycle import canonical, digest, identifier
+        from record_primitives import canonical, digest, identifier
         from forward_source_copies import identities
         with self.transaction():
             config = self._live_configuration()
@@ -287,7 +288,8 @@ class RelocationOperations:
                 'scope': 'Local copy and verification plan; execution and rebinding are separate'})
 
     def _reverse_relocation_evidence(self, forward_id):
-        from artifact_lifecycle import Lifecycle, canonical, digest
+        from record_primitives import canonical, digest
+        from artifact_lifecycle import Lifecycle
         import base64
         import json
         forward = self._read('relocations', forward_id)
@@ -355,7 +357,7 @@ class RelocationOperations:
                 'requested_storage': target_config['storage']}
 
     def plan_reverse_relocation(self, forward_id):
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         with self.transaction():
             evidence = self._reverse_relocation_evidence(forward_id)
             return self._record('relocations', {'id': identifier(),
@@ -446,7 +448,8 @@ class RelocationOperations:
         target_status = 'NOT_SWITCHED'
         target_errors = []
         if status == 'SWITCHED':
-            from artifact_lifecycle import Lifecycle, canonical
+            from record_primitives import canonical
+            from artifact_lifecycle import Lifecycle
             try:
                 intent = records.get('switch-intent')
                 if not isinstance(intent, dict) or not isinstance(intent.get('target_config'), dict):
@@ -495,7 +498,7 @@ class RelocationOperations:
                 'scope': 'Read-only operation evidence; use verification before execution'}
 
     def _verify_relocation_locked(self, plan_id):
-        from artifact_lifecycle import canonical, digest
+        from record_primitives import canonical, digest
         plan = self._read('relocations', plan_id)
         if plan.get('operation') == 'reverse-relocation-plan':
             return self._verify_reverse_relocation_locked(plan_id)
@@ -530,7 +533,7 @@ class RelocationOperations:
             return self._verify_relocation_locked(plan_id)
 
     def _verify_staging_root_proofs(self, prepared):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         plan = self._read('relocations', prepared['id'])
         _, _, staging = self._relocation_layout(plan)
         hashes = prepared.get('staging_root_proof_sha256')
@@ -543,7 +546,7 @@ class RelocationOperations:
                 raise ValueError('Staging root proof hash differs from prepared receipt')
 
     def _verify_prepared_relocation(self, prepared):
-        from artifact_lifecycle import digest
+        from record_primitives import digest
         self._verify_staging_root_proofs(prepared)
         plan = self._read('relocations', prepared['id'])
         if plan.get('operation') == 'relocation-plan':
@@ -665,7 +668,7 @@ class RelocationOperations:
         return policy
 
     def prepare_relocation(self, plan_id, actor, reason):
-        from artifact_lifecycle import digest, canonical
+        from record_primitives import digest, canonical
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Relocation preparation requires actor and reason')
         with self.transaction():
@@ -759,7 +762,7 @@ class RelocationOperations:
                 raise
 
     def recover_relocation(self, plan_id, actor, reason):
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Relocation recovery requires actor and reason')
         with self.transaction():
@@ -786,7 +789,7 @@ class RelocationOperations:
                 'source_deleted': False, 'configuration_changed': False}, 'recovery')
 
     def cancel_relocation(self, plan_id, actor, reason):
-        from artifact_lifecycle import canonical, digest
+        from record_primitives import canonical, digest
         from storage_git_policy import verify_staging_ignored
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Relocation cancellation requires actor and reason')
@@ -895,7 +898,7 @@ class RelocationOperations:
                 'configuration_changed': False}, 'cancelled')
 
     def _relocation_control_changes(self, plan, receipt, predecessors=None):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         changes = {}
         for category, binding in [('storage-activations', plan['to']), ('storage-bindings', plan['from'])]:
             key = hashlib.sha256(canonical(binding)).hexdigest()
@@ -932,7 +935,7 @@ class RelocationOperations:
         return changes
 
     def _verified_relocation_controls(self, plan, intent):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         if plan['operation'] == 'relocation-plan':
             from forward_source_copies import verify_capture
             verify_capture(self, plan, intent)
@@ -945,7 +948,7 @@ class RelocationOperations:
 
     def switch_relocation(self, plan_id, actor, reason):
         """Internal switch entry; recovery must be available before exposing a CLI."""
-        from artifact_lifecycle import canonical, digest, now
+        from record_primitives import canonical, digest, now
         from delivery_lifecycle import commit_directory
         from storage_control_projection import publish
         import json
@@ -1055,7 +1058,7 @@ class RelocationOperations:
 
     def rollback_relocation(self, plan_id, actor, reason):
         """Recover an interrupted, unactivated switch while preserving all copies."""
-        from artifact_lifecycle import canonical, digest
+        from record_primitives import canonical, digest
         from storage_control_projection import restore
         import base64
         import fcntl
@@ -1151,7 +1154,7 @@ class RelocationOperations:
 
     def resume_relocation(self, plan_id, actor, reason):
         """Resume a fenced switch without replacing existing destination bytes."""
-        from artifact_lifecycle import canonical, digest, now
+        from record_primitives import canonical, digest, now
         from delivery_lifecycle import commit_directory
         from storage_control_projection import publish
         from storage_git_policy import verify_staging_ignored
@@ -1362,7 +1365,8 @@ def recovery_lock(core):
 
 def recovery_source(root, config_path, workspace, plan_id):
     """Read and verify the original authority before opening recovery writes."""
-    from artifact_lifecycle import Lifecycle, canonical, safe_id
+    from record_primitives import canonical, safe_id
+    from artifact_lifecycle import Lifecycle
     import base64
     import json
     from configuration_layers import _read_regular, _document

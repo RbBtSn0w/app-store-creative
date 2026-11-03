@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import shutil
 import tempfile
-from artifact_lifecycle import canonical
+from record_primitives import canonical
 from configuration_layers import _read_regular, _document
 from delivery_lifecycle import verify_archive, relative_name, commit_directory
 from external_media_store import FileSystemMediaStore
@@ -116,7 +116,7 @@ def restore_external(bundle, destination, backend, backend_root, expected_descri
 
 
 def export_managed(core, delivery_id, backend, backend_root):
-    from artifact_lifecycle import identifier
+    from record_primitives import identifier
     from external_media_store import managed_store
     with core.transaction():
         backend_root = managed_store(core, backend, backend_root).root

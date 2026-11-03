@@ -82,7 +82,7 @@ class RetentionOperations:
                 'candidate_id': candidate_id, 'status': 'discarded', 'actor': actor, 'reason': reason})
 
     def _retention_state(self, retention_days, cutoff, include_missing=False):
-        from artifact_lifecycle import canonical
+        from record_primitives import canonical
         if isinstance(retention_days, bool) or not isinstance(retention_days, int) or retention_days < 0:
             raise ValueError('Retention days must be a nonnegative integer')
         records = self.paths.workspace / 'records'
@@ -152,7 +152,7 @@ class RetentionOperations:
                 protected.add(identity)
             elif datetime.fromisoformat(self._read('attempts', artifact['attempt_id'], 'outcome')['created_at']) > artifact_cutoff:
                 protected.add(identity)
-        from artifact_lifecycle import dependency_closure
+        from record_primitives import dependency_closure
         def load(identity):
             if identity not in artifacts:
                 raise ValueError('Missing referenced artifact')
@@ -181,7 +181,7 @@ class RetentionOperations:
     def plan_cleanup(self, retention_days=None):
         if retention_days is None:
             retention_days = self.artifact_policy['trialRetentionDays']
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         if isinstance(retention_days, bool) or not isinstance(retention_days, int) or retention_days < 0:
             raise ValueError('Retention days must be a nonnegative integer')
         cutoff = datetime.now(timezone.utc) - timedelta(days=retention_days)
@@ -193,7 +193,7 @@ class RetentionOperations:
                 'storage': self.paths.binding(), 'objects': objects, 'cleanup_executed': False})
 
     def _quarantine_path(self, identity, sha):
-        from artifact_lifecycle import safe_id
+        from record_primitives import safe_id
         self.object_path(sha)
         path = self.paths.objects / '.quarantine' / safe_id(identity) / sha
         if path.resolve() != path:
@@ -201,7 +201,7 @@ class RetentionOperations:
         return path
 
     def quarantine_cleanup(self, plan_id, actor, reason):
-        from artifact_lifecycle import digest, identifier
+        from record_primitives import digest, identifier
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
             raise ValueError('Maintenance requires actor and reason')
         with self.transaction():
@@ -227,7 +227,7 @@ class RetentionOperations:
             return operation
 
     def restore_cleanup(self, operation_id, actor, reason):
-        from artifact_lifecycle import digest
+        from record_primitives import digest
         from maintenance_observations import record_digest
         from operation_history import sync_directory
         if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
@@ -297,7 +297,7 @@ class RetentionOperations:
             return receipt
 
     def _purge_state(self, operation_id, quarantine_days):
-        from artifact_lifecycle import digest
+        from record_primitives import digest
         if isinstance(quarantine_days, bool) or not isinstance(quarantine_days, int) or quarantine_days < 0:
             raise ValueError('Quarantine days must be a nonnegative integer')
         operation = self._read('maintenance', operation_id)
@@ -343,7 +343,7 @@ class RetentionOperations:
     def plan_purge(self, operation_id, quarantine_days=None):
         if quarantine_days is None:
             quarantine_days = self.artifact_policy['quarantineDays']
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         with self.transaction():
             if self._path('maintenance', operation_id, 'purge-intent').exists():
                 raise ValueError('Purge already started; retry its original plan')

@@ -33,7 +33,7 @@ class LeaseOperations:
         return lease
 
     def _new_lease(self, attempt_id, owner, seconds, generation):
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         lease = self._record('attempt-leases', {'id': attempt_id, 'owner': owner,
             'generation': generation, 'lease_token': identifier(),
             'expires_at': (utcnow() + timedelta(seconds=duration(seconds))).isoformat()}, str(generation))
@@ -41,7 +41,7 @@ class LeaseOperations:
         return lease
 
     def _start_attempt_locked(self, run_id, stage, owner, retry_of, lease_seconds):
-        from artifact_lifecycle import identifier
+        from record_primitives import identifier
         identity = identifier()
         work = self.work_path(identity)
         lease = self._new_lease(identity, owner, lease_seconds, 1)

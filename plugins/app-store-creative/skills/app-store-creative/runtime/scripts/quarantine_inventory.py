@@ -2,7 +2,7 @@
 import hashlib
 from pathlib import Path
 
-from artifact_lifecycle import canonical, digest, safe_id
+from record_primitives import canonical, digest, safe_id
 from inventory_lifecycle import files_without_links
 
 

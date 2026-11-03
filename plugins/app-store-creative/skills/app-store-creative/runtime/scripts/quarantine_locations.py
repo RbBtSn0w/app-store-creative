@@ -1,7 +1,7 @@
 """Receipt-bound locations of quarantine copies; business records stay immutable."""
 from pathlib import Path
 
-from artifact_lifecycle import digest
+from record_primitives import digest
 from inventory_lifecycle import files_without_links
 from relocation_quarantine import _hash
 

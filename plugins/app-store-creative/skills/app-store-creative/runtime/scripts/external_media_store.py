@@ -110,7 +110,7 @@ class FileSystemMediaStore:
 
 
 def persist_managed(core, artifact_id, backend, root):
-    from artifact_lifecycle import identifier
+    from record_primitives import identifier
     with core.transaction():
         artifact = core.verify_artifact(artifact_id)
         store = managed_store(core, backend, root)
@@ -122,7 +122,7 @@ def persist_managed(core, artifact_id, backend, root):
 
 
 def restore_managed(core, reference_id, backend, root):
-    from artifact_lifecycle import identifier
+    from record_primitives import identifier
     with core.transaction():
         saved = core._read('external-media', reference_id)
         artifact = core._read('artifacts', saved['artifact_id'])

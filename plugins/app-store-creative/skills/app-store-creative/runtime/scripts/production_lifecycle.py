@@ -5,7 +5,8 @@ import json
 from pathlib import Path
 import shutil
 
-from artifact_lifecycle import Lifecycle, canonical, digest
+from record_primitives import canonical, digest
+from artifact_lifecycle import Lifecycle
 from delivery_lifecycle import relative_name
 import export_engine
 import studio_contract as contract

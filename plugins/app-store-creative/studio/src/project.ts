@@ -33,24 +33,28 @@ export function updateVariant(config: CreativeConfig, id: string, target: Target
     if (card.id !== id) return card;
     const variant = card.variants?.[target] || {};
     const { layout, deviceOffset, customBackground, ...text } = change;
-    const { headline: _headline, subheadline: _subheadline, ...capture } = text;
-    const existingDefault = locale === (config.project.defaultLocale || 'en-US') &&
-      Object.keys(localizedFields(config, card, target, locale)).length > 0;
+    const isDefault = locale === (config.project.defaultLocale || 'en-US');
+    const localized = localizedFields(config, card, target, locale);
+    const defaultCopy: LocalizedCard = {};
+    const directCopy: LocalizedCard = {};
+    const localeCopy: LocalizedCard = {};
+    for (const field of ['headline', 'subheadline', 'screenshot'] as const) {
+      if (text[field] === undefined) continue;
+      if (!isDefault || localized[field] !== undefined) localeCopy[field] = text[field];
+      else if (field === 'screenshot' || variant[field] !== undefined) directCopy[field] = text[field];
+      else defaultCopy[field] = text[field];
+    }
     const updatedOffset = deviceOffset
       ? { ...(variant.deviceOffset || {}), ...deviceOffset }
       : variant.deviceOffset;
-    const updated = locale === (config.project.defaultLocale || 'en-US')
-      ? { ...variant, ...capture, ...(layout ? { layout } : {}), ...(updatedOffset ? { deviceOffset: updatedOffset } : {}), ...(existingDefault ? {
+    const updated = isDefault
+      ? { ...variant, ...directCopy, ...(layout ? { layout } : {}), ...(updatedOffset ? { deviceOffset: updatedOffset } : {}), ...(Object.keys(localeCopy).length ? {
           localizations: { ...variant.localizations,
-            [locale]: { ...variant.localizations?.[locale], ...text } },
+            [locale]: { ...variant.localizations?.[locale], ...localeCopy } },
         } : {}) }
       : { ...variant, ...(layout ? { layout } : {}), ...(updatedOffset ? { deviceOffset: updatedOffset } : {}), localizations: {
         ...variant.localizations, [locale]: { ...variant.localizations?.[locale], ...text },
       } };
-    // Default copy remains shared unless a locale override is explicit.
-    const defaultCopy = locale === (config.project.defaultLocale || 'en-US')
-      ? { ...(text.headline !== undefined ? { headline: text.headline } : {}),
-          ...(text.subheadline !== undefined ? { subheadline: text.subheadline } : {}) } : {};
     return {
       ...card,
       ...defaultCopy,

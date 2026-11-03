@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import shutil
 
-from artifact_lifecycle import canonical, digest, identifier, safe_id
+from record_primitives import canonical, digest, identifier, safe_id
 from relocation_retention import _verify
 from storage_control_projection import _sync_history
 

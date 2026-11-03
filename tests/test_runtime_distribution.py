@@ -16,7 +16,8 @@ class RuntimeDistributionTests(unittest.TestCase):
             shutil.copytree(PLUGIN / "skills", installed / "skills",
                             ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
             runtime = installed / "skills/app-store-creative/runtime"
-            for name in ("scripts/app_store_creative.py", "scripts/operation_history.py", "schemas/creative.config.schema.json",
+            for name in ("scripts/app_store_creative.py", "scripts/operation_history.py",
+                         "scripts/record_primitives.py", "scripts/storage_paths.py", "schemas/creative.config.schema.json",
                          "assets/templates/creative.config.json", "studio/dist/index.html"):
                 self.assertTrue((runtime / name).is_file(), name)
             for obsolete in ("scripts/creative_workflow.py", "scripts/asc_handoff.py",
@@ -28,6 +29,13 @@ class RuntimeDistributionTests(unittest.TestCase):
                                      str(runtime / "assets/templates/creative.config.json")],
                                     cwd=directory, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
+            fingerprint = subprocess.run([sys.executable, '-c',
+                'import json; from runtime_identity import snapshot; '
+                'print(json.dumps(snapshot()))'], cwd=runtime / 'scripts',
+                capture_output=True, text=True, check=True)
+            import json
+            from runtime_identity import snapshot
+            self.assertEqual(json.loads(fingerprint.stdout), snapshot(PLUGIN / 'skills/app-store-creative/runtime/scripts'))
 
     def test_installed_shell_entrypoint_uses_managed_cli(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from artifact_lifecycle import StoragePaths
+from storage_paths import StoragePaths
 
 
 @dataclass

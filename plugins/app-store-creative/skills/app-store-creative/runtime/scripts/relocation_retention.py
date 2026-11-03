@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 from pathlib import Path
 
-from artifact_lifecycle import canonical, digest, identifier
+from record_primitives import canonical, digest, identifier
 from relocation_inventory import _verified_roots, inventory
 
 

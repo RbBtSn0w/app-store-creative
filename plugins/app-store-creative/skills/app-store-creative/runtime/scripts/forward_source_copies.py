@@ -4,7 +4,7 @@ import base64
 import hashlib
 import json
 
-from artifact_lifecycle import canonical
+from record_primitives import canonical
 from reverse_relocation import _identity, _tree
 
 

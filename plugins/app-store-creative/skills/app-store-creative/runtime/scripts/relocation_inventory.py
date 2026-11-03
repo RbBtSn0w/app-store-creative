@@ -3,7 +3,8 @@ import hashlib
 from pathlib import Path, PurePosixPath
 import re
 
-from artifact_lifecycle import canonical, digest, overlaps
+from record_primitives import canonical, digest
+from storage_paths import overlaps
 from inventory_lifecycle import files_without_links
 
 

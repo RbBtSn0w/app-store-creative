@@ -10,7 +10,8 @@ import os
 from pathlib import Path
 import stat
 import subprocess
-from artifact_lifecycle import StoragePaths, STORAGE_DEFAULTS, canonical
+from record_primitives import canonical
+from storage_paths import StoragePaths, STORAGE_DEFAULTS
 from storage_git_policy import repository_for, git_environment
 
 

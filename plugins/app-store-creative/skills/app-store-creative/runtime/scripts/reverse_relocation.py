@@ -19,7 +19,7 @@ def _configuration_target(core, plan):
 
 
 def _hash(value):
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     return hashlib.sha256(canonical(value)).hexdigest()
 
 
@@ -53,7 +53,7 @@ def _sync_tree(root):
 
 
 def _tree(path):
-    from artifact_lifecycle import digest
+    from record_primitives import digest
     files, links = files_without_links(path, strict=True)
     if links:
         raise ValueError('Reverse backup contains unsafe links')
@@ -62,7 +62,7 @@ def _tree(path):
 
 
 def _persist(core, path, record):
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     if path.resolve() != path:
         raise ValueError('Reverse control path contains aliases')
     if path.exists() or path.is_symlink():
@@ -102,7 +102,8 @@ def _locations(roots):
 
 
 def _validate_intent(core, plan, intent):
-    from artifact_lifecycle import Lifecycle, canonical
+    from record_primitives import canonical
+    from artifact_lifecycle import Lifecycle
     if _configuration_target(core, plan) == core.config_path:
         core._assert_relocation_local_absence()
     core._verify_staging_root_proofs(core._read('relocations', plan['id'], 'prepared'))
@@ -160,7 +161,7 @@ def _control_paths(intent, workspace):
 
 
 def _verify_staged(core, plan, intent, prepared, locations):
-    from artifact_lifecycle import canonical, digest
+    from record_primitives import canonical, digest
     workspace, _ = _target_workspace(plan, intent['roots'], locations)
     from quarantine_locations import verify_at
     verify_at(core, prepared, workspace)
@@ -178,7 +179,7 @@ def _verify_staged(core, plan, intent, prepared, locations):
 
 
 def _verify_configuration_state(core, plan, intent):
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     from configuration_preparation import verify_prepared_storage_change, _RelocationConfigurationCore
     from configuration_installation import verify_configuration_installation
     prepared = core._read('relocations', plan['id'], 'configuration-prepared')
@@ -202,7 +203,8 @@ def _verify_configuration_state(core, plan, intent):
 
 
 def _execute(core, plan, intent):
-    from artifact_lifecycle import Lifecycle, canonical, digest
+    from record_primitives import canonical, digest
+    from artifact_lifecycle import Lifecycle
     import delivery_lifecycle
     from storage_control_projection import publish
     _validate_intent(core, plan, intent)
@@ -314,7 +316,7 @@ def record_interruption(core, plan_id, error):
 
 
 def switch(core, plan_id, actor, reason):
-    from artifact_lifecycle import canonical, now
+    from record_primitives import canonical, now
     if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():
         raise ValueError('Reverse switch requires actor and reason')
     with core.transaction():
@@ -427,7 +429,7 @@ def resume(core, plan_id, actor, reason):
 
 
 def _verify_rollback_configuration_state(core, plan, intent):
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     from configuration_layers import verify_storage_change, verify_local_git_protection
     from configuration_installation import installation_paths, verify_configuration_installation
     source = base64.b64decode(intent['source_config_base64'], validate=True)
@@ -450,7 +452,7 @@ def _verify_rollback_configuration_state(core, plan, intent):
 
 
 def rollback(core, plan_id, actor, reason):
-    from artifact_lifecycle import canonical, digest
+    from record_primitives import canonical, digest
     from storage_control_projection import restore
     import delivery_lifecycle
     if not isinstance(actor, str) or not actor.strip() or not isinstance(reason, str) or not reason.strip():

@@ -44,7 +44,7 @@ def authority_matches(core, source_path, source_project=None):
 
 def storage_successor_hashes(core, receipt):
     """Advance byte authority only through committed, exact storage switch evidence."""
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     binding = receipt['binding']
     project_sha, local_sha = receipt['project_sha256'], receipt['local_sha256']
     seen = set()

@@ -4,7 +4,7 @@ import hashlib
 import os
 from pathlib import Path
 import stat
-from artifact_lifecycle import canonical
+from record_primitives import canonical
 from configuration_layers import _identity, _read_regular, verify_local_git_protection, owning_document
 from configuration_preparation import _sync_directory
 

@@ -20,7 +20,7 @@ def resolve(config):
 
 def inspect(core):
     import hashlib
-    from artifact_lifecycle import canonical
+    from record_primitives import canonical
     config = core._live_configuration()
     policy = resolve(config)
     return {'schema_version': 1, 'policy': policy,
