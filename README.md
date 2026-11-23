@@ -46,6 +46,10 @@ creative ppo --repo "$CREATIVE_REPO" result --handoff .creative/ppo-handoff.json
   --evidence "$ANALYTICS_REFERENCE" --decision inconclusive --output results/opening-us.json
 ```
 
+## Custom product pages
+
+Prepare a campaign-specific App Store page from release evidence. Use `cpp discover` to read existing ASC pages, `cpp plan` to review reuse or creation, and Studio to compare and reorder the selected media. The Publisher handoff binds the reviewed order to the CPP version and localization. Import detailed acquisition reports with `cpp report`. [Campaign inputs, commands and recovery](plugins/app-store-creative/skills/app-store-creative/references/custom-product-pages.md)
+
 ## Managed production and release
 
 Import authentic product captures through `input import`. Use managed screenshot export, `preview record`, `preview produce`, and `preview poster` for production. Each attempt owns its lease and isolated working files; failed or interrupted output remains evidence, and retries create new attempts.

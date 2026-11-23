@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { readHistory } from './historyRequest';
 import { PublicationHandoff } from './PublicationHandoff';
 
-type Plan = { id: string; created_at: string; delivery_id: string; target: { app_id: string; version_id: string; platform: string } };
+import { validPublicationTarget, type PublicationTarget } from './publicationHandoffState';
+
+type Plan = { id: string; created_at: string; delivery_id: string; target: PublicationTarget };
 export function parsePublicationPlans(value: unknown): { publications: Plan[]; next_cursor: string | null } {
   const data = value as { publications?: unknown; next_cursor?: unknown } | null;
   if (!data || !Array.isArray(data.publications) ||
@@ -11,7 +13,7 @@ export function parsePublicationPlans(value: unknown): { publications: Plan[]; n
     const row = item as Plan | null;
     if (!row || typeof row.id !== 'string' || !row.id || typeof row.delivery_id !== 'string' || !row.delivery_id ||
         typeof row.created_at !== 'string' || !Number.isFinite(Date.parse(row.created_at)) || !row.target ||
-        ![row.target.app_id, row.target.version_id, row.target.platform].every(value => typeof value === 'string' && value.length > 0)) {
+        !validPublicationTarget(row.target)) {
       throw new Error('Invalid publication plan');
     }
   }

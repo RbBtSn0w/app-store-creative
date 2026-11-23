@@ -9,9 +9,28 @@ import subprocess
 
 
 def check_remote_target(target, delivery, config=None):
-    if (not isinstance(target, dict)
-            or any(not isinstance(target.get(key), str) or not target[key].strip()
-                   for key in ('app_id', 'version_id', 'platform'))):
+    if not isinstance(target, dict):
+        raise ValueError('Explicit ASC app, version resource and platform are required')
+    kind = target.get('kind', 'appStoreVersion')
+    if kind == 'customProductPageVersion':
+        fields = ('app_id', 'page_id', 'page_version_id', 'cpp_localization_id', 'platform',
+                  'locale', 'target', 'plan_digest', 'display_type')
+        if target.get('platform') != 'IOS' or 'version_id' in target:
+            raise ValueError('Invalid CPP publication target')
+        from asc_display_types import IOS_SCREENSHOT_TYPES
+        if target.get('display_type') != IOS_SCREENSHOT_TYPES.get(target.get('target')):
+            raise ValueError('CPP display type does not match device')
+        sets = target.get('set_ids')
+        if (not isinstance(sets, dict) or set(sets) - {'screenshot', 'preview'} or
+                any(not isinstance(v, str) or not v.strip() for v in sets.values())):
+            raise ValueError('Invalid CPP media set bindings')
+        if not re.fullmatch(r'[0-9a-f]{64}', str(target.get('plan_digest', ''))):
+            raise ValueError('CPP publication requires the reviewed plan digest')
+    elif kind == 'appStoreVersion' and not {'page_id', 'page_version_id', 'cpp_localization_id'}.intersection(target):
+        fields = ('app_id', 'version_id', 'platform')
+    else:
+        raise ValueError('Unknown or mixed publication target')
+    if any(not isinstance(target.get(key), str) or not target[key].strip() for key in fields):
         raise ValueError('Explicit ASC app, version resource and platform are required')
     if not isinstance(target.get('bundle_id'), str) or not target['bundle_id'].strip():
         raise ValueError('Remote target requires explicit bundle_id')
@@ -34,9 +53,35 @@ def check_remote_target(target, delivery, config=None):
         raise ValueError('Remote target bundle identifier does not match configuration')
 
 
-def publication_assets(manifest, config, package=None, prefix=''):
+def publication_assets(manifest, config, package=None, prefix='', target=None):
     assets = []
-    for asset in manifest['assets']:
+    selected = manifest['assets']
+    if target and target.get('kind') == 'customProductPageVersion':
+        from record_primitives import safe_id
+        locale, device = safe_id(target['locale']), safe_id(target['target'])
+        indexed = {a['artifact_id']: a for a in selected}
+        selected = []
+        ordered = target.get('ordered_assets')
+        if not isinstance(ordered, list) or not ordered:
+            raise ValueError('CPP target requires ordered sealed media')
+        used = set()
+        for item in ordered:
+            asset = indexed.get(item['artifactId'])
+            if (not asset or asset['artifact_id'] in used or item['sha256'] != asset['sha256']
+                    or asset['role'] != item['role'] or asset['role'] not in ('preview', 'screenshot')):
+                raise ValueError('CPP selection differs from sealed assets')
+            if asset['role'] == 'screenshot' and not asset['path'].startswith(f'media/{locale}/{device}/'):
+                raise ValueError('CPP screenshot belongs to another locale or device')
+            if asset['role'] == 'preview' and not asset['path'].startswith(f'media/{locale}/{device}/'):
+                # Legacy unscoped previews can only identify a single project locale and device.
+                scoped_locale = asset['path'].startswith(f'media/{locale}/preview/')
+                single_locale = (asset['path'].startswith('media/preview/')
+                                 and config.get('project', {}).get('locales') == [locale])
+                if config.get('targets') != [device] or not (scoped_locale or single_locale):
+                    raise ValueError('CPP preview needs an unambiguous sealed locale and device')
+            used.add(asset['artifact_id'])
+            selected.append(asset)
+    for asset in selected:
         metadata = {key: asset[key] for key in ('path', 'artifact_id', 'role', 'sha256')}
         metadata['path'] = prefix + asset['path']
         if package is not None:
@@ -254,7 +299,7 @@ class PublicationOperations:
                 archive_commit = commit_id
 
             rel_prefix = relative + '/' if relative and not relative.endswith('/') else relative
-            assets = publication_assets(manifest, config, package, rel_prefix)
+            assets = publication_assets(manifest, config, package, rel_prefix, remote_target)
             identity = identifier()
             body = {'id': identity, 'delivery_id': delivery_id, 'target': remote_target,
                     'archive_commit': archive_commit, 'archive_remote': archive_remote, 'manifest_sha256': delivery['manifest_sha256'],
@@ -305,7 +350,7 @@ class PublicationOperations:
                     or hashlib.sha256(config_result.stdout).hexdigest() != config_record['sha256']):
                 raise ValueError('Committed external recipe differs from sealed archive')
             config = json.loads(config_result.stdout)
-            expected_assets = publication_assets(manifest, config)
+            expected_assets = publication_assets(manifest, config, target=plan["target"])
             actual_assets = plan.get('assets')
             if (not isinstance(actual_assets, list) or any(not isinstance(asset, dict)
                     or not isinstance(asset.get('source_checksum'), str)
@@ -319,7 +364,7 @@ class PublicationOperations:
             manifest = json.loads((package / 'manifest.json').read_text())
             config = json.loads((package / 'recipe/config.json').read_text())
             rel_prefix = plan['archive_path'] + '/' if plan['archive_path'] and not plan['archive_path'].endswith('/') else plan['archive_path']
-            expected_assets = publication_assets(manifest, config, package, rel_prefix)
+            expected_assets = publication_assets(manifest, config, package, rel_prefix, plan["target"])
             if plan.get('assets') != expected_assets:
                 raise ValueError('Publication assets differ from sealed archive')
         else:
@@ -329,7 +374,7 @@ class PublicationOperations:
             committed_archive(self._archive_repository(plan.get('archive_repository')), package, plan['archive_commit'],
                               manifest, plan['archive_path'])
             config = json.loads((package / 'recipe/config.json').read_text())
-            expected_assets = publication_assets(manifest, config, package, plan['archive_path'] + '/')
+            expected_assets = publication_assets(manifest, config, package, plan['archive_path'] + '/', plan['target'])
             if plan.get('assets') != expected_assets:
                 raise ValueError('Publication assets differ from sealed archive')
         return package
@@ -361,7 +406,7 @@ class PublicationOperations:
                 archive_policy = require_retrieval(config, retrieval)
                 if delivery.get('archive_policy') != archive_policy:
                     raise ValueError('Delivery archive policy differs from retrieved recipe')
-                assets = publication_assets(manifest, config, package)
+                assets = publication_assets(manifest, config, package, target=remote_target)
             body = {'id': identifier(), 'delivery_id': delivery['id'], 'target': remote_target,
                 'archive_policy': archive_policy,
                 'external_archive_id': external_archive_id, 'backend': saved['backend'],

@@ -18,6 +18,8 @@ if str(_script_dir) not in sys.path:
 
 import apply_critique
 import event_commands
+import cpp_campaign
+from cpp_discovery import AscReadError
 import companion_generator
 import lifecycle_commands
 import nomination_commands
@@ -40,6 +42,9 @@ def run(args):
 
     if args.command == "events":
         return event_commands.execute(args, root, project_path)
+
+    if args.command == "cpp":
+        return cpp_campaign.execute(root, args)
 
     # Modern v2 commands
     if args.command in ("dev", "studio"):
@@ -393,6 +398,7 @@ def build_parser():
     exp.add_argument("--locale", action="append", dest="locales", help="Specific locale to export (repeatable)")
     exp.add_argument("--with-video", action="store_true", help="Also synthesize App Preview video")
 
+    cpp_campaign.add_commands(cmd("cpp"))
     ppo = cmd("ppo")
     ppo_sub = ppo.add_subparsers(dest="ppo_action", required=True)
 
@@ -495,12 +501,15 @@ def main(argv=None):
                 print(res if isinstance(res, str) else json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
         if args.command == 'nomination' and isinstance(res, dict) and res.get('status') in ('conflict', 'outcome_unknown', 'unverified', 'rejected') and args.action != 'status':
             return 3
-        if args.command == 'events' and res.get('status') == 'blocked':
+        if args.command in ('cpp', 'events') and res.get('status') == 'blocked':
             return 3
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2
         return 0
+    except AscReadError as exc:
+        print(json.dumps({"status": "unavailable", "reasonCode": "ascReadFailed", "error": str(exc)}), file=sys.stderr)
+        return 4
     except Exception as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2

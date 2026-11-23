@@ -33,7 +33,7 @@ export function PublicationHandoff({ id, onSaved }: { id: string; onSaved: () =>
     <h3>ASC handoff review</h3><button disabled={busy} onClick={() => void load()}>Load bound upload plan</button>
     {message && <p role="status">{message}</p>}{error && <p role="alert">{error}</p>}
     {preview && <><p>Plan SHA-256: <code>{preview.plan_sha256}</code> · Upload approval: {preview.upload_approval}</p>
-      <ul>{Object.entries(preview.handoff.target).map(([key, value]) => <li key={key}>{key}: {value}</li>)}</ul>
+      <ul>{Object.entries(preview.handoff.target).map(([key, value]) => <li key={key}>{key}: {typeof value === 'string' ? value : JSON.stringify(value)}</li>)}</ul>
       <ul>{preview.handoff.assets.map(item => <li key={item.artifact_id}>{item.role} · {item.path} · <code>{item.sha256}</code></li>)}</ul>
       <label>Approving person<input value={actor} onChange={event => setActor(event.target.value)} /></label>
       <label>Human authorization reference<input value={authorization} onChange={event => setAuthorization(event.target.value)} /></label>

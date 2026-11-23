@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Localhost Studio HTTP server for App Store Creative v2.0."""
 
+import re
 import json
 import base64
 import studio_contract as contract
@@ -64,6 +65,41 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
         if not self._local_request():
             return
         path = urllib.parse.unquote(self.path.split("?")[0])
+        if path == '/api/cpp' or path.startswith('/api/cpp/'):
+            import cpp_campaign as cpp
+            from cpp_delivery import review_assets, review_html
+            try:
+                if path == '/api/cpp':
+                    base = cpp.inside(self.repo_root, '.creative/cpp')
+                    keys = [p.name for p in sorted(base.glob('*')) if
+                            re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', p.name)
+                            and cpp.inside(self.repo_root, p / 'brief.json').is_file()]
+                    self._json({'campaigns': keys})
+                    return
+                _, _, _, key, resource = path.split('/')
+                base = cpp.campaign_dir(self.repo_root, key)
+                if resource in ('review', 'plan'):
+                    plan = cpp.compile_plan(self.repo_root, key)
+                    if resource == 'plan':
+                        self._json(plan)
+                    else:
+                        media = {aid: (role, filename) for aid, role, filename, _ in review_assets(self.repo_root, plan)}
+                        self._serve_file(Path('review.html'), 'text/html; charset=utf-8', review_html(plan, media))
+                    return
+                if re.fullmatch(r'[a-f0-9]{64}\.(?:png|mp4|mov|m4v)', resource):
+                    stock = cpp.read(cpp.inside(self.repo_root, base / 'inventory.json'))
+                    for asset in stock['assets'].values():
+                        suffix = '.png' if asset['role'] == 'screenshot' else Path(asset['path']).suffix.lower()
+                        poster = asset.get('poster') if asset.get('role') == 'preview' else None
+                        ref = poster if poster and resource == poster['sha256'] + '.png' else asset
+                        if ref is poster or resource == asset['sha256'] + suffix:
+                            file = cpp.verified(self.repo_root, ref)
+                            self._serve_file(file, mimetypes.guess_type(resource)[0])
+                            return
+                self.send_error(404)
+            except (OSError, TypeError, ValueError, KeyError) as error:
+                self._json({'error': str(error)}, 400)
+            return
         if path == '/api/storage/media-budget':
             try:
                 from record_primitives import safe_id
@@ -400,6 +436,33 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length))
             if not isinstance(payload, dict):
                 raise ValueError('Request must be a JSON object')
+            if path.startswith('/api/cpp/') and path.endswith('/order'):
+                import cpp_campaign as cpp
+                _, _, _, key, _ = path.split('/')
+                if set(payload) != {'locale', 'target', 'order'}:
+                    raise ValueError('Expected locale, target and media order')
+                with contract.WRITE_LOCK:
+                    current = cpp.compile_plan(self.repo_root, key)
+                    if self.headers.get('If-Match') != '"' + current['planDigest'] + '"':
+                        self._json({'error': 'Campaign changed; reload the current plan'}, 409)
+                        return
+                    if current['decision'] not in ('updatePage', 'createPage'):
+                        raise ValueError('Only a proposed custom page can be reordered')
+                    draft_path = cpp.inside(self.repo_root, current['sources'][1])
+                    draft = cpp.read(draft_path)
+                    row = next((r for r in current['rows'] if r['locale'] == payload['locale']
+                                and r['target'] == payload['target']), None)
+                    if row is None:
+                        raise ValueError('Select a reviewed locale and target')
+                    existing = row['after']
+                    ordered = cpp.strings(payload['order'], 'order')
+                    if set(existing) != set(ordered) or cpp.digest(draft) != current['inputDigests'][1]:
+                        raise ValueError('Order must match the current campaign assets')
+                    slots = draft['localizations'][payload['locale']].setdefault('media', {})
+                    slots[payload['target']] = ordered
+                    contract.atomic_json(draft_path, draft)
+                    self._json(cpp.compile_plan(self.repo_root, key))
+                return
             if path == '/api/publications/persist-evidence':
                 from record_primitives import safe_id
                 from artifact_lifecycle import Lifecycle
