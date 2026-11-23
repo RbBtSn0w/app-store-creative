@@ -44,7 +44,7 @@ def _effective_previews(config, locales=None):
 
 def produce(root, config_path=None, targets=None, locales=None, with_video=False,
             progress=None, expected_revision=None, experiment_provenance=None,
-            require_declared_video=False):
+            require_declared_video=False, expected_screenshots=None):
     root = Path(root).resolve(); cfg = Path(config_path or root / 'creative.config.json').resolve()
     core = Lifecycle.from_configuration(root, cfg)
     raw = core._configuration_layers.project_bytes
@@ -128,10 +128,17 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
                                             logical_path='.export-evidence.json',
                                             experiment_provenance=experiment_provenance)['id']
             dependencies = source_ids + ([evidence_id] if evidence_id else [])
+            registered_screenshots = {}
             for output in result['artifacts']:
-                selected.append(core.register(attempt['id'], Path(output['path']), 'screenshot',
-                                              inputs=dependencies, logical_path=output['name'],
-                                              experiment_provenance=experiment_provenance)['id'])
+                artifact = core.register(attempt['id'], Path(output['path']), 'screenshot',
+                                         inputs=dependencies, logical_path=output['name'],
+                                         experiment_provenance=experiment_provenance)
+                selected.append(artifact['id'])
+                registered_screenshots[output['name']] = artifact['sha256']
+            if expected_screenshots is not None and registered_screenshots != expected_screenshots:
+                changed = sorted(name for name in registered_screenshots.keys() | expected_screenshots.keys()
+                                 if registered_screenshots.get(name) != expected_screenshots.get(name))
+                raise ValueError('Reproduction differs from measured screenshots: ' + ', '.join(changed))
             if video:
                 from managed_preview import portable_receipt
                 video_items = video['videos'].values() if 'videos' in video else [video]

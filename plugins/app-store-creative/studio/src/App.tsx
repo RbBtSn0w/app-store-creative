@@ -10,6 +10,7 @@ import { STYLE_PRESETS } from './stylePresets';
 import { downloadDraft } from './downloadDraft';
 import { COPY_FORMULAS } from './copyFormulas';
 import { RunHistory } from './RunHistory';
+import { CustomProductPages } from './CustomProductPages';
 import { DeliveryHistory } from './DeliveryHistory';
 import { InventoryView } from './InventoryView';
 import { MediaBudgetPanel } from './MediaBudgetPanel';
@@ -459,6 +460,7 @@ export const App: React.FC = () => {
             <div className="pt-4 border-t border-white/10">
               <h3 className="text-sm font-semibold text-white/70 mb-4 uppercase tracking-wider font-mono">Audit Trails & Publication Receipts</h3>
               <div className="space-y-6">
+                <CustomProductPages />
                 <RunHistory />
                 <DeliveryHistory candidateId={dirty ? null : status.candidate_id} onOpenCard={dirty ? undefined : path => {
                   const [language, device, filename] = path.split('/');

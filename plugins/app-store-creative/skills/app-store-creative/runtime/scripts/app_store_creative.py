@@ -17,8 +17,13 @@ if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 
 import apply_critique
+import event_commands
+import cpp_campaign
+from cpp_discovery import AscReadError
 import companion_generator
 import lifecycle_commands
+import nomination_commands
+import ppo_assessment
 import ppo_experiment
 import production_lifecycle
 import studio_server
@@ -29,8 +34,17 @@ def run(args):
     def project_path(value):
         return (value if value.is_absolute() else root / value).resolve() if value else None
 
+    if args.command == "nomination":
+        return nomination_commands.execute(args, root, project_path)
+
     if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input", "audit"):
         return lifecycle_commands.execute(args)
+
+    if args.command == "events":
+        return event_commands.execute(args, root, project_path)
+
+    if args.command == "cpp":
+        return cpp_campaign.execute(root, args)
 
     # Modern v2 commands
     if args.command in ("dev", "studio"):
@@ -74,8 +88,40 @@ def run(args):
             cfg = root / "creative.config.json"
         if not cfg.is_file():
             raise FileNotFoundError(f"Configuration file not found: {cfg}")
-        with open(cfg, "r", encoding="utf-8") as f:
-            base_config = json.load(f)
+        from configuration_layers import load
+        base_config = load(root, cfg).config
+
+        if args.ppo_action == "bind":
+            mapping = {}
+            for item in args.treatment_id:
+                local, separator, remote = item.partition(':')
+                if not separator or local in mapping:
+                    raise ValueError('Expected a unique local:remote treatment ID mapping')
+                mapping[local] = remote
+            bound = ppo_assessment.bind(root, base_config, project_path(args.handoff),
+                                        args.app_id, args.asc_experiment_id, mapping)
+            return ppo_assessment.write_once(project_path(args.output), bound)
+
+        if args.ppo_action == "assess":
+            assessed = ppo_assessment.assess(root, base_config, project_path(args.handoff),
+                                             project_path(args.binding), project_path(args.snapshot))
+            if args.output:
+                ppo_assessment.write_once(project_path(args.output), assessed)
+            return assessed
+
+        if args.ppo_action == "result":
+            manual = [args.market, args.change, args.observation, args.evidence, args.decision]
+            if args.assessment:
+                if any(value is not None for value in [*manual, args.treatment]):
+                    raise ValueError('--assessment cannot be combined with manual decision fields')
+                result = ppo_assessment.assessed_result(root, base_config, project_path(args.handoff),
+                                                        project_path(args.assessment))
+                return ppo_assessment.write_once(project_path(args.output), result)
+            if not all(manual):
+                raise ValueError('Supply an assessment or all manual decision fields')
+            return ppo_experiment.record_result(base_config, project_path(args.handoff), project_path(args.output),
+                market=args.market, change=args.change, observation=args.observation, evidence=args.evidence,
+                decision=args.decision, treatment=args.treatment)
 
         if args.ppo_action == "list":
             experiments = ppo_experiment.parse_experiments(base_config)
@@ -112,6 +158,8 @@ def run(args):
                     "storage": derived.get("storage", {}),
                 }
             return {
+                **({"preflight": ppo_assessment.preflight(base_config, base_config["experiments"][exp_id])}
+                   if "policy" in base_config["experiments"][exp_id] else {}),
                 "experiment": {
                     "id": exp.id,
                     "name": exp.name,
@@ -138,6 +186,8 @@ def run(args):
                 tid, did = tid.strip(), did.strip()
                 if tid not in exp.treatments:
                     raise ValueError(f"Unknown treatment ID '{tid}' in --treatment-delivery. Known treatments: {list(exp.treatments.keys())}")
+                if tid in treatment_del_map:
+                    raise ValueError(f'Duplicate delivery mapping for {tid}')
                 treatment_del_map[tid] = did
             out_path = project_path(getattr(args, "output", None))
             return ppo_experiment.compile_ppo_handoff(
@@ -156,22 +206,41 @@ def run(args):
                 raise KeyError(f"Experiment '{exp_id}' not found in configuration")
             variant = args.variant
             decision_basis = args.decision_basis or "explicit --variant selection"
+            measured_scope = expected_assets = None
+            if args.result:
+                variant, decision_basis = ppo_experiment.selected_result(base_config, exp_id, project_path(args.result))
+                result_record = ppo_assessment.read(project_path(args.result))
+                if result_record.get('schema_version') == 2 or 'assessment_sha256' in result_record:
+                    expected_assets = ppo_assessment.replay_selection(root, base_config, result_record)
+                    measured_scope = result_record['measured_scope']
             plan = ppo_experiment.ppo_reproduce_plan(
                 base_config=base_config,
                 experiment_id=exp_id,
                 variant_id=variant,
-                decision_basis=decision_basis,
+                decision_basis=decision_basis, measured_scope=measured_scope,
             )
+            if measured_scope:
+                plan['provenance']['assessment_sha256'] = result_record['assessment_sha256']
+                plan['provenance']['selected_delivery'] = result_record['selected_delivery']
+                plan['provenance']['measured_scope'] = measured_scope
+                derived = ppo_experiment.derive_treatment_config(base_config, exp_id, variant)
+                plan['screenshot_order'] = [card['id'] for card in derived['cards']]
+                production_root, cfg_path = ppo_assessment.reproduction_project(
+                    root, base_config, result_record, derived, args.execute)
+                plan['treatment_config'].update(storage_workspace=str(production_root / '.creative'),
+                                                storage_objects=str(production_root / '.creative/objects'))
             if args.execute:
                 from production_lifecycle import produce as managed_produce
-                derived = ppo_experiment.derive_treatment_config(base_config, exp_id, variant)
-                import tempfile
-                # Keep the configuration authority available for later lifecycle commands.
-                with tempfile.NamedTemporaryFile(mode="w", prefix="ppo-reproduce-", suffix=".json",
-                                                 dir=root, encoding="utf-8", delete=False) as config_file:
-                    json.dump(derived, config_file, indent=2, ensure_ascii=False)
-                    cfg_path = Path(config_file.name)
-                result = managed_produce(root, cfg_path, experiment_provenance=plan['provenance'])
+                if not measured_scope:
+                    import tempfile
+                    production_root = root
+                    derived = ppo_experiment.derive_treatment_config(base_config, exp_id, variant)
+                    with tempfile.NamedTemporaryFile(mode="w", prefix="ppo-reproduce-", suffix=".json",
+                                                     dir=root, encoding="utf-8", delete=False) as config_file:
+                        json.dump(derived, config_file, indent=2, ensure_ascii=False)
+                        cfg_path = Path(config_file.name)
+                production_options = dict(measured_scope, expected_screenshots=expected_assets) if measured_scope else {}
+                result = managed_produce(production_root, cfg_path, experiment_provenance=plan['provenance'], **production_options)
                 result["config_path"] = str(cfg_path)
                 result["provenance"] = plan["provenance"]
                 return result
@@ -301,6 +370,8 @@ def build_parser():
         x.add_argument("--repo", type=Path, default=Path.cwd())
         return x
 
+    nomination_commands.add_arguments(cmd("nomination"))
+    event_commands.add_commands(cmd("events"))
     lifecycle_commands.add_commands(sub)
 
     # Modern v2 Subcommands
@@ -327,12 +398,38 @@ def build_parser():
     exp.add_argument("--locale", action="append", dest="locales", help="Specific locale to export (repeatable)")
     exp.add_argument("--with-video", action="store_true", help="Also synthesize App Preview video")
 
+    cpp_campaign.add_commands(cmd("cpp"))
     ppo = cmd("ppo")
     ppo_sub = ppo.add_subparsers(dest="ppo_action", required=True)
 
     ppo_list = ppo_sub.add_parser("list", help="List experiments defined in creative.config.json")
     ppo_list.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
     ppo_list.add_argument("--config", type=Path, help="Path to creative.config.json")
+
+    binding = ppo_sub.add_parser("bind", help="Bind verified screenshot deliveries to deployed App Store IDs")
+    assess = ppo_sub.add_parser("assess", help="Replay an App Analytics snapshot")
+    for command in (binding, assess):
+        command.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
+        command.add_argument("--config", type=Path)
+        command.add_argument("--handoff", type=Path, required=True)
+    binding.add_argument("--output", type=Path, required=True)
+    binding.add_argument("--app-id", required=True)
+    binding.add_argument("--asc-experiment-id", required=True)
+    binding.add_argument("--treatment-id", action="append", required=True, metavar="LOCAL:REMOTE")
+    assess.add_argument("--binding", type=Path, required=True)
+    assess.add_argument("--snapshot", type=Path, required=True)
+    assess.add_argument("--output", type=Path)
+    assess.add_argument("--json", action="store_true", help="Emit JSON (default)")
+    result = ppo_sub.add_parser("result", help="Save an observed experiment outcome for the next release")
+    result.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
+    result.add_argument("--config", type=Path)
+    result.add_argument("--handoff", type=Path, required=True)
+    result.add_argument("--output", type=Path, required=True)
+    result.add_argument("--assessment", type=Path)
+    for field in ("market", "change", "observation", "evidence"):
+        result.add_argument("--" + field)
+    result.add_argument("--decision", choices=("inconclusive", "keep-control", "use-treatment"))
+    result.add_argument("--treatment", help="Selected treatment ID for use-treatment")
 
     ppo_plan = ppo_sub.add_parser("plan", help="Compile and inspect PPO experiment execution plan")
     ppo_plan.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
@@ -351,7 +448,9 @@ def build_parser():
     ppo_reproduce.add_argument("--repo", type=Path, default=argparse.SUPPRESS)
     ppo_reproduce.add_argument("--config", type=Path, help="Path to creative.config.json")
     ppo_reproduce.add_argument("--experiment", type=str, required=True, help="Experiment ID")
-    ppo_reproduce.add_argument("--variant", type=str, required=True, help="Winning treatment ID (explicit selection; no auto-selection in v1)")
+    choice = ppo_reproduce.add_mutually_exclusive_group(required=True)
+    choice.add_argument("--variant", help="Explicitly selected treatment ID")
+    choice.add_argument("--result", type=Path, help="Use the treatment selected in a recorded experiment result")
     ppo_reproduce.add_argument("--decision-basis", type=str, help="Human-readable decision basis recorded in receipts")
     ppo_reproduce.add_argument("--execute", action="store_true", help="Execute the reproduction (default is dry-run)")
     ppo_reproduce.add_argument("--json", action="store_true", help="Emit machine-readable JSON instead of the default review plan")
@@ -400,10 +499,17 @@ def main(argv=None):
                 print(f"Planned deliveries: {res['scope']['planned_delivery_count']}")
             else:
                 print(res if isinstance(res, str) else json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
+        if args.command == 'nomination' and isinstance(res, dict) and res.get('status') in ('conflict', 'outcome_unknown', 'unverified', 'rejected') and args.action != 'status':
+            return 3
+        if args.command in ('cpp', 'events') and res.get('status') == 'blocked':
+            return 3
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2
         return 0
+    except AscReadError as exc:
+        print(json.dumps({"status": "unavailable", "reasonCode": "ascReadFailed", "error": str(exc)}), file=sys.stderr)
+        return 4
     except Exception as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2

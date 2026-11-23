@@ -14,3 +14,14 @@ describe('bound handoff review', () => {
     expect(() => parseHandoffPreview({ ...value, upload_approval: 'unknown' }, id)).toThrow();
   });
 });
+it('opens CPP handoffs with a scoped media set and rejects mixed version kinds', () => {
+  const target = { kind: 'customProductPageVersion', app_id: '123', bundle_id: 'example.clip', platform: 'IOS',
+    page_id: 'P', page_version_id: 'V', cpp_localization_id: 'L', locale: 'en-US', target: 'iphone_6_9',
+    plan_digest: '1'.repeat(64), display_type: 'IPHONE_69', set_ids: { screenshot: 'S' },
+    ordered_assets: [{ artifactId: value.handoff.assets[0].artifact_id, sha256: value.handoff.assets[0].sha256, role: 'screenshot' }] };
+  const page = { ...value, handoff: { ...value.handoff, target } };
+  expect(parseHandoffPreview(page, id)).toEqual(page);
+  const changed = { ...value.handoff.assets[0], sha256: '2'.repeat(64) };
+  expect(() => parseHandoffPreview({ ...page, handoff: { ...page.handoff, assets: [changed] } }, id)).toThrow('media order');
+  expect(() => parseHandoffPreview({ ...page, handoff: { ...page.handoff, target: { ...target, version_id: 'wrong' } } }, id)).toThrow();
+});

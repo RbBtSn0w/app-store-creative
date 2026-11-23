@@ -24,8 +24,7 @@ app_store_creative.py ppo --repo /path/to/product reproduce \
 
 ## Notes
 
-- The variant must be selected explicitly in v1; there is no winner
-  auto-selection from ASC data.
+- Use `--result PATH` to reproduce a recorded selection. An assessed result replays the evidence, restricts the scope and verifies the rendered screenshot bytes. See the [measured PPO workflow](../../plugins/app-store-creative/skills/app-store-creative/references/ppo-assessment.md).
 - Partial-failure semantics follow the existing production pipeline: any
   failure marks the run attempt failed and does not complete the delivery.
 - All provenance fields survive the lifecycle record round-trip and appear
