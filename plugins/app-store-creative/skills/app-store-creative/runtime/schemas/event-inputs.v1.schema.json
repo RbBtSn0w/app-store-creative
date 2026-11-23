@@ -1,0 +1,572 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Normalized In-App Event evidence v1",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/inventory"
+    },
+    {
+      "$ref": "#/$defs/routes"
+    },
+    {
+      "$ref": "#/$defs/observation"
+    },
+    {
+      "$ref": "#/$defs/report"
+    }
+  ],
+  "$defs": {
+    "schedule": {
+      "type": "object",
+      "properties": {
+        "startAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publishAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "overrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "startAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "publishAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "startAt",
+              "endAt",
+              "publishAt"
+            ]
+          }
+        }
+      },
+      "required": [
+        "startAt",
+        "endAt",
+        "publishAt"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ]
+    },
+    "inventory": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1,
+          "type": "integer"
+        },
+        "appId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "hasApprovedVersion": {
+          "type": "boolean"
+        },
+        "territories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "referenceName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "type": "string",
+                "minLength": 1
+              },
+              "territories": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{3}$"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "schedule": {
+                "$ref": "#/$defs/schedule"
+              }
+            },
+            "required": [
+              "eventId",
+              "referenceName",
+              "state"
+            ]
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "appId",
+        "observedAt",
+        "complete",
+        "hasApprovedVersion",
+        "territories",
+        "events"
+      ]
+    },
+    "routes": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1,
+          "type": "integer"
+        },
+        "eventKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "buildRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bundleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deepLink": {
+          "type": "string",
+          "minLength": 1
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario": {
+                "type": "string",
+                "minLength": 1
+              },
+              "territory": {
+                "type": "string",
+                "minLength": 1
+              },
+              "eventKey": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "actualDestination": {
+                "type": "string",
+                "minLength": 1
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "actionAvailable": {
+                "type": "boolean"
+              },
+              "evidence": {
+                "$ref": "#/$defs/evidence"
+              }
+            },
+            "required": [
+              "scenario",
+              "territory",
+              "eventKey",
+              "observedAt",
+              "actualDestination",
+              "passed",
+              "actionAvailable",
+              "evidence"
+            ]
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventKey",
+        "buildRef",
+        "bundleId",
+        "deepLink",
+        "checks"
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1,
+          "type": "integer"
+        },
+        "eventKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "handoffSha256": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "readStatus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "state": {
+                "type": "string",
+                "minLength": 1
+              },
+              "referenceName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "schedule": {
+                "$ref": "#/$defs/schedule"
+              },
+              "territories": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{3}$"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "deepLink": {
+                "type": "string",
+                "minLength": 1
+              },
+              "badge": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "priority": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purchaseRequirement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "primaryLocale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "localizations": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "localizationId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "text": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "shortDescription": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "longDescription": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "shortDescription",
+                        "longDescription"
+                      ]
+                    },
+                    "assets": {
+                      "type": "object",
+                      "properties": {
+                        "card": {
+                          "type": "object",
+                          "properties": {
+                            "assetId": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "state": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "assetId",
+                            "state"
+                          ]
+                        },
+                        "details": {
+                          "type": "object",
+                          "properties": {
+                            "assetId": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "state": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "assetId",
+                            "state"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "localizationId",
+                    "text",
+                    "assets"
+                  ]
+                }
+              },
+              "submission": {
+                "type": "object",
+                "properties": {
+                  "submissionId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "appId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "platform": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "state": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "submissionId",
+                  "appId",
+                  "platform",
+                  "state",
+                  "items"
+                ]
+              }
+            },
+            "required": [
+              "eventId",
+              "state",
+              "referenceName",
+              "schedule",
+              "territories",
+              "deepLink",
+              "badge",
+              "purpose",
+              "priority",
+              "purchaseRequirement",
+              "primaryLocale"
+            ]
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "eventKey",
+        "appId",
+        "handoffSha256",
+        "observedAt",
+        "evidence"
+      ]
+    },
+    "report": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1,
+          "type": "integer"
+        },
+        "source": {
+          "enum": [
+            "product",
+            "store"
+          ]
+        },
+        "appId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "territories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "window": {
+          "const": "event_start_to_end"
+        },
+        "availability": {
+          "enum": [
+            "available",
+            "suppressed",
+            "delayed",
+            "not-collected"
+          ]
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "cohort": {
+          "type": "string",
+          "minLength": 1
+        },
+        "from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "to": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "source",
+        "appId",
+        "eventId",
+        "eventKey",
+        "territories",
+        "window",
+        "availability",
+        "metrics",
+        "evidence",
+        "from",
+        "to"
+      ]
+    }
+  }
+}

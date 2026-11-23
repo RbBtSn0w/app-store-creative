@@ -91,3 +91,7 @@ app-store-creative input import --repo . --artifact <capture-id> --actor <actor>
 
 `--artifact` and `--source` are mutually exclusive. Artifact imports require a complete
 capture from a successful acquisition attempt and retain the original capture dependency.
+
+### In-App Events
+
+Use `app-store-creative events` to plan timed iOS experiences, validate localized card and detail images, check regional schedules and app deep links, then prepare a Publisher handoff and assess the observed result. The [workflow and input contracts](plugins/app-store-creative/skills/app-store-creative/references/in-app-events.md) include the five commands and a two-language example.

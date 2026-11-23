@@ -1,6 +1,6 @@
 ---
 name: app-store-creative-publisher
-description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state.
+description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state. Reconcile authorized iOS In-App Event handoffs.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -109,3 +109,5 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 - For macOS desktop App Previews, specify `--device-type DESKTOP` (Apple API uses `DESKTOP`, not `APP_DESKTOP`).
 
 
+
+For authorized event operations, use the [In-App Events Publisher workflow](../app-store-creative/references/in-app-events.md). Reconcile event IDs, both localized media slots and the entire review submission before continuing a partial write.

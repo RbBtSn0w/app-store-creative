@@ -31,7 +31,10 @@ def main():
                          "scripts/artifact_policy.py", "scripts/media_budget.py", "scripts/relocation_object_observations.py",
                          "scripts/safe_staging.py", "scripts/archive_policy.py", "scripts/operation_history.py", "scripts/runtime_identity.py", "scripts/media_tool_identity.py", "scripts/asc_observation_adapter.py", "scripts/external_media_store.py", "scripts/external_delivery_archive.py",
                          "scripts/record_app_window.py", "scripts/record_app_window.swift",
-                         "scripts/produce_app_preview.py",
+                         "scripts/event_commands.py", "scripts/event_plan.py", "scripts/event_handoff.py",
+                         "scripts/event_assessment.py", "schemas/event-brief.v1.schema.json",
+                         "schemas/event-inputs.v1.schema.json",
+                         "assets/templates/events/walking-week.json", "scripts/produce_app_preview.py",
                          "schemas/creative.config.schema.json", "assets/templates/creative.config.json",
                          "studio/dist/index.html"):
             if not (runtime / required).is_file():
@@ -88,6 +91,14 @@ def main():
                                ("publication", "prepare-external"), ("publication", "preparation-status")):
             subprocess.run([sys.executable, str(cli), group, command, "--help"],
                            cwd=scratch, env=environment, check=True, capture_output=True)
+        event_templates = cli.parent.parent / "assets/templates/events"
+        shutil.copytree(event_templates, probe_project / "events")
+        for template, verdict in (("maintenance", "skip"), ("walking-week", "propose")):
+            result = subprocess.run([sys.executable, str(cli), "events", "--repo", str(probe_project),
+                                     "plan", "--brief", f"events/{template}.json"], cwd=scratch,
+                                    env=environment, check=True, capture_output=True, text=True)
+            if json.loads(result.stdout)["status"] != verdict:
+                raise SystemExit(f"Installed event planner returned the wrong decision for {template}")
         shutil.copyfile(archive, args.output)
         print(f"Validated complete plugin package: {args.output}")
 

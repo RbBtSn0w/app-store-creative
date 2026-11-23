@@ -17,6 +17,7 @@ if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 
 import apply_critique
+import event_commands
 import companion_generator
 import lifecycle_commands
 import ppo_assessment
@@ -32,6 +33,9 @@ def run(args):
 
     if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input", "audit"):
         return lifecycle_commands.execute(args)
+
+    if args.command == "events":
+        return event_commands.execute(args, root, project_path)
 
     # Modern v2 commands
     if args.command in ("dev", "studio"):
@@ -357,6 +361,7 @@ def build_parser():
         x.add_argument("--repo", type=Path, default=Path.cwd())
         return x
 
+    event_commands.add_commands(cmd("events"))
     lifecycle_commands.add_commands(sub)
 
     # Modern v2 Subcommands
@@ -483,6 +488,8 @@ def main(argv=None):
                 print(f"Planned deliveries: {res['scope']['planned_delivery_count']}")
             else:
                 print(res if isinstance(res, str) else json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
+        if args.command == 'events' and res.get('status') == 'blocked':
+            return 3
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2

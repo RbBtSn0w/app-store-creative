@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "In-App Event candidate brief v1",
+  "type": "object",
+  "properties": {
+    "eventKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "appId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platform": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "experience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bundleId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "buildRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "referenceName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primaryLocale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "badge": {
+      "type": "string",
+      "minLength": 1
+    },
+    "priority": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purchaseRequirement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "deepLink": {
+      "type": "string",
+      "minLength": 1
+    },
+    "versionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "timelyExperience": {
+      "type": "boolean"
+    },
+    "requiresNewVersion": {
+      "type": "boolean"
+    },
+    "additionalRouteScenarios": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "text"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "territories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "localizations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "shortDescription": {
+            "type": "string",
+            "minLength": 1
+          },
+          "longDescription": {
+            "type": "string",
+            "minLength": 1
+          },
+          "card": {
+            "type": "string",
+            "minLength": 1
+          },
+          "details": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name",
+          "shortDescription",
+          "longDescription",
+          "card",
+          "details"
+        ]
+      }
+    },
+    "destinations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "properties": {
+        "startAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publishAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "overrides": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "startAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "publishAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "startAt",
+              "endAt",
+              "publishAt"
+            ]
+          }
+        }
+      },
+      "required": [
+        "startAt",
+        "endAt",
+        "publishAt"
+      ]
+    },
+    "measurement": {
+      "type": "object",
+      "properties": {
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primaryMetric": {
+          "type": "string",
+          "minLength": 1
+        },
+        "numerator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "denominator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cohort": {
+          "type": "string",
+          "minLength": 1
+        },
+        "window": {
+          "type": "string",
+          "minLength": 1
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minDenominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "goal",
+        "decision",
+        "primaryMetric",
+        "numerator",
+        "denominator",
+        "cohort",
+        "window",
+        "threshold",
+        "minDenominator"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "projectId",
+    "appId",
+    "platform",
+    "eventKey",
+    "timelyExperience"
+  ],
+  "if": {
+    "properties": {
+      "timelyExperience": {
+        "const": false
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "reason"
+    ]
+  }
+}
