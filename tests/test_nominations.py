@@ -156,6 +156,23 @@ class NominationTests(unittest.TestCase):
         self.assertEqual(status["lastVerified"]["attempt"], saved["attempt"])
         self.assertEqual(self.call("plan", "--id", lid, "--action", "submit")["operation"], "submit")
 
+    def test_incompatible_remote_baseline_keeps_prior_snapshot(self):
+        rev = self.draft()
+        lid = rev["localId"]
+        saved = self.call("execute", "--plan", self.authorize(lid, "save-draft"))
+        file = self.root / "remote.json"
+        remote = json.loads(file.read_text())
+        remote["attributes"].update(publishStartDate="2027-04-28T00:00:00Z",
+                                    publishEndDate="2027-04-30T00:00:00Z")
+        file.write_text(json.dumps(remote))
+        failure = self.call("reconcile", "--id", lid, "--accept-baseline", fail=True)
+        self.assertIn("publishEndDate", failure["error"])
+        self.assertEqual(self.call("status", "--id", lid)["baseline"], saved["snapshot"])
+        self.assertEqual(self.call("review", "--id", lid)["revisionDigest"], rev["revisionDigest"])
+        self.brief["payload"].pop("publishStartDate")
+        self.draft("--id", lid, "--base", rev["revisionDigest"])
+        self.assertEqual(self.call("reconcile", "--id", lid, "--accept-baseline")["status"], "verified")
+
     def test_invalid_partial_revision_preserves_known_digest(self):
         rev = self.draft()
         lid = rev["localId"]

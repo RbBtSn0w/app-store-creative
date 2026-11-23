@@ -138,6 +138,9 @@ class Nomination:
         return checksum(self.events[-1]) if self.events else None
 
     def add(self, kind, body, actor="creative"):
+        if kind in ("verified", "baseline-adopted"):
+            brief = self.latest("revision")["brief"]
+            self.effective_payload(brief, body["snapshot"])
         seq = self.sequence + 1
         data = {"id": self.id, "seq": seq, "parent": self.parent, "kind": kind, "body": body,
                 "actor": actor, "project_id": self.core.config["project"]["id"]}
@@ -152,8 +155,10 @@ class Nomination:
         return next((e["body"]["snapshot"] for e in reversed(self.events)
                      if e["kind"] in ("verified", "baseline-adopted")), {})
 
-    def effective_payload(self, brief):
-        return asc.normalize({**self.baseline().get("payload", {}), **brief["payload"]})
+    def effective_payload(self, brief, baseline=None):
+        if baseline is None:
+            baseline = self.baseline()
+        return asc.normalize({**baseline.get("payload", {}), **brief["payload"]})
 
     def review(self):
         rev = self.latest("revision")
