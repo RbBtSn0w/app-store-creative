@@ -87,3 +87,6 @@ Export daily **detailed** App Store Downloads and Discovery and Engagement segme
 ```
 
 Use type discovery for page-view data. Run cpp report --campaign KEY --input reports --from YYYY-MM-DD --to YYYY-MM-DD. Results preserve source, date, device, territory and observed counts. Missing rows are unknown. A conversion rate requires comparable deduplicated visitor data; these report slices do not supply that denominator.
+
+For a confirmed permanent ASC rejection, use `cpp reconcile --plan <plan> --campaign <key> --operation <id> --rejection <receipt.json>`.
+The receipt must include the operationId, planDigest, timezone-aware observedAt and the ASC errors array with a terminal 400, 403 or 422 status and code. The ledger retains the rejected execution. Generate a fresh handoff before claiming a retry. Timeouts and ambiguous responses require a fresh readback.

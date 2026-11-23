@@ -127,7 +127,7 @@ def media_response(plan, response, scope):
             raise ValueError('Foreign CPP media set parent')
         display = remote_set.get('attributes', {}).get(display_field, '').removeprefix('APP_')
         if expected_id:
-            if remote_set['id'] == expected_id:
+            if remote_set['id'] == expected_id and display == expected_display:
                 bound.append(item)
         elif display == expected_display:
             bound.append(item)

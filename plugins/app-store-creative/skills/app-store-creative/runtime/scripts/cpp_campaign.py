@@ -172,6 +172,9 @@ def compile_plan(root, key, proposal=None, inventory=None):
             original = before.get('media', {}).get(target, [])
             groups = [strings(ids, 'media', empty=True) for ids in (
                 default.get('media', {}).get(target, []), original, after.get('media', {}).get(target, original))]
+            roles = [assets.get(aid, {}).get('role') for aid in groups[-1]]
+            if roles.count('screenshot') > 10 or roles.count('preview') > 3:
+                gaps.append(f'Media limit exceeded for {locale}/{target}: at most 10 screenshots and 3 previews')
             if not groups[-1]:
                 gaps.append(f'Provide media for {locale}/{target}')
             for aid in dict.fromkeys(a for group in groups for a in group):
@@ -262,6 +265,8 @@ def add_commands(parent):
             cmd.add_argument('--out', type=Path, required=True)
         if name in ('handoff', 'status', 'report', 'claim', 'reconcile'):
             cmd.add_argument('--observation', type=Path)
+        if name == 'reconcile':
+            cmd.add_argument('--rejection', type=Path, help='Receipt for a confirmed permanent ASC rejection')
         if name == 'report':
             cmd.add_argument('--input', type=Path, required=True)
             cmd.add_argument('--from', dest='start', required=True)
@@ -290,7 +295,7 @@ def execute(root, args):
             plan = replay(root, key, args.plan)
             if plan['blockers']:
                 return plan
-        return transition(root, plan, args.observation, args.operation, action)
+        return transition(root, plan, args.observation, args.operation, action, getattr(args, 'rejection', None))
     if action in ('handoff', 'preview'):
         plan = replay(root, key, args.plan)
         if action == 'preview':

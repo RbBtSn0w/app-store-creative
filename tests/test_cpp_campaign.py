@@ -1,4 +1,5 @@
 """CPP entry-point, sealed publication scope, reconciliation and reporting regressions."""
+from datetime import datetime, timezone
 import hashlib
 import json
 import tempfile
@@ -68,7 +69,7 @@ class CustomPageTests(unittest.TestCase):
         raw = self.root / 'asc.json'
         raw.write_text(json.dumps(self.snapshot))
         obs = dict(appId='123', bundleId='example.clip', campaignKey='share-save', pageId='P',
-                   pageVersionId='V', observedAt='2026-01-01T09:30:00Z',
+                   pageVersionId='V', observedAt=datetime.now(timezone.utc).isoformat(),
                    evidence=self.ref(raw), planDigest=plan['planDigest'])
         (self.base / 'observation.json').write_text(json.dumps(obs))
 
@@ -224,6 +225,41 @@ class CustomPageTests(unittest.TestCase):
             ids.append(op['operationId'])
         self.assertEqual(len(set(ids)), 3)
 
+    def test_stale_readback_and_confirmed_failure_recovery(self):
+        plan = self.plan_file()
+        op = self.handoff()['operations'][0]['operationId']
+        args = ('--plan', 'plan.json', '--operation', op)
+        self.run_cli('claim', *args)
+        self.observation(plan)
+        snapshot = self.base / 'observation.json'
+        observation = json.loads(snapshot.read_text())
+        observation['observedAt'] = '2020-01-01T00:00:00Z'
+        snapshot.write_text(json.dumps(observation))
+        self.assertEqual(self.run_cli('reconcile', *args)['status'], 'blocked')
+        receipt = dict(operationId=op, planDigest=plan['planDigest'],
+                       observedAt=datetime.now(timezone.utc).isoformat(), errors=[dict(status='500', code='UNKNOWN')])
+        path = self.root / 'failure.json'
+        path.write_text(json.dumps(receipt))
+        with self.assertRaisesRegex(ValueError, 'terminal'):
+            self.run_cli('reconcile', *args, '--rejection', path.name)
+        receipt['errors'] = [dict(status='422', code='INVALID_ATTRIBUTE')]
+        path.write_text(json.dumps(receipt))
+        self.assertEqual(self.run_cli('reconcile', *args, '--rejection', path.name)['status'], 'rejected')
+        snapshot.unlink()
+        second = self.handoff('retry.json')['operations'][0]['operationId']
+        self.assertNotEqual(second, op)
+        self.assertEqual(self.run_cli('claim', '--plan', 'plan.json', '--operation', second)['status'], 'reserved')
+        self.assertEqual(json.loads((self.base / 'operations.json').read_text())[op]['rejection'], receipt)
+
+    def test_screenshot_slot_limit(self):
+        self.stock['assets'] = {str(i): {**self.stock['assets']['share'], 'artifactId': f'shot{i}'} for i in range(11)}
+        self.loc['media']['iphone_6_9'] = list(self.stock['assets'])
+        self.save()
+        self.assertEqual(self.plan_file()['status'], 'blocked')
+        self.loc['media']['iphone_6_9'].pop()
+        self.save()
+        self.assertEqual(self.plan_file()['status'], 'ready')
+
     def test_studio_revision_order_and_preview(self):
         from unittest.mock import Mock
         import io
@@ -335,6 +371,9 @@ class CustomPageTests(unittest.TestCase):
         preview_sets = {'customProductPageLocalizationId': 'L', 'sets': [
             {'set': {'id': 'video', 'attributes': {'previewType': 'IPHONE_67'}}}]}
         self.assertEqual(media_response(preview, preview_sets, scope)['sets'], preview_sets['sets'])
+        target['set_ids'] = {'screenshot': 'other'}
+        with self.assertRaisesRegex(ValueError, 'media set'):
+            media_response(plan, response, scope)
         target['set_ids'] = {'screenshot': 'unknown'}
         with self.assertRaisesRegex(ValueError, 'media set'):
             media_response(plan, response, scope)

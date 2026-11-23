@@ -1,7 +1,8 @@
 """Reserve one external write at a time and reconcile its observed effect."""
+from datetime import datetime, timezone
 import fcntl
 
-from cpp_campaign import campaign_dir, inside, read
+from cpp_campaign import campaign_dir, digest, inside, read, required
 from cpp_delivery import handoff, status
 from studio_contract import atomic_json
 
@@ -34,7 +35,7 @@ def observed_effect(operation, observation):
     raise ValueError('Unknown CPP operation')
 
 
-def transition(root, plan, observation_path, operation_id, action):
+def transition(root, plan, observation_path, operation_id, action, rejection=None):
     base = campaign_dir(root, plan['campaignKey'])
     ledger = inside(root, base / 'operations.json')
     with inside(root, base / 'operations.lock').open('a') as lock:
@@ -44,11 +45,33 @@ def transition(root, plan, observation_path, operation_id, action):
         if action == 'reconcile':
             if not record or record['planDigest'] != plan['planDigest']:
                 raise ValueError('No matching claim to reconcile')
+            if record['state'] == 'rejected':
+                return dict(status='rejected', operationId=operation_id)
             if record['state'] == 'verified':
                 return dict(status='verified', operationId=operation_id)
+            if 'reservedAt' not in record:
+                record['reservedAt'] = datetime.now(timezone.utc).isoformat()
+                atomic_json(ledger, records)
+            reserved_at = datetime.fromisoformat(record['reservedAt'])
+            if rejection is not None:
+                if observation_path:
+                    raise ValueError('Select an observation or a rejection receipt')
+                receipt = read(inside(root, rejection))
+                when = datetime.fromisoformat(required(receipt, 'observedAt'))
+                errors = receipt.get('errors')
+                if (receipt.get('operationId') != operation_id or receipt.get('planDigest') != plan['planDigest']
+                        or when.tzinfo is None or not reserved_at <= when <= datetime.now(timezone.utc)
+                        or not isinstance(errors, list) or not errors
+                        or any(not isinstance(e, dict) or e.get('status') not in ('400', '403', '422')
+                               or not isinstance(e.get('code'), str) or not e['code'].strip() for e in errors)):
+                    raise ValueError('Expected a bound, terminal ASC rejection receipt')
+                record.update(state='rejected', rejection=receipt, evidenceSha256=digest(receipt))
+                atomic_json(ledger, records)
+                return dict(status='rejected', operationId=operation_id)
             brief = read(inside(root, plan['sources'][0]))
             observed = status(root, plan['campaignKey'], brief, observation_path)
             if (observed.get('planDigest') != plan['planDigest']
+                    or not reserved_at <= datetime.fromisoformat(observed['observedAt']) <= datetime.now(timezone.utc)
                     or not observed_effect(record['operation'], observed)):
                 return dict(status='blocked', reasonCode='outcomeUnknown', operationId=operation_id)
             record.update(state='verified', evidenceSha256=observed['evidenceSha256'])
@@ -66,6 +89,7 @@ def transition(root, plan, observation_path, operation_id, action):
         op = next((op for op in current['operations'] if op['operationId'] == operation_id), None)
         if op is None:
             raise ValueError('Operation is outside the current handoff')
-        records[operation_id] = dict(planDigest=plan['planDigest'], operation=op, state='reserved')
+        records[operation_id] = dict(planDigest=plan['planDigest'], operation=op, state='reserved',
+                                     reservedAt=datetime.now(timezone.utc).isoformat())
         atomic_json(ledger, records)
         return dict(status='reserved', operation=op, remoteWrite=False)

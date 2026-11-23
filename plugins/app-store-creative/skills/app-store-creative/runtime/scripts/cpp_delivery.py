@@ -153,7 +153,8 @@ def handoff(root, plan, observation):
             previous = record['operation']
             if previous['kind'] != kind or any(scope.get(k) != previous['scope'].get(k) for k in keys):
                 continue
-            if record['planDigest'] == plan['planDigest'] and previous['desired'] == desired and previous['scope'] == scope:
+            if (record['state'] != 'rejected' and record['planDigest'] == plan['planDigest']
+                    and previous['desired'] == desired and previous['scope'] == scope):
                 identity = previous_id
             else:
                 identity = digest([identity, plan['planDigest'], previous_id])
