@@ -157,7 +157,7 @@ class AssessmentWorkflowTests(unittest.TestCase):
 
     def test_handoff_separates_reorder_and_upload_by_display_type(self):
         self.spec['policy']['targets'] = self.config['targets']
-        self.spec['treatments']['C'] = {'name': 'New headline', 'cardOverrides': {'save': {'headline': 'New'}}}
+        self.spec['treatments']['C'] = {'name': 'New headline', 'cardOrder': ['search', 'save'], 'cardOverrides': {'save': {'headline': 'New'}}}
         self.save('creative.config.json', self.config)
         plan = self.run_cli('handoff', '--experiment', 'first', '--treatment-delivery', 'C:capture-C',
                             '--treatment-delivery', 'B:order-B')['asc_execution_plan']
@@ -166,6 +166,24 @@ class AssessmentWorkflowTests(unittest.TestCase):
         self.assertEqual(len(uploads), 2)
         self.assertTrue(any('--device-type IPHONE_69' in line and 'capture-C/media/en-US/iphone_6_9' in line for line in uploads))
         self.assertTrue(any('--device-type IPAD_PRO_3GEN_129' in line and 'capture-C/media/en-US/ipad_13' in line for line in uploads))
+
+    def test_planned_track_and_capture_must_match_sealed_composition(self):
+        source = self.root / 'capture.png'
+        create_mock_png(source)
+        initial = source.read_bytes()
+        control = self.seal(self.config)
+        source.write_bytes(screenshot(initial, 'different-capture'))
+        treatment = self.seal(ppo_experiment.derive_treatment_config(self.config, 'first', 'B'))
+        source.write_bytes(initial)
+        for connected, reason in [(True, 'planned composition'), (False, 'planned screenshot inputs')]:
+            self.config['connectedTrack'] = connected
+            self.save('creative.config.json', self.config)
+            name = f'handoff-{connected}.json'
+            self.run_cli('handoff', '--experiment', 'first', '--baseline-delivery', control,
+                         '--treatment-delivery', 'B:' + treatment, '--output', name)
+            with self.assertRaisesRegex(ValueError, reason):
+                self.run_cli('bind', '--handoff', name, '--app-id', '123', '--asc-experiment-id', 'asc-1',
+                             '--treatment-id', 'B:remote-B', '--output', 'binding.json')
 
     def test_full_workflow_and_scoped_production(self):
         self.prepare_snapshot()

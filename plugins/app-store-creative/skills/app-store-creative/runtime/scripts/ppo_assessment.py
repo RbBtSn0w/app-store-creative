@@ -117,7 +117,8 @@ def composition_digest(config, policy):
     # Compare effective localized compositions even for archives produced for a subset of devices.
     cells = {locale: {target: [resolve_card(config, card, target, locale)[0] for card in config['cards']]
                       for target in policy['targets']} for locale in policy['locales']}
-    return checksum({'theme': config.get('theme', {}), 'cells': cells, 'studio': config.get('studio', {})})
+    return checksum({'theme': config.get('theme', {}), 'cells': cells, 'studio': config.get('studio', {}),
+                     'connectedTrack': config.get('connectedTrack', False)})
 
 
 def deployed_assets(root, config, handoff, group):
@@ -142,6 +143,12 @@ def deployed_assets(root, config, handoff, group):
     policy = handoff['policy']
     if composition_digest(reviewed, policy) != group['composition_sha256']:
         raise ValueError('Reviewed delivery differs from the planned composition')
+    planned = group.get('input_hashes')
+    if not isinstance(planned, dict):
+        raise ValueError('Regenerate the measured handoff to record its scoped input hashes')
+    archived = {row['path'].removeprefix('recipe/inputs/'): row['sha256'] for row in manifest['recipe_inputs']}
+    if any(archived.get(name) != sha for name, sha in planned.items()):
+        raise ValueError('Sealed inputs differ from the planned screenshot inputs')
     for locale in policy['locales']:
         for target in policy['targets']:
             prefix = f'{component(locale)}/{component(target)}/'

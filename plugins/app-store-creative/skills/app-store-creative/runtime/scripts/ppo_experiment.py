@@ -289,6 +289,11 @@ def validate_platform_readiness(
     }
 
 
+def reorder_only(config, treatment):
+    return ('cardOrder' in treatment and not config.get('connectedTrack')
+            and not any(treatment.get(key) for key in ('cardOverrides', 'localizations', 'theme')))
+
+
 def compile_ppo_handoff(
     repo_root: Path,
     base_config: dict[str, Any],
@@ -376,7 +381,7 @@ def compile_ppo_handoff(
             asc_commands.append(
                 f"asc product-pages experiments treatments localizations create --treatment-id '<TREATMENT_ID>' --locale {shlex.quote(loc)}"
             )
-            if 'cardOrder' in treatment_spec and policy:
+            if policy and reorder_only(base_config, treatment_spec):
                 continue  # The publisher reorders the already approved screenshots.
             directory = Path(treat['delivery_path'] or '<DELIVERY_PATH>') / 'media' / loc
             upload = "asc product-pages experiments treatments localizations screenshot-sets upload --localization-id '<LOCALIZATION_ID>'"
@@ -428,7 +433,7 @@ def compile_ppo_handoff(
             group['card_order'] = treatment.get('cardOrder', order)
             render_config = derive_treatment_config(base_config, experiment_id, group['id']) if 'id' in group else base_config
             group['composition_sha256'] = assessment.composition_digest(render_config, spec['policy'])
-            group['reorder_only'] = 'cardOrder' in treatment
+            group['reorder_only'] = reorder_only(base_config, treatment)
             package = Path(group['delivery_path']) if group.get('delivery_path') else None
             group['manifest_sha256'] = None
             if package and group['delivery_exists']:
@@ -437,6 +442,12 @@ def compile_ppo_handoff(
                     raise ValueError('Invalid delivery path')
                 manifest_path = package / 'manifest.json'
                 if manifest_path.is_file():
+                    from studio_contract import input_hashes
+                    source_config = {**render_config, 'storage': base_config.get('storage', {})}
+                    sources, errors = input_hashes(repo_root, source_config, policy['targets'], policy['locales'])
+                    if errors:
+                        raise ValueError('Cannot record measured screenshot inputs: ' + ', '.join(errors))
+                    group['input_hashes'] = sources
                     group['manifest_sha256'] = assessment.digest(manifest_path)
         if output_path:
             return assessment.write_once(Path(output_path), handoff)
