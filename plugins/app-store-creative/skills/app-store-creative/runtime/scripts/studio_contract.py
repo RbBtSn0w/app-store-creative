@@ -103,6 +103,19 @@ def check_config(config):
     for field in ('id', 'name', 'bundleId', 'defaultLocale'):
         if field in config.get('project', {}) and not isinstance(config['project'][field], str):
             raise ValueError(f"Project {field} must be text")
+    if 'openings' in config.get('studio', {}):
+        openings = config['studio']['openings']
+        if not isinstance(openings, list) or len(openings) != 2:
+            raise ValueError('studio.openings requires two opening proposals')
+        for proposal in openings:
+            if (not isinstance(proposal, dict)
+                    or any(not isinstance(proposal.get(key), str) for key in ('audience', 'benefit'))):
+                raise ValueError('Each opening requires audience and benefit text')
+            cards = proposal.get('cardIds')
+            if (not isinstance(cards, list) or not 1 <= len(cards) <= 3
+                    or any(not isinstance(key, str) or not SAFE_ID.fullmatch(key) for key in cards)
+                    or len(cards) != len(set(cards))):
+                raise ValueError('Each opening requires one to three distinct card IDs')
     theme = config.get('theme', {})
     if 'background' in theme:
         check_background(theme['background'], 'theme.background')

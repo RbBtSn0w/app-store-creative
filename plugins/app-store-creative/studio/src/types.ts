@@ -163,6 +163,12 @@ export type ArchivePolicy =
   | { schema_version: 1; mediaMode: 'git' | 'lfs'; backend?: never }
   | { schema_version: 1; mediaMode: 'external'; backend: string };
 
+export interface OpeningProposal {
+  audience: string;
+  benefit: string;
+  cardIds: string[];
+}
+
 export interface CreativeConfig {
   archivePolicy?: ArchivePolicy;
   artifactPolicy?: { schema_version: 1; trialRetentionDays?: number; diagnosticRetentionDays?: number; quarantineDays?: number; mediaBudgetBytes?: number };
@@ -187,5 +193,5 @@ export interface CreativeConfig {
     };
   };
   localizations?: Record<string, Record<string, LocalizedCard>>;
-  studio?: { requireExportEvidence?: boolean };
+  studio?: { requireExportEvidence?: boolean; openings?: [OpeningProposal, OpeningProposal] };
 }

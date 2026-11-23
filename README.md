@@ -31,6 +31,47 @@ creative studio --repo "$CREATIVE_REPO"
 
 Review Git rule suggestions before applying them. Four configurable roots separate working records, content objects, sealed releases, and publication evidence. Moving existing storage requires the explicit relocation plan/prepare/switch/recovery workflow; editing paths alone does not relocate records.
 
+## Update an existing store listing
+
+In Studio, open **Delivery history**, select a sealed version, and choose **Plan
+screenshot updates**. Open a flagged language/device/card to edit it. The plan
+compares the saved configuration and actual capture files. A matching capture may
+still depict an earlier app build. In the Copy inspector, **Review original capture text** shows the localized and default-language
+captures at full resolution and can highlight lines recognized by Apple Vision.
+Use a known untranslated phrase such as a search placeholder to check a specific
+screen. A search with zero matches still needs visual review. On a Mac with
+Apple Vision, run `python3 tests/native/check_capture_copy.py` from this repository
+to check a known phrase, its highlighted location and an absent phrase.
+
+For a new listing, choose an audience and a task. Ask the design agent for two
+three-card openings using actual capture IDs: one showing the task in order and
+one leading with the result. Compare them in **Preview opening sequence** on the
+canvas. Applying a sequence reorders the project across languages and devices.
+Save the project to keep both proposals for the next session. Agents can populate
+`studio.openings` in the same project configuration. For example, given existing
+cards named `history`, `search`, and `paste`, supply:
+
+```json
+"openings": [
+  {"audience":"People retrieving an old link","benefit":"Find yesterday’s link","cardIds":["history","search","paste"]},
+  {"audience":"People reusing snippets","benefit":"Paste a saved reply","cardIds":["paste","history","search"]}
+]
+```
+
+Use the actual card IDs and describe the benefit visible in the first capture.
+Both proposals share the underlying cards and localized headlines.
+
+After exporting, select the baseline delivery again and choose **Compare with
+current candidate** to inspect changed screenshots, previews, posters, and
+placements. The same read-only checks are available to agents:
+
+```sh
+creative delivery --repo "$CREATIVE_REPO" screenshot-plan --id "$BASELINE_DELIVERY"
+creative input --repo "$CREATIVE_REPO" check-copy --locale zh-Hans --target mac_16_10 --card "$CARD_ID" --phrase 'Copy Result'
+creative candidate --repo "$CREATIVE_REPO" compare --id "$CANDIDATE_ID" --baseline-delivery "$BASELINE_DELIVERY"
+creative archive --repo "$CREATIVE_REPO" compare --baseline "$OLDER_ARCHIVE_PATH" --path "$NEWER_ARCHIVE_PATH"
+```
+
 ## Managed production and release
 
 Import authentic product captures through `input import`. Use managed screenshot export, `preview record`, `preview produce`, and `preview poster` for production. Each attempt owns its lease and isolated working files; failed or interrupted output remains evidence, and retries create new attempts.
