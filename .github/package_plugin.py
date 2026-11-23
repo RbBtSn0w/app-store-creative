@@ -28,6 +28,9 @@ def main():
         runtime = staged / "skills/app-store-creative/runtime"
         for required in ("scripts/app_store_creative.py", "scripts/publication_lifecycle.py",
                          "scripts/record_primitives.py", "scripts/storage_paths.py",
+                         "scripts/nomination_commands.py", "scripts/nomination_lifecycle.py",
+                         "scripts/nomination_asc.py", "schemas/nomination-brief.v1.schema.json",
+                         "assets/templates/nominations/launch-brief.json",
                          "scripts/artifact_policy.py", "scripts/media_budget.py", "scripts/relocation_object_observations.py",
                          "scripts/safe_staging.py", "scripts/archive_policy.py", "scripts/operation_history.py", "scripts/runtime_identity.py", "scripts/media_tool_identity.py", "scripts/asc_observation_adapter.py", "scripts/external_media_store.py", "scripts/external_delivery_archive.py",
                          "scripts/record_app_window.py", "scripts/record_app_window.swift",
@@ -91,6 +94,15 @@ def main():
                                ("publication", "prepare-external"), ("publication", "preparation-status")):
             subprocess.run([sys.executable, str(cli), group, command, "--help"],
                            cwd=scratch, env=environment, check=True, capture_output=True)
+        brief = cli.parent.parent / "assets/templates/nominations/launch-brief.json"
+        def nomination(*arguments):
+            completed = subprocess.run([sys.executable, str(cli), "nomination", "--repo", str(probe_project),
+                                        *arguments], cwd=scratch, env=environment, check=True, capture_output=True)
+            return json.loads(completed.stdout)
+        draft = nomination("draft", "--brief", str(brief))
+        reviewed = nomination("review", "--id", draft["localId"])
+        if reviewed["revisionDigest"] != draft["revisionDigest"] or reviewed["missing"]:
+            raise SystemExit("Installed nomination draft did not survive restart")
         event_templates = cli.parent.parent / "assets/templates/events"
         shutil.copytree(event_templates, probe_project / "events")
         for template, verdict in (("maintenance", "skip"), ("walking-week", "propose")):

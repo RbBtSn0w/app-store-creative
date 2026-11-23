@@ -41,6 +41,16 @@ class RetentionTests(unittest.TestCase):
         self.store.select(run['id'], [data['id']])
         self.assertEqual(self.store.plan_cleanup(retention_days=0)['objects'], [])
 
+    def test_nomination_revision_protects_its_managed_evidence(self):
+        from nomination_lifecycle import Nomination
+        _, artifact = self.artifact(status='succeeded')
+        self.assertTrue(self.store.plan_cleanup(retention_days=0)['objects'])
+        with self.store.transaction():
+            Nomination(self.store, 'story').draft({'evidence': [
+                {'id': 'source', 'sourceKind': 'file', 'artifactId': artifact['id'], 'sha256': artifact['sha256']}
+            ]}, None)
+        self.assertEqual(self.store.plan_cleanup(retention_days=0)['objects'], [])
+
     def test_stale_plan_cannot_remove_new_candidate(self):
         run, data = self.artifact(status='succeeded')
         plan = self.store.plan_cleanup(retention_days=0)

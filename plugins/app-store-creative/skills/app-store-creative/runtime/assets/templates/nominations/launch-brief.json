@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "target": {
+    "profileRef": "team",
+    "appIds": [
+      "123456789"
+    ]
+  },
+  "payload": {
+    "name": "Offline trail guides",
+    "type": "APP_ENHANCEMENTS",
+    "description": "Riders can read saved route guides while offline.",
+    "publishStartDate": "2027-05-01T08:00:00Z"
+  },
+  "context": {
+    "release": "2.0",
+    "claims": [
+      {
+        "text": "Saved guides work offline.",
+        "evidenceIds": [
+          "release-note"
+        ]
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "id": "release-note",
+      "sourceKind": "statement",
+      "actor": "release owner",
+      "text": "Confirmed saved guides open in airplane mode on the release build."
+    }
+  ]
+}
