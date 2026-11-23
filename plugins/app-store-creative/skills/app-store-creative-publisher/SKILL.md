@@ -1,6 +1,6 @@
 ---
 name: app-store-creative-publisher
-description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state.
+description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state. Supports App Store featuring nominations. Reconcile authorized iOS In-App Event handoffs.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -113,3 +113,9 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 ## Custom product page handoff
 
 Use [the CPP executor contract](../app-store-creative/references/custom-product-pages.md) for a campaign. Read the approved handoff's phase and operation scope. Verify the live app → page → page version → CPP localization → media set relationship before writing. A reconcileMedia scope is the target JSON for a sealed publication. Upload exactly the assets selected by that plan in their approved order. Record a fresh observation after each operation. Hand the specific CPP version to the operator for App Review.
+
+## Featuring nominations
+
+For a user-authorized featuring nomination use the [nomination workflow](../app-store-creative/references/featuring-nominations.md). Bind authorization to the reviewed nomination plan, its ASC profile and exact app IDs. Run nomination execute once; reconcile an interrupted operation by reading ASC. A verified draft may later be submitted through its own reviewed plan.
+
+For authorized event operations, use the [In-App Events Publisher workflow](../app-store-creative/references/in-app-events.md). Reconcile event IDs, both localized media slots and the entire review submission before continuing a partial write.

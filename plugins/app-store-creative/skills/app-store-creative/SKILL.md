@@ -1,6 +1,6 @@
 ---
 name: app-store-creative
-description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for campaign-specific custom product pages (CPP), a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload.
+description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for campaign-specific custom product pages (CPP), a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload. Supports App Store featuring nominations. Plan and measure iOS In-App Events.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -58,6 +58,8 @@ For nondefault locales, assign real localized captures or record an explicit rev
 
 
 ## Product Page Optimization (PPO) & A/B Experiment Workflow
+
+For a measured iOS screenshot test, follow the [App Analytics snapshot and reproduction workflow](references/ppo-assessment.md). It covers policy, card order, binding, assessment and scoped production.
 
 App Store Creative supports native Product Page Optimization (PPO) experiments defined declaratively inside `creative.config.json` under `experiments`:
 
@@ -133,3 +135,9 @@ Headless Chromium exports render multi-layer 3D CSS compositions (`perspective`,
 ## Custom product pages
 
 When the user wants an App Store page for a specific audience, tutorial, search intent or ad, follow [the CPP workflow and input contracts](references/custom-product-pages.md). Compare the default page and existing CPPs, trace each claim to released behavior, and show the proposed page before preparing a Publisher handoff. Route randomized default-page experiments to PPO.
+
+## Featuring nominations
+
+When asked to pitch an app launch, update, or new content for editorial featuring, use the [nomination workflow](references/featuring-nominations.md). Start with a reviewable local brief. Show the exact Apple fields, missing information, and supporting material before handing a specific save or submit request to Publisher.
+
+For a timed iOS experience use the [In-App Events workflow](references/in-app-events.md) to plan the candidate, validate its assets and destinations, hand off the reviewed package, then assess product participation.

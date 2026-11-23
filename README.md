@@ -31,6 +31,21 @@ creative studio --repo "$CREATIVE_REPO"
 
 Review Git rule suggestions before applying them. Four configurable roots separate working records, content objects, sealed releases, and publication evidence. Moving existing storage requires the explicit relocation plan/prepare/switch/recovery workflow; editing paths alone does not relocate records.
 
+When App Analytics observations are available, save the experiment decision
+alongside the handoff for the next release. Supply the market, change, actual
+observation and evidence reference. For a selected variant use
+`--decision use-treatment --treatment <id>`; for a retained baseline use
+`--decision keep-control`. The result file records the handoff digest and
+delivery IDs and requires a new output path. For a selected treatment from a new
+handoff, preview its reuse with `ppo reproduce --experiment <id> --result <file>`.
+Studio keeps the experiment decision separate from design and upload approvals.
+
+```sh
+creative ppo --repo "$CREATIVE_REPO" result --handoff .creative/ppo-handoff.json \
+  --market US --change 'Opening screenshot' --observation 'Insufficient traffic' \
+  --evidence "$ANALYTICS_REFERENCE" --decision inconclusive --output results/opening-us.json
+```
+
 ## Custom product pages
 
 Prepare a campaign-specific App Store page from release evidence. Use `cpp discover` to read existing ASC pages, `cpp plan` to review reuse or creation, and Studio to compare and reorder the selected media. The Publisher handoff binds the reviewed order to the CPP version and localization. Import detailed acquisition reports with `cpp report`. [Campaign inputs, commands and recovery](plugins/app-store-creative/skills/app-store-creative/references/custom-product-pages.md)
@@ -80,3 +95,11 @@ app-store-creative input import --repo . --artifact <capture-id> --actor <actor>
 
 `--artifact` and `--source` are mutually exclusive. Artifact imports require a complete
 capture from a successful acquisition attempt and retain the original capture dependency.
+
+## Featuring nominations
+
+Prepare an editorial pitch with `creative nomination draft`, inspect the Apple fields and supporting evidence with `nomination review`, and use an authorized plan to save, update or submit it through ASC. The [nomination workflow](plugins/app-store-creative/skills/app-store-creative/references/featuring-nominations.md) includes a sample brief, commands and lost-response recovery.
+
+### In-App Events
+
+Use `app-store-creative events` to plan timed iOS experiences, validate localized card and detail images, check regional schedules and app deep links, then prepare a Publisher handoff and assess the observed result. The [workflow and input contracts](plugins/app-store-creative/skills/app-store-creative/references/in-app-events.md) include the five commands and a two-language example.
