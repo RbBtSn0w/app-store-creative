@@ -632,8 +632,61 @@
               "VISION_OS"
             ]
           },
+          "policy": {
+            "type": "object",
+            "required": [
+              "testedChange",
+              "locales",
+              "targets"
+            ],
+            "properties": {
+              "testedChange": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "targets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "minRelativeLiftPct": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "durationEstimateDays": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "estimateSource": {
+                "type": "string",
+                "minLength": 1
+              },
+              "anotherTestRunning": {
+                "type": "boolean"
+              }
+            }
+          },
           "treatments": {
             "type": "object",
+            "minProperties": 1,
+            "maxProperties": 3,
             "additionalProperties": {
               "type": "object",
               "required": [
@@ -648,6 +701,12 @@
                 },
                 "theme": {
                   "$ref": "#/properties/theme"
+                },
+                "cardOrder": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "minItems": 1,
+                  "uniqueItems": true
                 },
                 "cardOverrides": {
                   "type": "object",

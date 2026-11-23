@@ -31,6 +31,21 @@ creative studio --repo "$CREATIVE_REPO"
 
 Review Git rule suggestions before applying them. Four configurable roots separate working records, content objects, sealed releases, and publication evidence. Moving existing storage requires the explicit relocation plan/prepare/switch/recovery workflow; editing paths alone does not relocate records.
 
+When App Analytics observations are available, save the experiment decision
+alongside the handoff for the next release. Supply the market, change, actual
+observation and evidence reference. For a selected variant use
+`--decision use-treatment --treatment <id>`; for a retained baseline use
+`--decision keep-control`. The result file records the handoff digest and
+delivery IDs and requires a new output path. For a selected treatment from a new
+handoff, preview its reuse with `ppo reproduce --experiment <id> --result <file>`.
+Studio keeps the experiment decision separate from design and upload approvals.
+
+```sh
+creative ppo --repo "$CREATIVE_REPO" result --handoff .creative/ppo-handoff.json \
+  --market US --change 'Opening screenshot' --observation 'Insufficient traffic' \
+  --evidence "$ANALYTICS_REFERENCE" --decision inconclusive --output results/opening-us.json
+```
+
 ## Managed production and release
 
 Import authentic product captures through `input import`. Use managed screenshot export, `preview record`, `preview produce`, and `preview poster` for production. Each attempt owns its lease and isolated working files; failed or interrupted output remains evidence, and retries create new attempts.
