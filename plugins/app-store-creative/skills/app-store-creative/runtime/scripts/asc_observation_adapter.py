@@ -112,6 +112,9 @@ def media_response(plan, response, scope):
     role = selected['role']
     expected_id = target['set_ids'].get(role)
     display_field = 'screenshotDisplayType' if role == 'screenshot' else 'previewType'
+    expected_display = target['display_type']
+    if role == 'preview' and target['target'] == 'iphone_6_9':
+        expected_display = 'IPHONE_67'
     bound = []
     for item in response['sets']:
         remote_set = item['set']
@@ -126,7 +129,7 @@ def media_response(plan, response, scope):
         if expected_id:
             if remote_set['id'] == expected_id:
                 bound.append(item)
-        elif display == target['display_type']:
+        elif display == expected_display:
             bound.append(item)
     if len(bound) != 1:
         raise ValueError('Could not identify one matching CPP media set')

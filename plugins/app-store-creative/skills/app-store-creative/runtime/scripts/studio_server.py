@@ -450,11 +450,15 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
                         raise ValueError('Only a proposed custom page can be reordered')
                     draft_path = cpp.inside(self.repo_root, current['sources'][1])
                     draft = cpp.read(draft_path)
-                    slots = draft['localizations'][payload['locale']]['media']
-                    existing = slots[payload['target']]
+                    row = next((r for r in current['rows'] if r['locale'] == payload['locale']
+                                and r['target'] == payload['target']), None)
+                    if row is None:
+                        raise ValueError('Select a reviewed locale and target')
+                    existing = row['after']
                     ordered = cpp.strings(payload['order'], 'order')
                     if set(existing) != set(ordered) or cpp.digest(draft) != current['inputDigests'][1]:
                         raise ValueError('Order must match the current campaign assets')
+                    slots = draft['localizations'][payload['locale']].setdefault('media', {})
                     slots[payload['target']] = ordered
                     contract.atomic_json(draft_path, draft)
                     self._json(cpp.compile_plan(self.repo_root, key))

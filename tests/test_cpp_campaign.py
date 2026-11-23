@@ -204,12 +204,33 @@ class CustomPageTests(unittest.TestCase):
         self.assertEqual(self.run_cli('reconcile', *opts)['status'], 'verified')
         self.assertEqual(self.run_cli('reconcile', *opts)['status'], 'verified')
 
+    def test_reviewed_text_can_cycle_without_reusing_an_execution(self):
+        ids = []
+        current = ''
+        for index, desired in enumerate(('A', 'B', 'A')):
+            self.loc['promotionalText'] = desired
+            self.save()
+            plan = self.plan_file()
+            self.observation(plan)
+            loc = self.snapshot['version']['localizations']['en-US']
+            loc['promotionalText'] = current
+            self.observe(plan)
+            op = next(x for x in self.handoff(f'handoff-{index}.json')['operations'] if x['kind'] == 'updateText')
+            args = ('--plan', 'plan.json', '--operation', op['operationId'])
+            self.assertEqual(self.run_cli('claim', *args)['status'], 'reserved')
+            loc['promotionalText'] = current = desired
+            self.observe(plan)
+            self.assertEqual(self.run_cli('reconcile', *args)['status'], 'verified')
+            ids.append(op['operationId'])
+        self.assertEqual(len(set(ids)), 3)
+
     def test_studio_revision_order_and_preview(self):
         from unittest.mock import Mock
         import io
         import studio_server
         self.stock['assets']['second'] = {**self.stock['assets']['share'], 'artifactId': 'shot2'}
         self.loc['media']['iphone_6_9'].append('second')
+        self.proposal['localizations']['en-US'] = {'promotionalText': 'Save text'}
         self.save()
         plan = self.plan_file()
         handler = Mock()
@@ -310,6 +331,10 @@ class CustomPageTests(unittest.TestCase):
         scope = {'artifact_id': 'shot1', 'localization_id': 'L'}
         facts = media_response(plan, response, scope)
         self.assertEqual([s['set']['id'] for s in facts['sets']], ['bound'])
+        preview = {'target': target, 'assets': [{'artifact_id': 'shot1', 'role': 'preview'}]}
+        preview_sets = {'customProductPageLocalizationId': 'L', 'sets': [
+            {'set': {'id': 'video', 'attributes': {'previewType': 'IPHONE_67'}}}]}
+        self.assertEqual(media_response(preview, preview_sets, scope)['sets'], preview_sets['sets'])
         target['set_ids'] = {'screenshot': 'unknown'}
         with self.assertRaisesRegex(ValueError, 'media set'):
             media_response(plan, response, scope)

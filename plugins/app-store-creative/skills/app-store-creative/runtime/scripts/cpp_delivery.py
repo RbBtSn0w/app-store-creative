@@ -141,9 +141,24 @@ def handoff(root, plan, observation):
     obs = status(root, plan['campaignKey'], brief, observation)
     ops = result['operations']
 
+    ledger = inside(root, campaign_dir(root, plan['campaignKey']) / 'operations.json')
+    records = read(ledger) if ledger.exists() else {}
+
     def add(kind, scope, desired):
         body = dict(kind=kind, scope=scope, desired=desired)
-        ops.append({**body, 'operationId': digest([plan['appId'], plan['campaignKey'], body])})
+        identity = digest([plan['appId'], plan['campaignKey'], body])
+        # A subsequent approved change to the same remote field starts a new execution.
+        keys = ('appId', 'app_id', 'page_id', 'page_version_id', 'cpp_localization_id', 'locale', 'target')
+        for previous_id, record in reversed(records.items()):
+            previous = record['operation']
+            if previous['kind'] != kind or any(scope.get(k) != previous['scope'].get(k) for k in keys):
+                continue
+            if record['planDigest'] == plan['planDigest'] and previous['desired'] == desired and previous['scope'] == scope:
+                identity = previous_id
+            else:
+                identity = digest([identity, plan['planDigest'], previous_id])
+            break
+        ops.append({**body, 'operationId': identity})
 
     if obs['status'] == 'unobserved':
         if plan['decision'] == 'createPage':
