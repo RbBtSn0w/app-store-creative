@@ -331,6 +331,18 @@ class EventWorkflow(unittest.TestCase):
         self.row["purchaseRequirement"] = "IN_APP_PURCHASE"
         self.assertEqual(self.observe()["status"], "identify-version-submission")
 
+    def test_readback_compares_default_and_regional_instants(self):
+        package = self.package()
+        window = self.window(self.start, timedelta(days=1))
+        package["brief"]["schedule"] = {**window, "overrides": {"USA": window}}
+        utc = {key: value.replace("+00:00", "Z") for key, value in window.items()}
+        offset = timezone(timedelta(hours=8))
+        regional = {key: rules.timestamp(value).astimezone(offset).isoformat() for key, value in window.items()}
+        self.row.update(state="PUBLISHED", schedule={**utc, "overrides": {"USA": regional}})
+        self.assertEqual(event_handoff.reconcile(package, self.snap, None)["status"], "published")
+        regional["startAt"] = regional["endAt"]
+        self.assertEqual(event_handoff.reconcile(package, self.snap, None)["status"], "remote-conflict")
+
     def test_creation_recovery_and_conflicts(self):
         for matches in [[], [self.row, self.row]]:
             self.snap["matches"] = matches

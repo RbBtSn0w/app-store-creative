@@ -48,6 +48,16 @@ def handoff(brief, assets, inventory, bound):
     }
 
 
+def normalized_schedule(schedule):
+    def normalize_window(window):
+        return {**window, **{key: timestamp(window[key]) for key in ("publishAt", "startAt", "endAt")}}
+
+    result = normalize_window(schedule)
+    result["overrides"] = {region: normalize_window(window)
+                           for region, window in schedule.get("overrides", {}).items()}
+    return result
+
+
 def reconcile(package, snapshot, binding):
     """Accept a normalized Publisher readback; never issue a remote mutation."""
     version(snapshot)
@@ -89,6 +99,11 @@ def reconcile(package, snapshot, binding):
         actual = row.get(key)
         if key == "territories" and isinstance(actual, list):
             actual, expected = sorted(actual), sorted(expected)
+        if key == "schedule":
+            try:
+                actual, expected = normalized_schedule(actual), normalized_schedule(expected)
+            except (KeyError, ValueError, TypeError, AttributeError):
+                return {"status": "remote-conflict", "field": key, "actions": []}
         if actual != expected:
             return {"status": "remote-conflict", "field": key, "actions": []}
     state = row["state"]
