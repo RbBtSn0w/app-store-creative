@@ -63,6 +63,8 @@ jobs:
     name: Cross-filesystem relocation tests
     runs-on: macos-15
     timeout-minutes: 15
+    outputs:
+      evidence-id: ${{ steps.upload.outputs.artifact-id }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -96,6 +98,7 @@ jobs:
           --report crossfs-reports/crossfs.json
 
       - name: Upload cross-filesystem evidence
+        id: upload
         if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -128,7 +131,8 @@ jobs:
         if: always()
         uses: actions/download-artifact@v8
         with:
-          name: crossfs-evidence
+          artifact-ids: ${{ needs.validate-crossfs.outputs.evidence-id }}
+          merge-multiple: true
           path: crossfs-reports
 
       - name: Write combined summary

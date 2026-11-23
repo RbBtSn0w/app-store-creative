@@ -1,6 +1,6 @@
 ---
 name: app-store-creative-validator
-description: Validate App Store screenshot and App Preview artifacts, receipts, manifests, visual acceptance evidence, and upload readiness without mutating App Store Connect. Use before design approval, promotion, upload approval, or publishing, and when diagnosing missing locales, bad dimensions, alpha, color, naming, ordering, codec, duration, stale hashes, or incomplete provenance.
+description: Validate App Store screenshot and App Preview artifacts, receipts, manifests, visual acceptance evidence, and upload readiness without mutating App Store Connect. Use before design approval, promotion, upload approval, or publishing, and when diagnosing missing locales, bad dimensions, alpha, color, naming, ordering, codec, duration, stale hashes, or incomplete provenance. Check event card media, calendars, and deep-link evidence for iOS In-App Events.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -33,3 +33,5 @@ Poster media validation honors `previewVideo.posterRequired`. A present poster
 must match the dimensions of a locally validated preview. Managed candidate
 validation additionally requires the poster's exact selected-preview dependency;
 filesystem validation alone cannot prove that identity relationship.
+
+For iOS In-App Events, validate the two event media slots, schedule inventory and build-bound route evidence using the [event validation contract](../app-store-creative/references/in-app-events.md).

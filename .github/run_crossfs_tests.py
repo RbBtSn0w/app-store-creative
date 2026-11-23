@@ -16,6 +16,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import time
 
 
 def write_json(path: Path, value: dict):
@@ -44,6 +45,17 @@ def attached_image(state):
 
 
 def cleanup(state, state_path=None):
+    for attempt in range(4):
+        try:
+            return cleanup_once(state, state_path)
+        except subprocess.CalledProcessError as error:
+            if error.cmd[:2] != ['/usr/bin/hdiutil', 'detach'] or error.returncode != 16 or attempt == 3:
+                raise
+            # Recheck image ownership and mount identity after every busy response.
+            time.sleep(2 ** attempt)
+
+
+def cleanup_once(state, state_path=None):
     owned = Path(state['owned_dir'])
     image = Path(state['image'])
     mount = Path(state['mountpoint'])
