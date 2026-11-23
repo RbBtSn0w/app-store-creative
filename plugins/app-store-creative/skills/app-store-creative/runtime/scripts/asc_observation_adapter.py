@@ -99,6 +99,40 @@ def preview_facts(response, localization_id, remote_id):
     return result
 
 
+def media_response(plan, response, scope):
+    target = plan['target']
+    if target.get('kind') != 'customProductPageVersion':
+        return response
+    localization_fields = [response[key] for key in ('customProductPageLocalizationId', 'localizationId')
+                           if key in response]
+    if (target.get('cpp_localization_id') != scope['localization_id']
+            or localization_fields != [scope['localization_id']] or 'versionLocalizationId' in response):
+        raise ValueError('CPP evidence localization differs from the approved target')
+    selected = next(asset for asset in plan['assets'] if asset['artifact_id'] == scope['artifact_id'])
+    role = selected['role']
+    expected_id = target['set_ids'].get(role)
+    display_field = 'screenshotDisplayType' if role == 'screenshot' else 'previewType'
+    bound = []
+    for item in response['sets']:
+        remote_set = item['set']
+        relationships = remote_set.get('relationships', {})
+        parent = relationships.get('appCustomProductPageLocalization', {}).get('data')
+        if parent and parent.get('id') != scope['localization_id']:
+            raise ValueError('Foreign CPP media set localization')
+        if any(relationships.get(k, {}).get('data') for k in
+               ('appStoreVersionLocalization', 'appStoreVersionExperimentTreatmentLocalization')):
+            raise ValueError('Foreign CPP media set parent')
+        display = remote_set.get('attributes', {}).get(display_field, '').removeprefix('APP_')
+        if expected_id:
+            if remote_set['id'] == expected_id:
+                bound.append(item)
+        elif display == target['display_type']:
+            bound.append(item)
+    if len(bound) != 1:
+        raise ValueError('Could not identify one matching CPP media set')
+    return {**response, 'versionLocalizationId': scope['localization_id'], 'sets': bound}
+
+
 def preview_observations(plan, response, scope):
     """Prepare observations from an explicit ASC executor scope, without writes."""
     from record_primitives import canonical
@@ -125,7 +159,7 @@ def preview_observations(plan, response, scope):
     observed = datetime.fromisoformat(scope['observed_at'])
     if observed.tzinfo is None or observed > datetime.now(timezone.utc) + timedelta(minutes=5):
         raise ValueError('ASC observation time must be timezone-aware and not in the future')
-    facts = preview_facts(response, scope['localization_id'], scope['remote_id'])
+    facts = preview_facts(media_response(plan, response, scope), scope['localization_id'], scope['remote_id'])
     binding = {'plan_sha256': hashlib.sha256(canonical(plan)).hexdigest(),
                'target': plan['target'], 'artifact_id': scope['artifact_id'],
                'remote_id': scope['remote_id'], 'source': 'asc-cli',
@@ -221,7 +255,7 @@ def screenshot_observations(plan, response, scope):
     observed = datetime.fromisoformat(scope['observed_at'])
     if observed.tzinfo is None or observed > datetime.now(timezone.utc) + timedelta(minutes=5):
         raise ValueError('ASC observation time must be timezone-aware and not in the future')
-    facts = screenshot_facts(response, scope['localization_id'], scope['remote_id'])
+    facts = screenshot_facts(media_response(plan, response, scope), scope['localization_id'], scope['remote_id'])
     binding = {'plan_sha256': hashlib.sha256(canonical(plan)).hexdigest(),
                'target': plan['target'], 'artifact_id': scope['artifact_id'],
                'remote_id': scope['remote_id'], 'source': 'asc-cli',

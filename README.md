@@ -31,6 +31,10 @@ creative studio --repo "$CREATIVE_REPO"
 
 Review Git rule suggestions before applying them. Four configurable roots separate working records, content objects, sealed releases, and publication evidence. Moving existing storage requires the explicit relocation plan/prepare/switch/recovery workflow; editing paths alone does not relocate records.
 
+## Custom product pages
+
+Prepare a campaign-specific App Store page from release evidence. Use `cpp discover` to read existing ASC pages, `cpp plan` to review reuse or creation, and Studio to compare and reorder the selected media. The Publisher handoff binds the reviewed order to the CPP version and localization. Import detailed acquisition reports with `cpp report`. [Campaign inputs, commands and recovery](plugins/app-store-creative/skills/app-store-creative/references/custom-product-pages.md)
+
 ## Managed production and release
 
 Import authentic product captures through `input import`. Use managed screenshot export, `preview record`, `preview produce`, and `preview poster` for production. Each attempt owns its lease and isolated working files; failed or interrupted output remains evidence, and retries create new attempts.

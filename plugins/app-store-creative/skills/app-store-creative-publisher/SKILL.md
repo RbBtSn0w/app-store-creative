@@ -109,3 +109,7 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 - For macOS desktop App Previews, specify `--device-type DESKTOP` (Apple API uses `DESKTOP`, not `APP_DESKTOP`).
 
 
+
+## Custom product page handoff
+
+Use [the CPP executor contract](../app-store-creative/references/custom-product-pages.md) for a campaign. Read the approved handoff's phase and operation scope. Verify the live app → page → page version → CPP localization → media set relationship before writing. A reconcileMedia scope is the target JSON for a sealed publication. Upload exactly the assets selected by that plan in their approved order. Record a fresh observation after each operation. Hand the specific CPP version to the operator for App Review.
