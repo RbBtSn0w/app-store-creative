@@ -59,6 +59,8 @@ For nondefault locales, assign real localized captures or record an explicit rev
 
 ## Product Page Optimization (PPO) & A/B Experiment Workflow
 
+For a measured iOS screenshot test, follow the [App Analytics snapshot and reproduction workflow](references/ppo-assessment.md). It covers policy, card order, binding, assessment and scoped production.
+
 App Store Creative supports native Product Page Optimization (PPO) experiments defined declaratively inside `creative.config.json` under `experiments`:
 
 ```json
