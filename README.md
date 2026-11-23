@@ -76,3 +76,7 @@ app-store-creative input import --repo . --artifact <capture-id> --actor <actor>
 
 `--artifact` and `--source` are mutually exclusive. Artifact imports require a complete
 capture from a successful acquisition attempt and retain the original capture dependency.
+
+## Featuring nominations
+
+Prepare an editorial pitch with `creative nomination draft`, inspect the Apple fields and supporting evidence with `nomination review`, and use an authorized plan to save, update or submit it through ASC. The [nomination workflow](plugins/app-store-creative/skills/app-store-creative/references/featuring-nominations.md) includes a sample brief, commands and lost-response recovery.

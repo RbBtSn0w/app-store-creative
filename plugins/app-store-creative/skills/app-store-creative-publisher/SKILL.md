@@ -1,6 +1,6 @@
 ---
 name: app-store-creative-publisher
-description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state.
+description: Plan, execute, recover, and audit human-approved App Store screenshot and App Preview uploads through the official ASC plugin. Use only after local validation, immutable sealing, design approval, and a separate upload approval are present, or when reconciling a partial media upload with live App Store Connect state. Supports App Store featuring nominations.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -109,3 +109,7 @@ When an experiment is defined in `creative.config.json` and treatment deliveries
 - For macOS desktop App Previews, specify `--device-type DESKTOP` (Apple API uses `DESKTOP`, not `APP_DESKTOP`).
 
 
+
+## Featuring nominations
+
+For a user-authorized featuring nomination use the [nomination workflow](../app-store-creative/references/featuring-nominations.md). Bind authorization to the reviewed nomination plan, its ASC profile and exact app IDs. Run nomination execute once; reconcile an interrupted operation by reading ASC. A verified draft may later be submitted through its own reviewed plan.

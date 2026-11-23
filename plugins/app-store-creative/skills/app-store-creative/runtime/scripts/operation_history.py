@@ -8,7 +8,7 @@ import platform
 import stat
 
 
-CATEGORIES = frozenset({"runs", "attempts", "attempt-leases", "artifacts", "imports",
+CATEGORIES = frozenset({"nomination-events", "runs", "attempts", "attempt-leases", "artifacts", "imports",
     "input-dispositions", "candidates", "candidate-dispositions", "validations",
     "approvals", "deliveries", "publications", "remote-observations", "incidents", "commit-abandonments", "external-media", "external-retrievals", "external-archives", "publication-preparations", "observation-evidence", "configuration-locations"})
 

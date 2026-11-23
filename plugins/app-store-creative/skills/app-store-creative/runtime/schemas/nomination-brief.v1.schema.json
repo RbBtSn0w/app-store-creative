@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Featuring nomination brief",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profileRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          }
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "APP_LAUNCH",
+            "APP_ENHANCEMENTS",
+            "NEW_CONTENT"
+          ]
+        },
+        "publishStartDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publishEndDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deviceFamilies": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "IPHONE",
+              "IPAD",
+              "MAC",
+              "APPLE_TV",
+              "APPLE_WATCH",
+              "VISION"
+            ]
+          }
+        },
+        "locales": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "supportedTerritories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "supplementalMaterialsUris": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "inAppEventIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hasInAppEvents": {
+          "type": "boolean"
+        },
+        "launchInSelectMarketsFirst": {
+          "type": "boolean"
+        },
+        "preOrderEnabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "text",
+              "evidenceIds"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceIds": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "sourceKind"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceKind": {
+            "enum": [
+              "statement",
+              "file",
+              "screenshot",
+              "releaseNotes",
+              "video"
+            ]
+          },
+          "actor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "artifactId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "startMs": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "endMs": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "sourceKind": {
+                  "const": "statement"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "actor",
+                "text"
+              ]
+            },
+            "else": {
+              "required": [
+                "sha256"
+              ],
+              "oneOf": [
+                {
+                  "required": [
+                    "path"
+                  ]
+                },
+                {
+                  "required": [
+                    "artifactId"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "sourceKind": {
+                  "const": "video"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "startMs",
+                "endMs"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "sourceKind": {
+                  "const": "screenshot"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "card",
+                "device",
+                "locale"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

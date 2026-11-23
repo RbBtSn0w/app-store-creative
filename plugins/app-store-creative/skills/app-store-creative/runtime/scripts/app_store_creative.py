@@ -19,6 +19,7 @@ if str(_script_dir) not in sys.path:
 import apply_critique
 import companion_generator
 import lifecycle_commands
+import nomination_commands
 import ppo_experiment
 import production_lifecycle
 import studio_server
@@ -28,6 +29,9 @@ def run(args):
     root = (args.repo or Path.cwd()).resolve()
     def project_path(value):
         return (value if value.is_absolute() else root / value).resolve() if value else None
+
+    if args.command == "nomination":
+        return nomination_commands.execute(args, root, project_path)
 
     if args.command in ("history", "preview", "run", "attempt", "artifact", "candidate", "inventory", "storage", "approval", "delivery", "archive", "publication", "cleanup", "incident", "input", "audit"):
         return lifecycle_commands.execute(args)
@@ -301,6 +305,7 @@ def build_parser():
         x.add_argument("--repo", type=Path, default=Path.cwd())
         return x
 
+    nomination_commands.add_arguments(cmd("nomination"))
     lifecycle_commands.add_commands(sub)
 
     # Modern v2 Subcommands
@@ -400,6 +405,8 @@ def main(argv=None):
                 print(f"Planned deliveries: {res['scope']['planned_delivery_count']}")
             else:
                 print(res if isinstance(res, str) else json.dumps(res, sort_keys=True, ensure_ascii=False, indent=2))
+        if args.command == 'nomination' and isinstance(res, dict) and res.get('status') in ('conflict', 'outcome_unknown', 'unverified', 'rejected') and args.action != 'status':
+            return 3
         # Ensure CI gates fail if validation reported FAIL
         if isinstance(res, dict) and res.get("status") == "FAIL":
             return 2

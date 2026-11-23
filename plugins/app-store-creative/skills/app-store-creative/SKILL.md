@@ -1,6 +1,6 @@
 ---
 name: app-store-creative
-description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload.
+description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload. Supports App Store featuring nominations.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -129,3 +129,7 @@ Headless Chromium exports render multi-layer 3D CSS compositions (`perspective`,
 - Never pass `--disable-gpu` on macOS. Preserving Metal hardware acceleration completes card exports in ~1.8s, whereas SwiftShader CPU software rasterization takes >6s per card and triggers export timeouts.
 - Mathematical dimension exactness: $\text{round}(\text{base\_w} \times \text{scale}) == \text{phys\_w}$ and $\text{round}(\text{base\_h} \times \text{scale}) == \text{phys\_h}$. Never use fractional base dimensions that cause 1-pixel rounding drift.
 
+
+## Featuring nominations
+
+When asked to pitch an app launch, update, or new content for editorial featuring, use the [nomination workflow](references/featuring-nominations.md). Start with a reviewable local brief. Show the exact Apple fields, missing information, and supporting material before handing a specific save or submit request to Publisher.
