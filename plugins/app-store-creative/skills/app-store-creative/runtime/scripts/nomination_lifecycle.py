@@ -88,8 +88,8 @@ def brief_for(core, source):
             "context": context, "evidence": evidence}
 
 
-def missing(brief):
-    fields = [k for k in asc.REQUIRED if not brief["payload"].get(k)]
+def missing(brief, payload):
+    fields = [k for k in asc.REQUIRED if not payload.get(k)]
     fields.extend(k for k, v in brief["target"].items() if not v)
     if not brief["context"].get("claims"):
         fields.append("context.claims")
@@ -154,13 +154,13 @@ class Nomination:
             raise ValueError("Unknown local nomination")
         brief = rev["brief"]
         warnings = []
-        start = brief["payload"].get("publishStartDate")
+        prior = self.latest("verified").get("snapshot", {}).get("payload", {})
+        expected = asc.normalize({**prior, **brief["payload"]})
+        start = expected.get("publishStartDate")
         if start and datetime.fromisoformat(start) < datetime.now(timezone.utc) + timedelta(days=14):
             warnings.append("Planned publication is less than 14 days away")
-        prior = self.latest("verified").get("snapshot", {}).get("payload", {})
-        expected = {**prior, **brief["payload"]}
         changes = {k: {"previous": prior.get(k), "proposed": v} for k, v in expected.items() if prior.get(k) != v}
-        return {**rev, "localId": self.id, "missing": missing(brief), "warnings": warnings,
+        return {**rev, "localId": self.id, "missing": missing(brief, expected), "warnings": warnings,
                 "appleFields": expected, "changes": changes}
 
     def draft(self, source, base):

@@ -114,6 +114,11 @@ class RetentionOperations:
                 disposition = self._read('input-dispositions', path.stem)
                 if disposition['status'] != 'discarded' or datetime.fromisoformat(disposition['created_at']) > cutoff:
                     protected.add(self._read('imports', path.stem)['artifact_id'])
+        for path in (records / 'nomination-events').glob('*/*.json'):
+            event = self._read('nomination-events', path.parent.name, path.stem)
+            if event['kind'] == 'revision':
+                protected.update(item['artifactId'] for item in event['body']['brief']['evidence']
+                                 if item.get('sourceKind') != 'statement' and 'artifactId' in item)
         for path in (records / 'observation-evidence').glob('*.json'):
             binding = self._read('observation-evidence', path.stem)
             observation = self._read('remote-observations', binding['observation_id'])

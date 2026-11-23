@@ -37,11 +37,9 @@
           "minLength": 1
         },
         "type": {
-          "enum": [
-            "APP_LAUNCH",
-            "APP_ENHANCEMENTS",
-            "NEW_CONTENT"
-          ]
+          "type": "string",
+          "pattern": "^(?:[Aa][Pp][Pp]_[Ll][Aa][Uu][Nn][Cc][Hh]|[Aa][Pp][Pp]_[Ee][Nn][Hh][Aa][Nn][Cc][Ee][Mm][Ee][Nn][Tt][Ss]|[Nn][Ee][Ww]_[Cc][Oo][Nn][Tt][Ee][Nn][Tt])$",
+          "description": "Canonical values: APP_LAUNCH, APP_ENHANCEMENTS, NEW_CONTENT. Input is case-insensitive."
         },
         "publishStartDate": {
           "type": "string",
@@ -54,14 +52,9 @@
         "deviceFamilies": {
           "type": "array",
           "items": {
-            "enum": [
-              "IPHONE",
-              "IPAD",
-              "MAC",
-              "APPLE_TV",
-              "APPLE_WATCH",
-              "VISION"
-            ]
+            "type": "string",
+            "pattern": "^(?:[Ii][Pp][Hh][Oo][Nn][Ee]|[Ii][Pp][Aa][Dd]|[Mm][Aa][Cc]|[Aa][Pp][Pp][Ll][Ee]_[Tt][Vv]|[Aa][Pp][Pp][Ll][Ee]_[Ww][Aa][Tt][Cc][Hh]|[Vv][Ii][Ss][Ii][Oo][Nn])$",
+            "description": "Canonical values: IPHONE, IPAD, MAC, APPLE_TV, APPLE_WATCH, VISION. Input is case-insensitive."
           }
         },
         "locales": {

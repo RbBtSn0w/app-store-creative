@@ -61,6 +61,8 @@ def normalize(payload):
     for field, value in payload.items():
         if field in LIST_FIELDS:
             value = strings(value, field)
+            if field in ("deviceFamilies", "supportedTerritories"):
+                value = sorted({item.upper() for item in value})
             if field == "supplementalMaterialsUris":
                 for uri in value:
                     public_uri(uri)
@@ -77,7 +79,7 @@ def normalize(payload):
             value = date(value)
         elif not isinstance(value, str) or not value.strip() or "\x00" in value:
             raise ValueError(f"Expected text: {field}")
-        result[field] = value
+        result[field] = value.upper() if field == "type" else value
     if "type" in result and result["type"] not in {"APP_LAUNCH", "APP_ENHANCEMENTS", "NEW_CONTENT"}:
         raise ValueError("Unknown nomination type")
     if "publishEndDate" in result and "publishStartDate" in result:

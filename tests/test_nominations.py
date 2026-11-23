@@ -108,6 +108,7 @@ class NominationTests(unittest.TestCase):
         saved = self.call("execute", "--plan", plan)
         self.assertEqual(saved["snapshot"]["payload"]["description"], "@env:KEEP_LITERAL")
         self.assertEqual(self.call("plan", "--id", lid, "--action", "save-draft")["status"], "no_change")
+        self.brief["payload"] = {}
         self.brief["payload"]["description"] = "Updated 中文\nsecond line"
         self.draft("--id", lid, "--base", rev["revisionDigest"])
         self.call("execute", "--plan", plan, fail=True)
@@ -168,6 +169,11 @@ class NominationTests(unittest.TestCase):
         self.call("plan", "--id", rev["localId"], "--action", "save-draft", fail=True)
         text.write_text("changed")
         self.assertIn("digest mismatch", self.call("plan", "--id", rev["localId"], "--action", "save-draft", fail=True)["error"])
+
+    def test_mixed_case_enum_values_are_canonicalized(self):
+        self.brief["payload"].update(type="app_Launch", deviceFamilies=["iPhone", "IPHONE"])
+        fields = self.draft()["appleFields"]
+        self.assertEqual((fields["type"], fields["deviceFamilies"]), ("APP_LAUNCH", ["IPHONE"]))
 
     def test_invalid_payloads(self):
         for bad in [{"locales": "en-US"}, {"type": "UPDATE"}, {"publishStartDate": "2027-05-01"},
