@@ -84,6 +84,13 @@ def check_background(value, label):
         raise ValueError(f"{label}.imageUrl must be text")
 
 
+def release_platform(config):
+    explicit = config.get('publishing', {}).get('platform')
+    if explicit:
+        return explicit.upper()
+    return 'MAC_OS' if all(target.startswith('mac_') for target in config.get('targets', [])) else 'IOS'
+
+
 def check_config(config):
     if isinstance(config, dict):
         from artifact_policy import resolve

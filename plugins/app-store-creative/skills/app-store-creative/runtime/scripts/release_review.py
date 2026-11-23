@@ -57,8 +57,8 @@ def screenshot_plan(core, baseline_id):
     import json
     delivery = core._read('deliveries', baseline_id)
     config = check_config(core.config)
-    platform = config.get('publishing', {}).get('platform') or (
-        'MAC_OS' if all(t.startswith('mac_') for t in config.get('targets', ['iphone_6_9'])) else 'IOS')
+    from studio_contract import release_platform
+    platform = release_platform(config)
     if (delivery['project_id'] != config['project']['id']
             or delivery['target']['platform'].upper() != platform.upper()):
         raise ValueError('Choose a baseline from the same project and platform')

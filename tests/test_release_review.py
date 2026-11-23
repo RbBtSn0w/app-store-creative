@@ -52,6 +52,15 @@ class ReleaseReviewTests(unittest.TestCase):
         (self.root / 'source.png').unlink()
         self.assertIn('Capture unavailable', self.invoke(*plan)['assets'][0]['reasons'])
 
+    def test_plan_accepts_production_platform_when_targets_are_omitted(self):
+        validation, approval = self.approved()
+        delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
+        self.config.pop('targets', None)
+        self.config.pop('publishing', None)
+        self.store.config_path.write_text(json.dumps(self.config))
+        plan = self.invoke('delivery', '--repo', str(self.root), 'screenshot-plan', '--id', delivery['id'])
+        self.assertEqual(plan['baseline_id'], delivery['id'])
+
     def test_studio_routes_use_the_selected_baseline_and_capture(self):
         validation, approval = self.approved()
         delivery = self.store.seal(self.candidate['id'], validation['id'], approval['id'])
