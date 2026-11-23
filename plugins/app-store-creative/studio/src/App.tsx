@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { CaptureCopy } from './CaptureCopy';
+import { OpeningStory } from './OpeningStory';
 import { CardView } from './components/CardView';
 import { CreativeConfig, TargetDevice, TARGET_DIMENSIONS, CardConfig, CardOffset } from './types';
 import { defaultCardLayout, localizedFields, resolveCard, updateVariant } from './project';
@@ -460,7 +462,11 @@ export const App: React.FC = () => {
               <div className="space-y-6">
                 <CustomProductPages />
                 <RunHistory />
-                <DeliveryHistory />
+                <DeliveryHistory candidateId={dirty ? null : status.candidate_id} onOpenCard={dirty ? undefined : path => {
+                  const [language, device, filename] = path.split('/');
+                  setLocale(language); setTarget(device as TargetDevice); setSelected(filename.replace(/\.png$/, ''));
+                  setWorkspaceMode('canvas'); setCanvasNarrowTab('inspector'); setInspectorTab('copy');
+                }} />
                 <PublicationHistory />
                 <ObservationEvidence />
               </div>
@@ -563,10 +569,13 @@ export const App: React.FC = () => {
           <aside className={`p-4 space-y-3 border-r border-white/10 bg-[#0C0F17]/50 ${canvasNarrowTab === 'cards' ? 'block' : 'hidden'} lg:block`}>
             <div className="flex justify-between items-center">
               <h2 className="font-semibold text-sm">Screenshots · {config.cards.length}</h2>
-              <span className="text-[10px] text-white/40 font-mono">5-Slide Arc</span>
             </div>
             <label className="upload text-xs block text-center py-2">Add real captures<input type="file" accept="image/png,image/jpeg" multiple disabled={busy || saving} onChange={event => { if (event.target.files) void importFiles(event.target.files); event.target.value = ''; }} /></label>
             <button className="w-full text-xs" disabled={busy || saving} onClick={() => { const id = `card-${crypto.randomUUID().slice(0, 8)}`; edit(current => ({ ...current, cards: [...current.cards, { id, headline: 'Your headline', layout: 'pure_text' }] })); setSelected(id); }}>Add text card</button>
+            {config.cards.length >= 2 && <OpeningStory key={JSON.stringify(config.cards.map(card => card.id))}
+              config={config} target={target} locale={locale} disabled={busy || saving}
+              onDraft={openings => edit(current => ({ ...current, studio: { ...current.studio, openings } }))}
+              onApply={(cards, openings) => edit(current => ({ ...current, cards, studio: { ...current.studio, openings } }))} />}
             <ol className="space-y-1.5">{config.cards.map((card, index) => (
               <li key={card.id}>
                 <button type="button" className={`w-full text-left p-2.5 rounded-xl border text-xs flex flex-col gap-1 transition ${selected === card.id ? 'border-indigo-400 bg-indigo-500/15 shadow-sm ring-1 ring-indigo-400/30' : 'border-white/10 hover:border-white/20 bg-white/5'}`} onClick={() => { setSelected(card.id); setCanvasNarrowTab('canvas'); }}>
@@ -635,6 +644,8 @@ export const App: React.FC = () => {
                 {/* TAB 1: COPY */}
                 {inspectorTab === 'copy' && (
                   <div className="space-y-3">
+                    {!dirty && resolved.screenshot && resolved.layout !== 'pure_text' && <CaptureCopy key={JSON.stringify([target, locale, active.id, resolved.screenshot])} locale={locale} target={target} card={active.id} source={resolved.screenshot}
+                      defaultLocale={defaultLocale} defaultSource={resolveCard(config, active, target, defaultLocale).screenshot} />}
                     {inherited && (
                       <div className="p-2.5 bg-amber-950/40 border border-amber-300/20 rounded-xl text-xs">
                         Copy or capture inherits the default language.

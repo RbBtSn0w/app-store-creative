@@ -1,3 +1,5 @@
+import { ScreenshotPlan } from './ScreenshotPlan';
+import { CandidateChanges } from './CandidateChanges';
 import { useRef, useState } from 'react';
 import { readHistory } from './historyRequest';
 import { deliveryVerdict, type LocalDeliveryStatus } from './deliveryStatus';
@@ -6,7 +8,7 @@ type Delivery = { id: string; created_at: string; project_id: string; target: { 
 type Page = { deliveries: Delivery[]; next_cursor: string | null };
 type Detail = LocalDeliveryStatus & { errors: string[]; remote_status: string };
 
-export function DeliveryHistory() {
+export function DeliveryHistory({ candidateId, onOpenCard }: { candidateId?: string | null; onOpenCard?: (path: string) => void }) {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [selected, setSelected] = useState('');
@@ -55,6 +57,8 @@ export function DeliveryHistory() {
     {cursor && <button disabled={busy} onClick={() => load(true)}>Load earlier deliveries</button>}
     {detail && <div className="mt-4 space-y-2" aria-live="polite">
       <h3 className="font-semibold">{deliveryVerdict(detail)}</h3>
+      {onOpenCard && detail.local_status === 'PASS' && <ScreenshotPlan key={selected} baseline={selected} onOpenCard={onOpenCard} />}
+      {candidateId && detail.local_status === 'PASS' && <CandidateChanges key={selected + candidateId} candidate={candidateId} baseline={selected} />}
       <p>Remote verification: {detail.remote_status === 'UNKNOWN' ? 'Unknown — check the publication record.' : detail.remote_status}</p>
       <ul>{detail.errors.map((finding, index) => <li className="text-amber-200" key={index}>{finding}</li>)}</ul>
       <button disabled={busy} onClick={() => {

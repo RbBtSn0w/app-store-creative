@@ -249,6 +249,71 @@ def verify_archive(package, expected_sha256=None):
             'assets_count': len(manifest['assets']), 'files_count': len(names)}
 
 
+def media_changes(previous, current, previous_config, current_config, destination):
+    from studio_contract import resolve_card
+    def placements(config):
+        result = {}
+        for locale in config['project'].get('locales', ['en-US']):
+            for target in config.get('targets', ['iphone_6_9']):
+                for index, card in enumerate(config['cards'], 1):
+                    resolved, _ = resolve_card(config, card, target, locale)
+                    result[f"{locale}/{target}/{card['id']}.png"] = (index, resolved)
+        return result
+
+    old_cards, new_cards = placements(previous_config), placements(current_config)
+    rows = []
+    for name in sorted(previous.keys() | current.keys()):
+        old, new = previous.get(name), current.get(name)
+        reasons = []
+        if not old:
+            reasons.append(f'Added to {destination}')
+        elif not new:
+            reasons.append(f'Absent from {destination}')
+        else:
+            if old['sha256'] != new['sha256']:
+                reasons.append('Media content changed')
+            if name in old_cards and name in new_cards:
+                old_position, before = old_cards[name]
+                new_position, after = new_cards[name]
+                if old_position != new_position:
+                    reasons.append(f'Position {old_position} → {new_position}')
+                for field, label in (('headline', 'Headline'), ('subheadline', 'Subheadline'),
+                                     ('screenshot', 'Capture reference')):
+                    if before.get(field) != after.get(field):
+                        reasons.append(label + ' changed')
+        rows.append({'path': name, 'role': (new or old)['role'], 'present': new is not None,
+                     'reasons': reasons})
+    return rows
+
+
+def compare_archives(baseline, release):
+    import hashlib
+
+    def snapshot(path):
+        verification = verify_archive(path)
+        raw = (path / 'manifest.json').read_bytes()
+        if hashlib.sha256(raw).hexdigest() != verification['manifest_sha256']:
+            raise ValueError('Archive manifest changed during comparison')
+        manifest = json.loads(raw)
+        config_path = 'evidence/reviewed-config.json'
+        reviewed = (path / config_path).read_bytes()
+        expected = next(item['sha256'] for item in manifest['files'] if item['path'] == config_path)
+        if hashlib.sha256(reviewed).hexdigest() != expected:
+            raise ValueError('Archive recipe changed during comparison')
+        assets = {item['path'].removeprefix('media/'): item for item in manifest['assets']}
+        if len(assets) != len(manifest['assets']):
+            raise ValueError('Archive contains duplicate media paths')
+        return manifest, json.loads(reviewed), assets
+
+    old, old_config, previous = snapshot(baseline)
+    new, new_config, current = snapshot(release)
+    if old['project_id'] != new['project_id'] or old['target']['platform'].upper() != new['target']['platform'].upper():
+        raise ValueError('Choose archives from the same project and platform')
+    return {'baseline_id': old['revision_id'], 'delivery_id': new['revision_id'],
+            'baseline_version': old['target']['version'], 'delivery_version': new['target']['version'],
+            'assets': media_changes(previous, current, old_config, new_config, 'release')}
+
+
 def commit_directory(staged, destination):
     """Publish a complete directory atomically without replacing an existing entry."""
     libc = ctypes.CDLL(None, use_errno=True)
@@ -513,6 +578,29 @@ class DeliveryOperations:
         write_snapshot_index(recipe, {data['logical_path']: data['sha256'] for data in closure.values()
             if data['role'] != 'render-evidence' and data['id'] not in candidate['artifacts']})
         return media, recipe, closure
+
+    def compare_candidate(self, candidate_id, baseline_id):
+        """Compare selected release media against a verified, explicit baseline."""
+        candidate, run = self._candidate(candidate_id)
+        delivery = self._read('deliveries', baseline_id)
+        if (delivery['project_id'] != run['config']['project']['id']
+                or delivery['target']['platform'].upper() != run['target']['platform'].upper()):
+            raise ValueError('Choose a baseline from the same project and platform')
+        package = self.delivery_path(delivery)
+        manifest = json.loads((package / 'manifest.json').read_text())
+        previous_config = json.loads((package / 'evidence/reviewed-config.json').read_text())
+        previous = {asset['path'].removeprefix('media/'): asset for asset in manifest['assets']}
+        current = {}
+        for identity in candidate['artifacts']:
+            asset = self.verify_artifact(identity)
+            name = asset['logical_path']
+            if name in current:
+                raise ValueError('Candidate contains duplicate media paths')
+            current[name] = asset
+
+        rows = media_changes(previous, current, previous_config, run['config'], 'candidate')
+        return {'baseline_id': baseline_id, 'candidate_id': candidate_id, 'assets': rows,
+                'baseline_version': delivery['target']['version'], 'candidate_version': run['target']['version']}
 
     def candidate_review(self, candidate_id):
         candidate, run = self._candidate(candidate_id)

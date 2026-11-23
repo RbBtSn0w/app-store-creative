@@ -1,6 +1,6 @@
-export async function readHistory<T>(path: string, label = 'production history'): Promise<T> {
+export async function readHistory<T>(path: string, label = 'production history', timeout = 20000): Promise<T> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 20000);
+  const timer = setTimeout(() => controller.abort(), timeout);
   try {
     const response = await fetch(path, { signal: controller.signal });
     const body = await response.json();

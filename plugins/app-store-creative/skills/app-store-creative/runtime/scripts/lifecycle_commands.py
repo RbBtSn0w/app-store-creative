@@ -152,6 +152,9 @@ def add_commands(subparsers):
     validate_parser = candidate.add_parser('validate')
     validate_parser.add_argument('--id', required=True)
     validate_parser.add_argument('--allow-silent-audio', action='store_true', default=False)
+    compare = candidate.add_parser('compare')
+    compare.add_argument('--id', required=True)
+    compare.add_argument('--baseline-delivery', required=True)
     candidate.add_parser('review').add_argument('--id', required=True)
     discard = candidate.add_parser('discard')
     discard.add_argument('--id', required=True)
@@ -166,6 +169,7 @@ def add_commands(subparsers):
     record.add_argument('--authorization-reference', required=True)
     record.add_argument('--confirm', choices=['APPROVE'], required=True)
     delivery = group('delivery')
+    delivery.add_parser('screenshot-plan').add_argument('--id', required=True)
     delivery.add_parser('status').add_argument('--id', required=True)
     listing = delivery.add_parser('list')
     listing.add_argument('--limit', type=int, default=20)
@@ -211,6 +215,9 @@ def add_commands(subparsers):
     retrieve.add_argument('--remote')
     retrieve.add_argument('--path', required=True)
     retrieve.add_argument('--expected-sha256', required=True)
+    compare_archive = archive.add_parser('compare', help='Compare media in two verified local archives')
+    compare_archive.add_argument('--baseline', type=Path, required=True)
+    compare_archive.add_argument('--path', type=Path, required=True)
     verify = archive.add_parser('verify')
     verify.add_argument('--path', type=Path, required=True)
     verify.add_argument('--expected-sha256')
@@ -328,6 +335,9 @@ def add_commands(subparsers):
     closed.add_argument('--confirm', choices=['CLOSE'], required=True)
     incident.add_parser('status').add_argument('--id', required=True)
     source_input = group('input')
+    text_check = source_input.add_parser('check-copy')
+    for field in ('locale', 'target', 'card', 'phrase'):
+        text_check.add_argument('--' + field, required=True)
     imported = source_input.add_parser('import')
     capture_origin = imported.add_mutually_exclusive_group(required=True)
     capture_origin.add_argument('--source', type=Path)
@@ -376,6 +386,9 @@ def execute(args):
         return operation(identity, args.backend, args.backend_root)
     if args.command == 'archive':
         from delivery_lifecycle import verify_archive, restore_archive, verify_git_archive
+        if args.action == 'compare':
+            from delivery_lifecycle import compare_archives
+            return compare_archives(local(args.baseline), local(args.path))
         if args.action == 'verify-git':
             return verify_git_archive(root, args.commit, args.path, args.expected_sha256, args.remote)
         if args.action == 'restore':
@@ -488,6 +501,9 @@ def execute(args):
             return core.close_incident(args.id, args.actor, args.resolution)
         return core.incident_status(args.id)
     if args.command == 'input':
+        if args.action == 'check-copy':
+            from release_review import check_capture_copy
+            return check_capture_copy(core, args.locale, args.target, args.card, args.phrase)
         if args.action == 'discard':
             return core.discard_input(args.id, args.actor, args.reason)
         if args.action == 'status':
@@ -521,6 +537,8 @@ def execute(args):
                                  args.media_type, args.partial, args.input, args.logical_path, args.lease_token)
         return core.verify_artifact(args.id)
     if args.command == 'candidate':
+        if args.action == 'compare':
+            return core.compare_candidate(args.id, args.baseline_delivery)
         if args.action == 'review':
             return core.candidate_review(args.id)
         if args.action == 'discard':
@@ -579,6 +597,9 @@ def execute(args):
             return core.approve_upload(args.publication_id, args.actor, args.authorization_reference)
         return core.approve_design(args.candidate_id, args.validation_id, args.actor, args.authorization_reference)
     if args.command == 'delivery':
+        if args.action == 'screenshot-plan':
+            from release_review import screenshot_plan
+            return screenshot_plan(core, args.id)
         if args.action == 'list':
             return core.list_deliveries(args.limit, args.cursor)
         if args.action == 'status':

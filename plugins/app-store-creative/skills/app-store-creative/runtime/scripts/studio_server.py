@@ -100,6 +100,20 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             except (OSError, TypeError, ValueError, KeyError) as error:
                 self._json({'error': str(error)}, 400)
             return
+        if path == '/api/capture-copy':
+            try:
+                from artifact_lifecycle import Lifecycle
+                from release_review import check_capture_copy
+                query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query, keep_blank_values=True)
+                fields = ('locale', 'target', 'card', 'phrase')
+                if set(query) != set(fields) or any(len(query[field]) != 1 for field in fields):
+                    raise ValueError('Select a capture and phrase to inspect')
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                self._json(check_capture_copy(core, *(query[field][0] for field in fields)))
+            except (ValueError, OSError) as error:
+                self._json({'error': str(error)}, 400)
+            return
         if path == '/api/storage/media-budget':
             try:
                 from record_primitives import safe_id
@@ -296,6 +310,21 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 404)
             return
+        if path.startswith('/api/candidates/') and path.endswith('/compare'):
+            try:
+                from artifact_lifecycle import Lifecycle
+                from record_primitives import safe_id
+                identity = safe_id(path.removeprefix('/api/candidates/').removesuffix('/compare'))
+                query = urllib.parse.parse_qs(urllib.parse.urlsplit(self.path).query, keep_blank_values=True)
+                if set(query) != {'baseline'} or len(query['baseline']) != 1:
+                    raise ValueError('Select one baseline delivery')
+                with contract.WRITE_LOCK:
+                    core = Lifecycle.from_configuration(self.repo_root, self.config_path)
+                    result = core.compare_candidate(identity, safe_id(query['baseline'][0]))
+                self._json(result)
+            except (ValueError, OSError) as error:
+                self._json({'error': str(error)}, 400)
+            return
         if path.startswith('/api/candidates/') and path.endswith('/review'):
             try:
                 from record_primitives import safe_id
@@ -363,10 +392,15 @@ class StudioRequestHandler(SimpleHTTPRequestHandler):
             try:
                 from record_primitives import safe_id
                 from artifact_lifecycle import Lifecycle
-                identity = safe_id(path.removeprefix('/api/deliveries/'))
+                from release_review import screenshot_plan
+                review_plan = path.endswith('/screenshot-plan')
+                if review_plan and urllib.parse.urlsplit(self.path).query:
+                    raise ValueError('Screenshot planning accepts only the baseline delivery ID')
+                suffix = path.removeprefix('/api/deliveries/')
+                identity = safe_id(suffix.removesuffix('/screenshot-plan') if review_plan else suffix)
                 with contract.WRITE_LOCK:
                     core = Lifecycle.from_configuration(self.repo_root, self.config_path)
-                    self._json(core.delivery_status(identity))
+                    self._json(screenshot_plan(core, identity) if review_plan else core.delivery_status(identity))
             except (ValueError, OSError) as error:
                 self._json({'error': str(error)}, 404)
             return

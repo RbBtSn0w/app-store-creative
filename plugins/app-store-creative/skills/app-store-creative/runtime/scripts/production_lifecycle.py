@@ -61,7 +61,7 @@ def produce(root, config_path=None, targets=None, locales=None, with_video=False
             if epv.get('posterRequired'):
                 timestamp_from_time_code(epv.get('posterFrameTimeCode'), epv.get('fps', 30))
     publishing = config.get('publishing', {})
-    platform = publishing.get('platform') or ('MAC_OS' if all(t.startswith('mac_') for t in config.get('targets', [])) else 'IOS')
+    platform = contract.release_platform(config)
     sources, input_errors = contract.input_hashes(root, config, targets, locales)
     if with_video:
         pv_sources = []
