@@ -73,7 +73,7 @@ def prepare_plan(core, lid, operation):
     with read_lock(core):
         journal = Nomination(core, lid)
         parent = journal.parent
-        previous = journal.latest("verified").get("snapshot")
+        previous = journal.baseline() or None
         target = journal.review()["brief"]["target"]
         if journal.pending():
             raise ValueError("Outstanding attempt requires reconcile")
@@ -154,8 +154,13 @@ def reconcile(core, lid, args):
         if journal.parent != parent:
             raise ValueError("Local state changed during reconciliation")
         if pending and (bound or args.accept_baseline):
-            return journal.observe(pending["attempt"], "view", raw, rid)
-        previous = journal.latest("verified").get("snapshot", {})
+            result = journal.observe(pending["attempt"], "view", raw, rid)
+            if result.get("status") != "conflict" or not args.accept_baseline or snap["state"] != "DRAFT":
+                return result
+            return journal.add("baseline-adopted", {"status": "baseline_adopted", "remoteId": rid,
+                               "snapshot": snap, "supersededAttempt": pending["attempt"],
+                               "evidenceDigest": result["evidenceDigest"], "observedAt": result["observedAt"]})
+        previous = journal.baseline()
         if not args.accept_baseline or snap["state"] != "DRAFT":
             fact = {"remoteId": rid, "snapshot": snap, "evidenceDigest": journal.retain(raw)}
             last = journal.latest("readback")

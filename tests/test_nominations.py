@@ -136,6 +136,42 @@ class NominationTests(unittest.TestCase):
                                    "--accept-baseline")["status"], "verified")
         self.assertEqual((self.root / "writes").read_text(), "create DRAFT\n")
 
+    def test_accept_conflicting_draft_after_lost_update(self):
+        rev = self.draft()
+        lid = rev["localId"]
+        saved = self.call("execute", "--plan", self.authorize(lid, "save-draft"))
+        self.brief["payload"] = {"description": "Revised"}
+        self.draft("--id", lid, "--base", rev["revisionDigest"])
+        plan = self.authorize(lid, "save-draft")
+        (self.root / "drop").touch()
+        self.call("execute", "--plan", plan, fail=True)
+        file = self.root / "remote.json"
+        remote = json.loads(file.read_text())
+        remote["attributes"]["name"] = "Web edit"
+        file.write_text(json.dumps(remote))
+        self.assertEqual(self.call("reconcile", "--id", lid, fail=True)["status"], "conflict")
+        self.assertEqual(self.call("reconcile", "--id", lid, "--accept-baseline")["status"], "baseline_adopted")
+        status = self.call("status", "--id", lid)
+        self.assertFalse(status["pending"])
+        self.assertEqual(status["lastVerified"]["attempt"], saved["attempt"])
+        self.assertEqual(self.call("plan", "--id", lid, "--action", "submit")["operation"], "submit")
+
+    def test_invalid_partial_revision_preserves_known_digest(self):
+        rev = self.draft()
+        lid = rev["localId"]
+        self.call("execute", "--plan", self.authorize(lid, "save-draft"))
+        file = self.root / "remote.json"
+        remote = json.loads(file.read_text())
+        remote["attributes"]["publishEndDate"] = "2027-05-02T00:00:00Z"
+        file.write_text(json.dumps(remote))
+        self.call("reconcile", "--id", lid, "--accept-baseline")
+        self.brief["payload"] = {"publishStartDate": "2027-05-03T00:00:00Z"}
+        (self.project / "brief.json").write_text(json.dumps(self.brief))
+        self.call("draft", "--brief", "brief.json", "--id", lid, "--base", rev["revisionDigest"], fail=True)
+        self.assertEqual(self.call("status", "--id", lid)["revisionDigest"], rev["revisionDigest"])
+        self.brief["payload"] = {"description": "Corrected"}
+        self.draft("--id", lid, "--base", rev["revisionDigest"])
+
     def test_external_edit_detected_before_write(self):
         lid = self.draft()["localId"]
         self.call("execute", "--plan", self.authorize(lid, "save-draft"))

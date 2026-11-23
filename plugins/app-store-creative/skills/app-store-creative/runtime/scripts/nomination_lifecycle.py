@@ -148,14 +148,21 @@ class Nomination:
     def latest(self, kind):
         return next((e["body"] for e in reversed(self.events) if e["kind"] == kind), {})
 
+    def baseline(self):
+        return next((e["body"]["snapshot"] for e in reversed(self.events)
+                     if e["kind"] in ("verified", "baseline-adopted")), {})
+
+    def effective_payload(self, brief):
+        return asc.normalize({**self.baseline().get("payload", {}), **brief["payload"]})
+
     def review(self):
         rev = self.latest("revision")
         if not rev:
             raise ValueError("Unknown local nomination")
         brief = rev["brief"]
         warnings = []
-        prior = self.latest("verified").get("snapshot", {}).get("payload", {})
-        expected = asc.normalize({**prior, **brief["payload"]})
+        prior = self.baseline().get("payload", {})
+        expected = self.effective_payload(brief)
         start = expected.get("publishStartDate")
         if start and datetime.fromisoformat(start) < datetime.now(timezone.utc) + timedelta(days=14):
             warnings.append("Planned publication is less than 14 days away")
@@ -175,13 +182,15 @@ class Nomination:
             raise ValueError("Revision conflict: reload review")
         if (self.latest("claim") or self.remote_id()) and old["brief"]["target"] != brief["target"]:
             raise ValueError("Cannot change target after dispatch")
+        self.effective_payload(brief)
         self.add("revision", {"brief": brief, "revisionDigest": sha, "parentDigest": base, "revision": old.get("revision", 0) + 1})
         return self.review()
 
     def pending(self):
         claim = self.latest("claim")
         if (claim and self.latest("verified").get("attempt") != claim["attempt"]
-                and self.latest("rejected").get("attempt") != claim["attempt"]):
+                and self.latest("rejected").get("attempt") != claim["attempt"]
+                and self.latest("baseline-adopted").get("supersededAttempt") != claim["attempt"]):
             return claim
         return {}
 
@@ -192,7 +201,7 @@ class Nomination:
             raise ValueError("Missing: " + ", ".join(rev["missing"]))
         if self.pending():
             raise ValueError("Outstanding attempt requires reconcile")
-        previous = self.latest("verified").get("snapshot", {})
+        previous = self.baseline()
         if previous and previous["state"] != "DRAFT":
             raise ValueError("Remote nomination is not a draft")
         changes = {k: v for k, v in brief["payload"].items() if previous.get("payload", {}).get(k) != v}
@@ -240,7 +249,7 @@ class Nomination:
         if self.pending():
             raise ValueError("Outstanding attempt")
         brief_for(self.core, self.review()["brief"])
-        if baseline != plan["baseline"] or self.latest("verified").get("snapshot", {}) != baseline:
+        if baseline != plan["baseline"] or self.baseline() != baseline:
             raise ValueError("Remote baseline conflict")
         attempt = self.id + "." + identifier()
         self.add("claim", {"attempt": attempt, "plan": ref})
@@ -262,7 +271,7 @@ class Nomination:
         return sha
 
     def remote_id(self):
-        return self.latest("ack").get("remoteId") or self.latest("verified").get("snapshot", {}).get("remoteId")
+        return self.latest("ack").get("remoteId") or self.baseline().get("remoteId")
 
     def observe(self, attempt, phase, raw, rid=None, observed_at=None):
         claim = self.latest("claim")
@@ -322,11 +331,14 @@ class Nomination:
         result = last.get("status", "local_draft")
         if self.latest("claim") and self.latest("rejected").get("attempt") == self.latest("claim").get("attempt"):
             result = "rejected"
+        adoption = self.latest("baseline-adopted")
+        if adoption and adoption.get("supersededAttempt") == self.latest("claim").get("attempt"):
+            result = "baseline_adopted"
         if pending:
             result = "outcome_unknown"
             if self.latest("conflict").get("attempt") == pending["attempt"]:
                 result = "conflict"
         return {"localId": self.id, "revisionDigest": revision["revisionDigest"], "remoteId": self.remote_id(),
-                "lastReadback": self.latest("readback"),
+                "lastReadback": self.latest("readback"), "baseline": self.baseline(),
                 "status": result,
                 "pending": pending, "lastVerified": last, "lastConflict": self.latest("conflict")}
