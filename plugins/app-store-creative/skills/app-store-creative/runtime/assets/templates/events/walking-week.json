@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "projectId": "habit-flow",
+  "appId": "EXAMPLE_APP_ID",
+  "platform": "IOS",
+  "eventKey": "walking-week",
+  "timelyExperience": true,
+  "audience": "Returning walkers",
+  "experience": "Seven-day walking challenge",
+  "action": "Record a walk",
+  "bundleId": "com.example.habitflow",
+  "buildRef": "1.0(7)",
+  "claims": [
+    {
+      "text": "Free seven-day walking challenge",
+      "path": "events/challenge-facts.txt",
+      "sha256": "93580448e7c8575e29683b779de5059943b0c5faf08c15fc38522778f2b4f840"
+    }
+  ],
+  "referenceName": "Walking Week",
+  "primaryLocale": "en-US",
+  "badge": "CHALLENGE",
+  "priority": "NORMAL",
+  "purpose": "BRING_BACK_LAPSED_USERS",
+  "purchaseRequirement": "NO_COST_ASSOCIATED",
+  "deepLink": "habitflow://events/walking-week",
+  "destinations": {
+    "active": "walking-week.challenge",
+    "preheat": "walking-week.preview",
+    "expired": "walking-week.ended"
+  },
+  "territories": [
+    "USA"
+  ],
+  "schedule": {
+    "publishAt": "2030-01-01T08:00:00Z",
+    "startAt": "2030-01-02T08:00:00Z",
+    "endAt": "2030-01-09T08:00:00Z"
+  },
+  "localizations": {
+    "en-US": {
+      "name": "Walking Week",
+      "shortDescription": "Record a daily walk",
+      "longDescription": "Take part in a seven-day walking challenge.",
+      "card": "events/card.png",
+      "details": "events/details.png"
+    },
+    "zh-Hans": {
+      "name": "步行挑战周",
+      "shortDescription": "记录每天的步行",
+      "longDescription": "参加为期七天的步行挑战。",
+      "card": "events/card.png",
+      "details": "events/details.png"
+    }
+  },
+  "measurement": {
+    "goal": "participation",
+    "decision": "commission_next_episode",
+    "primaryMetric": "completionAmongStarters",
+    "numerator": "uniqueCompleters",
+    "denominator": "uniqueStarters",
+    "minDenominator": 40,
+    "threshold": 0.5,
+    "cohort": "all_event_entrants",
+    "window": "event_start_to_end"
+  }
+}

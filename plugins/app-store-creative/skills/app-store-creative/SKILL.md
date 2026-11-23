@@ -1,6 +1,6 @@
 ---
 name: app-store-creative
-description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload.
+description: Orchestrate an evidence-gated App Store screenshot and App Preview release from planning through real-UI capture, Figma composition, video production, validation, two explicit approvals, immutable sealing, ASC handoff, and remote audit. Use for a complete creative release, resuming a run, coordinating specialist agents, or determining whether App Store media is ready to upload. Plan and measure iOS In-App Events.
 metadata:
   feedback_target: https://github.com/RbBtSn0w/app-store-creative
 ---
@@ -129,3 +129,5 @@ Headless Chromium exports render multi-layer 3D CSS compositions (`perspective`,
 - Never pass `--disable-gpu` on macOS. Preserving Metal hardware acceleration completes card exports in ~1.8s, whereas SwiftShader CPU software rasterization takes >6s per card and triggers export timeouts.
 - Mathematical dimension exactness: $\text{round}(\text{base\_w} \times \text{scale}) == \text{phys\_w}$ and $\text{round}(\text{base\_h} \times \text{scale}) == \text{phys\_h}$. Never use fractional base dimensions that cause 1-pixel rounding drift.
 
+
+For a timed iOS experience use the [In-App Events workflow](references/in-app-events.md) to plan the candidate, validate its assets and destinations, hand off the reviewed package, then assess product participation.
